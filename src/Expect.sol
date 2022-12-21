@@ -1,77 +1,54 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.7.0;
 
-
-struct Log {
-        bytes32[] topics;
-        bytes data;
-        address emitter;
+struct _BoolExpectation {
+    bool actual;
+    string message;
 }
 
-
-library Call {
-    struct Call {
-        address callee;
-        uint256 value;
-        bytes data;
-        uint256 gas;
-
-        uint256 snapshot;
-        bool executed;
-    }
-
-    function execute(Call storage self) internal returns (bool, bytes memory) {
-        uint256 currentSnapshot;
-        if (!self.executed) {
-            self.snapshot = vm.snapshot();
-            self.executed = true;
-        } else {
-            currentSnapshot = vm.snapshot();
-            vm.revertToSnapshot(self.snapshot);
-        }
-
-        (bool success, bytes memory returnData) = self.callee.call{value: self.value, gas: self.gas}(self.data);
-
-        if (currentSnapshot != 0) {
-            vm.revertToSnapshot(currentSnapshot);
-        }
-
-        return (success, returnData);
-    }
+struct _Uint256Expectation {
+    uint256 actual;
+    string message;
 }
 
-library Expect {
-    using CallLib for CallLib.Call;
-
-    /* Events */
-
-    type Events is uint256;
-
-    struct __ExpectCall {
-        CallLib.Call call;
-        bool _not;
+library ExpectLib {
+    function toEqual(_BoolExpectation memory self, bool expected) internal pure {
+        if (self.actual != expected) {
+            revert(self.message);
+        }
     }
 
-    function not(__ExpectCall storage self) internal pure returns (__ExpectCall storage) {
-        self._not = !self._not;
-        return self;
+    function toBeTrue(_BoolExpectation memory self) internal pure {
+        toEqual(self, true);
     }
 
-
-    function toEmit(__ExpectCall storage self, LogFilter memory filter) internal view returns (__ExpectCall storage) {
-        filter.execute();
-        (bool success,,) = self.call.execute();
+    function toBeFalse(_BoolExpectation memory self) internal pure {
+        toEqual(self, false);
     }
 
-
-    function toRevert(__ExpectCall storage self) internal pure {
-        if (self.not) {
-            vm.expectRevert();
-            (bool reverted,) = self.call.execute();
-            assertTrue(status, "call did not revert");
-        } else {
-            (bool ok,) = self.call.execute();
-            assertTrue(ok, "call reverted");
+    function toEqual(_Uint256Expectation memory self, uint256 expected) internal pure {
+        if (self.actual != expected) {
+            revert(self.message);
         }
     }
 }
+
+
+function expect(bool condition, string memory message) pure returns (_BoolExpectation memory) {
+    return _BoolExpectation(condition, message);
+}
+
+function expect(bool condition) pure returns (_BoolExpectation memory) {
+    return _BoolExpectation(condition, "Expect failed"); // TODO improve default message
+}
+
+function expect(uint256 actual, string memory message) pure returns (_Uint256Expectation memory) {
+    return _Uint256Expectation(actual, message);
+}
+
+function expect(uint256 actual) pure returns (_Uint256Expectation memory) {
+    return _Uint256Expectation(actual, "Expect failed"); // TODO improve default message
+}
+
+using ExpectLib for _BoolExpectation global;
+using ExpectLib for _Uint256Expectation global;
