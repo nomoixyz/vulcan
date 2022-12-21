@@ -10,7 +10,8 @@ struct _T {
 
 // @dev Main entry point to vm functionality
 library TestLib {
-    uint256 constant VM_SLOT = uint256(keccak256("sest.vm.slot")); 
+    uint256 internal constant VM_SLOT = uint256(keccak256("sest.vm.slot")); 
+    Vm internal constant DEFAULT_VM = Vm(address(bytes20(uint160(uint256(keccak256('hevm cheat code'))))));
 
     function vm() internal view returns(Vm _vm) {
         uint256 vmSlot = VM_SLOT;
