@@ -16,35 +16,36 @@ import "forge-std/Vm.sol";
 
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
 // @dev Main entry point to vm functionality
-library test {
-    type Block is uint8;
+library TestLib {
+    struct _T {
+        uint8 t;
+    }
     // type Account is uint8;
 
     Vm constant vm = Vm(address(bytes20(uint160(uint256(keccak256('hevm cheat code'))))));
-    Block constant block = Block.wrap(0);
 
     // Sets block.timestamp (newTimestamp)
-    function timestamp(Block self, uint256 newTimestamp) internal returns(Block) {
+    function setBlockTimestamp(_T memory self, uint256 newTimestamp) internal returns(_T memory) {
         vm.warp(newTimestamp);
         return self;
     }
     // Sets block.height (newHeight)
-    function height(Block self, uint256 newHeight) internal returns(Block) {
+    function setBlockHeight(_T memory self, uint256 newHeight) internal returns(_T memory) {
         vm.roll(newHeight);
         return self;
     }
     // Sets block.basefee (newBasefee)
-    function fee(Block self, uint256 newBasefee) internal returns(Block) {
+    function setBlockFee(_T memory self, uint256 newBasefee) internal returns(_T memory) {
         vm.fee(newBasefee);
         return self;
     }
     // Sets block.difficulty (newDifficulty)
-    function difficulty(Block self, uint256 newDifficulty) internal returns(Block) {
+    function setBlockDifficulty(_T memory self, uint256 newDifficulty) internal returns(_T memory) {
         vm.difficulty(newDifficulty);
         return self;
     }
     // Sets block.chainid
-    function chainId(Block self, uint256 chainId) internal returns(Block){
+    function setChainId(_T memory self, uint256 chainId) internal returns(_T memory){
         vm.chainId(chainId);
         return self;
     }
@@ -91,19 +92,5 @@ library test {
     // Resets subsequent calls' msg.sender to be `address(this)`
     function stopImpersonate() internal {
         vm.stopPrank();
-    }
-}
-
-contract TTT {
-    using test for *;
-
-    function t() external {
-        // Account(address(0)).impersonate().origin(address(1)).foo();
-        address owner = address(1);
-        // owner.impersonate().deal(1 ether).nonce(1);
-        // test.impersonate(owner).deal(1 ether).nonce(1);
-
-        // Maybe we can use a custom type that can be accessed by some function? like t(owner), s(owner), acc(owner), owner.sest(), sest(owner), etc
-        // t(owner).balance(1 ether).nonce(1);
     }
 }
