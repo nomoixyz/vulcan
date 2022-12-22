@@ -1,19 +1,14 @@
 pragma solidity ^0.8.13;
 
-import { Test, Vm, expect, _T } from  "../Sest.sol";
+import { Vm } from  "../Sest.sol";
 
 // Intercept calls to the VM
-contract InterceptVm {
+// This could be useful to add functionality to the VM but also for debugging (adding logs before/after calls, etc)
+contract VmWrapper {
     Vm internal immutable vm;
+
     constructor(Vm _vm) {
         vm = _vm;
-    }
-
-    // Intercept the warp function
-    function warp(uint256 timestamp) external {
-        vm.warp(timestamp);
-
-        // Do something...
     }
 
     fallback() external payable {
@@ -24,7 +19,7 @@ contract InterceptVm {
         _fallback();
     }
 
-    function _fallback() internal {
+    function _fallback() private {
         Vm _vm = vm;
         assembly {
             calldatacopy(0, 0, calldatasize())
