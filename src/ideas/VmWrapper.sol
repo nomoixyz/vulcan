@@ -4,6 +4,7 @@ import { Vm } from  "../Sest.sol";
 
 // Intercept calls to the VM
 // This could be useful to add functionality to the VM but also for debugging (adding logs before/after calls, etc)
+// TODO: check if this additional layer causes issues (for example some vm methods ignore calls to the vm itself)
 contract VmWrapper {
     Vm internal immutable vm;
 
