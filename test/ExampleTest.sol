@@ -39,4 +39,36 @@ contract ExampleTest is Test {
     function testConsoleLog() external view {
         console.log("hello world");
     }
+
+    function testGetNonce() external {
+        expect(vm.getNonce(address(1))).toEqual(0);
+    }
+
+    function testSetNonce() external {
+        uint64 nonce = 1337;
+        vm.setNonce(address(1), nonce);
+
+        expect(vm.getNonce(address(1))).toEqual(nonce);
+    }
+
+    function testSetBlockBaseFee() external {
+        uint256 baseFee = 1337;
+        vm.setBlockBaseFee(baseFee);
+
+        expect(block.basefee).toEqual(baseFee);
+    }
+
+    function testSetBlockDifficulty() external {
+        uint256 difficulty = 1337;
+        vm.setBlockDifficulty(difficulty);
+
+        expect(block.difficulty).toEqual(difficulty);
+    }
+
+    function testSetChainId() external {
+        uint256 chainId = 1337;
+        vm.setChainId(chainId);
+
+        expect(block.chainid).toEqual(chainId);
+    }
 }
