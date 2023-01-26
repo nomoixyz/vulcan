@@ -1,3 +1,5 @@
+![Vulcan](./assets/landscape.png)
+
 ## Usage
 
 ```Solidity

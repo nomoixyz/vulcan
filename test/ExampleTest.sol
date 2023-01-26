@@ -15,6 +15,10 @@ using TestExtension for _T;
 contract ExampleTest is Test {
     using TestLib for _T;
 
+    function beforeEach() internal view override {
+        console.log("before each");
+    }
+
     function testIncreaseTime() external {
         uint256 increase = 1000;
         uint256 current = block.timestamp;
