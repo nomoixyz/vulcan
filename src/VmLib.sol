@@ -201,10 +201,22 @@ library VmLib {
         return self;
     }
 
+    function impersonateOnce(_T, address sender) internal returns(address) {
+        underlying().prank(sender);
+        return sender;
+    }
+
     function impersonateOnce(address self) internal returns(address) {
         underlying().prank(self);
         return self;
     }
+
+    // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called
+    function impersonate(_T, address sender) internal returns(address) {
+        underlying().startPrank(sender);
+        return sender;
+    }
+
     // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called
     function impersonate(address self) internal returns(address) {
         underlying().startPrank(self);
@@ -212,15 +224,29 @@ library VmLib {
     }
 
     // Sets the *next* call's msg.sender to be the input address, and the tx.origin to be the second input
+    function impersonateOnce(_T, address sender, address origin) internal returns(address) {
+        underlying().prank(sender, origin);
+        return sender;
+    }
+
+    // Sets the *next* call's msg.sender to be the input address, and the tx.origin to be the second input
     function impersonateOnce(address self, address origin) internal returns(address) {
         underlying().prank(self, origin);
         return self;
     }
+
+    // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called, and the tx.origin to be the second input
+    function impersonate(_T, address sender, address origin) internal returns(address) {
+        underlying().startPrank(sender, origin);
+        return sender;
+    }
+
     // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called, and the tx.origin to be the second input
     function impersonate(address self, address origin) internal returns(address) {
         underlying().startPrank(self, origin);
         return self;
     }
+
     // Resets subsequent calls' msg.sender to be `address(this)`
     function stopImpersonate(_T) internal {
         underlying().stopPrank();

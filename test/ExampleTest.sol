@@ -1,6 +1,7 @@
 pragma solidity ^0.8.13;
 
 import { Test, expect, _T, vm, console, TestLib } from  "../src/Sest.sol";
+import {Sender} from "./mocks/Sender.sol";
 
 library TestExtension {
     function increaseBlockTimestamp(_T self, uint256 increase) internal returns(_T) {
@@ -13,6 +14,7 @@ using TestExtension for _T;
 
 contract ExampleTest is Test {
     using TestLib for _T;
+
     function testIncreaseTime() external {
         uint256 increase = 1000;
         uint256 current = block.timestamp;
@@ -70,5 +72,47 @@ contract ExampleTest is Test {
         vm.setChainId(chainId);
 
         expect(block.chainid).toEqual(chainId);
+    }
+
+    function testImpersonateOnce() external {
+        address expectedSender = address(1337);
+        address expectedOrigin = address(7331);
+        Sender sender = new Sender();
+
+        vm.impersonateOnce(expectedSender);
+        expect(sender.get()).toEqual(expectedSender);
+        expect(sender.get()).toEqual(address(this));
+
+        vm.impersonateOnce(expectedSender, expectedOrigin);
+        (address resultSender, address resultOrigin) = sender.getWithOrigin();
+        expect(resultSender).toEqual(expectedSender);
+        expect(resultOrigin).toEqual(expectedOrigin);
+        (resultSender, resultOrigin) = sender.getWithOrigin();
+        expect(resultSender).toEqual(address(this));
+        expect(resultOrigin).toEqual(tx.origin);
+
+        vm.impersonate(expectedSender);
+        expect(sender.get()).toEqual(expectedSender);
+        expect(sender.get()).toEqual(expectedSender);
+        expect(sender.get()).toEqual(expectedSender);
+        vm.stopImpersonate();
+
+        expect(sender.get()).toEqual(address(this));
+
+        vm.impersonate(expectedSender, expectedOrigin);
+        (resultSender, resultOrigin) = sender.getWithOrigin();
+        expect(resultSender).toEqual(expectedSender);
+        expect(resultOrigin).toEqual(expectedOrigin);
+        (resultSender, resultOrigin) = sender.getWithOrigin();
+        expect(resultSender).toEqual(expectedSender);
+        expect(resultOrigin).toEqual(expectedOrigin);
+        (resultSender, resultOrigin) = sender.getWithOrigin();
+        expect(resultSender).toEqual(expectedSender);
+        expect(resultOrigin).toEqual(expectedOrigin);
+        vm.stopImpersonate();
+
+        (resultSender, resultOrigin) = sender.getWithOrigin();
+        expect(resultSender).toEqual(address(this));
+        expect(resultOrigin).toEqual(tx.origin);
     }
 }
