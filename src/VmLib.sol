@@ -202,8 +202,7 @@ library VmLib {
     }
 
     function impersonateOnce(_T, address sender) internal returns(address) {
-        underlying().prank(sender);
-        return sender;
+        return impersonateOnce(sender);
     }
 
     function impersonateOnce(address self) internal returns(address) {
@@ -213,8 +212,7 @@ library VmLib {
 
     // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called
     function impersonate(_T, address sender) internal returns(address) {
-        underlying().startPrank(sender);
-        return sender;
+        return impersonate(sender);
     }
 
     // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called
@@ -225,8 +223,7 @@ library VmLib {
 
     // Sets the *next* call's msg.sender to be the input address, and the tx.origin to be the second input
     function impersonateOnce(_T, address sender, address origin) internal returns(address) {
-        underlying().prank(sender, origin);
-        return sender;
+        return impersonateOnce(sender, origin);
     }
 
     // Sets the *next* call's msg.sender to be the input address, and the tx.origin to be the second input
@@ -237,8 +234,7 @@ library VmLib {
 
     // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called, and the tx.origin to be the second input
     function impersonate(_T, address sender, address origin) internal returns(address) {
-        underlying().startPrank(sender, origin);
-        return sender;
+        return impersonate(sender, origin);
     }
 
     // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called, and the tx.origin to be the second input
