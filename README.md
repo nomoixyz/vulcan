@@ -3,7 +3,7 @@
 ## Usage
 
 ```Solidity
-import { Test, vm, expect } from  "../src/Sest.sol";
+import { Test, vm, expect } from  "../src/Vulcan.sol";
 
 contract TestFoo is Test {
 

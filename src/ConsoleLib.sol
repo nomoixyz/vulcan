@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.7.0;
 
-// It's basically the same as forge-std console2 but using a struct. TODO: give proper credits, add license, etc
+// It's basically the same as forge-std console2 but using a custom type so it is extendable.
+// TODO: give proper credits, add license, etc
 
 type _Console is bytes32;
 
@@ -228,6 +229,10 @@ library ConsoleLib {
 
     function log(_Console, string memory p0, address p1) internal view {
         _sendLogPayload(abi.encodeWithSignature("log(string,address)", p0, p1));
+    }
+
+    function log(_Console, string memory p0, bytes32 p1) internal view {
+        _sendLogPayload(abi.encodeWithSignature("log(string,bytes32)", p0, p1));
     }
 
     function log(_Console, bool p0, uint256 p1) internal view {

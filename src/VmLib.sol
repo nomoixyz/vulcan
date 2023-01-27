@@ -19,7 +19,7 @@ struct Rpc {
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
 // @dev Main entry point to vm functionality
 library VmLib {
-    uint256 internal constant VM_SLOT = uint256(keccak256("sest.vm.slot")); 
+    uint256 internal constant VM_SLOT = uint256(keccak256("vulcan.vm.slot")); 
     Vm internal constant DEFAULT_VM = Vm(address(bytes20(uint160(uint256(keccak256('hevm cheat code'))))));
 
     function underlying() internal view returns(Vm _vm) {
