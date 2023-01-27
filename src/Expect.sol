@@ -68,6 +68,16 @@ struct _StringExpectationNot {
     string actual;
 }
 
+// TODO: move somewhere else?
+// Adapted from forge-std
+function abs(int256 a) pure returns (uint256) {
+    if (a == type(int256).min) {
+        return uint256(type(int256).max) + 1;
+    }
+
+    return uint256(a > 0 ? a : -a);
+}
+
 library ExpectLib {
     using TestLib for _T;
 
@@ -78,6 +88,15 @@ library ExpectLib {
             console.log("Error: a == b not satisfied [bool]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
+            vm.fail();
+        }
+    }
+
+    function toEqual(_BoolExpectationNot memory self, bool expected) internal {
+        if (self.actual == expected) {
+            console.log("Error: a != b not satisfied [bool]");
+            console.log("  Value a", expected);
+            console.log("  Value b", self.actual);
             vm.fail();
         }
     }
@@ -260,8 +279,8 @@ library ExpectLib {
         // TODO: test for int256 min
 
         // absolute values
-        uint256 a = uint256(self.actual < 0 ? -self.actual : self.actual);
-        uint256 b = uint256(expected < 0 ? -expected : expected);
+        uint256 a = abs(self.actual);
+        uint256 b = abs(expected);
 
         uint256 diff;
 
