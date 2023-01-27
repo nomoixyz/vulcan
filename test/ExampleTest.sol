@@ -52,9 +52,26 @@ contract ExampleTest is Test {
 
     function testSetNonce() external {
         uint64 nonce = 1337;
-        vm.setNonce(address(1), nonce);
+        address target = address(1);
 
-        expect(vm.getNonce(address(1))).toEqual(nonce);
+        expect(vm.setNonce(target, nonce).getNonce()).toEqual(nonce);
+    }
+
+    function testWrappedAddress() external {
+        uint256 balance = 1e18;
+        uint64 nonce = 1337;
+        address targetAddress = address(1);
+
+        address alice = vm.setBalance(targetAddress, balance).setNonce(nonce).unwrap();
+
+        expect(alice).toEqual(targetAddress);
+        expect(alice.balance).toEqual(balance);
+        expect(vm.getNonce(alice)).toEqual(nonce);
+
+        Sender sender = new Sender();
+        address bob = vm.impersonateOnce(address(2)).setNonce(nonce).setBalance(balance).unwrap();
+        expect(sender.get()).toEqual(bob);
+        expect(sender.get()).toEqual(address(this));
     }
 
     function testSetBlockBaseFee() external {
