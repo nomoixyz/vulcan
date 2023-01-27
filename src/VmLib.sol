@@ -34,7 +34,7 @@ library VmLib {
         }
     }
 
-    /// @notice gets the underlying VM from a variable of type `_T`
+    /// @notice extends the `_T` type so it can obtain the underlying VM
     function underlying(_T) internal view returns(Vm) {
         return underlying();
     }
