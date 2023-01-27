@@ -4,6 +4,7 @@ pragma solidity >=0.7.0;
 import "forge-std/Vm.sol";
 
 type _T is bytes32;
+type WrappedAddress is address;
 
 struct Log {
     bytes32[] topics;
@@ -51,6 +52,14 @@ library VmLib {
 
     function deriveAddress(_T, uint256 privKey) internal view returns (address) {
         return underlying().addr(privKey);
+    }
+
+    function getNonce(_T, WrappedAddress who) internal view returns (uint64) {
+        return getNonce(who);
+    }
+
+    function getNonce(WrappedAddress who) internal view returns (uint64) {
+        return getNonce(WrappedAddress.unwrap(who));
     }
 
     function getNonce(_T, address who) internal view returns (uint64) {
@@ -131,9 +140,24 @@ library VmLib {
     function getDeployedCode(_T, string calldata path) internal view returns (bytes memory) {
         return underlying().getDeployedCode(path);
     }
-    function label(_T, address who, string calldata lbl) internal {
-        underlying().label(who, lbl);
+
+    function label(_T, address who, string calldata lbl) internal returns (WrappedAddress) {
+        return label(who, lbl);
     }
+
+    function label(_T, WrappedAddress who, string calldata lbl) internal returns (WrappedAddress) {
+        return label(who, lbl);
+    }
+
+    function label(WrappedAddress who, string calldata lbl) internal returns (WrappedAddress) {
+        return label(WrappedAddress.unwrap(who), lbl);
+    }
+
+    function label(address who, string calldata lbl) internal returns (WrappedAddress) {
+        underlying().label(who, lbl);
+        return WrappedAddress.wrap(who);
+    }
+
     // Using the address that calls the test contract, has the next call (at this call depth only) create a transaction that can later be signed and sent onchain
     function broadcast(_T) internal {
         underlying().broadcast();
@@ -188,59 +212,122 @@ library VmLib {
         return self;
     }
 
-    function setNonce(_T, address addr, uint64 n) internal returns(address) {
+    function setNonce(_T, WrappedAddress addr, uint64 n) internal returns(WrappedAddress) {
         return setNonce(addr, n);
     }
-    function setNonce(address self, uint64 n) internal returns(address) {
+
+    function setNonce(WrappedAddress self, uint64 n) internal returns(WrappedAddress) {
+        return setNonce(WrappedAddress.unwrap(self), n);
+    }
+
+    function setNonce(_T, address addr, uint64 n) internal returns(WrappedAddress) {
+        return setNonce(addr, n);
+    }
+
+    function setNonce(address self, uint64 n) internal returns(WrappedAddress) {
         underlying().setNonce(self, n);
-        return self;
+        return WrappedAddress.wrap(self);
     }
 
-    function setBalance(address self, uint256 bal) internal returns(address) {
+    function setBalance(_T, WrappedAddress self, uint256 bal) internal returns(WrappedAddress) {
+        return setBalance(self, bal);
+    }
+
+    function setBalance(WrappedAddress self, uint256 bal) internal returns(WrappedAddress) {
+        return setBalance(WrappedAddress.unwrap(self), bal);
+    }
+
+    function setBalance(_T, address self, uint256 bal) internal returns(WrappedAddress) {
+        return setBalance(self, bal);
+    }
+
+    function setBalance(address self, uint256 bal) internal returns(WrappedAddress) {
         underlying().deal(self, bal);
-        return self;
+        return WrappedAddress.wrap(self);
     }
 
-    function impersonateOnce(_T, address sender) internal returns(address) {
+    function impersonateOnce(_T, WrappedAddress sender) internal returns(WrappedAddress) {
         return impersonateOnce(sender);
     }
 
-    function impersonateOnce(address self) internal returns(address) {
+    function impersonateOnce(WrappedAddress sender) internal returns(WrappedAddress) {
+        return impersonateOnce(WrappedAddress.unwrap(sender));
+    }
+
+    function impersonateOnce(_T, address sender) internal returns(WrappedAddress) {
+        return impersonateOnce(sender);
+    }
+
+    function impersonateOnce(address self) internal returns(WrappedAddress) {
         underlying().prank(self);
-        return self;
+        return WrappedAddress.wrap(self);
     }
 
     // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called
-    function impersonate(_T, address sender) internal returns(address) {
+    function impersonate(_T, WrappedAddress sender) internal returns(WrappedAddress) {
         return impersonate(sender);
     }
 
     // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called
-    function impersonate(address self) internal returns(address) {
+    function impersonate(WrappedAddress self) internal returns(WrappedAddress) {
+        return impersonate(WrappedAddress.unwrap(self));
+    }
+
+    // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called
+    function impersonate(_T, address sender) internal returns(WrappedAddress) {
+        return impersonate(sender);
+    }
+
+    // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called
+    function impersonate(address self) internal returns(WrappedAddress) {
         underlying().startPrank(self);
-        return self;
+        return WrappedAddress.wrap(self);
     }
 
     // Sets the *next* call's msg.sender to be the input address, and the tx.origin to be the second input
-    function impersonateOnce(_T, address sender, address origin) internal returns(address) {
+    function impersonateOnce(_T, WrappedAddress sender, address origin) internal returns(WrappedAddress) {
+        return impersonateOnce(sender, origin);
+    }
+    // Sets the *next* call's msg.sender to be the input address, and the tx.origin to be the second input
+
+    function impersonateOnce(WrappedAddress sender, address origin) internal returns(WrappedAddress) {
+        return impersonateOnce(WrappedAddress.unwrap(sender), origin);
+    }
+
+    // Sets the *next* call's msg.sender to be the input address, and the tx.origin to be the second input
+    function impersonateOnce(_T, address sender, address origin) internal returns(WrappedAddress) {
         return impersonateOnce(sender, origin);
     }
 
     // Sets the *next* call's msg.sender to be the input address, and the tx.origin to be the second input
-    function impersonateOnce(address self, address origin) internal returns(address) {
+    function impersonateOnce(address self, address origin) internal returns(WrappedAddress) {
         underlying().prank(self, origin);
-        return self;
+        return WrappedAddress.wrap(self);
     }
 
     // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called, and the tx.origin to be the second input
-    function impersonate(_T, address sender, address origin) internal returns(address) {
+    function impersonate(_T, WrappedAddress sender, address origin) internal returns(WrappedAddress) {
         return impersonate(sender, origin);
     }
 
     // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called, and the tx.origin to be the second input
-    function impersonate(address self, address origin) internal returns(address) {
+    function impersonate(WrappedAddress self, address origin) internal returns(WrappedAddress) {
+        return impersonateOnce(WrappedAddress.unwrap(self), origin);
+    }
+
+    // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called, and the tx.origin to be the second input
+    function impersonate(_T, address sender, address origin) internal returns(WrappedAddress) {
+        return impersonate(sender, origin);
+    }
+
+    // Sets all subsequent calls' msg.sender to be the input address until `stopPrank` is called, and the tx.origin to be the second input
+    function impersonate(address self, address origin) internal returns(WrappedAddress) {
         underlying().startPrank(self, origin);
-        return self;
+        return WrappedAddress.wrap(self);
+    }
+
+    function unwrap(WrappedAddress self) internal pure returns (address) {
+        return WrappedAddress.unwrap(self);
     }
 
     // Resets subsequent calls' msg.sender to be `address(this)`
@@ -256,3 +343,4 @@ library VmLib {
 _T constant vm = _T.wrap(bytes32(uint256(0)));
 
 using VmLib for _T global;
+using VmLib for WrappedAddress global;
