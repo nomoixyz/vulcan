@@ -247,6 +247,10 @@ library VmLib {
     function stopImpersonate(_T) internal {
         underlying().stopPrank();
     }
+
+    function assume(_T, bool condition) internal view {
+        underlying().assume(condition);
+    }
 }
 
 _T constant vm = _T.wrap(bytes32(uint256(0)));

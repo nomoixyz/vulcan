@@ -17,4 +17,8 @@ library TestLib {
     function fail(_T self) internal {
         address(self.underlying()).setStorage(GLOBAL_FAILED_SLOT, bytes32(uint256(1)));
     }
+
+    function clearFailure(_T self) internal {
+        address(self.underlying()).setStorage(GLOBAL_FAILED_SLOT, bytes32(uint256(0)));
+    }
 }
