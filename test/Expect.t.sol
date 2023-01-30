@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, _T, vm, console, TestLib } from  "../src/Sest.sol";
+import { Test, expect, _T, vm, console, TestLib } from  "../src/Vulcan.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract ExpectTest is Test {
@@ -22,129 +22,129 @@ contract ExpectTest is Test {
         vm.clearFailure();
     }
 
-    function testUintToEqualPasses(uint256 a) external {
+    function testUintToEqualPass(uint256 a) external {
         expect(a).toEqual(a);
     }
 
-    function testUintToEqualFails(uint256 a, uint256 b) external shouldFail {
+    function testUintToEqualFail(uint256 a, uint256 b) external shouldFail {
         vm.assume(a != b);
         expect(a).toEqual(b);
     }
 
-    function testUintNotToEqualPasses(uint256 a, uint256 b) external {
+    function testUintNotToEqualPass(uint256 a, uint256 b) external {
         vm.assume(a != b);
         expect(a).not.toEqual(b);
     }
 
-    function testUintNotToEqualFails(uint256 a) external shouldFail {
+    function testUintNotToEqualFail(uint256 a) external shouldFail {
         expect(a).not.toEqual(a);
     }
 
-    function testUintToBeCloseToPasses(uint256 a, uint256 b, uint256 delta) external {
+    function testUintToBeCloseToPass(uint256 a, uint256 b, uint256 delta) external {
         vm.assume((a < b ? b - a : a - b) <= delta);
         expect(a).toBeCloseTo(b, delta);
     }
 
-    function testUintToBeCloseToFails(uint256 a, uint256 b, uint256 delta) external shouldFail {
+    function testUintToBeCloseToFail(uint256 a, uint256 b, uint256 delta) external shouldFail {
         vm.assume((a < b ? b - a : a - b) > delta);
         expect(a).toBeCloseTo(b, delta);
     }
 
-    function testUintToBeLessThanPasses(uint256 a, uint256 b) external {
+    function testUintToBeLessThanPass(uint256 a, uint256 b) external {
         vm.assume(a < b);
         expect(a).toBeLessThan(b);
     }
 
-    function testUintToBeLessThanOrEqualPasses(uint256 a, uint256 b) external {
+    function testUintToBeLessThanOrEqualPass(uint256 a, uint256 b) external {
         vm.assume(a <= b);
         expect(a).toBeLessThanOrEqual(b);
         expect(a).toBeLessThanOrEqual(a);
     }
 
-    function testUintToBeGreaterThanPasses(uint256 a, uint256 b) external {
+    function testUintToBeGreaterThanPass(uint256 a, uint256 b) external {
         vm.assume(a > b);
         expect(a).toBeGreaterThan(b);
     }
 
-    function testUintToBeGreaterThanOrEqualPasses(uint256 a, uint256 b) external {
+    function testUintToBeGreaterThanOrEqualPass(uint256 a, uint256 b) external {
         vm.assume(a >= b);
         expect(a).toBeGreaterThanOrEqual(b);
         expect(a).toBeGreaterThanOrEqual(a);
     }
 
 
-    function testIntToEqualPasses(int256 a) external {
+    function testIntToEqualPass(int256 a) external {
         expect(a).toEqual(a);
     }
 
-    function testIntToEqualFails(int256 a, int256 b) external shouldFail {
+    function testIntToEqualFail(int256 a, int256 b) external shouldFail {
         vm.assume(a != b);
         expect(a).toEqual(b);
     }
 
-    function testIntNotToEqualPasses(int256 a, int256 b) external {
+    function testIntNotToEqualPass(int256 a, int256 b) external {
         vm.assume(a != b);
         expect(a).not.toEqual(b);
     }
 
-    function testIntNotToEqualFails(int256 a) external shouldFail {
+    function testIntNotToEqualFail(int256 a) external shouldFail {
         expect(a).not.toEqual(a);
     }
 
-    function testIntToBeCloseToPasses(int256 a, int256 b, uint256 delta) external {
+    function testIntToBeCloseToPass(int256 a, int256 b, uint256 delta) external {
         // vm.assume( <= delta);
         // expect(a).toBeCloseTo(b, delta);
     }
 
-    function testIntToBeCloseToFails(int256 a, uint256 delta, bool add) external shouldFail {
+    function testIntToBeCloseToFail(int256 a, uint256 delta, bool add) external shouldFail {
 
         // TODO: better fuzzing
 
     }
 
-    function testIntToBeLessThanPasses(int256 a, int256 b) external {
+    function testIntToBeLessThanPass(int256 a, int256 b) external {
         vm.assume(a < b);
         expect(a).toBeLessThan(b);
     }
 
-    function testIntToBeLessThanFails(int256 a, int256 b) external shouldFail {
+    function testIntToBeLessThanFail(int256 a, int256 b) external shouldFail {
         vm.assume(a >= b);
         expect(a).toBeLessThan(b);
     }
 
-    function testIntToBeLessThanOrEqualPasses(int256 a, int256 b) external {
+    function testIntToBeLessThanOrEqualPass(int256 a, int256 b) external {
         vm.assume(a <= b);
         expect(a).toBeLessThanOrEqual(b);
         expect(a).toBeLessThanOrEqual(a);
     }
 
-    function testIntToBeLessThanOrEqualFails(int256 a, int256 b) external shouldFail {
+    function testIntToBeLessThanOrEqualFail(int256 a, int256 b) external shouldFail {
         vm.assume(a > b);
         expect(a).toBeLessThanOrEqual(b);
     }
 
-    function testIntToBeGreaterThanPasses(int256 a, int256 b) external {
+    function testIntToBeGreaterThanPass(int256 a, int256 b) external {
         vm.assume(a > b);
         expect(a).toBeGreaterThan(b);
     }
 
-    function testIntToBeGreaterThanFails(int256 a, int256 b) external shouldFail {
+    function testIntToBeGreaterThanFail(int256 a, int256 b) external shouldFail {
         vm.assume(a <= b);
         expect(a).toBeGreaterThan(b);
     }
 
-    function testIntToBeGreaterThanOrEqualPasses(int256 a, int256 b) external {
+    function testIntToBeGreaterThanOrEqualPass(int256 a, int256 b) external {
         vm.assume(a >= b);
         expect(a).toBeGreaterThanOrEqual(b);
         expect(a).toBeGreaterThanOrEqual(a);
     }
 
-    function testIntToBeGreaterThanOrEqualFails(int256 a, int256 b) external shouldFail {
+    function testIntToBeGreaterThanOrEqualFail(int256 a, int256 b) external shouldFail {
         vm.assume(a < b);
         expect(a).toBeGreaterThanOrEqual(b);
     }
 
-    function testBoolToEqualPasses(bool a) external {
+    function testBoolToEqualPass(bool a) external {
         if (a) {
             expect(a).toEqual(true);
             expect(a).toBeTrue();
@@ -153,4 +153,77 @@ contract ExpectTest is Test {
             expect(a).toBeFalse();
         }
     }
+
+    /* BYTES32 */
+
+    function testBytes32ToEqualPass(bytes32 a) external {
+        expect(a).toEqual(a);
+    }
+
+    function testBytes32ToEqualFail(bytes32 a, bytes32 b) external shouldFail {
+        vm.assume(a != b);
+        expect(a).toEqual(b);
+    }
+
+    function testBytes32NotToEqualPass(bytes32 a, bytes32 b) external {
+        vm.assume(a != b);
+        expect(a).not.toEqual(b);
+    } 
+
+    function testBytes32NotToEqualFail(bytes32 a) external shouldFail {
+        expect(a).not.toEqual(a);
+    }
+
+    function testBytes32ToBeTheHashOfPass(bytes32 a, bytes memory b) external {
+        vm.assume(keccak256(b) == a);
+        expect(a).toBeTheHashOf(b);
+    }
+
+    function testBytes32ToBeTheHashOfFail(bytes32 a, bytes memory b) external shouldFail {
+        vm.assume(keccak256(b) != a);
+        expect(a).toBeTheHashOf(b);
+    }
+
+    function testBytes32NotToBeTheHashOfPass(bytes32 a, bytes memory b) external {
+        vm.assume(keccak256(b) != a);
+        expect(a).not.toBeTheHashOf(b);
+    }
+
+    /* STRING */
+
+    function testStringToEqualPass(string memory a) external {
+        expect(a).toEqual(a);
+    }
+
+    function testStringToEqualFail(string memory a, string memory b) external shouldFail {
+        vm.assume(keccak256(bytes(a)) != keccak256(bytes(b)));
+        expect(a).toEqual(b);
+    }
+
+    function testStringNotToEqualPass(string memory a, string memory b) external {
+        vm.assume(keccak256(bytes(a)) != keccak256(bytes(b)));
+        expect(a).not.toEqual(b);
+    }
+
+    function testStringNotToEqualFail(string memory a) external shouldFail {
+        expect(a).not.toEqual(a);
+    }
+
+    function testStringToContainPass(string memory a, string memory b, string memory c) external {
+        expect(string.concat(a, b, c)).toContain(b);
+    }
+
+    function testStringToContainFail(string memory a) external shouldFail {
+        // TODO
+    }
+
+    function testStringToHaveLengthPass(string memory a) external {
+        expect(a).toHaveLength(bytes(a).length);
+    }
+
+    function testStringToHaveLengthFail(string memory a, uint256 len) external shouldFail {
+        vm.assume(len != bytes(a).length);
+        expect(a).toHaveLength(len);
+    }
+
 }

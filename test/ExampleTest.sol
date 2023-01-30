@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, _T, vm, console, TestLib } from  "../src/Sest.sol";
+import { Test, expect, _T, vm, console, TestLib } from  "../src/Vulcan.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 library TestExtension {
@@ -52,9 +52,24 @@ contract ExampleTest is Test {
 
     function testSetNonce() external {
         uint64 nonce = 1337;
-        vm.setNonce(address(1), nonce);
+        address target = address(1);
 
-        expect(vm.getNonce(address(1))).toEqual(nonce);
+        expect(vm.setNonce(target, nonce).getNonce()).toEqual(nonce);
+    }
+
+    function testWrappedAddress() external {
+        uint256 balance = 1e18;
+        uint64 nonce = 1337;
+
+        address alice = vm.createAddress("ALICE").setBalance(balance).setNonce(nonce).unwrap();
+
+        expect(alice.balance).toEqual(balance);
+        expect(vm.getNonce(alice)).toEqual(nonce);
+
+        Sender sender = new Sender();
+        address bob = vm.createAddress("BOB").impersonateOnce().setNonce(nonce).setBalance(balance).unwrap();
+        expect(sender.get()).toEqual(bob);
+        expect(sender.get()).toEqual(address(this));
     }
 
     function testSetBlockBaseFee() external {

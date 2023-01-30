@@ -145,6 +145,44 @@ library ExpectLib {
         }
     }
 
+    /* BYTES32 */
+
+    function toEqual(_Bytes32Expectation memory self, bytes32 expected) internal {
+        if (self.actual != expected) {
+            console.log("Error: a == b not satisfied [bytes32]");
+            console.log("  Expected", expected);
+            console.log("    Actual", self.actual);
+            vm.fail();
+        }
+    }
+
+    function toEqual(_Bytes32ExpectationNot memory self, bytes32 expected) internal {
+        if (self.actual == expected) {
+            console.log("Error: a != b not satisfied [bytes32]");
+            console.log("  Value a", expected);
+            console.log("  Value b", self.actual);
+            vm.fail();
+        }
+    }
+
+    function toBeTheHashOf(_Bytes32Expectation memory self, bytes memory data) internal {
+        if (self.actual != keccak256(data)) {
+            console.log("Error: a is not the hash of b [bytes32]");
+            console.log("  Expected", keccak256(data));
+            console.log("    Actual", self.actual);
+            vm.fail();
+        }
+    }
+
+    function toBeTheHashOf(_Bytes32ExpectationNot memory self, bytes memory data) internal {
+        if (self.actual == keccak256(data)) {
+            console.log("Error: a is the hash of b [bytes32]");
+            console.log("  Value a", keccak256(data));
+            console.log("  Value b", self.actual);
+            vm.fail();
+        }
+    }
+
     /* BYTES */
 
     function toEqual(_BytesExpectation memory self, bytes memory expected) internal {
@@ -181,6 +219,46 @@ library ExpectLib {
             console.log("Error: a != b not satisfied [string]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
+            vm.fail();
+        }
+    }
+
+    function toContain(_StringExpectation memory self, string memory contained) internal {
+        if (bytes(self.actual).length < bytes(contained).length) {
+            console.log("Error: a does not contain b [string]");
+            console.log("  Value a", self.actual);
+            console.log("  Value b", contained);
+            vm.fail();
+        }
+
+        // TODO: optimize
+        bool found = false;
+        for (uint256 i = 0; i < bytes(self.actual).length - bytes(contained).length + 1; i++) {
+            found = true;
+            for (uint256 j = 0; j < bytes(contained).length; j++) {
+                if (bytes(self.actual)[i + j] != bytes(contained)[j]) {
+                    found = false;
+                    break;
+                }
+            }
+            if (found) {
+                break;
+            }
+        }
+
+        if (!found) {
+            console.log("Error: a does not contain b [string]");
+            console.log("  Value a", self.actual);
+            console.log("  Value b", contained);
+            vm.fail();
+        }
+    }
+
+    function toHaveLength(_StringExpectation memory self, uint256 expected) internal {
+        if (bytes(self.actual).length != expected) {
+            console.log("Error: a.length != b [string]");
+            console.log("  Expected", expected);
+            console.log("    Actual", bytes(self.actual).length);
             vm.fail();
         }
     }
@@ -419,6 +497,10 @@ function expect(address actual) pure returns (_AddressExpectation memory) {
     return _AddressExpectation(actual, _AddressExpectationNot(actual));
 }
 
+function expect(bytes32 actual) pure returns (_Bytes32Expectation memory) {
+    return _Bytes32Expectation(actual, _Bytes32ExpectationNot(actual));
+}
+
 function expect(bytes memory actual) pure returns (_BytesExpectation memory) {
     return _BytesExpectation(actual, _BytesExpectationNot(actual));
 }
@@ -435,6 +517,8 @@ using ExpectLib for _IntExpectation global;
 using ExpectLib for _IntExpectationNot global;
 using ExpectLib for _AddressExpectation global;
 using ExpectLib for _AddressExpectationNot global;
+using ExpectLib for _Bytes32Expectation global;
+using ExpectLib for _Bytes32ExpectationNot global;
 using ExpectLib for _BytesExpectation global;
 using ExpectLib for _BytesExpectationNot global;
 using ExpectLib for _StringExpectation global;

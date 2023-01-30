@@ -4,6 +4,7 @@ pragma solidity >=0.7.0;
 import "forge-std/Vm.sol";
 
 type _T is bytes32;
+type WrappedAddress is address;
 
 /// @dev struct that represent a log
 struct Log {
@@ -22,7 +23,7 @@ struct Rpc {
 /// @dev Main entry point to vm functionality
 library VmLib {
     /// @dev sest VM storage slot
-    uint256 internal constant VM_SLOT = uint256(keccak256("sest.vm.slot")); 
+    uint256 internal constant VM_SLOT = uint256(keccak256("vulcan.vm.slot")); 
     /// @dev forge-std VM
     Vm internal constant DEFAULT_VM = Vm(address(bytes20(uint160(uint256(keccak256('hevm cheat code'))))));
 
@@ -70,6 +71,20 @@ library VmLib {
     /// @return the address derived from `privKey`
     function deriveAddress(_T, uint256 privKey) internal view returns (address) {
         return underlying().addr(privKey);
+    }
+
+    /// @dev obtains the nonce of the address `who`
+    /// @param who the target address
+    /// @return the nonce of address `who`
+    function getNonce(_T, WrappedAddress who) internal view returns (uint64) {
+        return getNonce(who);
+    }
+
+    /// @dev obtains the nonce of the address `who`
+    /// @param who the target address
+    /// @return the nonce of address `who`
+    function getNonce(WrappedAddress who) internal view returns (uint64) {
+        return getNonce(WrappedAddress.unwrap(who));
     }
 
     /// @dev obtains the nonce of the address `who`
@@ -230,11 +245,45 @@ library VmLib {
         return underlying().getDeployedCode(path);
     }
 
+    /// @dev creates a wrapped address from `name`
+    function createAddress(_T self, string memory name) internal returns (WrappedAddress) {
+        return createAddress(self, name, name);
+    }
+
+    /// @dev creates a wrapped address from `name` and labels it with `lbl`
+    function createAddress(_T self, string memory name, string memory lbl) internal returns (WrappedAddress) {
+        address addr = deriveAddress(self, uint256(keccak256(abi.encodePacked(name))));
+
+        return label(addr, lbl);
+    }
+
     /// @dev labels the address `who` with label `lbl`
     /// @param who the address to label
     /// @param lbl the new label for address `who`
-    function label(_T, address who, string calldata lbl) internal {
+    function label(_T, address who, string memory lbl) internal returns (WrappedAddress) {
+        return label(who, lbl);
+    }
+
+    /// @dev labels the address `who` with label `lbl`
+    /// @param who the address to label
+    /// @param lbl the new label for address `who`
+    function label(_T, WrappedAddress who, string memory lbl) internal returns (WrappedAddress) {
+        return label(who, lbl);
+    }
+
+    /// @dev labels the address `who` with label `lbl`
+    /// @param who the address to label
+    /// @param lbl the new label for address `who`
+    function label(WrappedAddress who, string memory lbl) internal returns (WrappedAddress) {
+        return label(WrappedAddress.unwrap(who), lbl);
+    }
+
+    /// @dev labels the address `who` with label `lbl`
+    /// @param who the address to label
+    /// @param lbl the new label for address `who`
+    function label(address who, string memory lbl) internal returns (WrappedAddress) {
         underlying().label(who, lbl);
+        return WrappedAddress.wrap(who);
     }
 
     /// @dev Using the address that calls the test contract, has the next call (at this call depth only) create a transaction that can later be signed and sent onchain
@@ -320,63 +369,147 @@ library VmLib {
     /// @param addr the address that will be updated
     /// @param n the new nonce
     /// @return the address that was updated
-    function setNonce(_T, address addr, uint64 n) internal returns(address) {
+    function setNonce(_T, WrappedAddress addr, uint64 n) internal returns(WrappedAddress) {
         return setNonce(addr, n);
     }
 
     /// @dev sets the nonce of the address `addr` to `n`
     /// @param self the address that will be updated
     /// @param n the new nonce
-    /// @return the address that was updated so other methods can be chained
-    function setNonce(address self, uint64 n) internal returns(address) {
+    /// @return the address that was updated
+    function setNonce(WrappedAddress self, uint64 n) internal returns(WrappedAddress) {
+        return setNonce(WrappedAddress.unwrap(self), n);
+    }
+
+    /// @dev sets the nonce of the address `addr` to `n`
+    /// @param addr the address that will be updated
+    /// @param n the new nonce
+    /// @return the address that was updated
+    function setNonce(_T, address addr, uint64 n) internal returns(WrappedAddress) {
+        return setNonce(addr, n);
+    }
+
+    /// @dev sets the nonce of the address `addr` to `n`
+    /// @param self the address that will be updated
+    /// @param n the new nonce
+    /// @return the address that was updated
+    function setNonce(address self, uint64 n) internal returns(WrappedAddress) {
         underlying().setNonce(self, n);
-        return self;
+        return WrappedAddress.wrap(self);
     }
 
     /// @dev sets the balance of the address `addr` to `bal`
-    /// @param addr the address that will be updated
+    /// @param self the address that will be updated
     /// @param bal the new balance
     /// @return the address that was updated
-    function setBalance(address self, uint256 bal) internal returns(address) {
+    function setBalance(_T, WrappedAddress self, uint256 bal) internal returns(WrappedAddress) {
+        return setBalance(self, bal);
+    }
+
+    /// @dev sets the balance of the address `addr` to `bal`
+    /// @param self the address that will be updated
+    /// @param bal the new balance
+    /// @return the address that was updated
+    function setBalance(WrappedAddress self, uint256 bal) internal returns(WrappedAddress) {
+        return setBalance(WrappedAddress.unwrap(self), bal);
+    }
+
+    /// @dev sets the balance of the address `addr` to `bal`
+    /// @param self the address that will be updated
+    /// @param bal the new balance
+    /// @return the address that was updated
+    function setBalance(_T, address self, uint256 bal) internal returns(WrappedAddress) {
+        return setBalance(self, bal);
+    }
+
+    /// @dev sets the balance of the address `addr` to `bal`
+    /// @param self the address that will be updated
+    /// @param bal the new balance
+    /// @return the address that was updated
+    function setBalance(address self, uint256 bal) internal returns(WrappedAddress) {
         underlying().deal(self, bal);
-        return self;
+        return WrappedAddress.wrap(self);
     }
 
     /// @dev sets the next call's `msg.sender` to `sender`
     /// @param sender the address to set the `msg.sender`
     /// @return the `msg.sender` for the next call
-    function impersonateOnce(_T, address sender) internal returns(address) {
+    function impersonateOnce(_T, WrappedAddress sender) internal returns(WrappedAddress) {
+        return impersonateOnce(sender);
+    }
+
+    /// @dev sets the next call's `msg.sender` to `sender`
+    /// @param sender the address to set the `msg.sender`
+    /// @return the `msg.sender` for the next call
+    function impersonateOnce(WrappedAddress sender) internal returns(WrappedAddress) {
+        return impersonateOnce(WrappedAddress.unwrap(sender));
+    }
+
+    /// @dev sets the next call's `msg.sender` to `sender`
+    /// @param sender the address to set the `msg.sender`
+    /// @return the `msg.sender` for the next call
+    function impersonateOnce(_T, address sender) internal returns(WrappedAddress) {
         return impersonateOnce(sender);
     }
 
     /// @dev sets the next call's `msg.sender` to `sender`
     /// @param self the address to set the `msg.sender`
     /// @return the `msg.sender` for the next call
-    function impersonateOnce(address self) internal returns(address) {
+    function impersonateOnce(address self) internal returns(WrappedAddress) {
         underlying().prank(self);
-        return self;
+        return WrappedAddress.wrap(self);
     }
 
     /// @dev sets all subsequent call's `msg.sender` to `sender` until `stopPrank` is called
     /// @param sender the address to set the `msg.sender`
     /// @return the `msg.sender` for the next calls
-    function impersonate(_T, address sender) internal returns(address) {
+    function impersonate(_T, WrappedAddress sender) internal returns(WrappedAddress) {
         return impersonate(sender);
     }
 
     /// @dev sets all subsequent call's `msg.sender` to `sender` until `stopPrank` is called
     /// @param self the address to set the `msg.sender`
     /// @return the `msg.sender` for the next calls
-    function impersonate(address self) internal returns(address) {
+    function impersonate(WrappedAddress self) internal returns(WrappedAddress) {
+        return impersonate(WrappedAddress.unwrap(self));
+    }
+
+    /// @dev sets all subsequent call's `msg.sender` to `sender` until `stopPrank` is called
+    /// @param sender the address to set the `msg.sender`
+    /// @return the `msg.sender` for the next calls
+    function impersonate(_T, address sender) internal returns(WrappedAddress) {
+        return impersonate(sender);
+    }
+
+    /// @dev sets all subsequent call's `msg.sender` to `sender` until `stopPrank` is called
+    /// @param self the address to set the `msg.sender`
+    /// @return the `msg.sender` for the next calls
+    function impersonate(address self) internal returns(WrappedAddress) {
         underlying().startPrank(self);
-        return self;
+        return WrappedAddress.wrap(self);
     }
 
     /// @dev sets the next call's `msg.sender` to `sender` and `tx.origin` to `origin`
     /// @param sender the address to set the `msg.sender`
     /// @param origin the address to set the `tx.origin`
     /// @return the `msg.sender` for the next call
-    function impersonateOnce(_T, address sender, address origin) internal returns(address) {
+    function impersonateOnce(_T, WrappedAddress sender, address origin) internal returns(WrappedAddress) {
+        return impersonateOnce(sender, origin);
+    }
+
+    /// @dev sets the next call's `msg.sender` to `sender` and `tx.origin` to `origin`
+    /// @param sender the address to set the `msg.sender`
+    /// @param origin the address to set the `tx.origin`
+    /// @return the `msg.sender` for the next call
+    function impersonateOnce(WrappedAddress sender, address origin) internal returns(WrappedAddress) {
+        return impersonateOnce(WrappedAddress.unwrap(sender), origin);
+    }
+
+    /// @dev sets the next call's `msg.sender` to `sender` and `tx.origin` to `origin`
+    /// @param sender the address to set the `msg.sender`
+    /// @param origin the address to set the `tx.origin`
+    /// @return the `msg.sender` for the next call
+    function impersonateOnce(_T, address sender, address origin) internal returns(WrappedAddress) {
         return impersonateOnce(sender, origin);
     }
 
@@ -384,16 +517,16 @@ library VmLib {
     /// @param self the address to set the `msg.sender`
     /// @param origin the address to set the `tx.origin`
     /// @return the `msg.sender` for the next call
-    function impersonateOnce(address self, address origin) internal returns(address) {
+    function impersonateOnce(address self, address origin) internal returns(WrappedAddress) {
         underlying().prank(self, origin);
-        return self;
+        return WrappedAddress.wrap(self);
     }
 
     /// @dev sets all subsequent call's `msg.sender` to `sender` and `tx.origin` to `origin` until `stopPrank` is called
     /// @param sender the address to set the `msg.sender`
     /// @param origin the address to set the `tx.origin`
     /// @return the `msg.sender` for the next calls
-    function impersonate(_T, address sender, address origin) internal returns(address) {
+    function impersonate(_T, WrappedAddress sender, address origin) internal returns(WrappedAddress) {
         return impersonate(sender, origin);
     }
 
@@ -401,9 +534,30 @@ library VmLib {
     /// @param self the address to set the `msg.sender`
     /// @param origin the address to set the `tx.origin`
     /// @return the `msg.sender` for the next calls
-    function impersonate(address self, address origin) internal returns(address) {
+    function impersonate(WrappedAddress self, address origin) internal returns(WrappedAddress) {
+        return impersonateOnce(WrappedAddress.unwrap(self), origin);
+    }
+
+    /// @dev sets all subsequent call's `msg.sender` to `sender` and `tx.origin` to `origin` until `stopPrank` is called
+    /// @param sender the address to set the `msg.sender`
+    /// @param origin the address to set the `tx.origin`
+    /// @return the `msg.sender` for the next calls
+    function impersonate(_T, address sender, address origin) internal returns(WrappedAddress) {
+        return impersonate(sender, origin);
+    }
+
+    /// @dev sets all subsequent call's `msg.sender` to `sender` and `tx.origin` to `origin` until `stopPrank` is called
+    /// @param self the address to set the `msg.sender`
+    /// @param origin the address to set the `tx.origin`
+    /// @return the `msg.sender` for the next calls
+    function impersonate(address self, address origin) internal returns(WrappedAddress) {
         underlying().startPrank(self, origin);
-        return self;
+        return WrappedAddress.wrap(self);
+    }
+
+    /// @dev unwraps a `WrappedAddress` to return a native `address`
+    function unwrap(WrappedAddress self) internal pure returns (address) {
+        return WrappedAddress.unwrap(self);
     }
 
     /// @dev resets the values of `msg.sender` and `tx.origin` to their original values
@@ -419,3 +573,4 @@ library VmLib {
 _T constant vm = _T.wrap(bytes32(uint256(0)));
 
 using VmLib for _T global;
+using VmLib for WrappedAddress global;

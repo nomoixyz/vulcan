@@ -5,7 +5,7 @@ import "./VmLib.sol";
 import "./ConsoleLib.sol";
 import "./TestLib.sol";
 
-// @dev Main entry point to sest tests
+// @dev Main entry point to Vulcan tests
 contract Test {
     using TestLib for _T;
     using VmLib for _T;
