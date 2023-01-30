@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import { Vm } from  "../Vulcan.sol";
+import { Vm } from  "../lib.sol";
 
 // Intercept calls to the VM
 // This could be useful to add functionality to the VM but also for debugging (adding logs before/after calls, etc)

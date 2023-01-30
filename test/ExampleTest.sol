@@ -1,22 +1,23 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, _T, vm, console, TestLib } from  "../src/Vulcan.sol";
+import { Test, expect, VulcanVmTest, console, vulcan } from  "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 library TestExtension {
-    function increaseBlockTimestamp(_T self, uint256 increase) internal returns(_T) {
+    using vulcan for *;
+    function increaseBlockTimestamp(VulcanVmTest self, uint256 increase) internal returns(VulcanVmTest) {
         self.setBlockTimestamp(block.timestamp + increase);
         return self;
     }
 }
 
-using TestExtension for _T;
+using TestExtension for VulcanVmTest;
 
 contract ExampleTest is Test {
-    using TestLib for _T;
+    using vulcan for *;
 
     function beforeEach() internal view override {
-        console.log("before each");
+        // console.log("before each");
     }
 
     function testIncreaseTime() external {
@@ -61,13 +62,13 @@ contract ExampleTest is Test {
         uint256 balance = 1e18;
         uint64 nonce = 1337;
 
-        address alice = vm.createAddress("ALICE").setBalance(balance).setNonce(nonce).unwrap();
+        address alice = vm.createAddress("ALICE").setBalance(balance).setNonce(nonce);
 
         expect(alice.balance).toEqual(balance);
         expect(vm.getNonce(alice)).toEqual(nonce);
 
         Sender sender = new Sender();
-        address bob = vm.createAddress("BOB").impersonateOnce().setNonce(nonce).setBalance(balance).unwrap();
+        address bob = vm.createAddress("BOB").impersonateOnce().setNonce(nonce).setBalance(balance);
         expect(sender.get()).toEqual(bob);
         expect(sender.get()).toEqual(address(this));
     }
