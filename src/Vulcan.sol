@@ -111,49 +111,49 @@ library vulcan {
     /// @dev Reads the environment variable with name `name` and returns the value as `bool`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `bool`
-    function envBool(string calldata name) internal view returns (bool) {
+    function envBool(VulcanVmCommon, string calldata name) internal view returns (bool) {
         return vm().envBool(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `uint256`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `uint256`
-    function envUint(string calldata name) internal view returns (uint256) {
+    function envUint(VulcanVmCommon, string calldata name) internal view returns (uint256) {
         return vm().envUint(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `int256`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `int256`
-    function envInt(string calldata name) internal view returns (int256) {
+    function envInt(VulcanVmCommon, string calldata name) internal view returns (int256) {
         return vm().envInt(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `address`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `address`
-    function envAddress(string calldata name) internal view returns (address) {
+    function envAddress(VulcanVmCommon, string calldata name) internal view returns (address) {
         return vm().envAddress(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `bytes32`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `bytes32`
-    function envBytes32(string calldata name) internal view returns (bytes32) {
+    function envBytes32(VulcanVmCommon, string calldata name) internal view returns (bytes32) {
         return vm().envBytes32(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `string`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `string`
-    function envString(string calldata name) internal view returns (string memory) {
+    function envString(VulcanVmCommon, string calldata name) internal view returns (string memory) {
         return vm().envString(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `bytes`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `bytes`
-    function envBytes(string calldata name) internal view returns (bytes memory) {
+    function envBytes(VulcanVmCommon, string calldata name) internal view returns (bytes memory) {
         return vm().envBytes(name);
     }
 
@@ -161,7 +161,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `bool[]`
-    function envBool(string calldata name, string calldata delim) internal view returns (bool[] memory) {
+    function envBool(VulcanVmCommon, string calldata name, string calldata delim) internal view returns (bool[] memory) {
         return vm().envBool(name, delim);
     }
 
@@ -169,7 +169,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `uint256[]`
-    function envUint(string calldata name, string calldata delim) internal view returns (uint256[] memory) {
+    function envUint(VulcanVmCommon, string calldata name, string calldata delim) internal view returns (uint256[] memory) {
         return vm().envUint(name, delim);
     }
 
@@ -177,7 +177,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `int256[]`
-    function envInt(string calldata name, string calldata delim) internal view returns (int256[] memory) {
+    function envInt(VulcanVmCommon, string calldata name, string calldata delim) internal view returns (int256[] memory) {
         return vm().envInt(name, delim);
     }
 
@@ -185,7 +185,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `address[]`
-    function envAddress(string calldata name, string calldata delim) internal view returns (address[] memory) {
+    function envAddress(VulcanVmCommon, string calldata name, string calldata delim) internal view returns (address[] memory) {
         return vm().envAddress(name, delim);
     }
 
@@ -193,7 +193,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `bytes32[]`
-    function envBytes32(string calldata name, string calldata delim) internal view returns (bytes32[] memory) {
+    function envBytes32(VulcanVmCommon, string calldata name, string calldata delim) internal view returns (bytes32[] memory) {
         return vm().envBytes32(name, delim);
     }
 
@@ -201,7 +201,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `string[]`
-    function envString(string calldata name, string calldata delim) internal view returns (string[] memory) {
+    function envString(VulcanVmCommon, string calldata name, string calldata delim) internal view returns (string[] memory) {
         return vm().envString(name, delim);
     }
 
@@ -209,13 +209,20 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `bytes[]`
-    function envBytes(string calldata name, string calldata delim) internal view returns (bytes[] memory) {
+    function envBytes(VulcanVmCommon, string calldata name, string calldata delim) internal view returns (bytes[] memory) {
         return vm().envBytes(name, delim);
     }
 
     /// @dev records all storage reads and writes
     function recordStorage(VulcanVmCommon) internal {
         vm().record();
+    }
+
+    /// @dev obtains all reads and writes to the storage from address `who`
+    /// @param who the target address to read all accesses to the storage
+    /// @return reads and writes in the form of (bytes32[] reads, bytes32[] writes)
+    function getStorageAccesses(VulcanVmCommon, address who) internal returns (bytes32[] memory reads, bytes32[] memory writes) {
+        return vm().accesses(who);
     }
 
     /// @dev obtains all reads and writes to the storage from address `who`
@@ -289,6 +296,95 @@ library vulcan {
 
     function stopBroadcast(VulcanVmCommon) internal {
         vm().stopBroadcast();
+    }
+
+    function readFile(VulcanVmCommon, string memory path) internal view returns (string memory) {
+        return vm().readFile(path);
+    }
+
+    function readFileBinary(VulcanVmCommon, string memory path) external view returns (bytes memory) {
+        return vm().readFileBinary(path);
+    }
+
+    function projectRoot(VulcanVmCommon) external view returns (string memory) {
+        return vm().projectRoot();
+    }
+
+    function readLine(VulcanVmCommon, string calldata path) external view returns (string memory) {
+        return vm().readLine(path);
+    }
+
+    function writeFile(VulcanVmCommon, string calldata path, string calldata data) external {
+        vm().writeFile(path, data);
+    }
+
+    function writeFileBinary(VulcanVmCommon, string calldata path, bytes calldata data) external {
+        vm().writeFileBinary(path, data);
+    }
+    function writeLine(VulcanVmCommon, string calldata path, string calldata data) external {
+        vm().writeLine(path, data);
+    }
+    function closeFile(VulcanVmCommon, string calldata path) external {
+        vm().closeFile(path);
+    }
+    function removeFile(VulcanVmCommon, string calldata path) external {
+        vm().removeFile(path);
+    }
+    function toString(VulcanVmCommon, address value) external view returns (string memory) {
+        return vm().toString(value);
+    }
+    function toString(VulcanVmCommon, bytes calldata value) external view returns (string memory) {
+        return vm().toString(value);
+    }
+
+    function toString(VulcanVmCommon, bytes32 value) external view returns (string memory) {
+        return vm().toString(value);
+    }
+    function toString(VulcanVmCommon, bool value) external view returns (string memory) {
+        return vm().toString(value);
+    }
+    function toString(VulcanVmCommon, uint256 value) external view returns (string memory) {
+        return vm().toString(value);
+    }
+    function toString(VulcanVmCommon, int256 value) external view returns (string memory) {
+        return vm().toString(value);
+    }
+    function parseBytes(VulcanVmCommon, string calldata value) external view returns (bytes memory) {
+        return vm().parseBytes(value);
+    }
+    function parseAddress(VulcanVmCommon, string calldata value) external view returns (address) {
+        return vm().parseAddress(value);
+    }
+    function parseUint(VulcanVmCommon, string calldata value) external view returns (uint256) {
+        return vm().parseUint(value);
+    }
+    function parseInt(VulcanVmCommon, string calldata value) external view returns (int256) {
+        return vm().parseInt(value);
+    }
+    function parseBytes32(VulcanVmCommon, string calldata value) external view returns (bytes32) {
+        return vm().parseBytes32(value);
+    }
+    function parseBool(VulcanVmCommon, string calldata value) external view returns (bool) {
+        return vm().parseBool(value);
+    }
+    function recordLogs(VulcanVmCommon) external {
+        vm().recordLogs();
+    }
+    function getRecordedLogs(VulcanVmCommon) external returns (Log[] memory logs) {
+        Vm.Log[] memory recorded = vm().getRecordedLogs();
+        assembly {
+            logs := recorded
+        }
+    }
+    function deriveKey(VulcanVmCommon, string calldata mnemonicOrPath, uint32 index) external view returns (uint256) {
+        return vm().deriveKey(mnemonicOrPath, index);
+    }
+    function deriveKey(VulcanVmCommon, string calldata mnemonicOrPath, string calldata derivationPath, uint32 index) external view returns (uint256) {
+        return vm().deriveKey(mnemonicOrPath, derivationPath, index);
+    }
+
+    function rememberKey(VulcanVmCommon, uint256 privKey) external returns (address) {
+        return vm().rememberKey(privKey);
     }
 
     function assume(VulcanVmCommon, bool condition) internal view {
