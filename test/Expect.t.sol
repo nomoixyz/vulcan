@@ -1,11 +1,17 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, console, vulcan, Call, CallProxy } from  "../src/lib.sol";
+import { Test, expect, console, vulcan, Call } from  "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract CallTest {
+    uint256 num = 69;
+
     function ok() external returns (uint256) {
-        return 1;
+        uint256 val = uint256(keccak256(abi.encodePacked(num)));
+
+        num = val;
+
+        return val;
     }
 
     function err() external {
@@ -241,7 +247,9 @@ contract ExpectTest is Test {
         t.err();
 
         expect(functionCall).toHaveReverted();
+
         uint256 result = t.ok();
-        expect(functionCall).toHaveReverted();
+        expect(result).toEqual(uint256(keccak256(abi.encodePacked(uint256(69)))));
+        expect(t.ok()).toEqual(uint256(keccak256(abi.encodePacked(uint256(result)))));
     }
 }

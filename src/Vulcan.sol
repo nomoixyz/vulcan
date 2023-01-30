@@ -2,6 +2,7 @@
 pragma solidity >=0.7.0;
 
 import { Vm } from "forge-std/Vm.sol";
+import {CallWatcher} from "./CallWatcher.sol";
 
 interface VulcanVmCommon {}
 interface VulcanVmTest is VulcanVmCommon {}
@@ -22,26 +23,6 @@ struct Rpc {
 struct Call {
     address payable target;
     address payable proxy;
-}
-
-contract CallProxy {
-    address target;
-    bool public _success;
-    bytes public _data;
-
-    function setTarget(address _target) external {
-        target = _target;
-    }
-
-    fallback(bytes calldata _callData) external payable returns (bytes memory) {
-        (bool success, bytes memory data) = target.call{value: msg.value}(_callData);
-
-        _success = success;
-
-        _data = data;
-
-        return data;
-    }
 }
 
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
@@ -694,17 +675,17 @@ library vulcan {
     }
 
     function watch(VulcanVmTest self, address payable _target) internal returns (Call memory) {
-        CallProxy proxy = new CallProxy();
+        CallWatcher watcher = new CallWatcher();
 
         bytes memory targetCode = _target.code;
 
-        setCode(self, _target, address(proxy).code);
-        setCode(self, address(proxy), targetCode);
+        setCode(self, _target, address(watcher).code);
+        setCode(self, address(watcher), targetCode);
 
-        CallProxy(_target).setTarget(address(proxy));
+        CallWatcher(_target).setTarget(address(watcher));
 
         return Call(
-            payable(address(proxy)),
+            payable(address(watcher)),
             _target
         );
     }

@@ -414,7 +414,7 @@ library ExpectLib {
     }
 
     function toHaveReverted(_CallExpectation memory self) internal {
-        if (CallProxy(self.lastCall.proxy)._success()) {
+        if (CallWatcher(self.lastCall.proxy).wasSuccess()) {
             console.log("Error: function expected to fail");
             vulcan.fail();
         }
