@@ -3,7 +3,6 @@ pragma solidity >=0.7.0;
 import { console } from "./Console.sol";
 import "./Vulcan.sol";
 
-
 struct _BoolExpectation {
     bool actual;
     _BoolExpectationNot not;
@@ -223,25 +222,20 @@ library ExpectLib {
     }
 
     function toContain(_StringExpectation memory self, string memory contained) internal {
-        if (bytes(self.actual).length < bytes(contained).length) {
-            console.log("Error: a does not contain b [string]");
-            console.log("  Value a", self.actual);
-            console.log("  Value b", contained);
-            vulcan.fail();
-        }
-
         // TODO: optimize
         bool found = false;
-        for (uint256 i = 0; i < bytes(self.actual).length - bytes(contained).length + 1; i++) {
-            found = true;
-            for (uint256 j = 0; j < bytes(contained).length; j++) {
-                if (bytes(self.actual)[i + j] != bytes(contained)[j]) {
-                    found = false;
+        if (bytes(self.actual).length >= bytes(contained).length) {
+            for (uint256 i = 0; i < bytes(self.actual).length - bytes(contained).length + 1; i++) {
+                found = true;
+                for (uint256 j = 0; j < bytes(contained).length; j++) {
+                    if (bytes(self.actual)[i + j] != bytes(contained)[j]) {
+                        found = false;
+                        break;
+                    }
+                }
+                if (found) {
                     break;
                 }
-            }
-            if (found) {
-                break;
             }
         }
 

@@ -17,7 +17,7 @@ contract ExampleTest is Test {
     using vulcan for *;
 
     function beforeEach() internal view override {
-        console.log("before each");
+        // console.log("before each");
     }
 
     function testIncreaseTime() external {

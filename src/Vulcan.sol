@@ -572,7 +572,7 @@ library vulcan {
         return self;
     }
 
-    /* SHOULD WE ADD THE expectX HERE ? */
+    /* TODO: SHOULD WE ADD THE expectX HERE ? */
 
     function setBlockCoinbase(VulcanVmTest self, address who) internal returns (VulcanVmTest){
         vm().coinbase(who);
@@ -667,4 +667,5 @@ library vulcan {
     function clearFailure() internal {
         address(HEVM).setStorage(GLOBAL_FAILED_SLOT, bytes32(uint256(0)));
     }
+
 }
