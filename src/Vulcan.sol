@@ -19,6 +19,31 @@ struct Rpc {
     string url;
 }
 
+struct Call {
+    address payable target;
+    address payable proxy;
+}
+
+contract CallProxy {
+    address target;
+    bool public _success;
+    bytes public _data;
+
+    function setTarget(address _target) external {
+        target = _target;
+    }
+
+    fallback(bytes calldata _callData) external payable returns (bytes memory) {
+        (bool success, bytes memory data) = target.call{value: msg.value}(_callData);
+
+        _success = success;
+
+        _data = data;
+
+        return data;
+    }
+}
+
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
 /// @dev Main entry point to vm functionality
 library vulcan {
@@ -666,6 +691,22 @@ library vulcan {
 
     function clearFailure() internal {
         address(HEVM).setStorage(GLOBAL_FAILED_SLOT, bytes32(uint256(0)));
+    }
+
+    function watch(VulcanVmTest self, address payable _target) internal returns (Call memory) {
+        CallProxy proxy = new CallProxy();
+
+        bytes memory targetCode = _target.code;
+
+        setCode(self, _target, address(proxy).code);
+        setCode(self, address(proxy), targetCode);
+
+        CallProxy(_target).setTarget(address(proxy));
+
+        return Call(
+            payable(address(proxy)),
+            _target
+        );
     }
 
 }

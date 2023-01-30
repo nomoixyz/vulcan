@@ -66,6 +66,10 @@ struct _StringExpectationNot {
     string actual;
 }
 
+struct _CallExpectation {
+    Call lastCall;
+}
+
 // TODO: move somewhere else?
 // Adapted from forge-std
 function abs(int256 a) pure returns (uint256) {
@@ -408,6 +412,13 @@ library ExpectLib {
             vulcan.fail();
         }
     }
+
+    function toHaveReverted(_CallExpectation memory self) internal {
+        if (CallProxy(self.lastCall.proxy)._success()) {
+            console.log("Error: function expected to fail");
+            vulcan.fail();
+        }
+    }
 }
 
 function expect(bool actual) pure returns (_BoolExpectation memory) {
@@ -502,6 +513,10 @@ function expect(string memory actual) pure returns (_StringExpectation memory) {
     return _StringExpectation(actual, _StringExpectationNot(actual));
 }
 
+function expect(Call memory _call) pure returns (_CallExpectation memory) {
+    return _CallExpectation(_call);
+}
+
 using ExpectLib for _BoolExpectation global;
 using ExpectLib for _BoolExpectationNot global;
 using ExpectLib for _UintExpectation global;
@@ -516,3 +531,4 @@ using ExpectLib for _BytesExpectation global;
 using ExpectLib for _BytesExpectationNot global;
 using ExpectLib for _StringExpectation global;
 using ExpectLib for _StringExpectationNot global;
+using ExpectLib for _CallExpectation global;

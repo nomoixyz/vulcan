@@ -1,7 +1,17 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, console, vulcan } from  "../src/lib.sol";
+import { Test, expect, console, vulcan, Call, CallProxy } from  "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
+
+contract CallTest {
+    function ok() external returns (uint256) {
+        return 1;
+    }
+
+    function err() external {
+        revert("Error");
+    }
+}
 
 contract ExpectTest is Test {
     using vulcan for *;
@@ -221,5 +231,17 @@ contract ExpectTest is Test {
     function testStringToHaveLengthFail(string memory a, uint256 len) external shouldFail {
         vm.assume(len != bytes(a).length);
         expect(a).toHaveLength(len);
+    }
+
+    function testCallProxy() external {
+        CallTest t = new CallTest();
+
+        Call memory functionCall = vm.watch(payable(address(t)));
+
+        t.err();
+
+        expect(functionCall).toHaveReverted();
+        uint256 result = t.ok();
+        expect(functionCall).toHaveReverted();
     }
 }
