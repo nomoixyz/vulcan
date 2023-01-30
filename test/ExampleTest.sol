@@ -60,16 +60,14 @@ contract ExampleTest is Test {
     function testWrappedAddress() external {
         uint256 balance = 1e18;
         uint64 nonce = 1337;
-        address targetAddress = address(1);
 
-        address alice = vm.setBalance(targetAddress, balance).setNonce(nonce).unwrap();
+        address alice = vm.createAddress("ALICE").setBalance(balance).setNonce(nonce).unwrap();
 
-        expect(alice).toEqual(targetAddress);
         expect(alice.balance).toEqual(balance);
         expect(vm.getNonce(alice)).toEqual(nonce);
 
         Sender sender = new Sender();
-        address bob = vm.impersonateOnce(address(2)).setNonce(nonce).setBalance(balance).unwrap();
+        address bob = vm.createAddress("BOB").impersonateOnce().setNonce(nonce).setBalance(balance).unwrap();
         expect(sender.get()).toEqual(bob);
         expect(sender.get()).toEqual(address(this));
     }

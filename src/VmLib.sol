@@ -141,19 +141,29 @@ library VmLib {
         return underlying().getDeployedCode(path);
     }
 
-    function label(_T, address who, string calldata lbl) internal returns (WrappedAddress) {
+    function createAddress(_T self, string memory name) internal returns (WrappedAddress) {
+        return createAddress(self, name, name);
+    }
+
+    function createAddress(_T self, string memory name, string memory lbl) internal returns (WrappedAddress) {
+        address addr = deriveAddress(self, uint256(keccak256(abi.encodePacked(name))));
+
+        return label(addr, lbl);
+    }
+
+    function label(_T, address who, string memory lbl) internal returns (WrappedAddress) {
         return label(who, lbl);
     }
 
-    function label(_T, WrappedAddress who, string calldata lbl) internal returns (WrappedAddress) {
+    function label(_T, WrappedAddress who, string memory lbl) internal returns (WrappedAddress) {
         return label(who, lbl);
     }
 
-    function label(WrappedAddress who, string calldata lbl) internal returns (WrappedAddress) {
+    function label(WrappedAddress who, string memory lbl) internal returns (WrappedAddress) {
         return label(WrappedAddress.unwrap(who), lbl);
     }
 
-    function label(address who, string calldata lbl) internal returns (WrappedAddress) {
+    function label(address who, string memory lbl) internal returns (WrappedAddress) {
         underlying().label(who, lbl);
         return WrappedAddress.wrap(who);
     }
