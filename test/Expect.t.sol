@@ -1,15 +1,15 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, _T, vm, console, TestLib } from  "../src/Vulcan.sol";
+import { Test, expect, console, vulcan } from  "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract ExpectTest is Test {
-    using TestLib for _T;
+    using vulcan for *;
 
     modifier shouldFail() {
-        bool pre = vm.failed();
+        bool pre = vulcan.failed();
         _;
-        bool post = vm.failed();
+        bool post = vulcan.failed();
 
         if (pre) {
             return;
@@ -19,7 +19,7 @@ contract ExpectTest is Test {
             revert("Didn't fail");
         }
 
-        vm.clearFailure();
+        vulcan.clearFailure();
     }
 
     function testUintToEqualPass(uint256 a) external {
@@ -92,14 +92,11 @@ contract ExpectTest is Test {
     }
 
     function testIntToBeCloseToPass(int256 a, int256 b, uint256 delta) external {
-        // vm.assume( <= delta);
-        // expect(a).toBeCloseTo(b, delta);
+        // TODO
     }
 
     function testIntToBeCloseToFail(int256 a, uint256 delta, bool add) external shouldFail {
-
-        // TODO: better fuzzing
-
+        // TODO
     }
 
     function testIntToBeLessThanPass(int256 a, int256 b) external {
@@ -174,9 +171,8 @@ contract ExpectTest is Test {
         expect(a).not.toEqual(a);
     }
 
-    function testBytes32ToBeTheHashOfPass(bytes32 a, bytes memory b) external {
-        vm.assume(keccak256(b) == a);
-        expect(a).toBeTheHashOf(b);
+    function testBytes32ToBeTheHashOfPass(bytes memory a) external {
+        expect(keccak256(a)).toBeTheHashOf(a);
     }
 
     function testBytes32ToBeTheHashOfFail(bytes32 a, bytes memory b) external shouldFail {
@@ -213,8 +209,9 @@ contract ExpectTest is Test {
         expect(string.concat(a, b, c)).toContain(b);
     }
 
-    function testStringToContainFail(string memory a) external shouldFail {
-        // TODO
+    // TODO: fuzzing?
+    function testStringToContainFail() external shouldFail {
+        expect(string("abc")).toContain("d");
     }
 
     function testStringToHaveLengthPass(string memory a) external {

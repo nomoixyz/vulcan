@@ -1,22 +1,21 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import "./VmLib.sol";
-import "./ConsoleLib.sol";
-import "./TestLib.sol";
+import "./Vulcan.sol";
+import "./Console.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test {
-    using TestLib for _T;
-    using VmLib for _T;
-    using VmLib for address;
+    using vulcan for *;
 
     bool public IS_TEST = true;
 
     bool first = false;
 
+    VulcanVmTest vm;
+
     constructor() {
-        vm.setUnderlying(VmLib.DEFAULT_VM);
+        vm.setVm(vulcan.HEVM);
     }
 
     function setUp() external {
@@ -33,6 +32,6 @@ contract Test {
     function beforeEach() virtual internal {}
 
     function failed() public view returns (bool) {
-        return vm.failed();
+        return vulcan.failed();
     } 
 }

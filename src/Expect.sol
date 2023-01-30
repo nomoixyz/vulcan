@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.7.0;
-import "./TestLib.sol";
-import "./VmLib.sol";
-import { console } from "./ConsoleLib.sol";
+import { console } from "./Console.sol";
+import "./Vulcan.sol";
 
 
 struct _BoolExpectation {
@@ -79,7 +78,7 @@ function abs(int256 a) pure returns (uint256) {
 }
 
 library ExpectLib {
-    using TestLib for _T;
+    using vulcan for *;
 
     /* BOOL */
 
@@ -88,7 +87,7 @@ library ExpectLib {
             console.log("Error: a == b not satisfied [bool]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -97,7 +96,7 @@ library ExpectLib {
             console.log("Error: a != b not satisfied [bool]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -116,7 +115,7 @@ library ExpectLib {
             console.log("Error: a == b not satisfied [address]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -125,7 +124,7 @@ library ExpectLib {
             console.log("Error: a != b not satisfied [address]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -133,7 +132,7 @@ library ExpectLib {
         if (self.actual.code.length == 0) {
             console.log("Error: a is not a contract [address]");
             console.log("  Value", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -141,7 +140,7 @@ library ExpectLib {
         if (self.actual.code.length == 0) {
             console.log("Error: a is a contract [address]");
             console.log("  Value", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -152,7 +151,7 @@ library ExpectLib {
             console.log("Error: a == b not satisfied [bytes32]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -161,7 +160,7 @@ library ExpectLib {
             console.log("Error: a != b not satisfied [bytes32]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -170,7 +169,7 @@ library ExpectLib {
             console.log("Error: a is not the hash of b [bytes32]");
             console.log("  Expected", keccak256(data));
             console.log("    Actual", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -179,7 +178,7 @@ library ExpectLib {
             console.log("Error: a is the hash of b [bytes32]");
             console.log("  Value a", keccak256(data));
             console.log("  Value b", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -190,7 +189,7 @@ library ExpectLib {
             console.log("Error: a == b not satisfied [bytes]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -199,7 +198,7 @@ library ExpectLib {
             console.log("Error: a != b not satisfied [bytes]");
             console.log("  Value", expected);
             console.log("  Value", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -210,7 +209,7 @@ library ExpectLib {
             console.log("Error: a == b not satisfied [string]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -219,7 +218,7 @@ library ExpectLib {
             console.log("Error: a != b not satisfied [string]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -228,7 +227,7 @@ library ExpectLib {
             console.log("Error: a does not contain b [string]");
             console.log("  Value a", self.actual);
             console.log("  Value b", contained);
-            vm.fail();
+            vulcan.fail();
         }
 
         // TODO: optimize
@@ -250,7 +249,7 @@ library ExpectLib {
             console.log("Error: a does not contain b [string]");
             console.log("  Value a", self.actual);
             console.log("  Value b", contained);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -259,7 +258,7 @@ library ExpectLib {
             console.log("Error: a.length != b [string]");
             console.log("  Expected", expected);
             console.log("    Actual", bytes(self.actual).length);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -270,7 +269,7 @@ library ExpectLib {
             console.log("Error: a == b not satisfied [uint]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -279,7 +278,7 @@ library ExpectLib {
             console.log("Error: a != b not satisfied [uint]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -291,7 +290,7 @@ library ExpectLib {
             console.log("    Actual", self.actual);
             console.log(" Max Delta", delta);
             console.log("     Delta", diff);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -300,7 +299,7 @@ library ExpectLib {
             console.log("Error: a < b not satisfied [uint]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -309,7 +308,7 @@ library ExpectLib {
             console.log("Error: a <= b not satisfied [uint]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -318,7 +317,7 @@ library ExpectLib {
             console.log("Error: a > b not satisfied [uint]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -327,7 +326,7 @@ library ExpectLib {
             console.log("Error: a >= b not satisfied [uint]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -338,7 +337,7 @@ library ExpectLib {
             console.log("Error: a == b not satisfied [int]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -347,7 +346,7 @@ library ExpectLib {
             console.log("Error: a != b not satisfied [int]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -375,7 +374,7 @@ library ExpectLib {
             console.log("    Actual", self.actual);
             console.log(" Max Delta", delta);
             console.log("     Delta", diff);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -385,7 +384,7 @@ library ExpectLib {
             console.log("Error: a < b not satisfied [int]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -394,7 +393,7 @@ library ExpectLib {
             console.log("Error: a <= b not satisfied [int]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -403,7 +402,7 @@ library ExpectLib {
             console.log("Error: a > b not satisfied [int]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
-            vm.fail();
+            vulcan.fail();
         }
     }
 
@@ -412,7 +411,7 @@ library ExpectLib {
             console.log("Error: a >= b not satisfied [int]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
-            vm.fail();
+            vulcan.fail();
         }
     }
 }

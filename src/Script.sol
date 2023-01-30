@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import "./VmLib.sol";
-import "./ConsoleLib.sol";
+import "./Vulcan.sol";
+import "./Console.sol";
 
 // @dev Main entry point to sest tests
 contract Script {
-    using VmLib for _T;
-    using VmLib for address;
+    using vulcan for *;
+
+    VulcanVmCommon vm;
 
     constructor() {
-        vm.setUnderlying(VmLib.DEFAULT_VM);
+        vm.setVm(vulcan.HEVM);
     }
 }

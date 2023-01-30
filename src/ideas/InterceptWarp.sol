@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import { Test, Vm, expect, _T } from  "../Vulcan.sol";
+import { Test, Vm, expect } from  "../lib.sol";
 import "./VmWrapper.sol";
 
 // Example wrapper that intercepts calls to the VM
