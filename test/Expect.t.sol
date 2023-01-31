@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, console, vulcan, Call } from  "../src/lib.sol";
+import { Test, expect, console, vulcan, WatchData } from  "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract CallTest {
@@ -242,7 +242,7 @@ contract ExpectTest is Test {
     function testCallProxy() external {
         CallTest t = new CallTest();
 
-        Call memory functionCall = vm.watch(payable(address(t)));
+        WatchData memory functionCall = vm.watch(payable(address(t)));
 
         t.err();
 

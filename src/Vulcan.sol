@@ -20,7 +20,7 @@ struct Rpc {
     string url;
 }
 
-struct Call {
+struct WatchData {
     address payable target;
     address payable proxy;
 }
@@ -674,7 +674,7 @@ library vulcan {
         address(HEVM).setStorage(GLOBAL_FAILED_SLOT, bytes32(uint256(0)));
     }
 
-    function watch(VulcanVmTest self, address payable _target) internal returns (Call memory) {
+    function watch(VulcanVmTest self, address payable _target) internal returns (WatchData memory) {
         CallWatcher watcher = new CallWatcher();
 
         bytes memory targetCode = _target.code;
@@ -684,7 +684,7 @@ library vulcan {
 
         CallWatcher(_target).setTarget(address(watcher));
 
-        return Call(
+        return WatchData(
             payable(address(watcher)),
             _target
         );
