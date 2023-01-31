@@ -413,9 +413,16 @@ library ExpectLib {
         }
     }
 
-    function toHaveReverted(_CallExpectation memory self) internal {
-        if (CallWatcher(self.lastCall.proxy).wasSuccess()) {
+    function toHaveReverted(_CallExpectation memory self, uint256 callIndex) internal {
+        if (CallWatcher(self.lastCall.proxy).wasSuccess(callIndex)) {
             console.log("Error: function expected to fail");
+            vulcan.fail();
+        }
+    }
+
+    function toHaveSucceeded(_CallExpectation memory self, uint256 callIndex) internal {
+        if (!CallWatcher(self.lastCall.proxy).wasSuccess(callIndex)) {
+            console.log("Error: function expected to succeed");
             vulcan.fail();
         }
     }

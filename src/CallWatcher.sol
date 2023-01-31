@@ -4,10 +4,14 @@ pragma solidity >=0.7.0;
 library CallWatcherLib {
     bytes32 constant STORAGE_SLOT = keccak256("vulcan.callwatcher.slot");
 
-    struct Storage {
-        address target;
+    struct CallResult {
         bool success;
         bytes data;
+    }
+
+    struct Storage {
+        address target;
+        CallResult[] results;
     }
 
     function getStorage() internal pure returns (Storage storage s) {
@@ -18,18 +22,21 @@ library CallWatcherLib {
         }
     }
 
+    function resultWasSuccess(Storage storage s, uint256 _index) internal view returns (bool) {
+        return s.results[_index].success;
+    }
+
     function setTarget(Storage storage s, address _target) internal returns (Storage storage) {
         s.target = _target;
+
         return s;
     }
 
-    function setSuccess(Storage storage s, bool _success) internal returns (Storage storage) {
-        s.success = _success;
-        return s;
-    }
+    function addResult(Storage storage s, bool _success, bytes memory _data) internal returns (Storage storage) {
+        CallResult memory result = CallResult(_success, _data);
 
-    function setData(Storage storage s, bytes memory _data) internal returns (Storage storage) {
-        s.data = _data;
+        s.results.push(result);
+
         return s;
     }
 }
@@ -37,8 +44,8 @@ library CallWatcherLib {
 contract CallWatcher {
     using CallWatcherLib for *;
 
-    function wasSuccess() external view returns (bool) {
-        return CallWatcherLib.getStorage().success;
+    function wasSuccess(uint256 _callIndex) external view returns (bool) {
+        return CallWatcherLib.getStorage().resultWasSuccess(_callIndex);
     }
 
     function setTarget(address _target) external {
@@ -50,7 +57,7 @@ contract CallWatcher {
 
         (bool success, bytes memory data) = s.target.delegatecall(_callData);
 
-        s.setSuccess(success).setData(data);
+        s.addResult(success, data);
 
         return data;
     }

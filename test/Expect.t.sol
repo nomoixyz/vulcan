@@ -246,10 +246,11 @@ contract ExpectTest is Test {
 
         t.err();
 
-        expect(functionCall).toHaveReverted();
+        expect(functionCall).toHaveReverted(0);
 
         uint256 result = t.ok();
+
+        expect(functionCall).toHaveSucceeded(1);
         expect(result).toEqual(uint256(keccak256(abi.encodePacked(uint256(69)))));
-        expect(t.ok()).toEqual(uint256(keccak256(abi.encodePacked(uint256(result)))));
     }
 }
