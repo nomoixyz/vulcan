@@ -67,7 +67,7 @@ struct _StringExpectationNot {
 }
 
 struct _CallExpectation {
-    CallWatcherLib.Result result;
+    CallWatcher.Result result;
 }
 
 // TODO: move somewhere else?
@@ -520,7 +520,7 @@ function expect(string memory actual) pure returns (_StringExpectation memory) {
     return _StringExpectation(actual, _StringExpectationNot(actual));
 }
 
-function expect(CallWatcherLib.Result memory result) pure returns (_CallExpectation memory) {
+function expect(CallWatcher.Result memory result) pure returns (_CallExpectation memory) {
     return _CallExpectation(result);
 }
 

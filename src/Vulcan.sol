@@ -2,7 +2,7 @@
 pragma solidity >=0.7.0;
 
 import { Vm } from "forge-std/Vm.sol";
-import {CallWatcher, CallWatcherLib} from "./CallWatcher.sol";
+import {CallWatcher} from "./CallWatcher.sol";
 
 interface VulcanVmCommon {}
 interface VulcanVmTest is VulcanVmCommon {}
@@ -669,15 +669,14 @@ library vulcan {
         address(HEVM).setStorage(GLOBAL_FAILED_SLOT, bytes32(uint256(0)));
     }
 
-    function watch(VulcanVmTest self, address payable _target) internal returns (CallWatcher) {
+    function watch(VulcanVmTest, address payable _target) internal returns (CallWatcher) {
         CallWatcher watcher = new CallWatcher();
 
         bytes memory targetCode = _target.code;
 
-        setCode(self, _target, address(watcher).code);
-        setCode(self, address(watcher), targetCode);
-
-        CallWatcher(_target).setTarget(address(watcher));
+        // Switcheroo
+        _target.setCode(address(watcher).code);
+        address(watcher).setCode(targetCode);
 
         return CallWatcher(_target);
     }
