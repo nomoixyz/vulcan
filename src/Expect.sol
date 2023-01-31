@@ -415,7 +415,44 @@ library ExpectLib {
 
     function toHaveReverted(_CallExpectation memory self) internal {
         if (self.result.success) {
-            console.log("Error: function expected to fail");
+            console.log("Error: function expected to revert");
+            vulcan.fail();
+        }
+    }
+
+    function toHaveRevertedWith(_CallExpectation memory self, bytes4 expectedSelector) internal {
+        self.toHaveReverted();
+
+        bytes4 actualSelector = bytes4(self.result.data);
+
+        if (!self.result.success && actualSelector != expectedSelector) {
+            console.log("Error: function expected to revert with error");
+            console.log("  Expected error", expectedSelector);
+            console.log("  Actual error", actualSelector);
+
+            vulcan.fail();
+        }
+    }
+
+    function toHaveRevertedWith(_CallExpectation memory self, string memory error) internal {
+        self.toHaveReverted();
+
+        bytes memory expectedError = abi.encodeWithSignature("Error(string)", error);
+
+        self.toHaveRevertedWith(expectedError);
+    }
+
+    function toHaveRevertedWith(_CallExpectation memory self, bytes memory expectedError) internal {
+        toHaveReverted(self);
+
+        bytes32 expectedHash = keccak256(expectedError);
+        bytes32 actualHash = keccak256(self.result.data);
+
+        if (!self.result.success && actualHash != expectedHash) {
+            console.log("Error: function expected to revert with error");
+            console.log("  Expected error", expectedError);
+            console.log("  Actual error", self.result.data);
+
             vulcan.fail();
         }
     }

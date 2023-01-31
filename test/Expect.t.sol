@@ -14,9 +14,27 @@ contract CallTest {
         return val;
     }
 
-    function err() external {
+    function failWithRevert() external {
+        revert();
+    }
+
+    function failWithStringRevert() external {
         revert("Error");
     }
+
+    function failWithRequire() external {
+        require(true == false);
+    }
+
+    function failWithRequireMessage() external {
+        require(true == false, "Require message");
+    }
+
+    function failWithCustomError() external {
+        revert CustomError(num);
+    }
+
+    error CustomError(uint256 i);
 }
 
 contract ExpectTest is Test {
@@ -239,18 +257,52 @@ contract ExpectTest is Test {
         expect(a).toHaveLength(len);
     }
 
-    function testCallProxy() external {
+    function testToHaveReverted() external {
         CallTest t = new CallTest();
 
         CallWatcher watcher = vm.watch(payable(address(t)));
 
-        t.err();
+        t.failWithRevert();
+        t.failWithStringRevert();
+        t.failWithRequire();
+        t.failWithRequireMessage();
+        t.failWithCustomError();
 
         expect(watcher.calls(0)).toHaveReverted();
+        expect(watcher.calls(1)).toHaveReverted();
+        expect(watcher.calls(2)).toHaveReverted();
+        expect(watcher.calls(3)).toHaveReverted();
+        expect(watcher.calls(4)).toHaveReverted();
+    }
+
+    function testToHaveSucceeded() external {
+        CallTest t = new CallTest();
+
+        CallWatcher watcher = vm.watch(payable(address(t)));
 
         uint256 result = t.ok();
 
-        expect(watcher.calls(1)).toHaveSucceeded();
+        expect(watcher.calls(0)).toHaveSucceeded();
         expect(result).toEqual(uint256(keccak256(abi.encodePacked(uint256(69)))));
     }
+
+    function testToHaveRevertedWith() external {
+        CallTest t = new CallTest();
+
+        CallWatcher watcher = vm.watch(payable(address(t)));
+
+        t.failWithStringRevert();
+        t.failWithRequireMessage();
+        t.failWithCustomError();
+
+        expect(watcher.calls(0)).toHaveRevertedWith(string("Error"));
+
+        expect(watcher.calls(1)).toHaveRevertedWith(string("Require message"));
+
+        expect(watcher.calls(2)).toHaveRevertedWith(CallTest.CustomError.selector);
+
+        bytes memory expectedError = abi.encodeWithSelector(CallTest.CustomError.selector, uint256(69));
+        expect(watcher.calls(2)).toHaveRevertedWith(expectedError);
+    }
+
 }
