@@ -67,7 +67,7 @@ struct _StringExpectationNot {
 }
 
 struct _CallExpectation {
-    CallWatcher.Result result;
+    Watcher.Call call;
 }
 
 // TODO: move somewhere else?
@@ -414,8 +414,8 @@ library ExpectLib {
     }
 
     function toHaveReverted(_CallExpectation memory self) internal {
-        if (self.result.success) {
-            console.log("Error: function expected to revert");
+        if (self.call.success) {
+            console.log("Error: call expected to revert [call]");
             vulcan.fail();
         }
     }
@@ -423,12 +423,12 @@ library ExpectLib {
     function toHaveRevertedWith(_CallExpectation memory self, bytes4 expectedSelector) internal {
         self.toHaveReverted();
 
-        bytes4 actualSelector = bytes4(self.result.data);
+        bytes4 actualSelector = bytes4(self.call.returnData);
 
-        if (!self.result.success && actualSelector != expectedSelector) {
-            console.log("Error: function expected to revert with error");
+        if (!self.call.success && actualSelector != expectedSelector) {
+            console.log("Error: call expected to revert with error [call]");
             console.log("  Expected error", expectedSelector);
-            console.log("  Actual error", actualSelector);
+            console.log("    Actual error", actualSelector);
 
             vulcan.fail();
         }
@@ -443,23 +443,41 @@ library ExpectLib {
     }
 
     function toHaveRevertedWith(_CallExpectation memory self, bytes memory expectedError) internal {
-        toHaveReverted(self);
+        self.toHaveReverted();
 
         bytes32 expectedHash = keccak256(expectedError);
-        bytes32 actualHash = keccak256(self.result.data);
+        bytes32 actualHash = keccak256(self.call.returnData);
 
-        if (!self.result.success && actualHash != expectedHash) {
-            console.log("Error: function expected to revert with error");
+        if (!self.call.success && actualHash != expectedHash) {
+            console.log("Error: function expected to revert with error [call]");
             console.log("  Expected error", expectedError);
-            console.log("  Actual error", self.result.data);
+            console.log("    Actual error", self.call.returnData);
 
             vulcan.fail();
         }
     }
 
     function toHaveSucceeded(_CallExpectation memory self) internal {
-        if (!self.result.success) {
-            console.log("Error: function expected to succeed");
+        if (!self.call.success) {
+            console.log("Error: call expected to succeed [call]");
+            vulcan.fail();
+        }
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, bytes32 eventSig) internal {
+        self.toHaveSucceeded();
+
+        bool found = false;
+        for (uint256 i = 0; i < self.call.logs.length; i++) {
+            if (self.call.logs[i].topics[i] == eventSig) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            console.log("Error: event not emitted [call]");
+            console.log("  Event", eventSig);
             vulcan.fail();
         }
     }
@@ -557,8 +575,8 @@ function expect(string memory actual) pure returns (_StringExpectation memory) {
     return _StringExpectation(actual, _StringExpectationNot(actual));
 }
 
-function expect(CallWatcher.Result memory result) pure returns (_CallExpectation memory) {
-    return _CallExpectation(result);
+function expect(Watcher.Call memory call) pure returns (_CallExpectation memory) {
+    return _CallExpectation(call);
 }
 
 using ExpectLib for _BoolExpectation global;

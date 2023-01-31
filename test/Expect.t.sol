@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, console, vulcan, CallWatcher } from  "../src/lib.sol";
+import { Test, expect, console, vulcan, Watcher } from  "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract CallTest {
@@ -260,7 +260,7 @@ contract ExpectTest is Test {
     function testToHaveReverted() external {
         CallTest t = new CallTest();
 
-        CallWatcher watcher = vm.watch(payable(address(t)));
+        Watcher watcher = vm.watch(payable(address(t)));
 
         t.failWithRevert();
         t.failWithStringRevert();
