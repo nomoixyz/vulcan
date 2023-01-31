@@ -295,11 +295,9 @@ contract ExpectTest is Test {
         t.failWithRequireMessage();
         t.failWithCustomError();
 
-        string memory revertString = "Error";
-        expect(watcher.calls(0)).toHaveRevertedWith(revertString);
+        expect(watcher.calls(0)).toHaveRevertedWith(string("Error"));
 
-        string memory requireMessage = "Require message";
-        expect(watcher.calls(1)).toHaveRevertedWith(requireMessage);
+        expect(watcher.calls(1)).toHaveRevertedWith(string("Require message"));
 
         expect(watcher.calls(2)).toHaveRevertedWith(CallTest.CustomError.selector);
 
