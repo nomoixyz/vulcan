@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, console, vulcan, WatchData } from  "../src/lib.sol";
+import { Test, expect, console, vulcan, CallWatcher } from  "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract CallTest {
@@ -242,15 +242,15 @@ contract ExpectTest is Test {
     function testCallProxy() external {
         CallTest t = new CallTest();
 
-        WatchData memory functionCall = vm.watch(payable(address(t)));
+        CallWatcher watcher = vm.watch(payable(address(t)));
 
         t.err();
 
-        expect(functionCall).toHaveReverted(0);
+        expect(watcher.calls(0)).toHaveReverted();
 
         uint256 result = t.ok();
 
-        expect(functionCall).toHaveSucceeded(1);
+        expect(watcher.calls(1)).toHaveSucceeded();
         expect(result).toEqual(uint256(keccak256(abi.encodePacked(uint256(69)))));
     }
 }

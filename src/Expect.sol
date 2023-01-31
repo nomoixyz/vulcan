@@ -67,7 +67,7 @@ struct _StringExpectationNot {
 }
 
 struct _CallExpectation {
-    WatchData data;
+    CallWatcherLib.Result result;
 }
 
 // TODO: move somewhere else?
@@ -413,15 +413,15 @@ library ExpectLib {
         }
     }
 
-    function toHaveReverted(_CallExpectation memory self, uint256 callIndex) internal {
-        if (CallWatcher(self.data.proxy).wasSuccess(callIndex)) {
+    function toHaveReverted(_CallExpectation memory self) internal {
+        if (self.result.success) {
             console.log("Error: function expected to fail");
             vulcan.fail();
         }
     }
 
-    function toHaveSucceeded(_CallExpectation memory self, uint256 callIndex) internal {
-        if (!CallWatcher(self.data.proxy).wasSuccess(callIndex)) {
+    function toHaveSucceeded(_CallExpectation memory self) internal {
+        if (!self.result.success) {
             console.log("Error: function expected to succeed");
             vulcan.fail();
         }
@@ -520,8 +520,8 @@ function expect(string memory actual) pure returns (_StringExpectation memory) {
     return _StringExpectation(actual, _StringExpectationNot(actual));
 }
 
-function expect(WatchData memory _call) pure returns (_CallExpectation memory) {
-    return _CallExpectation(_call);
+function expect(CallWatcherLib.Result memory result) pure returns (_CallExpectation memory) {
+    return _CallExpectation(result);
 }
 
 using ExpectLib for _BoolExpectation global;

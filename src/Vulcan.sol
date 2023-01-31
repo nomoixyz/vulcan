@@ -2,7 +2,7 @@
 pragma solidity >=0.7.0;
 
 import { Vm } from "forge-std/Vm.sol";
-import {CallWatcher} from "./CallWatcher.sol";
+import {CallWatcher, CallWatcherLib} from "./CallWatcher.sol";
 
 interface VulcanVmCommon {}
 interface VulcanVmTest is VulcanVmCommon {}
@@ -18,11 +18,6 @@ struct Log {
 struct Rpc {
     string name;
     string url;
-}
-
-struct WatchData {
-    address payable target;
-    address payable proxy;
 }
 
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
@@ -674,7 +669,7 @@ library vulcan {
         address(HEVM).setStorage(GLOBAL_FAILED_SLOT, bytes32(uint256(0)));
     }
 
-    function watch(VulcanVmTest self, address payable _target) internal returns (WatchData memory) {
+    function watch(VulcanVmTest self, address payable _target) internal returns (CallWatcher) {
         CallWatcher watcher = new CallWatcher();
 
         bytes memory targetCode = _target.code;
@@ -684,10 +679,7 @@ library vulcan {
 
         CallWatcher(_target).setTarget(address(watcher));
 
-        return WatchData(
-            payable(address(watcher)),
-            _target
-        );
+        return CallWatcher(_target);
     }
 
 }

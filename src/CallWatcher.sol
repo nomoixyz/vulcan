@@ -4,14 +4,14 @@ pragma solidity >=0.7.0;
 library CallWatcherLib {
     bytes32 constant STORAGE_SLOT = keccak256("vulcan.callwatcher.slot");
 
-    struct CallResult {
+    struct Result {
         bool success;
         bytes data;
     }
 
     struct Storage {
         address target;
-        CallResult[] results;
+        Result[] results;
     }
 
     function getStorage() internal pure returns (Storage storage s) {
@@ -33,7 +33,7 @@ library CallWatcherLib {
     }
 
     function addResult(Storage storage s, bool _success, bytes memory _data) internal returns (Storage storage) {
-        CallResult memory result = CallResult(_success, _data);
+        Result memory result = Result(_success, _data);
 
         s.results.push(result);
 
@@ -44,8 +44,8 @@ library CallWatcherLib {
 contract CallWatcher {
     using CallWatcherLib for *;
 
-    function wasSuccess(uint256 _callIndex) external view returns (bool) {
-        return CallWatcherLib.getStorage().resultWasSuccess(_callIndex);
+    function calls(uint256 _index) external view returns (CallWatcherLib.Result memory) {
+        return CallWatcherLib.getStorage().results[_index];
     }
 
     function setTarget(address _target) external {
