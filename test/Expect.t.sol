@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, console, vulcan, CallWatcher } from  "../src/lib.sol";
+import { Test, expect, console, vulcan } from  "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract CallTest {
@@ -260,7 +260,7 @@ contract ExpectTest is Test {
     function testToHaveReverted() external {
         CallTest t = new CallTest();
 
-        CallWatcher watcher = vm.watch(payable(address(t)));
+        vm.watch(payable(address(t)));
 
         t.failWithRevert();
         t.failWithStringRevert();
@@ -268,41 +268,39 @@ contract ExpectTest is Test {
         t.failWithRequireMessage();
         t.failWithCustomError();
 
-        expect(watcher.calls(0)).toHaveReverted();
-        expect(watcher.calls(1)).toHaveReverted();
-        expect(watcher.calls(2)).toHaveReverted();
-        expect(watcher.calls(3)).toHaveReverted();
-        expect(watcher.calls(4)).toHaveReverted();
+        expect(address(t).calls(0)).toHaveReverted();
+        expect(address(t).calls(1)).toHaveReverted();
+        expect(address(t).calls(2)).toHaveReverted();
+        expect(address(t).calls(3)).toHaveReverted();
+        expect(address(t).calls(4)).toHaveReverted();
     }
 
     function testToHaveSucceeded() external {
         CallTest t = new CallTest();
 
-        CallWatcher watcher = vm.watch(payable(address(t)));
+        vm.watch(payable(address(t)));
 
         uint256 result = t.ok();
 
-        expect(watcher.calls(0)).toHaveSucceeded();
+        expect(address(t).calls(0)).toHaveSucceeded();
         expect(result).toEqual(uint256(keccak256(abi.encodePacked(uint256(69)))));
     }
 
     function testToHaveRevertedWith() external {
         CallTest t = new CallTest();
 
-        CallWatcher watcher = vm.watch(payable(address(t)));
+        vm.watch(payable(address(t)));
 
         t.failWithStringRevert();
         t.failWithRequireMessage();
         t.failWithCustomError();
 
-        expect(watcher.calls(0)).toHaveRevertedWith(string("Error"));
-
-        expect(watcher.calls(1)).toHaveRevertedWith(string("Require message"));
-
-        expect(watcher.calls(2)).toHaveRevertedWith(CallTest.CustomError.selector);
+        expect(address(t).calls(0)).toHaveRevertedWith(string("Error"));
+        expect(address(t).calls(1)).toHaveRevertedWith(string("Require message"));
+        expect(address(t).calls(2)).toHaveRevertedWith(CallTest.CustomError.selector);
 
         bytes memory expectedError = abi.encodeWithSelector(CallTest.CustomError.selector, uint256(69));
-        expect(watcher.calls(2)).toHaveRevertedWith(expectedError);
+        expect(address(t).calls(2)).toHaveRevertedWith(expectedError);
     }
 
 }

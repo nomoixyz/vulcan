@@ -20,12 +20,19 @@ struct Rpc {
     string url;
 }
 
+struct Watchers {
+    mapping(address => CallWatcher) map;
+}
+
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
 /// @dev Main entry point to vm functionality
 library vulcan {
     using vulcan for *;
 
     bytes32 constant GLOBAL_FAILED_SLOT = bytes32("failed");
+
+    bytes32 constant VM_WATCHERS_SLOT = bytes32("vulcan.vm.watchers.slot");
+
     /// @dev sest VM storage slot
     uint256 internal constant VM_SLOT = uint256(keccak256("vulcan.vm.slot")); 
     /// @dev forge-std VM
@@ -36,6 +43,14 @@ library vulcan {
         uint256 vmSlot = VM_SLOT;
         assembly {
             _vm := sload(vmSlot)
+        }
+    }
+
+    function watchers() internal view returns (Watchers storage watchers) {
+        bytes32 slot = VM_WATCHERS_SLOT;
+
+        assembly {
+            watchers.slot := slot
         }
     }
 
@@ -678,7 +693,12 @@ library vulcan {
         _target.setCode(address(watcher).code);
         address(watcher).setCode(targetCode);
 
+        watchers().map[_target] = CallWatcher(_target);
+
         return CallWatcher(_target);
     }
 
+    function calls(address self, uint256 index) internal returns (CallWatcher.Result memory) {
+        return watchers().map[self].calls(index);
+    }
 }
