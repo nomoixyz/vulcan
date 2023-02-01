@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.7.0;
 import { console } from "./Console.sol";
+import "./Events.sol";
 import "./Vulcan.sol";
 
 struct _BoolExpectation {
@@ -498,6 +499,36 @@ library ExpectLib {
         if (!found) {
             console.log("Error: event not emitted [call]");
             console.log("  Event", eventSig);
+            vulcan.fail();
+        }
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Event memory ev) internal {
+        self.toHaveSucceeded();
+
+        bool found = false;
+        for (uint256 i = 0; i < self.call.logs.length; i++) {
+            Log memory log = self.call.logs[i];
+
+            if (log.topics.length < ev.topics.length) {
+                continue;
+            }
+
+            if (ev._data.length > 0 && keccak256(log.data) == keccak256(ev._data)) {
+                found = true;
+            }
+
+            for (uint256 j = 0; j < ev.topics.length; j++) {
+                if (log.topics[j] != ev.topics[j]) {
+                    found = false;
+                    break;
+                }
+            }
+        }
+
+        if (!found) {
+            console.log("Error: event not emitted [call]");
+            console.log("  TODO");
             vulcan.fail();
         }
     }

@@ -1,13 +1,13 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, console, vulcan, Watcher } from  "../src/lib.sol";
+import { Test, expect, events, console, vulcan, Watcher } from  "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract CallTest {
 
     error CustomError(uint256 i);
 
-    event Event(uint256 a);
+    event Event(string indexed foo, uint256 bar);
 
     uint256 num = 69;
 
@@ -19,8 +19,8 @@ contract CallTest {
         return val;
     }
 
-    function emitEvent(uint256 val) external {
-        emit Event(val);
+    function emitEvent(string memory foo, uint256 bar) external {
+        emit Event(foo, bar);
     }
 
     function failWithRevert() external {
@@ -317,9 +317,9 @@ contract ExpectTest is Test {
 
         Watcher watcher = vm.watch(payable(address(t)));
 
-        t.emitEvent(123);
+        t.emitEvent("foo", 123);
 
-        expect(watcher.calls(0)).toHaveEmitted("Event(uint256)");
+        expect(watcher.calls(0)).toHaveEmitted("Event(string,uint256)");
     }
 
     function testToHaveEmittedFail() external shouldFail {
@@ -327,9 +327,9 @@ contract ExpectTest is Test {
 
         Watcher watcher = vm.watch(payable(address(t)));
 
-        t.emitEvent(123);
+        t.emitEvent("foo", 123);
 
-        expect(watcher.calls(0)).toHaveEmitted("Fake(uint256)");
+        expect(watcher.calls(0)).toHaveEmitted("Fake(string,uint256)");
     }
 
     function testToHaveEmittedWithDataPass() external {
@@ -337,9 +337,9 @@ contract ExpectTest is Test {
 
         Watcher watcher = vm.watch(payable(address(t)));
 
-        t.emitEvent(123);
+        t.emitEvent("foo", 123);
 
-        expect(watcher.calls(0)).toHaveEmitted("Event(uint256)", abi.encode(uint256(123)));
+        expect(watcher.calls(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(123)));
     }
 
     function testToHaveEmittedWithDataFail() external shouldFail {
@@ -347,8 +347,28 @@ contract ExpectTest is Test {
 
         Watcher watcher = vm.watch(payable(address(t)));
 
-        t.emitEvent(123);
+        t.emitEvent("foo", 123);
 
-        expect(watcher.calls(0)).toHaveEmitted("Event(uint256)", abi.encode(uint256(321)));
+        expect(watcher.calls(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(321)));
+    }
+
+    function testToHaveEmittedWithBuilderPass() external {
+        CallTest t = new CallTest();
+
+        Watcher watcher = vm.watch(payable(address(t)));
+
+        t.emitEvent("foo", 123);
+
+        expect(watcher.calls(0)).toHaveEmitted(events.sig("Event(string,uint256)").indexedParam(string("foo")).data(abi.encode(uint256(123))));
+    }
+
+    function testToHaveEmittedWithBuilderFail() external shouldFail {
+        CallTest t = new CallTest();
+
+        Watcher watcher = vm.watch(payable(address(t)));
+
+        t.emitEvent("foo", 123);
+
+        expect(watcher.calls(0)).toHaveEmitted(events.sig("Fake(string,uint256)").indexedParam(string("bar")).data(abi.encode(uint256(123))));
     }
 }
