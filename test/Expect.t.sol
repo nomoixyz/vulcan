@@ -265,7 +265,7 @@ contract ExpectTest is Test {
     function testToHaveReverted() external {
         CallTest t = new CallTest();
 
-        vm.watch(payable(address(t)));
+        vm.watch(payable(address(t))).captureReverts();
 
         t.failWithRevert();
         t.failWithStringRevert();
@@ -294,7 +294,7 @@ contract ExpectTest is Test {
     function testToHaveRevertedWith() external {
         CallTest t = new CallTest();
 
-        vm.watch(payable(address(t)));
+        vm.watch(payable(address(t))).captureReverts();
 
         t.failWithStringRevert();
         t.failWithRequireMessage();
