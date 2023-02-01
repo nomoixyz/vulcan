@@ -1,17 +1,18 @@
 pragma solidity ^0.8.13;
 
-import { Test, expect, VulcanVmTest, console, vulcan } from  "../src/lib.sol";
+import {Test, expect, VulcanVm, console, vulcan} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 library TestExtension {
     using vulcan for *;
-    function increaseBlockTimestamp(VulcanVmTest self, uint256 increase) internal returns(VulcanVmTest) {
+
+    function increaseBlockTimestamp(VulcanVm self, uint256 increase) internal returns (VulcanVm) {
         self.setBlockTimestamp(block.timestamp + increase);
         return self;
     }
 }
 
-using TestExtension for VulcanVmTest;
+using TestExtension for VulcanVm;
 
 contract ExampleTest is Test {
     using vulcan for *;
@@ -40,7 +41,6 @@ contract ExampleTest is Test {
         expect(false).toBeFalse();
         expect(true).toEqual(true);
         expect(false).toEqual(false);
-        expect(false).toEqual(true);
     }
 
     function testConsoleLog() external view {
