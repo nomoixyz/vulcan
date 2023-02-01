@@ -436,8 +436,6 @@ library ExpectLib {
     }
 
     function toHaveRevertedWith(_CallExpectation memory self, string memory error) internal {
-        self.toHaveReverted();
-
         bytes memory expectedError = abi.encodeWithSignature("Error(string)", error);
 
         self.toHaveRevertedWith(expectedError);

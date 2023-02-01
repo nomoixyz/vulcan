@@ -20,17 +20,24 @@ struct Rpc {
     string url;
 }
 
+struct Watchers {
+    mapping(address => Watcher) map;
+}
+
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
 /// @dev Main entry point to vm functionality
 library vulcan {
     using vulcan for *;
 
     bytes32 constant GLOBAL_FAILED_SLOT = bytes32("failed");
+    bytes32 constant VM_WATCHERS_SLOT = bytes32("vulcan.vm.watchers.slot");
+
     /// @dev forge-std VM
     Hevm internal constant hevm = Hevm(address(bytes20(uint160(uint256(keccak256('hevm cheat code'))))));
 
     // This address doesn't contain any code
     VulcanVm internal constant vm = VulcanVm(address(bytes20(uint160(uint256(keccak256('vulcan.vm.address'))))));
+
 
     /// @dev reads an storage slot from an adress and returns the content
     /// @param who the target address from which the storage slot will be read
@@ -651,6 +658,14 @@ library vulcan {
         address(hevm).setStorage(GLOBAL_FAILED_SLOT, bytes32(uint256(0)));
     }
 
+    function watchers() internal view returns (Watchers storage watchers) {
+        bytes32 slot = VM_WATCHERS_SLOT;
+
+        assembly {
+            watchers.slot := slot
+        }
+    }
+
     function watch(VulcanVm, address payable _target) internal returns (Watcher) {
         Watcher watcher = new Watcher();
 
@@ -660,6 +675,12 @@ library vulcan {
         _target.setCode(address(watcher).code);
         address(watcher).setCode(targetCode);
 
+        watchers().map[_target] = Watcher(_target);
+
         return Watcher(_target);
+    }
+
+    function calls(address self, uint256 index) internal returns (Watcher.Call memory) {
+        return watchers().map[self].calls(index);
     }
 }
