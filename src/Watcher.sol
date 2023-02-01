@@ -14,19 +14,19 @@ contract Watcher {
         Log[] logs;
     }
 
-    bytes32 constant CALLS_SLOT = keccak256("vulcan.callwatcher.slot");
+    bytes32 constant CALLS_SLOT = keccak256("vulcan.watcher.slot");
     address immutable target = address(this);
-    VulcanVmTest vm;
 
     function calls(uint256 _index) external view returns (Call memory) {
         return _getCalls()[_index];
     }
 
     fallback(bytes calldata _callData) external payable returns (bytes memory) {
-        vulcan.vm().recordLogs();
+        vulcan.vm.recordLogs();
+
         (bool success, bytes memory data) = target.delegatecall(_callData);
 
-        Log[] memory logs = vm.getRecordedLogs();
+        Log[] memory logs = vulcan.vm.getRecordedLogs();
 
         // Filter logs by address and replace in place
         uint256 watcherLogCount = 0;
@@ -37,15 +37,16 @@ contract Watcher {
             }
         }
 
-        // Copy logs to new array
-        Log[] memory filteredLogs = new Log[](watcherLogCount);
-        for (uint256 i = 0; i < watcherLogCount; i++) {
-            filteredLogs[i] = logs[i];
-        }
+        Call storage call = _getCalls().push();
 
-        Call memory call = Call(_callData, success, data, filteredLogs);
-        _getCalls().push(call);
-        // _getCalls().push(call);
+        call.callData = _callData;
+        call.success = success;
+        call.returnData = data;
+
+        // Add logs to call
+        for (uint256 i = 0; i < watcherLogCount; i++) {
+            call.logs.push(logs[i]);
+        }
 
         return data;
     }

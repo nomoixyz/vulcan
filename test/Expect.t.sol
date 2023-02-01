@@ -4,6 +4,11 @@ import { Test, expect, console, vulcan, Watcher } from  "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract CallTest {
+
+    error CustomError(uint256 i);
+
+    event Event(uint256 a);
+
     uint256 num = 69;
 
     function ok() external returns (uint256) {
@@ -12,6 +17,10 @@ contract CallTest {
         num = val;
 
         return val;
+    }
+
+    function emitEvent(uint256 val) external {
+        emit Event(val);
     }
 
     function failWithRevert() external {
@@ -33,8 +42,6 @@ contract CallTest {
     function failWithCustomError() external {
         revert CustomError(num);
     }
-
-    error CustomError(uint256 i);
 }
 
 contract ExpectTest is Test {
@@ -278,7 +285,7 @@ contract ExpectTest is Test {
     function testToHaveSucceeded() external {
         CallTest t = new CallTest();
 
-        CallWatcher watcher = vm.watch(payable(address(t)));
+        Watcher watcher = vm.watch(payable(address(t)));
 
         uint256 result = t.ok();
 
@@ -289,7 +296,7 @@ contract ExpectTest is Test {
     function testToHaveRevertedWith() external {
         CallTest t = new CallTest();
 
-        CallWatcher watcher = vm.watch(payable(address(t)));
+        Watcher watcher = vm.watch(payable(address(t)));
 
         t.failWithStringRevert();
         t.failWithRequireMessage();
@@ -305,4 +312,43 @@ contract ExpectTest is Test {
         expect(watcher.calls(2)).toHaveRevertedWith(expectedError);
     }
 
+    function testToHaveEmittedPass() external {
+        CallTest t = new CallTest();
+
+        Watcher watcher = vm.watch(payable(address(t)));
+
+        t.emitEvent(123);
+
+        expect(watcher.calls(0)).toHaveEmitted("Event(uint256)");
+    }
+
+    function testToHaveEmittedFail() external shouldFail {
+        CallTest t = new CallTest();
+
+        Watcher watcher = vm.watch(payable(address(t)));
+
+        t.emitEvent(123);
+
+        expect(watcher.calls(0)).toHaveEmitted("Fake(uint256)");
+    }
+
+    function testToHaveEmittedWithDataPass() external {
+        CallTest t = new CallTest();
+
+        Watcher watcher = vm.watch(payable(address(t)));
+
+        t.emitEvent(123);
+
+        expect(watcher.calls(0)).toHaveEmitted("Event(uint256)", abi.encode(uint256(123)));
+    }
+
+    function testToHaveEmittedWithDataFail() external shouldFail {
+        CallTest t = new CallTest();
+
+        Watcher watcher = vm.watch(payable(address(t)));
+
+        t.emitEvent(123);
+
+        expect(watcher.calls(0)).toHaveEmitted("Event(uint256)", abi.encode(uint256(321)));
+    }
 }

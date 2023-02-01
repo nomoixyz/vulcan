@@ -464,12 +464,32 @@ library ExpectLib {
         }
     }
 
-    function toHaveEmitted(_CallExpectation memory self, bytes32 eventSig) internal {
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig) internal {
         self.toHaveSucceeded();
 
         bool found = false;
         for (uint256 i = 0; i < self.call.logs.length; i++) {
-            if (self.call.logs[i].topics[i] == eventSig) {
+            Log memory log = self.call.logs[i];
+            if (log.topics.length > 0 && log.topics[0] == keccak256(bytes(eventSig))) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            console.log("Error: event not emitted [call]");
+            console.log("  Event", eventSig);
+            vulcan.fail();
+        }
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes memory data) internal {
+        self.toHaveSucceeded();
+
+        bool found = false;
+        for (uint256 i = 0; i < self.call.logs.length; i++) {
+            Log memory log = self.call.logs[i];
+            if (log.topics.length > 0 && log.topics[0] == keccak256(bytes(eventSig)) && keccak256(log.data) == keccak256(data)) {
                 found = true;
                 break;
             }
