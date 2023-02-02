@@ -15,7 +15,7 @@ contract Watcher {
 
     bytes32 constant CAPTURE_REVERTS_SLOT = keccak256("vulcan.watcher.captureReverts.slot");
     bytes32 constant CALLS_SLOT = keccak256("vulcan.watcher.calls.slot");
-    address immutable target = address(this);
+    address public immutable target = address(this);
 
     function calls(uint256 _index) external view returns (Call memory) {
         return _getCalls()[_index];
