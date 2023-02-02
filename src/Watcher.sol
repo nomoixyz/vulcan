@@ -39,12 +39,12 @@ contract Watcher {
         }
     }
 
-    function disableCaptureReverts() external {
-        bytes32 slot = CAPTURE_REVERTS_SLOT;
+    function captureReverts() external {
+        _setCaptureReverts(true);
+    }
 
-        assembly {
-            sstore(slot, false)
-        }
+    function disableCaptureReverts() external {
+        _setCaptureReverts(false);
     }
 
     fallback(bytes calldata _callData) external payable returns (bytes memory) {
@@ -88,6 +88,14 @@ contract Watcher {
 
         assembly {
             val := sload(slot)
+        }
+    }
+
+    function _setCaptureReverts(bool value) internal {
+        bytes32 slot = CAPTURE_REVERTS_SLOT;
+
+        assembly {
+            sstore(slot, value)
         }
     }
 
