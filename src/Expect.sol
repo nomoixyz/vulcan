@@ -84,6 +84,7 @@ function abs(int256 a) pure returns (uint256) {
 
 library ExpectLib {
     using vulcan for *;
+    using events for *;
 
     /* BOOL */
 
@@ -464,46 +465,99 @@ library ExpectLib {
         }
     }
 
+
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig) internal {
-        self.toHaveEmitted(events.create(eventSig, new Topic[](0), new bytes(0)));
+        self.toHaveEmitted(eventSig, new Topic[](0), new bytes(0));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Topic[1] memory topics) internal {
+        self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Topic[2] memory topics) internal {
+        self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Topic[3] memory topics) internal {
+        self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Topic[4] memory topics) internal {
+        self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes memory data) internal {
-        self.toHaveEmitted(events.create(eventSig, new Topic[](0), data));
+        self.toHaveEmitted(eventSig, new Topic[](0), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[] memory topics) internal {
-        self.toHaveEmitted(events.create(eventSig, topics, new bytes(0)));
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[1] memory topics) internal {
+        self.toHaveEmitted(eventSig, topics.toDynamic(), new bytes(0));
     }
 
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[2] memory topics) internal {
+        self.toHaveEmitted(eventSig, topics.toDynamic(), new bytes(0));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[3] memory topics) internal {
+        self.toHaveEmitted(eventSig, topics.toDynamic(), new bytes(0));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Topic[1] memory topics, bytes memory data) internal {
+        self.toHaveEmitted("", topics.toDynamic(), data);
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Topic[2] memory topics, bytes memory data) internal {
+        self.toHaveEmitted("", topics.toDynamic(), data);
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Topic[3] memory topics, bytes memory data) internal {
+        self.toHaveEmitted("", topics.toDynamic(), data);
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Topic[4] memory topics, bytes memory data) internal {
+        self.toHaveEmitted("", topics.toDynamic(), data);
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[1] memory topics, bytes memory data) internal {
+        self.toHaveEmitted(eventSig, topics.toDynamic(), data);
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[2] memory topics, bytes memory data) internal {
+        self.toHaveEmitted(eventSig, topics.toDynamic(), data);
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[3] memory topics, bytes memory data) internal {
+        self.toHaveEmitted(eventSig, topics.toDynamic(), data);
+    }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[] memory topics, bytes memory data) internal {
-        self.toHaveEmitted(events.create(eventSig, topics, data));
-    }
-
-    function toHaveEmitted(_CallExpectation memory self, Topic[] memory topics, bytes memory data) internal {
-        self.toHaveEmitted(events.create(topics, data));
-    }
-
-    function toHaveEmitted(_CallExpectation memory self, Event memory ev) internal {
         self.toHaveSucceeded();
+
+        Topic[] memory _topics;
+        if (bytes(eventSig).length > 0) {
+            _topics = new Topic[](topics.length + 1);
+            _topics[0] = eventSig.topic();
+            for (uint256 i = 0; i < topics.length; i++) {
+                _topics[i+1] = topics[i];
+            }
+        }
 
         // kind of ugly, improve this whole function
         bool found = false;
         for (uint256 i = 0; i < self.call.logs.length; i++) {
             Log memory log = self.call.logs[i];
 
-            if (log.topics.length < ev._topics.length) {
+            if (log.topics.length < _topics.length) {
                 continue;
             }
 
-            if (ev._data.length > 0 && keccak256(log.data) != keccak256(ev._data)) {
+            if (data.length > 0 && keccak256(log.data) != keccak256(data)) {
                 continue;
             }
 
             bool topicsMatch = true;
-            for (uint256 j = 0; j < ev._topics.length; j++) {
-                if (!ev._topics[j]._any && log.topics[j] != ev._topics[j]._value) {
+            for (uint256 j = 0; j < _topics.length; j++) {
+                if (!_topics[j]._any && log.topics[j] != _topics[j]._value) {
                     topicsMatch = false;
                     break;
                 }
@@ -517,7 +571,7 @@ library ExpectLib {
 
         if (!found) {
             console.log("Error: event not emitted [call]");
-            console.log("  Event", bytes(ev._sig).length > 0 ? ev._sig : "anonymous");
+            console.log("  Event", bytes(eventSig).length > 0 ? eventSig : "anonymous");
             vulcan.fail();
         }
     }

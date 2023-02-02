@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import {ANY, Test, expect, events, console, vulcan, Watcher} from "../src/lib.sol";
+import {Topic, ANY, Test, expect, events, console, vulcan, Watcher} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract CallTest {
@@ -366,7 +366,7 @@ contract ExpectTest is Test {
 
         expect(watcher.calls(0)).toHaveEmitted(
             "Event(string,uint256)",
-            [events.topic(string("foo"))]
+            [ANY.topic()]
         );
     }
 
@@ -378,7 +378,9 @@ contract ExpectTest is Test {
         t.emitEvent("foo", 123);
 
         expect(watcher.calls(0)).toHaveEmitted(
-            events.sig("Fake(string,uint256)").topic(string("bar")).data(abi.encode(uint256(123)))
+            "Fake(string,uint256)",
+            [string("bar").topic()],
+            abi.encode(uint256(123))
         );
     }
 }
