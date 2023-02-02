@@ -667,10 +667,14 @@ library vulcan {
     }
 
     function watcher(address self) internal view returns (Watcher) {
+        require(watchers().map[self], "Address doesn't have a watcher");
+
         return Watcher(payable(self));
     }
 
     function watch(address self) internal returns (Watcher) {
+        require(!watchers().map[self], "Address already have a watcher");
+
         Watcher watcher = new Watcher();
 
         bytes memory targetCode = self.code;
