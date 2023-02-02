@@ -21,7 +21,7 @@ struct Rpc {
 }
 
 struct Watchers {
-    mapping(address => Watcher) map;
+    mapping(address => bool) map;
 }
 
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
@@ -667,7 +667,7 @@ library vulcan {
     }
 
     function watcher(address self) internal view returns (Watcher) {
-        return watchers().map[self];
+        return Watcher(payable(self));
     }
 
     function watch(address self) internal returns (Watcher) {
@@ -678,9 +678,9 @@ library vulcan {
         self.setCode(address(watcher).code);
         address(watcher).setCode(targetCode);
 
-        watchers().map[self] = Watcher(payable(self));
+        watchers().map[self] = true;
 
-        return Watcher(payable(self));
+        return self.watcher();
     }
 
     function watch(VulcanVm, address _target) internal returns (Watcher) {
@@ -692,24 +692,28 @@ library vulcan {
 
         address(self).setCode(self.target().code);
 
-        delete watchers().map[address(self)];
+        watchers().map[address(self)] = false;
     }
 
-    function stopWatch(VulcanVm, address _target) internal {
-        Watcher watcher = watchers().map[_target];
+    function stopWatcher(address self) internal returns (address) {
+        self.watcher().stop();
+        return self;
+    }
 
-        watcher.stop();
+    function stopWatcher(VulcanVm self, address _target) internal returns (VulcanVm) {
+        _target.watcher().stop();
+        return self;
     }
 
     function calls(address self, uint256 index) internal returns (Watcher.Call memory) {
-        return watchers().map[self].calls(index);
+        return self.watcher().calls(index);
     }
 
     function firstCall(address self) internal returns (Watcher.Call memory) {
-        return watchers().map[self].firstCall();
+        return self.watcher().firstCall();
     }
 
     function lastCall(address self) internal returns (Watcher.Call memory) {
-        return watchers().map[self].lastCall();
+        return self.watcher().lastCall();
     }
 }
