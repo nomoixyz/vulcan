@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import {Test, expect, VulcanVm, console, vulcan} from "../src/lib.sol";
+import {Test, expect, VulcanVm, console, vulcan, Watcher} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 library TestExtension {
@@ -134,5 +134,28 @@ contract ExampleTest is Test {
         (resultSender, resultOrigin) = sender.getWithOrigin();
         expect(resultSender).toEqual(address(this));
         expect(resultOrigin).toEqual(tx.origin);
+    }
+
+    function testVmWatchers() external {
+        Sender sender = new Sender();
+        uint256 senderCode = uint256(keccak256(address(sender).code));
+
+        Watcher watcher = vm.watch(payable(address(sender)));
+        uint256 watcherCode = uint256(keccak256(address(watcher).code));
+
+        uint256 watcherTargetCode = uint256(keccak256(watcher.target().code));
+
+        expect(address(vulcan.watchers().map[address(sender)])).toEqual(address(watcher));
+        // The target of the watcher should have the sender code
+        expect(watcherTargetCode).toEqual(senderCode);
+        // The sender code should have the watcher code
+        expect(uint256(keccak256(address(sender).code))).toEqual(watcherCode);
+
+        vm.stopWatch(address(sender));
+
+        // The sender code should be the original sender code
+        expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
+
+        expect(address(vulcan.watchers().map[address(sender)])).toEqual(address(0));
     }
 }

@@ -265,7 +265,7 @@ contract ExpectTest is Test {
     function testToHaveReverted() external {
         CallTest t = new CallTest();
 
-        vm.watch(payable(address(t)));
+        vm.watch(payable(address(t))).captureReverts();
 
         t.failWithRevert();
         t.failWithStringRevert();
@@ -278,6 +278,8 @@ contract ExpectTest is Test {
         expect(address(t).calls(2)).toHaveReverted();
         expect(address(t).calls(3)).toHaveReverted();
         expect(address(t).calls(4)).toHaveReverted();
+        expect(address(t).firstCall()).toHaveReverted();
+        expect(address(t).lastCall()).toHaveReverted();
     }
 
     function testToHaveSucceeded() external {
@@ -288,13 +290,15 @@ contract ExpectTest is Test {
         uint256 result = t.ok();
 
         expect(address(t).calls(0)).toHaveSucceeded();
+        expect(address(t).firstCall()).toHaveSucceeded();
+        expect(address(t).lastCall()).toHaveSucceeded();
         expect(result).toEqual(uint256(keccak256(abi.encodePacked(uint256(69)))));
     }
 
     function testToHaveRevertedWith() external {
         CallTest t = new CallTest();
 
-        vm.watch(payable(address(t)));
+        vm.watch(payable(address(t))).captureReverts();
 
         t.failWithStringRevert();
         t.failWithRequireMessage();
@@ -303,6 +307,8 @@ contract ExpectTest is Test {
         expect(address(t).calls(0)).toHaveRevertedWith(string("Error"));
         expect(address(t).calls(1)).toHaveRevertedWith(string("Require message"));
         expect(address(t).calls(2)).toHaveRevertedWith(CallTest.CustomError.selector);
+        expect(address(t).firstCall()).toHaveRevertedWith(string("Error"));
+        expect(address(t).lastCall()).toHaveRevertedWith(CallTest.CustomError.selector);
 
         bytes memory expectedError = abi.encodeWithSelector(CallTest.CustomError.selector, uint256(69));
         expect(address(t).calls(2)).toHaveRevertedWith(expectedError);

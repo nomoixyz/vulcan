@@ -680,7 +680,29 @@ library vulcan {
         return Watcher(_target);
     }
 
+    function stopWatch(VulcanVm, address _target) internal {
+        Watcher watcher = watchers().map[_target];
+
+        if (address(watcher) == address(0)) {
+            return;
+        }
+
+        watcher.reset();
+
+        _target.setCode(watcher.target().code);
+
+        delete watchers().map[_target];
+    }
+
     function calls(address self, uint256 index) internal returns (Watcher.Call memory) {
         return watchers().map[self].calls(index);
+    }
+
+    function firstCall(address self) internal returns (Watcher.Call memory) {
+        return watchers().map[self].firstCall();
+    }
+
+    function lastCall(address self) internal returns (Watcher.Call memory) {
+        return watchers().map[self].lastCall();
     }
 }
