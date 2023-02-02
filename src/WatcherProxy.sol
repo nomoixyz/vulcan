@@ -3,7 +3,7 @@ pragma solidity >=0.7.0;
 
 import "./Vulcan.sol";
 
-contract Watcher {
+contract WatcherProxy {
     using vulcan for *;
 
     struct Call {

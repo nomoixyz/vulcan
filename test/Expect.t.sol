@@ -317,7 +317,7 @@ contract ExpectTest is Test {
     function testToHaveEmittedPass() external {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(address(t));
+        Watcher memory watcher = vm.watch(address(t));
 
         t.emitEvent("foo", 123);
 
@@ -327,7 +327,7 @@ contract ExpectTest is Test {
     function testToHaveEmittedFail() external shouldFail {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(address(t));
+        Watcher memory watcher = vm.watch(address(t));
 
         t.emitEvent("foo", 123);
 
@@ -337,7 +337,7 @@ contract ExpectTest is Test {
     function testToHaveEmittedWithDataPass() external {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(address(t));
+        Watcher memory watcher = vm.watch(address(t));
 
         t.emitEvent("foo", 123);
 
@@ -347,7 +347,7 @@ contract ExpectTest is Test {
     function testToHaveEmittedWithDataFail() external shouldFail {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(address(t));
+        Watcher memory watcher = vm.watch(address(t));
 
         t.emitEvent("foo", 123);
 
@@ -357,7 +357,7 @@ contract ExpectTest is Test {
     function testToHaveEmittedWithBuilderPass() external {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(address(t));
+        Watcher memory watcher = vm.watch(address(t));
 
         t.emitEvent("foo", 123);
 
@@ -369,7 +369,7 @@ contract ExpectTest is Test {
     function testToHaveEmittedWithBuilderFail() external shouldFail {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(address(t));
+        Watcher memory watcher = vm.watch(address(t));
 
         t.emitEvent("foo", 123);
 

@@ -2,10 +2,14 @@
 pragma solidity >=0.7.0;
 
 import { Vm as Hevm } from "forge-std/Vm.sol";
-import {Watcher} from "./Watcher.sol";
+import {WatcherProxy} from "./WatcherProxy.sol";
 
 interface VulcanVmSafe {}
 interface VulcanVm is VulcanVmSafe {}
+
+struct Watcher {
+    WatcherProxy proxy;
+}
 
 /// @dev struct that represent a log
 struct Log {
@@ -666,38 +670,48 @@ library vulcan {
         }
     }
 
-    function watcher(address self) internal view returns (Watcher) {
+    function watcher(address self) internal view returns (Watcher memory) {
         require(watchers().map[self], "Address doesn't have a watcher");
 
-        return Watcher(payable(self));
+        return Watcher(WatcherProxy(payable(self)));
     }
 
-    function watch(address self) internal returns (Watcher) {
+    function watch(address self) internal returns (Watcher memory) {
         require(!watchers().map[self], "Address already has a watcher");
 
-        Watcher watcher = new Watcher();
+        WatcherProxy proxy = new WatcherProxy();
 
         bytes memory targetCode = self.code;
 
         // Switcheroo
-        self.setCode(address(watcher).code);
-        address(watcher).setCode(targetCode);
+        self.setCode(address(proxy).code);
+        address(proxy).setCode(targetCode);
 
         watchers().map[self] = true;
 
         return self.watcher();
     }
 
-    function watch(VulcanVm, address _target) internal returns (Watcher) {
+    function watch(VulcanVm, address _target) internal returns (Watcher memory) {
         return _target.watch();
     }
 
-    function stop(Watcher self) internal {
-        self.reset();
+    function captureReverts(Watcher memory self) internal returns (Watcher memory) {
+        self.proxy.captureReverts();
+        return self;
+    }
 
-        address(self).setCode(self.target().code);
+    function disableCaptureReverts(Watcher memory self) internal returns (Watcher memory) {
+        self.proxy.disableCaptureReverts();
+        return self;
+    }
 
-        watchers().map[address(self)] = false;
+    function stop(Watcher memory self) internal {
+        self.proxy.reset();
+
+        address(self.proxy).setCode(self.proxy.target().code);
+
+        watchers().map[address(self.proxy)] = false;
     }
 
     function stopWatcher(address self) internal returns (address) {
@@ -710,15 +724,27 @@ library vulcan {
         return self;
     }
 
-    function calls(address self, uint256 index) internal returns (Watcher.Call memory) {
+    function calls(Watcher memory self, uint256 index) internal returns (WatcherProxy.Call memory) {
+        return self.proxy.calls(index);
+    }
+
+    function calls(address self, uint256 index) internal returns (WatcherProxy.Call memory) {
         return self.watcher().calls(index);
     }
 
-    function firstCall(address self) internal returns (Watcher.Call memory) {
+    function firstCall(Watcher memory self) internal returns (WatcherProxy.Call memory) {
+        return self.proxy.firstCall();
+    }
+
+    function firstCall(address self) internal returns (WatcherProxy.Call memory) {
         return self.watcher().firstCall();
     }
 
-    function lastCall(address self) internal returns (Watcher.Call memory) {
+    function lastCall(Watcher memory self) internal returns (WatcherProxy.Call memory) {
+        return self.proxy.lastCall();
+    }
+
+    function lastCall(address self) internal returns (WatcherProxy.Call memory) {
         return self.watcher().lastCall();
     }
 }
