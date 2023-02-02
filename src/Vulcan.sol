@@ -679,6 +679,7 @@ library vulcan {
 
         bytes memory targetCode = self.code;
 
+        // Switcheroo
         self.setCode(address(watcher).code);
         address(watcher).setCode(targetCode);
 
