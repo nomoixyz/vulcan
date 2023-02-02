@@ -21,6 +21,16 @@ contract Watcher {
         return _getCalls()[_index];
     }
 
+    function firstCall() external view returns (Call memory) {
+        return _getCalls()[0];
+    }
+
+    function lastCall() external view returns (Call memory) {
+        Call[] memory calls = _getCalls();
+
+        return calls[calls.length - 1];
+    }
+
     function captureReverts() external {
         bytes32 slot = CAPTURE_REVERTS_SLOT;
 
