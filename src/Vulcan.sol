@@ -699,10 +699,10 @@ library vulcan {
     }
 
     function firstCall(address self) internal returns (Watcher.Call memory) {
-        return watchers().map(self).firstCall();
+        return watchers().map[self].firstCall();
     }
 
     function lastCall(address self) internal returns (Watcher.Call memory) {
-        return watchers().map(self).lastCall();
+        return watchers().map[self].lastCall();
     }
 }
