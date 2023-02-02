@@ -31,13 +31,17 @@ contract Watcher {
         return calls[calls.length - 1];
     }
 
-    function captureReverts() external {
-        bytes32 slot = CAPTURE_REVERTS_SLOT;
+    function reset() external {
+        _setCaptureReverts(false);
 
-        assembly {
-            sstore(slot, true)
+        Call[] storage calls = _getCalls();
+
+        uint256 callsLength = calls.length;
+
+        for (uint256 i; i < callsLength; ++i) {
+            calls.pop();
         }
-    }
+    } 
 
     function captureReverts() external {
         _setCaptureReverts(true);
