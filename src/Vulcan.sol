@@ -683,4 +683,12 @@ library vulcan {
     function calls(address self, uint256 index) internal returns (Watcher.Call memory) {
         return watchers().map[self].calls(index);
     }
+
+    function firstCall(address self) internal returns (Watcher.Call memory) {
+        return watchers().map(self).firstCall();
+    }
+
+    function lastCall(address self) internal returns (Watcher.Call memory) {
+        return watchers().map(self).lastCall();
+    }
 }
