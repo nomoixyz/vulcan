@@ -673,7 +673,7 @@ library vulcan {
     }
 
     function watch(address self) internal returns (Watcher) {
-        require(!watchers().map[self], "Address already have a watcher");
+        require(!watchers().map[self], "Address already has a watcher");
 
         Watcher watcher = new Watcher();
 
