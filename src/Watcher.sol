@@ -6,10 +6,6 @@ import "./Vulcan.sol";
 contract Watcher {
     using vulcan for *;
 
-    struct Storage {
-        bool captureReverts;
-    }
-
     struct Call {
         bytes callData;
         bool success;
@@ -17,7 +13,7 @@ contract Watcher {
         Log[] logs;
     }
 
-    bytes32 constant STORAGE_SLOT = keccak256("vulcan.watcher.storage.slot");
+    bytes32 constant CAPTURE_REVERTS_SLOT = keccak256("vulcan.watcher.captureReverts.slot");
     bytes32 constant CALLS_SLOT = keccak256("vulcan.watcher.calls.slot");
     address immutable target = address(this);
 
@@ -26,7 +22,12 @@ contract Watcher {
     }
 
     function captureReverts() external {
-        _getStorage().captureReverts = true;
+        bytes32 slot = CAPTURE_REVERTS_SLOT;
+
+        assembly {
+            sstore(slot, true)
+        }
+    }
     }
 
     fallback(bytes calldata _callData) external payable returns (bytes memory) {
@@ -56,7 +57,7 @@ contract Watcher {
             call.logs.push(logs[i]);
         }
 
-        if (!_getStorage().captureReverts && !success) {
+        if (!_shouldCaptureReverts() && !success) {
             assembly {
                 revert(add(returnData, 32), mload(returnData))
             }
@@ -65,11 +66,11 @@ contract Watcher {
         return returnData;
     }
 
-    function _getStorage() internal pure returns (Storage storage s) {
-        bytes32 slot = STORAGE_SLOT;
+    function _shouldCaptureReverts() internal view returns (bool val) {
+        bytes32 slot = CAPTURE_REVERTS_SLOT;
 
         assembly {
-            s.slot := slot
+            val := sload(slot)
         }
     }
 
