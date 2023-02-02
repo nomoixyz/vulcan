@@ -71,6 +71,7 @@ struct _CallExpectation {
     Watcher.Call call;
 }
 
+
 // TODO: move somewhere else?
 // Adapted from forge-std
 function abs(int256 a) pure returns (uint256) {
@@ -464,69 +465,59 @@ library ExpectLib {
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig) internal {
-        self.toHaveSucceeded();
-
-        bool found = false;
-        for (uint256 i = 0; i < self.call.logs.length; i++) {
-            Log memory log = self.call.logs[i];
-            if (log.topics.length > 0 && log.topics[0] == keccak256(bytes(eventSig))) {
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            console.log("Error: event not emitted [call]");
-            console.log("  Event", eventSig);
-            vulcan.fail();
-        }
+        self.toHaveEmitted(events.create(eventSig, new Topic[](0), new bytes(0)));
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes memory data) internal {
-        self.toHaveSucceeded();
+        self.toHaveEmitted(events.create(eventSig, new Topic[](0), data));
+    }
 
-        bool found = false;
-        for (uint256 i = 0; i < self.call.logs.length; i++) {
-            Log memory log = self.call.logs[i];
-            if (log.topics.length > 0 && log.topics[0] == keccak256(bytes(eventSig)) && keccak256(log.data) == keccak256(data)) {
-                found = true;
-                break;
-            }
-        }
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[] memory topics) internal {
+        self.toHaveEmitted(events.create(eventSig, topics, new bytes(0)));
+    }
 
-        if (!found) {
-            console.log("Error: event not emitted [call]");
-            console.log("  Event", eventSig);
-            vulcan.fail();
-        }
+
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[] memory topics, bytes memory data) internal {
+        self.toHaveEmitted(events.create(eventSig, topics, data));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Topic[] memory topics, bytes memory data) internal {
+        self.toHaveEmitted(events.create(topics, data));
     }
 
     function toHaveEmitted(_CallExpectation memory self, Event memory ev) internal {
         self.toHaveSucceeded();
 
+        // kind of ugly, improve this whole function
         bool found = false;
         for (uint256 i = 0; i < self.call.logs.length; i++) {
             Log memory log = self.call.logs[i];
 
-            if (log.topics.length < ev.topics.length) {
+            if (log.topics.length < ev._topics.length) {
                 continue;
             }
 
-            if (ev._data.length > 0 && keccak256(log.data) == keccak256(ev._data)) {
-                found = true;
+            if (ev._data.length > 0 && keccak256(log.data) != keccak256(ev._data)) {
+                continue;
             }
 
-            for (uint256 j = 0; j < ev.topics.length; j++) {
-                if (log.topics[j] != ev.topics[j]) {
-                    found = false;
+            bool topicsMatch = true;
+            for (uint256 j = 0; j < ev._topics.length; j++) {
+                if (!ev._topics[j]._any && log.topics[j] != ev._topics[j]._value) {
+                    topicsMatch = false;
                     break;
                 }
+            }
+
+            if (topicsMatch) {
+                found = true;
+                break;
             }
         }
 
         if (!found) {
             console.log("Error: event not emitted [call]");
-            console.log("  TODO");
+            console.log("  Event", bytes(ev._sig).length > 0 ? ev._sig : "anonymous");
             vulcan.fail();
         }
     }
@@ -536,73 +527,9 @@ function expect(bool actual) pure returns (_BoolExpectation memory) {
     return _BoolExpectation(actual, _BoolExpectationNot(actual));
 }
 
-// function expect(uint8 actual) pure returns (_UintExpectation memory) {
-//     return _UintExpectation(actual, _UintExpectationNot(actual));
-// }
-
-// function expect(uint32 actual) pure returns (_UintExpectation memory) {
-//     return _UintExpectation(actual, _UintExpectationNot(actual));
-// }
-
-// function expect(uint64 actual) pure returns (_UintExpectation memory) {
-//     return _UintExpectation(actual, _UintExpectationNot(actual));
-// }
-
-// function expect(uint96 actual) pure returns (_UintExpectation memory) {
-//     return _UintExpectation(actual, _UintExpectationNot(actual));
-// }
-
-// function expect(uint128 actual) pure returns (_UintExpectation memory) {
-//     return _UintExpectation(actual, _UintExpectationNot(actual));
-// }
-
-// function expect(uint160 actual) pure returns (_UintExpectation memory) {
-//     return _UintExpectation(actual, _UintExpectationNot(actual));
-// }
-
-// function expect(uint192 actual) pure returns (_UintExpectation memory) {
-//     return _UintExpectation(actual, _UintExpectationNot(actual));
-// }
-
-// function expect(uint224 actual) pure returns (_UintExpectation memory) {
-//     return _UintExpectation(actual, _UintExpectationNot(actual));
-// }
-
 function expect(uint256 actual) pure returns (_UintExpectation memory) {
     return _UintExpectation(actual, _UintExpectationNot(actual));
 }
-
-// function expect(int8 actual) pure returns (_IntExpectation memory) {
-//     return _IntExpectation(actual, _IntExpectationNot(actual));
-// }
-
-// function expect(int32 actual) pure returns (_IntExpectation memory) {
-//     return _IntExpectation(actual, _IntExpectationNot(actual));
-// }
-
-// function expect(int64 actual) pure returns (_IntExpectation memory) {
-//     return _IntExpectation(actual, _IntExpectationNot(actual));
-// }
-
-// function expect(int96 actual) pure returns (_IntExpectation memory) {
-//     return _IntExpectation(actual, _IntExpectationNot(actual));
-// }
-
-// function expect(int128 actual) pure returns (_IntExpectation memory) {
-//     return _IntExpectation(actual, _IntExpectationNot(actual));
-// }
-
-// function expect(int160 actual) pure returns (_IntExpectation memory) {
-//     return _IntExpectation(actual, _IntExpectationNot(actual));
-// }
-
-// function expect(int192 actual) pure returns (_IntExpectation memory) {
-//     return _IntExpectation(actual, _IntExpectationNot(actual));
-// }
-
-// function expect(int224 actual) pure returns (_IntExpectation memory) {
-//     return _IntExpectation(actual, _IntExpectationNot(actual));
-// }
 
 function expect(int256 actual) pure returns (_IntExpectation memory) {
     return _IntExpectation(actual, _IntExpectationNot(actual));

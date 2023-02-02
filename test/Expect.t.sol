@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import {Test, expect, events, console, vulcan, Watcher} from "../src/lib.sol";
+import {ANY, Test, expect, events, console, vulcan, Watcher} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract CallTest {
@@ -45,6 +45,7 @@ contract CallTest {
 
 contract ExpectTest is Test {
     using vulcan for *;
+    using events for *;
 
     modifier shouldFail() {
         bool pre = vulcan.failed();
@@ -354,7 +355,9 @@ contract ExpectTest is Test {
         expect(watcher.calls(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(321)));
     }
 
-    function testToHaveEmittedWithBuilderPass() external {
+    event Event(string indexed a, uint256 b);
+
+    function testToHaveEmittedWithTopicsPass() external {
         CallTest t = new CallTest();
 
         Watcher watcher = vm.watch(payable(address(t)));
@@ -362,11 +365,12 @@ contract ExpectTest is Test {
         t.emitEvent("foo", 123);
 
         expect(watcher.calls(0)).toHaveEmitted(
-            events.sig("Event(string,uint256)").indexedParam(string("foo")).data(abi.encode(uint256(123)))
+            "Event(string,uint256)",
+            [events.topic(string("foo"))]
         );
     }
 
-    function testToHaveEmittedWithBuilderFail() external shouldFail {
+    function testToHaveEmittedWithTopicsFail() external shouldFail {
         CallTest t = new CallTest();
 
         Watcher watcher = vm.watch(payable(address(t)));
@@ -374,7 +378,7 @@ contract ExpectTest is Test {
         t.emitEvent("foo", 123);
 
         expect(watcher.calls(0)).toHaveEmitted(
-            events.sig("Fake(string,uint256)").indexedParam(string("bar")).data(abi.encode(uint256(123)))
+            events.sig("Fake(string,uint256)").topic(string("bar")).data(abi.encode(uint256(123)))
         );
     }
 }
