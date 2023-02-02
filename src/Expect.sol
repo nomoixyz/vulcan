@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.7.0;
 import { console } from "./Console.sol";
+import "./Events.sol";
 import "./Vulcan.sol";
 
 struct _BoolExpectation {
@@ -64,6 +65,10 @@ struct _StringExpectation {
 
 struct _StringExpectationNot {
     string actual;
+}
+
+struct _CallExpectation {
+    Watcher.Call call;
 }
 
 // TODO: move somewhere else?
@@ -408,6 +413,123 @@ library ExpectLib {
             vulcan.fail();
         }
     }
+
+    function toHaveReverted(_CallExpectation memory self) internal {
+        if (self.call.success) {
+            console.log("Error: call expected to revert [call]");
+            vulcan.fail();
+        }
+    }
+
+    function toHaveRevertedWith(_CallExpectation memory self, bytes4 expectedSelector) internal {
+        self.toHaveReverted();
+
+        bytes4 actualSelector = bytes4(self.call.returnData);
+
+        if (!self.call.success && actualSelector != expectedSelector) {
+            console.log("Error: call expected to revert with error [call]");
+            console.log("  Expected error", expectedSelector);
+            console.log("    Actual error", actualSelector);
+
+            vulcan.fail();
+        }
+    }
+
+    function toHaveRevertedWith(_CallExpectation memory self, string memory error) internal {
+        bytes memory expectedError = abi.encodeWithSignature("Error(string)", error);
+
+        self.toHaveRevertedWith(expectedError);
+    }
+
+    function toHaveRevertedWith(_CallExpectation memory self, bytes memory expectedError) internal {
+        self.toHaveReverted();
+
+        bytes32 expectedHash = keccak256(expectedError);
+        bytes32 actualHash = keccak256(self.call.returnData);
+
+        if (!self.call.success && actualHash != expectedHash) {
+            console.log("Error: function expected to revert with error [call]");
+            console.log("  Expected error", expectedError);
+            console.log("    Actual error", self.call.returnData);
+
+            vulcan.fail();
+        }
+    }
+
+    function toHaveSucceeded(_CallExpectation memory self) internal {
+        if (!self.call.success) {
+            console.log("Error: call expected to succeed [call]");
+            vulcan.fail();
+        }
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig) internal {
+        self.toHaveSucceeded();
+
+        bool found = false;
+        for (uint256 i = 0; i < self.call.logs.length; i++) {
+            Log memory log = self.call.logs[i];
+            if (log.topics.length > 0 && log.topics[0] == keccak256(bytes(eventSig))) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            console.log("Error: event not emitted [call]");
+            console.log("  Event", eventSig);
+            vulcan.fail();
+        }
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes memory data) internal {
+        self.toHaveSucceeded();
+
+        bool found = false;
+        for (uint256 i = 0; i < self.call.logs.length; i++) {
+            Log memory log = self.call.logs[i];
+            if (log.topics.length > 0 && log.topics[0] == keccak256(bytes(eventSig)) && keccak256(log.data) == keccak256(data)) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            console.log("Error: event not emitted [call]");
+            console.log("  Event", eventSig);
+            vulcan.fail();
+        }
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, Event memory ev) internal {
+        self.toHaveSucceeded();
+
+        bool found = false;
+        for (uint256 i = 0; i < self.call.logs.length; i++) {
+            Log memory log = self.call.logs[i];
+
+            if (log.topics.length < ev.topics.length) {
+                continue;
+            }
+
+            if (ev._data.length > 0 && keccak256(log.data) == keccak256(ev._data)) {
+                found = true;
+            }
+
+            for (uint256 j = 0; j < ev.topics.length; j++) {
+                if (log.topics[j] != ev.topics[j]) {
+                    found = false;
+                    break;
+                }
+            }
+        }
+
+        if (!found) {
+            console.log("Error: event not emitted [call]");
+            console.log("  TODO");
+            vulcan.fail();
+        }
+    }
 }
 
 function expect(bool actual) pure returns (_BoolExpectation memory) {
@@ -502,6 +624,10 @@ function expect(string memory actual) pure returns (_StringExpectation memory) {
     return _StringExpectation(actual, _StringExpectationNot(actual));
 }
 
+function expect(Watcher.Call memory call) pure returns (_CallExpectation memory) {
+    return _CallExpectation(call);
+}
+
 using ExpectLib for _BoolExpectation global;
 using ExpectLib for _BoolExpectationNot global;
 using ExpectLib for _UintExpectation global;
@@ -516,3 +642,4 @@ using ExpectLib for _BytesExpectation global;
 using ExpectLib for _BytesExpectationNot global;
 using ExpectLib for _StringExpectation global;
 using ExpectLib for _StringExpectationNot global;
+using ExpectLib for _CallExpectation global;

@@ -8,9 +8,7 @@ import "./Console.sol";
 contract Script {
     using vulcan for *;
 
-    VulcanVmCommon vm;
 
     constructor() {
-        vm.setVm(vulcan.HEVM);
     }
 }
