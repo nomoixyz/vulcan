@@ -666,32 +666,39 @@ library vulcan {
         }
     }
 
-    function watch(VulcanVm, address payable _target) internal returns (Watcher) {
+    function watcher(address self) internal view returns (Watcher) {
+        return watchers().map[self];
+    }
+
+    function watch(address self) internal returns (Watcher) {
         Watcher watcher = new Watcher();
 
-        bytes memory targetCode = _target.code;
+        bytes memory targetCode = self.code;
 
-        // Switcheroo
-        _target.setCode(address(watcher).code);
+        self.setCode(address(watcher).code);
         address(watcher).setCode(targetCode);
 
-        watchers().map[_target] = Watcher(_target);
+        watchers().map[self] = Watcher(payable(self));
 
-        return Watcher(_target);
+        return Watcher(payable(self));
+    }
+
+    function watch(VulcanVm, address _target) internal returns (Watcher) {
+        return _target.watch();
+    }
+
+    function stop(Watcher self) internal {
+        self.reset();
+
+        address(self).setCode(self.target().code);
+
+        delete watchers().map[address(self)];
     }
 
     function stopWatch(VulcanVm, address _target) internal {
         Watcher watcher = watchers().map[_target];
 
-        if (address(watcher) == address(0)) {
-            return;
-        }
-
-        watcher.reset();
-
-        _target.setCode(watcher.target().code);
-
-        delete watchers().map[_target];
+        watcher.stop();
     }
 
     function calls(address self, uint256 index) internal returns (Watcher.Call memory) {

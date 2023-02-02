@@ -140,7 +140,7 @@ contract ExampleTest is Test {
         Sender sender = new Sender();
         uint256 senderCode = uint256(keccak256(address(sender).code));
 
-        Watcher watcher = vm.watch(payable(address(sender)));
+        Watcher watcher = vm.watch(address(sender));
         uint256 watcherCode = uint256(keccak256(address(watcher).code));
 
         uint256 watcherTargetCode = uint256(keccak256(watcher.target().code));
@@ -152,6 +152,29 @@ contract ExampleTest is Test {
         expect(uint256(keccak256(address(sender).code))).toEqual(watcherCode);
 
         vm.stopWatch(address(sender));
+
+        // The sender code should be the original sender code
+        expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
+
+        expect(address(vulcan.watchers().map[address(sender)])).toEqual(address(0));
+    }
+
+    function testVmWatchersFromAddress() external {
+        Sender sender = new Sender();
+        uint256 senderCode = uint256(keccak256(address(sender).code));
+
+        Watcher watcher = address(sender).watch();
+        uint256 watcherCode = uint256(keccak256(address(watcher).code));
+
+        uint256 watcherTargetCode = uint256(keccak256(watcher.target().code));
+
+        expect(address(vulcan.watchers().map[address(sender)])).toEqual(address(watcher));
+        // The target of the watcher should have the sender code
+        expect(watcherTargetCode).toEqual(senderCode);
+        // The sender code should have the watcher code
+        expect(uint256(keccak256(address(sender).code))).toEqual(watcherCode);
+
+        address(sender).watcher().stop();
 
         // The sender code should be the original sender code
         expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
