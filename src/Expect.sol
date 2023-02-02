@@ -71,6 +71,41 @@ struct _CallExpectation {
     Watcher.Call call;
 }
 
+library any {
+    struct _AnyData {
+        uint256 used;
+        uint256 checked;
+    }
+
+    function topic() internal returns (bytes32) {
+       return _any();
+    }
+
+    function check(bytes32 val) internal returns (bool) {
+        _AnyData storage data = _getData();
+
+        for (uint256 i = data.checked; i < data.used; i++) {
+            if (keccak256(abi.encode(msg.data, i)) == val) {
+                data.checked++;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function _getData() private view returns (_AnyData storage data) {
+        uint256 slot = uint256(keccak256("any"));
+        assembly {
+            data.slot := slot
+        }
+    }
+
+    function _any() private returns (bytes32) {
+        _AnyData storage data = _getData();
+        return keccak256(abi.encode(msg.data, data.used++));
+    }
+}
 
 // TODO: move somewhere else?
 // Adapted from forge-std
@@ -81,6 +116,7 @@ function abs(int256 a) pure returns (uint256) {
 
     return uint256(a > 0 ? a : -a);
 }
+
 
 library ExpectLib {
     using vulcan for *;
@@ -467,75 +503,75 @@ library ExpectLib {
 
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig) internal {
-        self.toHaveEmitted(eventSig, new Topic[](0), new bytes(0));
+        self.toHaveEmitted(eventSig, new bytes32[](0), new bytes(0));
     }
 
-    function toHaveEmitted(_CallExpectation memory self, Topic[1] memory topics) internal {
+    function toHaveEmitted(_CallExpectation memory self, bytes32[1] memory topics) internal {
         self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
     }
 
-    function toHaveEmitted(_CallExpectation memory self, Topic[2] memory topics) internal {
+    function toHaveEmitted(_CallExpectation memory self, bytes32[2] memory topics) internal {
         self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
     }
 
-    function toHaveEmitted(_CallExpectation memory self, Topic[3] memory topics) internal {
+    function toHaveEmitted(_CallExpectation memory self, bytes32[3] memory topics) internal {
         self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
     }
 
-    function toHaveEmitted(_CallExpectation memory self, Topic[4] memory topics) internal {
+    function toHaveEmitted(_CallExpectation memory self, bytes32[4] memory topics) internal {
         self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes memory data) internal {
-        self.toHaveEmitted(eventSig, new Topic[](0), data);
+        self.toHaveEmitted(eventSig, new bytes32[](0), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[1] memory topics) internal {
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[1] memory topics) internal {
         self.toHaveEmitted(eventSig, topics.toDynamic(), new bytes(0));
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[2] memory topics) internal {
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[2] memory topics) internal {
         self.toHaveEmitted(eventSig, topics.toDynamic(), new bytes(0));
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[3] memory topics) internal {
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[3] memory topics) internal {
         self.toHaveEmitted(eventSig, topics.toDynamic(), new bytes(0));
     }
 
-    function toHaveEmitted(_CallExpectation memory self, Topic[1] memory topics, bytes memory data) internal {
+    function toHaveEmitted(_CallExpectation memory self, bytes32[1] memory topics, bytes memory data) internal {
         self.toHaveEmitted("", topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, Topic[2] memory topics, bytes memory data) internal {
+    function toHaveEmitted(_CallExpectation memory self, bytes32[2] memory topics, bytes memory data) internal {
         self.toHaveEmitted("", topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, Topic[3] memory topics, bytes memory data) internal {
+    function toHaveEmitted(_CallExpectation memory self, bytes32[3] memory topics, bytes memory data) internal {
         self.toHaveEmitted("", topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, Topic[4] memory topics, bytes memory data) internal {
+    function toHaveEmitted(_CallExpectation memory self, bytes32[4] memory topics, bytes memory data) internal {
         self.toHaveEmitted("", topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[1] memory topics, bytes memory data) internal {
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[1] memory topics, bytes memory data) internal {
         self.toHaveEmitted(eventSig, topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[2] memory topics, bytes memory data) internal {
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[2] memory topics, bytes memory data) internal {
         self.toHaveEmitted(eventSig, topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[3] memory topics, bytes memory data) internal {
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[3] memory topics, bytes memory data) internal {
         self.toHaveEmitted(eventSig, topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, Topic[] memory topics, bytes memory data) internal {
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[] memory topics, bytes memory data) internal {
         self.toHaveSucceeded();
 
-        Topic[] memory _topics;
+        bytes32[] memory _topics;
         if (bytes(eventSig).length > 0) {
-            _topics = new Topic[](topics.length + 1);
+            _topics = new bytes32[](topics.length + 1);
             _topics[0] = eventSig.topic();
             for (uint256 i = 0; i < topics.length; i++) {
                 _topics[i+1] = topics[i];
@@ -557,7 +593,8 @@ library ExpectLib {
 
             bool topicsMatch = true;
             for (uint256 j = 0; j < _topics.length; j++) {
-                if (!_topics[j]._any && log.topics[j] != _topics[j]._value) {
+                if (!any.check(_topics[j]) && log.topics[j] != _topics[j]) {
+                    console.log("topics don't match");
                     topicsMatch = false;
                     break;
                 }

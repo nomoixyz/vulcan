@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import {Topic, ANY, Test, expect, events, console, vulcan, Watcher} from "../src/lib.sol";
+import {any, Test, expect, events, console, vulcan, Watcher} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract CallTest {
@@ -318,11 +318,11 @@ contract ExpectTest is Test {
     function testToHaveEmittedPass() external {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(payable(address(t)));
+        vm.watch(payable(address(t)));
 
         t.emitEvent("foo", 123);
 
-        expect(watcher.calls(0)).toHaveEmitted("Event(string,uint256)");
+        expect(address(t).calls(0)).toHaveEmitted("Event(string,uint256)");
     }
 
     function testToHaveEmittedFail() external shouldFail {
@@ -360,24 +360,24 @@ contract ExpectTest is Test {
     function testToHaveEmittedWithTopicsPass() external {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(payable(address(t)));
+        vm.watch(payable(address(t)));
 
         t.emitEvent("foo", 123);
 
-        expect(watcher.calls(0)).toHaveEmitted(
+        expect(address(t).calls(0)).toHaveEmitted(
             "Event(string,uint256)",
-            [ANY.topic()]
+            [any.topic()]
         );
     }
 
     function testToHaveEmittedWithTopicsFail() external shouldFail {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(payable(address(t)));
+        vm.watch(payable(address(t)));
 
         t.emitEvent("foo", 123);
 
-        expect(watcher.calls(0)).toHaveEmitted(
+        expect(address(t).calls(0)).toHaveEmitted(
             "Fake(string,uint256)",
             [string("bar").topic()],
             abi.encode(uint256(123))
