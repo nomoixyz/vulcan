@@ -3,6 +3,10 @@ pragma solidity >=0.7.0;
 
 import "./Vulcan.sol";
 
+struct Watcher {
+    WatcherStorage watcherStorage;
+}
+
 struct Call {
     bytes callData;
     bool success;
@@ -34,11 +38,7 @@ contract WatcherStorage {
         }
     }
 
-    function calls() external view returns (Call[] memory) {
-        return _calls;
-    }
-
-    function callAt(uint256 index) external view returns (Call memory) {
+    function calls(uint256 index) external view returns (Call memory) {
         return _calls[index];
     }
 

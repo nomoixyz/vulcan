@@ -2,14 +2,10 @@
 pragma solidity >=0.7.0;
 
 import { Vm as Hevm } from "forge-std/Vm.sol";
-import {WatcherProxy, WatcherStorage, Call} from "./Watcher.sol";
+import {WatcherProxy, WatcherStorage, Call, Watcher} from "./Watcher.sol";
 
 interface VulcanVmSafe {}
 interface VulcanVm is VulcanVmSafe {}
-
-struct Watcher {
-    WatcherStorage watcherStorage;
-}
 
 /// @dev struct that represent a log
 struct Log {
@@ -724,11 +720,11 @@ library vulcan {
     }
 
     function calls(address self, uint256 index) internal returns (Call memory) {
-        return watchers().storages[self].callAt(index);
+        return watchers().storages[self].calls(index);
     }
 
     function calls(Watcher memory self, uint256 index) internal returns (Call memory) {
-        return self.watcherStorage.callAt(index);
+        return self.watcherStorage.calls(index);
     }
 
     function firstCall(address self) internal returns (Call memory) {
