@@ -143,7 +143,7 @@ contract ExampleTest is Test {
         Watcher memory watcher = vm.watch(address(sender));
         uint256 watcherCode = uint256(keccak256(address(watcher.proxy).code));
 
-        uint256 watcherTargetCode = uint256(keccak256(watcher.proxy.target().code));
+        uint256 watcherTargetCode = uint256(keccak256(watcher.target().code));
 
         expect(vulcan.watchers().map[address(sender)]).toEqual(true);
         // The target of the watcher should have the sender code
@@ -166,7 +166,7 @@ contract ExampleTest is Test {
         Watcher memory watcher = address(sender).watch();
         uint256 watcherCode = uint256(keccak256(address(watcher.proxy).code));
 
-        uint256 watcherTargetCode = uint256(keccak256(watcher.proxy.target().code));
+        uint256 watcherTargetCode = uint256(keccak256(watcher.target().code));
 
         expect(vulcan.watchers().map[address(sender)]).toEqual(true);
         // The target of the watcher should have the sender code

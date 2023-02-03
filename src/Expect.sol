@@ -68,7 +68,7 @@ struct _StringExpectationNot {
 }
 
 struct _CallExpectation {
-    WatcherProxy.Call call;
+    Call call;
 }
 
 // TODO: move somewhere else?
@@ -624,7 +624,7 @@ function expect(string memory actual) pure returns (_StringExpectation memory) {
     return _StringExpectation(actual, _StringExpectationNot(actual));
 }
 
-function expect(WatcherProxy.Call memory call) pure returns (_CallExpectation memory) {
+function expect(Call memory call) pure returns (_CallExpectation memory) {
     return _CallExpectation(call);
 }
 
