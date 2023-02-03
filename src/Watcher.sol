@@ -3,10 +3,6 @@ pragma solidity >=0.7.0;
 
 import "./Vulcan.sol";
 
-struct Watcher {
-    WatcherProxy proxy;
-}
-
 struct Call {
     bytes callData;
     bool success;
@@ -14,66 +10,8 @@ struct Call {
     Log[] logs;
 }
 
-library WatcherLib {
-    using WatcherLib for Watcher;
-
-    struct Storage {
-        mapping(WatcherProxy => WatcherStorage) storages;
-    }
-
-    bytes32 constant WATCHER_STORAGE_SLOT = keccak256("vulcan.watcher.storage.slot");
-
-    function registerStorage(WatcherProxy proxy, WatcherStorage proxyStorage) internal {
-       _internalStorage().storages[proxy]  = proxyStorage; 
-    }
-
-    function getStorage(Watcher memory self) internal view returns (WatcherStorage s) {
-       return _internalStorage() .storages[self.proxy];
-    }
-
-    function calls(Watcher memory self, uint256 index) internal view returns (Call memory) {
-        return self.getStorage().getCalls()[index];
-    }
-
-    function firstCall(Watcher memory self) internal view returns (Call memory) {
-        return self.calls(0);
-    }
-
-    function lastCall(Watcher memory self) internal view returns (Call memory) {
-        Call[] memory currentCalls = self.getStorage().getCalls();
-        uint256 totalCalls = currentCalls.length;
-
-        return currentCalls[totalCalls - 1];
-    }
-
-    function target(Watcher memory self) internal view returns (address) {
-        return self.getStorage().target();
-    }
-
-    function setTarget(Watcher memory self, address _target) internal returns (Watcher memory) {
-        self.getStorage().setTarget(_target);
-    }
-
-    function captureReverts(Watcher memory self) internal returns (Watcher memory) {
-        self.getStorage().setCaptureReverts(true);
-        return self;
-    }
-    
-    function disableCaptureReverts(Watcher memory self) internal returns (Watcher memory) {
-        self.getStorage().setCaptureReverts(false);
-        return self;
-    }
-
-    function _internalStorage() private pure returns (Storage storage s) {
-        bytes32 slot = WATCHER_STORAGE_SLOT;
-
-        assembly {
-            s.slot := slot
-        }
-    }
-}
-
 contract WatcherStorage {
+    address public proxy;
     address public target;
     bool public shouldCaptureReverts;
     Call[] _calls;
@@ -96,8 +34,22 @@ contract WatcherStorage {
         }
     }
 
-    function getCalls() external view returns (Call[] memory) {
+    function calls() external view returns (Call[] memory) {
         return _calls;
+    }
+
+    function callAt(uint256 index) external view returns (Call memory) {
+        return _calls[index];
+    }
+
+    function firstCall() external view returns (Call memory) {
+        return _calls[0];
+    }
+
+    function lastCall() external view returns (Call memory) {
+        Call[] memory currentCalls = _calls;
+
+        return currentCalls[currentCalls.length - 1];
     }
 
     function setCaptureReverts(bool _value) external {
@@ -106,6 +58,10 @@ contract WatcherStorage {
 
     function setTarget(address _target) external {
         target = _target;
+    }
+
+    function setProxy(address _proxy) external {
+        proxy = _proxy;
     }
 }
 
@@ -154,6 +110,3 @@ contract WatcherProxy {
         return returnData;
     }
 }
-
-using WatcherLib for Watcher global;
-using WatcherLib for WatcherProxy;

@@ -2,10 +2,14 @@
 pragma solidity >=0.7.0;
 
 import { Vm as Hevm } from "forge-std/Vm.sol";
-import {WatcherLib, WatcherProxy, WatcherStorage, Watcher, Call} from "./Watcher.sol";
+import {WatcherProxy, WatcherStorage, Call} from "./Watcher.sol";
 
 interface VulcanVmSafe {}
 interface VulcanVm is VulcanVmSafe {}
+
+struct Watcher {
+    WatcherStorage watcherStorage;
+}
 
 /// @dev struct that represent a log
 struct Log {
@@ -22,13 +26,13 @@ struct Rpc {
 
 struct Watchers {
     mapping(address => bool) map;
+    mapping(address => WatcherStorage) storages;
 }
 
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
 /// @dev Main entry point to vm functionality
 library vulcan {
     using vulcan for *;
-    using WatcherLib for *;
 
     bytes32 constant GLOBAL_FAILED_SLOT = bytes32("failed");
     bytes32 constant VM_WATCHERS_SLOT = bytes32("vulcan.vm.watchers.slot");
@@ -670,7 +674,7 @@ library vulcan {
     function watcher(address self) internal view returns (Watcher memory) {
         require(watchers().map[self], "Address doesn't have a watcher");
 
-        return Watcher(WatcherProxy(payable(self)));
+        return Watcher(watchers().storages[self]);
     }
 
     function watch(address self) internal returns (Watcher memory) {
@@ -681,6 +685,7 @@ library vulcan {
         WatcherProxy proxy = new WatcherProxy(proxyStorage);
 
         proxyStorage.setTarget(address(proxy));
+        proxyStorage.setProxy(self);
 
         bytes memory targetCode = self.code;
 
@@ -689,10 +694,9 @@ library vulcan {
         address(proxy).setCode(targetCode);
 
         watchers().map[self] = true;
+        watchers().storages[self] = proxyStorage;
 
-        WatcherLib.registerStorage(proxy, proxyStorage);
-
-        return self.watcher();
+        return Watcher(proxyStorage);
     }
 
     function watch(VulcanVm, address _target) internal returns (Watcher memory) {
@@ -700,9 +704,13 @@ library vulcan {
     }
 
     function stop(Watcher memory self) internal {
-        address(self.proxy).setCode(self.target().code);
+        address proxy = self.watcherStorage.proxy();
+        address target = self.watcherStorage.target();
 
-        watchers().map[address(self.proxy)] = false;
+        proxy.setCode(target.code);
+
+        watchers().map[proxy] = false;
+        delete watchers().storages[proxy];
     }
 
     function stopWatcher(address self) internal returns (address) {
@@ -716,14 +724,36 @@ library vulcan {
     }
 
     function calls(address self, uint256 index) internal returns (Call memory) {
-        return self.watcher().calls(index);
+        return watchers().storages[self].callAt(index);
+    }
+
+    function calls(Watcher memory self, uint256 index) internal returns (Call memory) {
+        return self.watcherStorage.callAt(index);
     }
 
     function firstCall(address self) internal returns (Call memory) {
-        return self.watcher().firstCall();
+        return watchers().storages[self].firstCall();
+    }
+
+    function firstCall(Watcher memory self) internal returns (Call memory) {
+        return self.watcherStorage.firstCall();
     }
 
     function lastCall(address self) internal returns (Call memory) {
-        return self.watcher().lastCall();
+        return watchers().storages[self].lastCall();
+    }
+
+    function lastCall(Watcher memory self) internal returns (Call memory) {
+        return self.watcherStorage.lastCall();
+    }
+
+    function captureReverts(Watcher memory self) internal returns (Watcher memory) {
+        self.watcherStorage.setCaptureReverts(true);
+        return self;
+    }
+
+    function disableCaptureReverts(Watcher memory self) internal returns (Watcher memory) {
+        self.watcherStorage.setCaptureReverts(true);
+        return self;
     }
 }
