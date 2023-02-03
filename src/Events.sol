@@ -1,71 +1,61 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-struct Event { 
-    bytes32[] topics;
-    bytes _data;
-} 
-
 // @dev Main entry point to sest tests
 library events {
-    using events for Event;
-
-    function addTopic(Event memory _ev, bytes32 _topic) pure internal returns (Event memory) {
-        if (_ev.topics.length == 4) {
-            revert("Event already has 4 topics");
-        }
-
-        bytes32[] memory topics = _ev.topics;
-        _ev.topics = new bytes32[](topics.length + 1);
-        for (uint256 i = 0; i < topics.length; i++) {
-            _ev.topics[i] = topics[i];
-        }
-        _ev.topics[topics.length] = _topic;
-        return _ev;
+    function toDynamic(bytes32[1] memory topics) pure internal returns (bytes32[] memory _topics) {
+        _topics = new bytes32[](1);
+        _topics[0] = topics[0];
     }
 
-    function sig(string memory _sig) internal pure returns (Event memory ev) {
-        // if (ev.topics.length != 0) {
-        //     revert("Event already has topics");
-        // }
-
-        return ev.addTopic(keccak256(bytes(_sig)));
+    function toDynamic(bytes32[2] memory topics) pure internal returns (bytes32[] memory _topics) {
+        _topics = new bytes32[](2);
+        _topics[0] = topics[0];
+        _topics[1] = topics[1];
     }
 
-    function indexedParam(Event memory self, uint256 _param) internal pure returns (Event memory) {
-        return self.addTopic(bytes32(_param));
+    function toDynamic(bytes32[3] memory topics) pure internal returns (bytes32[] memory _topics) {
+        _topics = new bytes32[](3);
+        _topics[0] = topics[0];
+        _topics[1] = topics[1];
+        _topics[2] = topics[2];
     }
 
-    function indexedParam(Event memory self, string memory _param) internal pure returns (Event memory) {
-        return self.addTopic(keccak256(bytes(_param)));
+    function toDynamic(bytes32[4] memory topics) pure internal returns (bytes32[] memory _topics) {
+        _topics = new bytes32[](4);
+        _topics[0] = topics[0];
+        _topics[1] = topics[1];
+        _topics[2] = topics[2];
+        _topics[3] = topics[3];
     }
 
-    function indexedParam(Event memory self, address _param) internal pure returns (Event memory) {
-        return self.addTopic(bytes32(uint256(uint160(_param))));
+    function topic(uint256 _param) internal pure returns (bytes32) {
+        return bytes32(_param);
     }
 
-    function indexedParam(Event memory self, bytes32 _param) internal pure returns (Event memory) {
-        return self.addTopic(_param);
+    function topic(string memory _param) internal pure returns (bytes32) {
+        return keccak256(bytes(_param));
     }
 
-    function indexedParam(Event memory self, bytes memory _param) internal pure returns (Event memory) {
-        return self.addTopic(keccak256(_param));
+    function topic(address _param) internal pure returns (bytes32) {
+        return bytes32(uint256(uint160(_param)));
     }
 
-    function indexedParam(Event memory self, bool _param) internal pure returns (Event memory) {
-        return self.addTopic(bytes32(uint256(_param ? 1 : 0)));
+    // Just here for consistency
+    function topic(bytes32 _param) internal pure returns (bytes32) {
+        return _param;
     }
 
-    function indexedParam(Event memory self, int256 _param) internal pure returns (Event memory) {
+    function topic(bytes memory _param) internal pure returns (bytes32) {
+        return keccak256(_param);
+    }
+
+    function topic(bool _param) internal pure returns (bytes32) {
+        return bytes32(uint256(_param ? 1 : 0));
+    }
+
+    function topic(int256 _param) internal pure returns (bytes32) {
         // TODO: is this correct?
-        return self.addTopic(bytes32(uint256(_param)));
+        return bytes32(uint256(_param));
     }
-
-    function data(Event memory self, bytes memory _data) internal pure returns (Event memory) {
-        self._data = _data;
-        return self;
-    }
-
 }
-
-using events for Event global;
