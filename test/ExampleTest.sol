@@ -1,4 +1,4 @@
-pragma solidity ^0.8.13;
+pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, VulcanVm, console, vulcan, Watcher} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";

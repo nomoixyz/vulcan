@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.7.0;
+pragma solidity >=0.8.13 <0.9.0;
 
 import { Vm as Hevm } from "forge-std/Vm.sol";
 import {WatcherProxy, WatcherStorage, Call, Watcher} from "./Watcher.sol";
@@ -18,16 +18,6 @@ struct Log {
 struct Rpc {
     string name;
     string url;
-}
-
-struct FsMetadata {
-    bool isDir;
-    bool isSymlink;
-    uint256 length;
-    bool readOnly;
-    uint256 modified;
-    uint256 accessed;
-    uint256 created;
 }
 
 struct Fork {
@@ -99,184 +89,6 @@ library vulcan {
     /// @return the output of the command
     function runCommand(VulcanVmSafe, string[] memory inputs) internal returns (bytes memory) {
         return hevm.ffi(inputs);
-    }
-
-    /// @dev sets the value of the  environment variable with name `name` to `value`
-    /// @param name the name of the environment variable
-    /// @param value the new value of the environment variable
-    function setEnv(VulcanVmSafe, string memory name, string memory value) internal {
-        hevm.setEnv(name, value);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `bool`
-    /// @param name the name of the environment variable to read
-    /// @return the value of the environment variable as `bool`
-    function envBool(VulcanVmSafe, string memory name) internal view returns (bool) {
-        return hevm.envBool(name);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `uint256`
-    /// @param name the name of the environment variable to read
-    /// @return the value of the environment variable as `uint256`
-    function envUint(VulcanVmSafe, string memory name) internal view returns (uint256) {
-        return hevm.envUint(name);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `int256`
-    /// @param name the name of the environment variable to read
-    /// @return the value of the environment variable as `int256`
-    function envInt(VulcanVmSafe, string memory name) internal view returns (int256) {
-        return hevm.envInt(name);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `address`
-    /// @param name the name of the environment variable to read
-    /// @return the value of the environment variable as `address`
-    function envAddress(VulcanVmSafe, string memory name) internal view returns (address) {
-        return hevm.envAddress(name);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `bytes32`
-    /// @param name the name of the environment variable to read
-    /// @return the value of the environment variable as `bytes32`
-    function envBytes32(VulcanVmSafe, string memory name) internal view returns (bytes32) {
-        return hevm.envBytes32(name);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `string`
-    /// @param name the name of the environment variable to read
-    /// @return the value of the environment variable as `string`
-    function envString(VulcanVmSafe, string memory name) internal view returns (string memory) {
-        return hevm.envString(name);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `bytes`
-    /// @param name the name of the environment variable to read
-    /// @return the value of the environment variable as `bytes`
-    function envBytes(VulcanVmSafe, string memory name) internal view returns (bytes memory) {
-        return hevm.envBytes(name);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `bool[]`
-    /// @param name the name of the environment variable to read
-    /// @param delim the delimiter used to split the values 
-    /// @return the value of the environment variable as `bool[]`
-    function envBool(VulcanVmSafe, string memory name, string memory delim) internal view returns (bool[] memory) {
-        return hevm.envBool(name, delim);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `uint256[]`
-    /// @param name the name of the environment variable to read
-    /// @param delim the delimiter used to split the values 
-    /// @return the value of the environment variable as `uint256[]`
-    function envUint(VulcanVmSafe, string memory name, string memory delim) internal view returns (uint256[] memory) {
-        return hevm.envUint(name, delim);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `int256[]`
-    /// @param name the name of the environment variable to read
-    /// @param delim the delimiter used to split the values 
-    /// @return the value of the environment variable as `int256[]`
-    function envInt(VulcanVmSafe, string memory name, string memory delim) internal view returns (int256[] memory) {
-        return hevm.envInt(name, delim);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `address[]`
-    /// @param name the name of the environment variable to read
-    /// @param delim the delimiter used to split the values 
-    /// @return the value of the environment variable as `address[]`
-    function envAddress(VulcanVmSafe, string memory name, string memory delim) internal view returns (address[] memory) {
-        return hevm.envAddress(name, delim);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `bytes32[]`
-    /// @param name the name of the environment variable to read
-    /// @param delim the delimiter used to split the values 
-    /// @return the value of the environment variable as `bytes32[]`
-    function envBytes32(VulcanVmSafe, string memory name, string memory delim) internal view returns (bytes32[] memory) {
-        return hevm.envBytes32(name, delim);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `string[]`
-    /// @param name the name of the environment variable to read
-    /// @param delim the delimiter used to split the values 
-    /// @return the value of the environment variable as `string[]`
-    function envString(VulcanVmSafe, string memory name, string memory delim) internal view returns (string[] memory) {
-        return hevm.envString(name, delim);
-    }
-
-    /// @dev Reads the environment variable with name `name` and returns the value as `bytes[]`
-    /// @param name the name of the environment variable to read
-    /// @param delim the delimiter used to split the values 
-    /// @return the value of the environment variable as `bytes[]`
-    function envBytes(VulcanVmSafe, string memory name, string memory delim) internal view returns (bytes[] memory) {
-        return hevm.envBytes(name, delim);
-    }
-
-    function envOr(string memory name, bool defaultValue) internal returns (bool value) {
-        return hevm.envOr(name, defaultValue);
-    }
-    function envOr(string memory name, uint256 defaultValue) external returns (uint256 value) {
-        return hevm.envOr(name, defaultValue);
-    }
-    function envOr(string memory name, int256 defaultValue) external returns (int256 value) {
-        return hevm.envOr(name, defaultValue);
-    }
-    function envOr(string memory name, address defaultValue) external returns (address value) {
-        return hevm.envOr(name, defaultValue);
-    }
-    function envOr(string memory name, bytes32 defaultValue) external returns (bytes32 value) {
-        return hevm.envOr(name, defaultValue);
-    }
-    function envOr(string memory name, string memory defaultValue) external returns (string memory value) {
-        return hevm.envOr(name, defaultValue);
-    }
-    function envOr(string memory name, bytes memory defaultValue) external returns (bytes memory value) {
-        return hevm.envOr(name, defaultValue);
-    }
-    // Read environment variables as arrays with default value
-    function envOr(string memory name, string memory delim, bool[] memory defaultValue)
-        external
-        returns (bool[] memory value)
-    {
-        return hevm.envOr(name, delim, defaultValue);
-    }
-
-    function envOr(string memory name, string memory delim, uint256[] memory defaultValue)
-        external
-        returns (uint256[] memory value)
-    {
-        return hevm.envOr(name, delim, defaultValue);
-    }
-    function envOr(string memory name, string memory delim, int256[] memory defaultValue)
-        external
-        returns (int256[] memory value)
-    {
-        return hevm.envOr(name, delim, defaultValue);
-    }
-    function envOr(string memory name, string memory delim, address[] memory defaultValue)
-        external
-        returns (address[] memory value)
-    {
-        return hevm.envOr(name, delim, defaultValue);
-    }
-    function envOr(string memory name, string memory delim, bytes32[] memory defaultValue)
-        external
-        returns (bytes32[] memory value)
-    {
-        return hevm.envOr(name, delim, defaultValue);
-    }
-    function envOr(string memory name, string memory delim, string[] memory defaultValue)
-        external
-        returns (string[] memory value)
-    {
-        return hevm.envOr(name, delim, defaultValue);
-    }
-    function envOr(string memory name, string memory delim, bytes[] memory defaultValue)
-        external
-        returns (bytes[] memory value)
-    {
-        return hevm.envOr(name, delim, defaultValue);
     }
 
     /// @dev records all storage reads and writes
@@ -362,46 +174,6 @@ library vulcan {
 
     function stopBroadcast(VulcanVmSafe) internal {
         hevm.stopBroadcast();
-    }
-
-    function readFile(VulcanVmSafe, string memory path) internal view returns (string memory) {
-        return hevm.readFile(path);
-    }
-
-    function readFileBinary(VulcanVmSafe, string memory path) internal view returns (bytes memory) {
-        return hevm.readFileBinary(path);
-    }
-
-    function projectRoot(VulcanVmSafe) internal view returns (string memory) {
-        return hevm.projectRoot();
-    }
-    
-    function fsMetadata(string memory fileOrDir) internal returns (FsMetadata memory metadata) {
-        Hevm.FsMetadata memory md = hevm.fsMetadata(fileOrDir);
-        assembly {
-            metadata := md
-        }
-    }
-
-    function readLine(VulcanVmSafe, string memory path) internal view returns (string memory) {
-        return hevm.readLine(path);
-    }
-
-    function writeFile(VulcanVmSafe, string memory path, string memory data) internal {
-        hevm.writeFile(path, data);
-    }
-
-    function writeFileBinary(VulcanVmSafe, string memory path, bytes memory data) internal {
-        hevm.writeFileBinary(path, data);
-    }
-    function writeLine(VulcanVmSafe, string memory path, string memory data) internal {
-        hevm.writeLine(path, data);
-    }
-    function closeFile(VulcanVmSafe, string memory path) internal {
-        hevm.closeFile(path);
-    }
-    function removeFile(VulcanVmSafe, string memory path) internal {
-        hevm.removeFile(path);
     }
     function toString(VulcanVmSafe, address value) internal pure returns (string memory) {
         return hevm.toString(value);
