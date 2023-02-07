@@ -20,11 +20,6 @@ struct Rpc {
     string url;
 }
 
-struct Watchers {
-    mapping(address => bool) map;
-    mapping(address => WatcherStorage) storages;
-}
-
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
 /// @dev Main entry point to vm functionality
 library vulcan {
@@ -659,22 +654,22 @@ library vulcan {
         address(hevm).setStorage(GLOBAL_FAILED_SLOT, bytes32(uint256(0)));
     }
 
-    function watchers() internal view returns (Watchers storage watchers) {
+    function storages() internal view returns (mapping(address => WatcherStorage) storage s) {
         bytes32 slot = VM_WATCHERS_SLOT;
 
         assembly {
-            watchers.slot := slot
+            s.slot := slot
         }
     }
 
     function watcher(address self) internal view returns (Watcher memory) {
-        require(watchers().map[self], "Address doesn't have a watcher");
+        require(address(storages()[self]) != address(0), "Address doesn't have a watcher");
 
-        return Watcher(watchers().storages[self]);
+        return Watcher(storages()[self]);
     }
 
     function watch(address self) internal returns (Watcher memory) {
-        require(!watchers().map[self], "Address already has a watcher");
+        require(address(storages()[self]) == address(0), "Address already has a watcher");
 
         WatcherStorage proxyStorage = new WatcherStorage();
 
@@ -689,8 +684,7 @@ library vulcan {
         self.setCode(address(proxy).code);
         address(proxy).setCode(targetCode);
 
-        watchers().map[self] = true;
-        watchers().storages[self] = proxyStorage;
+        storages()[self] = proxyStorage;
 
         return Watcher(proxyStorage);
     }
@@ -705,8 +699,7 @@ library vulcan {
 
         proxy.setCode(target.code);
 
-        watchers().map[proxy] = false;
-        delete watchers().storages[proxy];
+        delete storages()[proxy];
     }
 
     function stopWatcher(address self) internal returns (address) {
@@ -720,7 +713,7 @@ library vulcan {
     }
 
     function calls(address self, uint256 index) internal returns (Call memory) {
-        return watchers().storages[self].calls(index);
+        return storages()[self].calls(index);
     }
 
     function calls(Watcher memory self, uint256 index) internal returns (Call memory) {
@@ -728,7 +721,7 @@ library vulcan {
     }
 
     function firstCall(address self) internal returns (Call memory) {
-        return watchers().storages[self].firstCall();
+        return storages()[self].firstCall();
     }
 
     function firstCall(Watcher memory self) internal returns (Call memory) {
@@ -736,7 +729,7 @@ library vulcan {
     }
 
     function lastCall(address self) internal returns (Call memory) {
-        return watchers().storages[self].lastCall();
+        return storages()[self].lastCall();
     }
 
     function lastCall(Watcher memory self) internal returns (Call memory) {
