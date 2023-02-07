@@ -20,8 +20,22 @@ struct Rpc {
     string url;
 }
 
+struct FsMetadata {
+    bool isDir;
+    bool isSymlink;
+    uint256 length;
+    bool readOnly;
+    uint256 modified;
+    uint256 accessed;
+    uint256 created;
+}
+
 struct Watchers {
     mapping(address => Watcher) map;
+}
+
+struct Fork {
+    uint256 id;
 }
 
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
@@ -87,63 +101,63 @@ library vulcan {
     /// @dev performs a foreign function call via the terminal, (stringInputs) => (result)
     /// @param inputs the command splitted into strings. eg ["mkdir", "-p", "tests"]
     /// @return the output of the command
-    function runCommand(VulcanVmSafe, string[] calldata inputs) internal returns (bytes memory) {
+    function runCommand(VulcanVmSafe, string[] memory inputs) internal returns (bytes memory) {
         return hevm.ffi(inputs);
     }
 
     /// @dev sets the value of the  environment variable with name `name` to `value`
     /// @param name the name of the environment variable
     /// @param value the new value of the environment variable
-    function setEnv(VulcanVmSafe, string calldata name, string calldata value) internal {
+    function setEnv(VulcanVmSafe, string memory name, string memory value) internal {
         hevm.setEnv(name, value);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `bool`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `bool`
-    function envBool(VulcanVmSafe, string calldata name) internal view returns (bool) {
+    function envBool(VulcanVmSafe, string memory name) internal view returns (bool) {
         return hevm.envBool(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `uint256`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `uint256`
-    function envUint(VulcanVmSafe, string calldata name) internal view returns (uint256) {
+    function envUint(VulcanVmSafe, string memory name) internal view returns (uint256) {
         return hevm.envUint(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `int256`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `int256`
-    function envInt(VulcanVmSafe, string calldata name) internal view returns (int256) {
+    function envInt(VulcanVmSafe, string memory name) internal view returns (int256) {
         return hevm.envInt(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `address`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `address`
-    function envAddress(VulcanVmSafe, string calldata name) internal view returns (address) {
+    function envAddress(VulcanVmSafe, string memory name) internal view returns (address) {
         return hevm.envAddress(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `bytes32`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `bytes32`
-    function envBytes32(VulcanVmSafe, string calldata name) internal view returns (bytes32) {
+    function envBytes32(VulcanVmSafe, string memory name) internal view returns (bytes32) {
         return hevm.envBytes32(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `string`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `string`
-    function envString(VulcanVmSafe, string calldata name) internal view returns (string memory) {
+    function envString(VulcanVmSafe, string memory name) internal view returns (string memory) {
         return hevm.envString(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `bytes`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `bytes`
-    function envBytes(VulcanVmSafe, string calldata name) internal view returns (bytes memory) {
+    function envBytes(VulcanVmSafe, string memory name) internal view returns (bytes memory) {
         return hevm.envBytes(name);
     }
 
@@ -151,7 +165,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `bool[]`
-    function envBool(VulcanVmSafe, string calldata name, string calldata delim) internal view returns (bool[] memory) {
+    function envBool(VulcanVmSafe, string memory name, string memory delim) internal view returns (bool[] memory) {
         return hevm.envBool(name, delim);
     }
 
@@ -159,7 +173,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `uint256[]`
-    function envUint(VulcanVmSafe, string calldata name, string calldata delim) internal view returns (uint256[] memory) {
+    function envUint(VulcanVmSafe, string memory name, string memory delim) internal view returns (uint256[] memory) {
         return hevm.envUint(name, delim);
     }
 
@@ -167,7 +181,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `int256[]`
-    function envInt(VulcanVmSafe, string calldata name, string calldata delim) internal view returns (int256[] memory) {
+    function envInt(VulcanVmSafe, string memory name, string memory delim) internal view returns (int256[] memory) {
         return hevm.envInt(name, delim);
     }
 
@@ -175,7 +189,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `address[]`
-    function envAddress(VulcanVmSafe, string calldata name, string calldata delim) internal view returns (address[] memory) {
+    function envAddress(VulcanVmSafe, string memory name, string memory delim) internal view returns (address[] memory) {
         return hevm.envAddress(name, delim);
     }
 
@@ -183,7 +197,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `bytes32[]`
-    function envBytes32(VulcanVmSafe, string calldata name, string calldata delim) internal view returns (bytes32[] memory) {
+    function envBytes32(VulcanVmSafe, string memory name, string memory delim) internal view returns (bytes32[] memory) {
         return hevm.envBytes32(name, delim);
     }
 
@@ -191,7 +205,7 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `string[]`
-    function envString(VulcanVmSafe, string calldata name, string calldata delim) internal view returns (string[] memory) {
+    function envString(VulcanVmSafe, string memory name, string memory delim) internal view returns (string[] memory) {
         return hevm.envString(name, delim);
     }
 
@@ -199,8 +213,74 @@ library vulcan {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `bytes[]`
-    function envBytes(VulcanVmSafe, string calldata name, string calldata delim) internal view returns (bytes[] memory) {
+    function envBytes(VulcanVmSafe, string memory name, string memory delim) internal view returns (bytes[] memory) {
         return hevm.envBytes(name, delim);
+    }
+
+    function envOr(string memory name, bool defaultValue) internal returns (bool value) {
+        return hevm.envOr(name, defaultValue);
+    }
+    function envOr(string memory name, uint256 defaultValue) external returns (uint256 value) {
+        return hevm.envOr(name, defaultValue);
+    }
+    function envOr(string memory name, int256 defaultValue) external returns (int256 value) {
+        return hevm.envOr(name, defaultValue);
+    }
+    function envOr(string memory name, address defaultValue) external returns (address value) {
+        return hevm.envOr(name, defaultValue);
+    }
+    function envOr(string memory name, bytes32 defaultValue) external returns (bytes32 value) {
+        return hevm.envOr(name, defaultValue);
+    }
+    function envOr(string memory name, string memory defaultValue) external returns (string memory value) {
+        return hevm.envOr(name, defaultValue);
+    }
+    function envOr(string memory name, bytes memory defaultValue) external returns (bytes memory value) {
+        return hevm.envOr(name, defaultValue);
+    }
+    // Read environment variables as arrays with default value
+    function envOr(string memory name, string memory delim, bool[] memory defaultValue)
+        external
+        returns (bool[] memory value)
+    {
+        return hevm.envOr(name, delim, defaultValue);
+    }
+
+    function envOr(string memory name, string memory delim, uint256[] memory defaultValue)
+        external
+        returns (uint256[] memory value)
+    {
+        return hevm.envOr(name, delim, defaultValue);
+    }
+    function envOr(string memory name, string memory delim, int256[] memory defaultValue)
+        external
+        returns (int256[] memory value)
+    {
+        return hevm.envOr(name, delim, defaultValue);
+    }
+    function envOr(string memory name, string memory delim, address[] memory defaultValue)
+        external
+        returns (address[] memory value)
+    {
+        return hevm.envOr(name, delim, defaultValue);
+    }
+    function envOr(string memory name, string memory delim, bytes32[] memory defaultValue)
+        external
+        returns (bytes32[] memory value)
+    {
+        return hevm.envOr(name, delim, defaultValue);
+    }
+    function envOr(string memory name, string memory delim, string[] memory defaultValue)
+        external
+        returns (string[] memory value)
+    {
+        return hevm.envOr(name, delim, defaultValue);
+    }
+    function envOr(string memory name, string memory delim, bytes[] memory defaultValue)
+        external
+        returns (bytes[] memory value)
+    {
+        return hevm.envOr(name, delim, defaultValue);
     }
 
     /// @dev records all storage reads and writes
@@ -225,13 +305,13 @@ library vulcan {
     /// @dev Gets the creation bytecode from an artifact file. Takes in the relative path to the json file
     /// @param path the relative path to the json file
     /// @return the creation code
-    function getCode(VulcanVmSafe, string calldata path) internal view returns (bytes memory) {
+    function getCode(VulcanVmSafe, string memory path) internal view returns (bytes memory) {
         return hevm.getCode(path);
     }
     /// @dev Gets the deployed bytecode from an artifact file. Takes in the relative path to the json file
     /// @param path the relative path to the json file
     /// @return the deployed code
-    function getDeployedCode(VulcanVmSafe, string calldata path) internal view returns (bytes memory) {
+    function getDeployedCode(VulcanVmSafe, string memory path) internal view returns (bytes memory) {
         return hevm.getDeployedCode(path);
     }
 
@@ -299,31 +379,38 @@ library vulcan {
     function projectRoot(VulcanVmSafe) internal view returns (string memory) {
         return hevm.projectRoot();
     }
+    
+    function fsMetadata(string memory fileOrDir) internal returns (FsMetadata memory metadata) {
+        Hevm.FsMetadata memory md = hevm.fsMetadata(fileOrDir);
+        assembly {
+            metadata := md
+        }
+    }
 
-    function readLine(VulcanVmSafe, string calldata path) internal view returns (string memory) {
+    function readLine(VulcanVmSafe, string memory path) internal view returns (string memory) {
         return hevm.readLine(path);
     }
 
-    function writeFile(VulcanVmSafe, string calldata path, string calldata data) internal {
+    function writeFile(VulcanVmSafe, string memory path, string memory data) internal {
         hevm.writeFile(path, data);
     }
 
-    function writeFileBinary(VulcanVmSafe, string calldata path, bytes calldata data) internal {
+    function writeFileBinary(VulcanVmSafe, string memory path, bytes memory data) internal {
         hevm.writeFileBinary(path, data);
     }
-    function writeLine(VulcanVmSafe, string calldata path, string calldata data) internal {
+    function writeLine(VulcanVmSafe, string memory path, string memory data) internal {
         hevm.writeLine(path, data);
     }
-    function closeFile(VulcanVmSafe, string calldata path) internal {
+    function closeFile(VulcanVmSafe, string memory path) internal {
         hevm.closeFile(path);
     }
-    function removeFile(VulcanVmSafe, string calldata path) internal {
+    function removeFile(VulcanVmSafe, string memory path) internal {
         hevm.removeFile(path);
     }
     function toString(VulcanVmSafe, address value) internal pure returns (string memory) {
         return hevm.toString(value);
     }
-    function toString(VulcanVmSafe, bytes calldata value) internal pure returns (string memory) {
+    function toString(VulcanVmSafe, bytes memory value) internal pure returns (string memory) {
         return hevm.toString(value);
     }
 
@@ -339,22 +426,22 @@ library vulcan {
     function toString(VulcanVmSafe, int256 value) internal pure returns (string memory) {
         return hevm.toString(value);
     }
-    function parseBytes(VulcanVmSafe, string calldata value) internal pure returns (bytes memory) {
+    function parseBytes(VulcanVmSafe, string memory value) internal pure returns (bytes memory) {
         return hevm.parseBytes(value);
     }
-    function parseAddress(VulcanVmSafe, string calldata value) internal pure returns (address) {
+    function parseAddress(VulcanVmSafe, string memory value) internal pure returns (address) {
         return hevm.parseAddress(value);
     }
-    function parseUint(VulcanVmSafe, string calldata value) internal pure returns (uint256) {
+    function parseUint(VulcanVmSafe, string memory value) internal pure returns (uint256) {
         return hevm.parseUint(value);
     }
-    function parseInt(VulcanVmSafe, string calldata value) internal pure returns (int256) {
+    function parseInt(VulcanVmSafe, string memory value) internal pure returns (int256) {
         return hevm.parseInt(value);
     }
-    function parseBytes32(VulcanVmSafe, string calldata value) internal pure returns (bytes32) {
+    function parseBytes32(VulcanVmSafe, string memory value) internal pure returns (bytes32) {
         return hevm.parseBytes32(value);
     }
-    function parseBool(VulcanVmSafe, string calldata value) internal pure returns (bool) {
+    function parseBool(VulcanVmSafe, string memory value) internal pure returns (bool) {
         return hevm.parseBool(value);
     }
     function recordLogs(VulcanVmSafe) internal {
@@ -366,10 +453,10 @@ library vulcan {
             logs := recorded
         }
     }
-    function deriveKey(VulcanVmSafe, string calldata mnemonicOrPath, uint32 index) internal pure returns (uint256) {
+    function deriveKey(VulcanVmSafe, string memory mnemonicOrPath, uint32 index) internal pure returns (uint256) {
         return hevm.deriveKey(mnemonicOrPath, index);
     }
-    function deriveKey(VulcanVmSafe, string calldata mnemonicOrPath, string calldata derivationPath, uint32 index) internal pure returns (uint256) {
+    function deriveKey(VulcanVmSafe, string memory mnemonicOrPath, string memory derivationPath, uint32 index) internal pure returns (uint256) {
         return hevm.deriveKey(mnemonicOrPath, derivationPath, index);
     }
 
@@ -379,6 +466,14 @@ library vulcan {
 
     function assume(VulcanVmSafe, bool condition) internal pure {
         hevm.assume(condition);
+    }
+
+    function pauseGasMetering() external {
+        hevm.pauseGasMetering();
+    }
+
+    function resumeGasMetering() external {
+        hevm.resumeGasMetering();
     }
 
     /// @dev creates a wrapped address from `name`
@@ -562,7 +657,46 @@ library vulcan {
         return self;
     }
 
-    /* TODO: SHOULD WE ADD THE expectX HERE ? */
+    function expectRevert(bytes memory revertData) internal {
+        hevm.expectRevert(revertData);
+    }
+
+    function expectRevert(bytes4 revertData) internal {
+        hevm.expectRevert(revertData);
+    }
+
+    function expectRevert() external {
+        hevm.expectRevert();
+    }
+
+    function expectEmit(bool checkTopic1, bool checkTopic2, bool checkTopic3, bool checkData) internal {
+        hevm.expectEmit(checkTopic1, checkTopic2, checkTopic3, checkData);
+    }
+    function expectEmit(bool checkTopic1, bool checkTopic2, bool checkTopic3, bool checkData, address emitter)
+        internal
+    {
+        hevm.expectEmit(checkTopic1, checkTopic2, checkTopic3, checkData, emitter);
+    }
+
+    function mockCall(address callee, bytes memory data, bytes memory returnData) internal {
+        hevm.mockCall(callee, data, returnData);
+    }
+
+    function mockCall(address callee, uint256 msgValue, bytes memory data, bytes memory returnData) internal {
+        hevm.mockCall(callee, msgValue, data, returnData);
+    }
+
+    function clearMockedCalls() internal {
+        hevm.clearMockedCalls();
+    }
+
+    function expectCall(address callee, bytes memory data) internal {
+        hevm.expectCall(callee, data);
+    }
+
+    function expectCall(address callee, uint256 msgValue, bytes memory data) internal {
+        hevm.expectCall(callee, msgValue, data);
+    }
 
     function setBlockCoinbase(VulcanVm self, address who) internal returns (VulcanVm){
         hevm.coinbase(who);
@@ -577,72 +711,72 @@ library vulcan {
         return hevm.revertTo(snapshotId);
     }
 
-    function createFork(VulcanVm, string memory endpoint, uint256 blockNumber) internal returns (uint256) {
-        return hevm.createFork(endpoint, blockNumber);
+    function forkAtBlock(VulcanVm, string memory endpoint, uint256 blockNumber) internal returns (Fork memory) {
+        return Fork(hevm.createFork(endpoint, blockNumber));
     }
-    function createFork(VulcanVm, string memory endpoint) internal returns (uint256) {
-        return hevm.createFork(endpoint);
+    function fork(VulcanVm, string memory endpoint) internal returns (Fork memory) {
+        return Fork(hevm.createFork(endpoint));
     }
-    function createFork(VulcanVm, string memory endpoint, bytes32 txHash) internal returns (uint256) {
-        return hevm.createFork(endpoint, txHash);
-    }
-    function createSelectFork(VulcanVm, string memory endpoint, uint256 blockNumber) internal returns (uint256) {
-        return hevm.createSelectFork(endpoint, blockNumber);
-    }
-    function createSelectFork(VulcanVm, string memory endpoint, bytes32 txHash) internal returns (uint256) {
-        return hevm.createSelectFork(endpoint, txHash);
-    }
-    function createSelectFork(VulcanVm, string memory endpoint) internal returns (uint256) {
-        return hevm.createSelectFork(endpoint);
-    }
-    function selectFork(VulcanVm, uint256 forkId) internal {
-        return hevm.selectFork(forkId);
-    }
-    function activeFork(VulcanVm) internal view returns (uint256) {
-        return hevm.activeFork();
-    }
-    function rollFork(VulcanVm, uint256 blockNumber) internal {
-        return hevm.rollFork(blockNumber);
-    }
-    function rollFork(VulcanVm, bytes32 txHash) internal {
-        return hevm.rollFork(txHash);
-    }
-    function rollFork(VulcanVm, uint256 forkId, uint256 blockNumber) internal {
-        return hevm.rollFork(forkId, blockNumber);
-    }
-    function rollFork(VulcanVm, uint256 forkId, bytes32 txHash) internal {
-        return hevm.rollFork(forkId, txHash);
-    }
-    function makePersistent(VulcanVm, address who) internal {
-        return hevm.makePersistent(who);
-    }
-    function makePersistent(VulcanVm, address who1, address who2) internal {
-        return hevm.makePersistent(who1, who2);
-    }
-    function makePersistent(VulcanVm, address who1, address who2, address who3) internal {
-        return hevm.makePersistent(who1, who2, who3);
-    }
-    function makePersistent(VulcanVm, address[] memory whos) internal {
-        return hevm.makePersistent(whos);
-    }
-    function revokePersistent(VulcanVm, address who) internal {
-        return hevm.revokePersistent(who);
-    }
-    function revokePersistent(VulcanVm, address[] memory whos) internal {
-        return hevm.revokePersistent(whos);
+    function forkBeforeTx(VulcanVm, string memory endpoint, bytes32 txHash) internal returns (Fork memory) {
+        return Fork(hevm.createFork(endpoint, txHash));
     }
 
+    function select(Fork memory self) internal returns (Fork memory) {
+        hevm.selectFork(self.id);
+        return self;
+    }
+
+    function activeFork(VulcanVm) internal view returns (Fork memory) {
+        return Fork(hevm.activeFork());
+    }
+
+    function setBlockNumber(Fork memory self, uint256 blockNumber) internal returns (Fork memory) {
+        hevm.rollFork(self.id, blockNumber);
+        return self;
+    }
+
+    function beforeTx(Fork memory self, bytes32 txHash) internal returns (Fork memory) {
+        hevm.rollFork(self.id, txHash);
+        return self;
+    }
+
+
+    function persistBetweenForks(address self) internal returns(address) {
+        hevm.makePersistent(self);
+        return self;
+    }
+
+    function persistBetweenForks(VulcanVm, address who) internal {
+        hevm.makePersistent(who);
+    }
+
+    function persistBetweenForks(VulcanVm, address who1, address who2) internal {
+        hevm.makePersistent(who1, who2);
+    }
+    function persistBetweenForks(VulcanVm, address who1, address who2, address who3) internal {
+        hevm.makePersistent(who1, who2, who3);
+    }
+    function persistBetweenForks(VulcanVm, address[] memory whos) internal {
+        hevm.makePersistent(whos);
+    }
+    function stopPersist(VulcanVm, address who) internal {
+        hevm.revokePersistent(who);
+    }
+    function stopPersist(VulcanVm, address[] memory whos) internal {
+        hevm.revokePersistent(whos);
+    }
     function isPersistent(VulcanVm, address who) internal view returns (bool) {
         return hevm.isPersistent(who);
     }
     function allowCheatcodes(VulcanVm, address who) internal {
-        return hevm.allowCheatcodes(who);
+        hevm.allowCheatcodes(who);
     }
-    function transact(VulcanVm, bytes32 txHash) internal {
-        return hevm.transact(txHash);
+    function executeTx(VulcanVm, bytes32 txHash) internal {
+        hevm.transact(txHash);
     }
-    function transact(VulcanVm, uint256 forkId, bytes32 txHash) internal {
-        return hevm.transact(forkId, txHash);
+    function executeTx(Fork memory self, bytes32 txHash) internal returns(Fork memory) {
+        hevm.transact(self.id, txHash);
+        return self;
     }
 
     function failed() internal view returns (bool) {
@@ -706,3 +840,5 @@ library vulcan {
         return watchers().map[self].lastCall();
     }
 }
+
+using vulcan for Fork global;
