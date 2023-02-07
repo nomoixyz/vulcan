@@ -266,7 +266,7 @@ contract ExpectTest is Test {
     function testToHaveReverted() external {
         CallTest t = new CallTest();
 
-        vm.watch(payable(address(t))).captureReverts();
+        vm.watch(address(t)).captureReverts();
 
         t.failWithRevert();
         t.failWithStringRevert();
@@ -286,7 +286,7 @@ contract ExpectTest is Test {
     function testToHaveSucceeded() external {
         CallTest t = new CallTest();
 
-        vm.watch(payable(address(t)));
+        vm.watch(address(t));
 
         uint256 result = t.ok();
 
@@ -299,7 +299,7 @@ contract ExpectTest is Test {
     function testToHaveRevertedWith() external {
         CallTest t = new CallTest();
 
-        vm.watch(payable(address(t))).captureReverts();
+        vm.watch(address(t)).captureReverts();
 
         t.failWithStringRevert();
         t.failWithRequireMessage();
@@ -328,7 +328,7 @@ contract ExpectTest is Test {
     function testToHaveEmittedFail() external shouldFail {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(payable(address(t)));
+        Watcher memory watcher = vm.watch(address(t));
 
         t.emitEvent("foo", 123);
 
@@ -338,7 +338,7 @@ contract ExpectTest is Test {
     function testToHaveEmittedWithDataPass() external {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(payable(address(t)));
+        Watcher memory watcher = vm.watch(address(t));
 
         t.emitEvent("foo", 123);
 
@@ -348,7 +348,7 @@ contract ExpectTest is Test {
     function testToHaveEmittedWithDataFail() external shouldFail {
         CallTest t = new CallTest();
 
-        Watcher watcher = vm.watch(payable(address(t)));
+        Watcher memory watcher = vm.watch(address(t));
 
         t.emitEvent("foo", 123);
 

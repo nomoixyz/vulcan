@@ -68,7 +68,7 @@ struct _StringExpectationNot {
 }
 
 struct _CallExpectation {
-    Watcher.Call call;
+    Call call;
 }
 
 library any {
@@ -642,7 +642,7 @@ function expect(string memory actual) pure returns (_StringExpectation memory) {
     return _StringExpectation(actual, _StringExpectationNot(actual));
 }
 
-function expect(Watcher.Call memory call) pure returns (_CallExpectation memory) {
+function expect(Call memory call) pure returns (_CallExpectation memory) {
     return _CallExpectation(call);
 }
 

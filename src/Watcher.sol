@@ -3,58 +3,83 @@ pragma solidity >=0.7.0;
 
 import "./Vulcan.sol";
 
-contract Watcher {
-    using vulcan for *;
+struct Watcher {
+    WatcherStorage watcherStorage;
+}
 
-    struct Call {
-        bytes callData;
-        bool success;
-        bytes returnData;
-        Log[] logs;
+struct Call {
+    bytes callData;
+    bool success;
+    bytes returnData;
+    Log[] logs;
+}
+
+contract WatcherStorage {
+    address public proxy;
+    address public target;
+    bool public shouldCaptureReverts;
+    Call[] _calls;
+
+    function storeCall(
+        bytes memory _callData,
+        bool _success,
+        bytes memory _returnData,
+        Log[] memory _logs
+    ) external {
+        Call storage call = _calls.push();
+        call.callData = _callData;
+        call.success = _success;
+        call.returnData = _returnData;
+
+        Log[] storage logs = call.logs;
+
+        for (uint256 i; i < _logs.length; ++i) {
+            logs.push(_logs[i]);
+        }
     }
 
-    bytes32 constant CAPTURE_REVERTS_SLOT = keccak256("vulcan.watcher.captureReverts.slot");
-    bytes32 constant CALLS_SLOT = keccak256("vulcan.watcher.calls.slot");
-    address public immutable target = address(this);
-
-    function calls(uint256 _index) external view returns (Call memory) {
-        return _getCalls()[_index];
+    function calls(uint256 index) external view returns (Call memory) {
+        return _calls[index];
     }
 
     function firstCall() external view returns (Call memory) {
-        return _getCalls()[0];
+        return _calls[0];
     }
 
     function lastCall() external view returns (Call memory) {
-        Call[] memory calls = _getCalls();
+        Call[] memory currentCalls = _calls;
 
-        return calls[calls.length - 1];
+        return currentCalls[currentCalls.length - 1];
     }
 
-    function reset() external {
-        _setCaptureReverts(false);
-
-        Call[] storage calls = _getCalls();
-
-        uint256 callsLength = calls.length;
-
-        for (uint256 i; i < callsLength; ++i) {
-            calls.pop();
-        }
-    } 
-
-    function captureReverts() external {
-        _setCaptureReverts(true);
+    function setCaptureReverts(bool _value) external {
+        shouldCaptureReverts = _value;
     }
 
-    function disableCaptureReverts() external {
-        _setCaptureReverts(false);
+    function setTarget(address _target) external {
+        target = _target;
+    }
+
+    function setProxy(address _proxy) external {
+        proxy = _proxy;
+    }
+}
+
+contract WatcherProxy {
+    using vulcan for *;
+
+    WatcherStorage immutable _storage;
+    address immutable _target;
+
+    constructor(WatcherStorage _watcherStorage) {
+        _storage = _watcherStorage;
+        _target = address(this);
     }
 
     fallback(bytes calldata _callData) external payable returns (bytes memory) {
         vulcan.vm.recordLogs();
 
-        (bool success, bytes memory returnData) = target.delegatecall(_callData);
+        (bool success, bytes memory returnData) = _target.delegatecall(_callData);
 
         Log[] memory logs = vulcan.vm.getRecordedLogs();
 
@@ -67,47 +92,21 @@ contract Watcher {
             }
         }
 
-        Call storage call = _getCalls().push();
-
-        call.callData = _callData;
-        call.success = success;
-        call.returnData = returnData;
+        Log[] memory filteredLogs = new Log[](watcherLogCount);
 
         // Add logs to call
         for (uint256 i = 0; i < watcherLogCount; i++) {
-            call.logs.push(logs[i]);
+            filteredLogs[i] = logs[i];
         }
 
-        if (!_shouldCaptureReverts() && !success) {
+        _storage.storeCall(_callData, success, returnData, filteredLogs);
+
+        if (!_storage.shouldCaptureReverts() && !success) {
             assembly {
                 revert(add(returnData, 32), mload(returnData))
             }
         }
         
         return returnData;
-    }
-
-    function _shouldCaptureReverts() internal view returns (bool val) {
-        bytes32 slot = CAPTURE_REVERTS_SLOT;
-
-        assembly {
-            val := sload(slot)
-        }
-    }
-
-    function _setCaptureReverts(bool value) internal {
-        bytes32 slot = CAPTURE_REVERTS_SLOT;
-
-        assembly {
-            sstore(slot, value)
-        }
-    }
-
-    function _getCalls() internal pure returns (Call[] storage results) {
-        bytes32 slot = CALLS_SLOT;
-
-        assembly {
-            results.slot := slot
-        }
     }
 }
