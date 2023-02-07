@@ -26,7 +26,7 @@ library vulcan {
     using vulcan for *;
 
     bytes32 constant GLOBAL_FAILED_SLOT = bytes32("failed");
-    bytes32 constant VM_WATCHERS_SLOT = bytes32("vulcan.vm.watchers.slot");
+    bytes32 constant VM_WATCHERS_STORAGES_SLOT = bytes32("vulcan.vm.watchers.storages.slot");
 
     /// @dev forge-std VM
     Hevm internal constant hevm = Hevm(address(bytes20(uint160(uint256(keccak256('hevm cheat code'))))));
@@ -655,7 +655,7 @@ library vulcan {
     }
 
     function storages() internal view returns (mapping(address => WatcherStorage) storage s) {
-        bytes32 slot = VM_WATCHERS_SLOT;
+        bytes32 slot = VM_WATCHERS_STORAGES_SLOT;
 
         assembly {
             s.slot := slot
