@@ -517,4 +517,3 @@ library vulcan {
     }
 }
 
-using vulcan for Fork global;
