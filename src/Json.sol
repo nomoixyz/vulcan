@@ -5,9 +5,12 @@ import "./Vulcan.sol";
 
 type Json is bytes32;
 
+struct JsonObject {
+    string id;
+    string serialized;
+}
+
 library JsonLib {
-
-
     //
     // parseJson
     //
@@ -26,11 +29,19 @@ library JsonLib {
     // decode the tuple in that order, and thus fail.
     // ----
     // Given a string of JSON, return it as ABI-encoded
-    function parseJson(string memory json, string memory key) external pure returns (bytes memory abiEncodedData) {
+    function parseObject(Json, string memory json, string memory key) external pure returns (bytes memory abiEncodedData) {
         return vulcan.hevm.parseJson(json, key);
     }
-    function parseJson(string memory json) external pure returns (bytes memory abiEncodedData) {
+    function parseObject(Json, string memory json) external pure returns (bytes memory abiEncodedData) {
         return vulcan.hevm.parseJson(json);
+    }
+
+    function parseObject(Json, JsonObject memory json, string memory key) external pure returns (bytes memory abiEncodedData) {
+        return vulcan.hevm.parseJson(json.serialized, key);
+    }
+
+    function parseObject(Json, JsonObject memory json) external pure returns (bytes memory abiEncodedData) {
+        return vulcan.hevm.parseJson(json.serialized);
     }
 
     // The following parseJson cheatcodes will do type coercion, for the type that they indicate.
@@ -38,128 +49,153 @@ library JsonLib {
     // and hex numbers '0xEF'.
     // Type coercion works ONLY for discrete values or arrays. That means that the key must return a value or array, not
     // a JSON object.
-    function parseUint(string memory json, string memory key) external returns (uint256) {
+    function parseUint(Json, string memory json, string memory key) external returns (uint256) {
         return vulcan.hevm.parseJsonUint(json, key);
     }
-    function parseUintArray(string memory json, string memory key) external returns (uint256[] memory) {
+    function parseUintArray(Json, string memory json, string memory key) external returns (uint256[] memory) {
         return vulcan.hevm.parseJsonUintArray(json, key);
     }
-    function parseInt(string memory json, string memory key) external returns (int256) {
+    function parseInt(Json, string memory json, string memory key) external returns (int256) {
         return vulcan.hevm.parseJsonInt(json, key);
     }
-    function parseIntArray(string memory json, string memory key) external returns (int256[] memory) {
+    function parseIntArray(Json, string memory json, string memory key) external returns (int256[] memory) {
         return vulcan.hevm.parseJsonIntArray(json, key);
     }
-    function parseBool(string memory json, string memory key) external returns (bool) {
+    function parseBool(Json, string memory json, string memory key) external returns (bool) {
         return vulcan.hevm.parseJsonBool(json, key);
     }
-    function parseJsonBoolArray(string memory json, string memory key) external returns (bool[] memory) {
+    function parseJsonBoolArray(Json, string memory json, string memory key) external returns (bool[] memory) {
         return vulcan.hevm.parseJsonBoolArray(json, key);
     }
-    function parseAddress(string memory json, string memory key) external returns (address) {
+    function parseAddress(Json, string memory json, string memory key) external returns (address) {
         return vulcan.hevm.parseJsonAddress(json, key);
 
     }
-    function parseAddressArray(string memory json, string memory key) external returns (address[] memory) {
+    function parseAddressArray(Json, string memory json, string memory key) external returns (address[] memory) {
         return vulcan.hevm.parseJsonAddressArray(json, key);
     }
-    function parseString(string memory json, string memory key) external returns (string memory) {
+    function parseString(Json, string memory json, string memory key) external returns (string memory) {
         return vulcan.hevm.parseJsonString(json, key);
     }
-    function parseStringArray(string memory json, string memory key) external returns (string[] memory) {
+    function parseStringArray(Json, string memory json, string memory key) external returns (string[] memory) {
         return vulcan.hevm.parseJsonStringArray(json, key);
     }
-    function parseBytes(string memory json, string memory key) external returns (bytes memory) {
+    function parseBytes(Json, string memory json, string memory key) external returns (bytes memory) {
         return vulcan.hevm.parseJsonBytes(json, key);
     }
-    function parseBytesArray(string memory json, string memory key) external returns (bytes[] memory) {
+    function parseBytesArray(Json, string memory json, string memory key) external returns (bytes[] memory) {
         return vulcan.hevm.parseJsonBytesArray(json, key);
     }
-    function parseBytes32(string memory json, string memory key) external returns (bytes32) {
+    function parseBytes32(Json, string memory json, string memory key) external returns (bytes32) {
         return vulcan.hevm.parseJsonBytes32(json, key);
     }
-    function parseBytes32Array(string memory json, string memory key) external returns (bytes32[] memory) {
+    function parseBytes32Array(Json, string memory json, string memory key) external returns (bytes32[] memory) {
         return vulcan.hevm.parseJsonBytes32Array(json, key);
+    }
+
+
+    function create(Json, string memory id) external pure returns (JsonObject memory) {
+        return JsonObject({id: id, serialized: ""});
     }
 
     // Serialize a key and value to a JSON object stored in-memory that can be later written to a file
     // It returns the stringified version of the specific JSON file up to that moment.
-    function serialize(string memory objectKey, string memory valueKey, bool value)
+    function serialize(JsonObject memory obj, string memory valueKey, bool value)
         external
-        returns (string memory json)
+        returns (JsonObject memory)
     {
-        return vulcan.hevm.serializeBool(objectKey, valueKey, value);
+        obj.serialized = vulcan.hevm.serializeBool(obj.id, valueKey, value);
+        return obj;
     }
 
-    function serialize(string memory objectKey, string memory valueKey, uint256 value)
+    function serialize(JsonObject memory obj, string memory valueKey, uint256 value)
         external
-        returns (string memory json)
+        returns (JsonObject memory)
     {
-        return vulcan.hevm.serializeUint(objectKey, valueKey, value);
+        obj.serialized = vulcan.hevm.serializeUint(obj.id, valueKey, value);
+        return obj;
     }
-    function serialize(string memory objectKey, string memory valueKey, int256 value)
+    function serialize(JsonObject memory obj, string memory valueKey, int256 value)
         external
-        returns (string memory json)
+        returns (JsonObject memory)
         {
-        return vulcan.hevm.serializeInt(objectKey, valueKey, value);
+        obj.serialized = vulcan.hevm.serializeInt(obj.id, valueKey, value);
+        return obj;
         }
-    function serialize(string memory objectKey, string memory valueKey, address value)
+    function serialize(JsonObject memory obj, string memory valueKey, address value)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeAddress(objectKey, valueKey, value);
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeAddress(obj.id, valueKey, value);
+        return obj;
         }
-    function serialize(string memory objectKey, string memory valueKey, bytes32 value)
+    function serialize(JsonObject memory obj, string memory valueKey, bytes32 value)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeBytes32(objectKey, valueKey, value);
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeBytes32(obj.id, valueKey, value);
+        return obj;
         }
-    function serialize(string memory objectKey, string memory valueKey, string memory value)
+    function serialize(JsonObject memory obj, string memory valueKey, string memory value)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeString(objectKey, valueKey, value);
-        }
-    function serialize(string memory objectKey, string memory valueKey, bytes memory value)
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeString(obj.id, valueKey, value);
+        return obj;
+    }
+    function serialize(JsonObject memory obj, string memory valueKey, bytes memory value)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeBytes(objectKey, valueKey, value);
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeBytes(obj.id, valueKey, value);
+        return obj;
         }
 
-    function serialize(string memory objectKey, string memory valueKey, bool[] memory values)
+    function serialize(JsonObject memory obj, string memory valueKey, bool[] memory values)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeBoolArray(objectKey, valueKey, values);
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeBool(obj.id, valueKey, values);
+        return obj;
         }
-    function serialize(string memory objectKey, string memory valueKey, uint256[] memory values)
+    function serialize(JsonObject memory obj, string memory valueKey, uint256[] memory values)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeUintArray(objectKey, valueKey, values);
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeUint(obj.id, valueKey, values);
+        return obj;
         }
-    function serialize(string memory objectKey, string memory valueKey, int256[] memory values)
+    function serialize(JsonObject memory obj, string memory valueKey, int256[] memory values)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeIntArray(objectKey, valueKey, values);
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeInt(obj.id, valueKey, values);
+        return obj;
         }
-    function serialize(string memory objectKey, string memory valueKey, address[] memory values)
+    function serialize(JsonObject memory obj, string memory valueKey, address[] memory values)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeAddressArray(objectKey, valueKey, values);
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeAddress(obj.id, valueKey, values);
+        return obj;
         }
-    function serialize(string memory objectKey, string memory valueKey, bytes32[] memory values)
+    function serialize(JsonObject memory obj, string memory valueKey, bytes32[] memory values)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeBytes32Array(objectKey, valueKey, values);
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeBytes32(obj.id, valueKey, values);
+        return obj;
         }
-    function serialize(string memory objectKey, string memory valueKey, string[] memory values)
+    function serialize(JsonObject memory obj, string memory valueKey, string[] memory values)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeStringArray(objectKey, valueKey, values);
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeString(obj.id, valueKey, values);
+        return obj;
         }
-    function serialize(string memory objectKey, string memory valueKey, bytes[] memory values)
+    function serialize(JsonObject memory obj, string memory valueKey, bytes[] memory values)
         external
-        returns (string memory json) {
-        return vulcan.hevm.serializeBytesArray(objectKey, valueKey, values);
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeBytes(obj.id, valueKey, values);
+        return obj;
         }
 
+    function serialize(JsonObject memory obj, string memory valueKey, JsonObject memory value)
+        external
+        returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeString(obj.id, valueKey, value.serialized);
+        return obj;
+    }
     //
     // writeJson
     //
@@ -184,16 +220,17 @@ library JsonLib {
     //
     // json1 and json2 are simply keys used by the backend to keep track of the objects. So vm.serializeJson(json1,..)
     // will find the object in-memory that is keyed by "some key".
-    function write(string memory json, string memory path) external {
-        vulcan.hevm.writeJson(json, path);
+    function write(JsonObject memory obj, string memory path) external {
+        vulcan.hevm.writeJson(obj.serialized, path);
     }
     // Write a serialized JSON object to an **existing** JSON file, replacing a value with key = <value_key>
     // This is useful to replace a specific value of a JSON file, without having to parse the entire thing
-    function write(string memory json, string memory path, string memory valueKey) external {
-        vulcan.hevm.writeJson(json, path, valueKey);
+    function write(JsonObject memory obj, string memory path, string memory valueKey) external {
+        vulcan.hevm.writeJson(obj.serialized, path, valueKey);
     }
 }
 
 Json constant json = Json.wrap(0);
 
 using JsonLib for Json global;
+using JsonLib for JsonObject global;
