@@ -876,7 +876,7 @@ library vulcan {
     }
 
     function disableCaptureReverts(Watcher memory self) internal returns (Watcher memory) {
-        self.watcherStorage.setCaptureReverts(true);
+        self.watcherStorage.setCaptureReverts(false);
         return self;
     }
 }
