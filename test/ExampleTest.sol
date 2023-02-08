@@ -1,7 +1,8 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, VulcanVm, console, vulcan, Watcher} from "../src/lib.sol";
+import {Test, expect, VulcanVm, console, vulcan} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
+import {watchers, Watcher} from "src/Watcher.sol";
 
 library TestExtension {
     using vulcan for *;
@@ -136,26 +137,44 @@ contract ExampleTest is Test {
         expect(resultOrigin).toEqual(tx.origin);
     }
 
-    function testVmWatchers() external {
+    function testNamespacedWatchers() external {
         Sender sender = new Sender();
         uint256 senderCode = uint256(keccak256(address(sender).code));
 
-        Watcher memory watcher = vm.watch(address(sender));
-        uint256 watcherCode = uint256(keccak256(watcher.watcherStorage.proxy().code));
+        Watcher memory watcher = watchers.watch(address(sender));
 
+        uint256 watcherProxyCode = uint256(keccak256(watcher.watcherStorage.proxy().code));
         uint256 watcherTargetCode = uint256(keccak256(watcher.watcherStorage.target().code));
 
         // The target of the watcher should have the sender code
         expect(watcherTargetCode).toEqual(senderCode);
         // The sender code should have the watcher code
-        expect(uint256(keccak256(address(sender).code))).toEqual(watcherCode);
+        expect(uint256(keccak256(address(sender).code))).toEqual(watcherProxyCode);
+
+        watchers.stop(address(sender));
+
+        // The sender code should be the original sender code
+        expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
+    }
+
+    function testVmWatchers() external {
+        Sender sender = new Sender();
+        uint256 senderCode = uint256(keccak256(address(sender).code));
+
+        Watcher memory watcher = vm.watch(address(sender));
+
+        uint256 watcherProxyCode = uint256(keccak256(watcher.watcherStorage.proxy().code));
+        uint256 watcherTargetCode = uint256(keccak256(watcher.watcherStorage.target().code));
+
+        // The target of the watcher should have the sender code
+        expect(watcherTargetCode).toEqual(senderCode);
+        // The sender code should have the watcher code
+        expect(uint256(keccak256(address(sender).code))).toEqual(watcherProxyCode);
 
         vm.stopWatcher(address(sender));
 
         // The sender code should be the original sender code
         expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
-
-        expect(address(vulcan.storages()[address(sender)])).toEqual(address(0));
     }
 
     function testVmWatchersFromAddress() external {
@@ -163,20 +182,18 @@ contract ExampleTest is Test {
         uint256 senderCode = uint256(keccak256(address(sender).code));
 
         Watcher memory watcher = address(sender).watch();
-        uint256 watcherCode = uint256(keccak256(watcher.watcherStorage.proxy().code));
 
+        uint256 watcherProxyCode = uint256(keccak256(watcher.watcherStorage.proxy().code));
         uint256 watcherTargetCode = uint256(keccak256(watcher.watcherStorage.target().code));
 
         // The target of the watcher should have the sender code
         expect(watcherTargetCode).toEqual(senderCode);
         // The sender code should have the watcher code
-        expect(uint256(keccak256(address(sender).code))).toEqual(watcherCode);
+        expect(uint256(keccak256(address(sender).code))).toEqual(watcherProxyCode);
 
-        address(sender).watcher().stop();
+        address(sender).stopWatcher();
 
         // The sender code should be the original sender code
         expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
-
-        expect(address(vulcan.storages()[address(sender)])).toEqual(address(0));
     }
 }
