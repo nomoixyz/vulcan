@@ -19,11 +19,6 @@ struct Rpc {
     string name;
     string url;
 }
-
-struct Fork {
-    uint256 id;
-}
-
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
 /// @dev Main entry point to vm functionality
 library vulcan {
@@ -479,74 +474,6 @@ library vulcan {
         return hevm.revertTo(snapshotId);
     }
 
-    function forkAtBlock(VulcanVm, string memory endpoint, uint256 blockNumber) internal returns (Fork memory) {
-        return Fork(hevm.createFork(endpoint, blockNumber));
-    }
-    function fork(VulcanVm, string memory endpoint) internal returns (Fork memory) {
-        return Fork(hevm.createFork(endpoint));
-    }
-    function forkBeforeTx(VulcanVm, string memory endpoint, bytes32 txHash) internal returns (Fork memory) {
-        return Fork(hevm.createFork(endpoint, txHash));
-    }
-
-    function select(Fork memory self) internal returns (Fork memory) {
-        hevm.selectFork(self.id);
-        return self;
-    }
-
-    function activeFork(VulcanVm) internal view returns (Fork memory) {
-        return Fork(hevm.activeFork());
-    }
-
-    function setBlockNumber(Fork memory self, uint256 blockNumber) internal returns (Fork memory) {
-        hevm.rollFork(self.id, blockNumber);
-        return self;
-    }
-
-    function beforeTx(Fork memory self, bytes32 txHash) internal returns (Fork memory) {
-        hevm.rollFork(self.id, txHash);
-        return self;
-    }
-
-
-    function persistBetweenForks(address self) internal returns(address) {
-        hevm.makePersistent(self);
-        return self;
-    }
-
-    function persistBetweenForks(VulcanVm, address who) internal {
-        hevm.makePersistent(who);
-    }
-
-    function persistBetweenForks(VulcanVm, address who1, address who2) internal {
-        hevm.makePersistent(who1, who2);
-    }
-    function persistBetweenForks(VulcanVm, address who1, address who2, address who3) internal {
-        hevm.makePersistent(who1, who2, who3);
-    }
-    function persistBetweenForks(VulcanVm, address[] memory whos) internal {
-        hevm.makePersistent(whos);
-    }
-    function stopPersist(VulcanVm, address who) internal {
-        hevm.revokePersistent(who);
-    }
-    function stopPersist(VulcanVm, address[] memory whos) internal {
-        hevm.revokePersistent(whos);
-    }
-    function isPersistent(VulcanVm, address who) internal view returns (bool) {
-        return hevm.isPersistent(who);
-    }
-    function allowCheatcodes(VulcanVm, address who) internal {
-        hevm.allowCheatcodes(who);
-    }
-    function executeTx(VulcanVm, bytes32 txHash) internal {
-        hevm.transact(txHash);
-    }
-    function executeTx(Fork memory self, bytes32 txHash) internal returns(Fork memory) {
-        hevm.transact(self.id, txHash);
-        return self;
-    }
-
     function failed() internal view returns (bool) {
         bytes32 globalFailed = address(hevm).readStorage(GLOBAL_FAILED_SLOT);
         return globalFailed == bytes32(uint256(1));
@@ -652,5 +579,3 @@ library vulcan {
         return self;
     }
 }
-
-using vulcan for Fork global;
