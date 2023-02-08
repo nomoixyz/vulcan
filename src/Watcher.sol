@@ -14,6 +14,18 @@ struct Call {
     Log[] logs;
 }
 
+library WatcherLib {
+    bytes32 constant STORAGES_SLOT = keccak256("vulcan.watchers.storages.slot");
+
+    function storages() internal pure returns (mapping(address => WatcherStorage) storage s) {
+        bytes32 SLOT = STORAGES_SLOT;
+
+        assembly {
+            s.slot := SLOT
+        }
+    }
+}
+
 contract WatcherStorage {
     address public proxy;
     address public target;
