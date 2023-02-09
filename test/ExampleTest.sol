@@ -187,9 +187,9 @@ contract ExampleTest is Test {
         inputs[1] = "'Hello, World!'";
 
         expect(string(commands.run(inputs))).toEqual("'Hello, World!'");
-        expect(string(commands.make(inputs).run())).toEqual("'Hello, World!'");
+        expect(string(commands.create(inputs).run())).toEqual("'Hello, World!'");
 
-        Command memory cmd = commands.make(inputs);
+        Command memory cmd = commands.create(inputs);
         expect(string(cmd.run())).toEqual("'Hello, World!'");
     }
 }

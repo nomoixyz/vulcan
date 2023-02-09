@@ -10,7 +10,7 @@ struct Command {
 library commands {
     using commands for *;
 
-    function make(string[] memory inputs) internal pure returns (Command memory) {
+    function create(string[] memory inputs) internal pure returns (Command memory) {
         return Command(inputs);
     }
 
