@@ -108,34 +108,9 @@ library vulcan {
         return watchers.watch(_target);
     }
 
-    function watch(address self) internal returns (Watcher memory) {
-        return watchers.watch(self);
-    }
-
-    function stopWatcher(address self) internal returns (address) {
-        watchers.stop(self);
-        return self;
-    }
-
     function stopWatcher(VulcanVm self, address _target) internal returns (VulcanVm) {
         watchers.stop(_target);
         return self;
-    }
-
-    function calls(address self) internal view returns (Call[] memory) {
-        return watchers.calls(self);
-    }
-
-    function getCall(address self, uint256 index) internal view returns (Call memory) {
-        return watchers.getCall(self, index);
-    }
-
-    function firstCall(address self) internal view returns (Call memory) {
-        return watchers.firstCall(self);
-    }
-
-    function lastCall(address self) internal view returns (Call memory) {
-        return watchers.lastCall(self);
     }
 }
 

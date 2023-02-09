@@ -46,6 +46,7 @@ contract CallTest {
 
 contract ExpectTest is Test {
     using vulcan for *;
+    using watchers for *;
 
     modifier shouldFail() {
         bool pre = vulcan.failed();

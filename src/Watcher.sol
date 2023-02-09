@@ -4,8 +4,6 @@ pragma solidity >=0.8.13 <0.9.0;
 import "./Vulcan.sol";
 import "./Events.sol";
 
-type WatchersNamespace is bytes32;
-
 struct Watcher {
     WatcherStorage watcherStorage;
 }
@@ -17,8 +15,8 @@ struct Call {
     Log[] logs;
 }
 
-library WatcherLib {
-    using WatcherLib for *;
+library watchers {
+    using watchers for *;
 
     bytes32 constant STORAGES_SLOT = keccak256("vulcan.watchers.storages.slot");
 
@@ -30,14 +28,14 @@ library WatcherLib {
         }
     }
 
-    function watcher(WatchersNamespace, address target) internal returns (Watcher memory) {
+    function watcher(address target) internal returns (Watcher memory) {
         WatcherStorage watcherStorage = storages()[target];
         require(address(watcherStorage) != address(0), "Addess doesn't have a watcher");
 
         return Watcher(watcherStorage);
     }
 
-    function watch(WatchersNamespace, address target) internal returns (Watcher memory) {
+    function watch(address target) internal returns (Watcher memory) {
         require(address(storages()[target]) == address(0), "Address already has a watcher");
 
         WatcherStorage proxyStorage = new WatcherStorage();
@@ -58,7 +56,11 @@ library WatcherLib {
         return Watcher(proxyStorage);
     }
 
-    function stop(WatchersNamespace, address target) internal {
+    function stop(address target) internal {
+        Watcher(storages()[target]).stop();
+    }
+
+    function stopWatcher(address target) internal {
         Watcher(storages()[target]).stop();
     }
 
@@ -75,7 +77,7 @@ library WatcherLib {
         delete storages()[target];
     }
 
-    function calls(WatchersNamespace, address target) internal view returns (Call[] memory) {
+    function calls(address target) internal view returns (Call[] memory) {
         return Watcher(storages()[target]).calls();
     }
 
@@ -84,7 +86,7 @@ library WatcherLib {
         return self.watcherStorage.calls();
     }
 
-    function getCall(WatchersNamespace, address target, uint256 index) internal view returns (Call memory) {
+    function getCall(address target, uint256 index) internal view returns (Call memory) {
         return Watcher(storages()[target]).getCall(index);
     }
 
@@ -93,7 +95,7 @@ library WatcherLib {
         return self.watcherStorage.getCall(index);
     }
 
-    function firstCall(WatchersNamespace, address target) internal view returns(Call memory) {
+    function firstCall(address target) internal view returns(Call memory) {
         return Watcher(storages()[target]).firstCall();
     }
 
@@ -102,7 +104,7 @@ library WatcherLib {
         return self.watcherStorage.firstCall();
     }
 
-    function lastCall(WatchersNamespace, address target) internal view returns(Call memory) {
+    function lastCall(address target) internal view returns(Call memory) {
         return Watcher(storages()[target]).lastCall();
     }
 
@@ -111,7 +113,7 @@ library WatcherLib {
         return self.watcherStorage.lastCall();
     }
 
-    function captureReverts(WatchersNamespace, address target) internal returns (Watcher memory) {
+    function captureReverts(address target) internal returns (Watcher memory) {
         return Watcher(storages()[target]).captureReverts();
     }
 
@@ -121,7 +123,7 @@ library WatcherLib {
         return self;
     }
 
-    function disableCaptureReverts(WatchersNamespace, address target) internal returns (Watcher memory) {
+    function disableCaptureReverts(address target) internal returns (Watcher memory) {
         return Watcher(storages()[target]).disableCaptureReverts();
     }
 
@@ -233,7 +235,3 @@ contract WatcherProxy {
     }
 }
 
-WatchersNamespace constant watchers = WatchersNamespace.wrap(0);
-
-using WatcherLib for WatchersNamespace global;
-using WatcherLib for Watcher global;

@@ -7,6 +7,7 @@ import {commands, Command} from "src/Command.sol";
 contract ExampleTest is Test {
     using vulcan for *;
     using AccountsLib for *;
+    using watchers for *;
 
     function beforeEach() internal view override {
         // console.log("before each");
