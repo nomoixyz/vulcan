@@ -29,6 +29,13 @@ library WatcherLib {
         }
     }
 
+    function watcher(_Watcher, address target) internal returns (Watcher memory) {
+        WatcherStorage watcherStorage = storages()[target];
+        require(address(watcherStorage) != address(0), "Addess doesn't have a watcher");
+
+        return Watcher(watcherStorage);
+    }
+
     function watch(_Watcher, address target) internal returns (Watcher memory) {
         require(address(storages()[target]) == address(0), "Address already has a watcher");
 
