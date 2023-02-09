@@ -120,7 +120,7 @@ function abs(int256 a) pure returns (uint256) {
 
 library ExpectLib {
     using vulcan for *;
-    using EventsLib for *;
+    using events for *;
 
     /* BOOL */
 

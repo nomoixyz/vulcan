@@ -1,12 +1,12 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, accounts, ctx, console, vulcan, accounts, AccountsLib, watchers, Watcher} from "../src/lib.sol";
+import {Test, expect, accounts, ctx, console, vulcan, accounts, watchers, Watcher} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
 import {commands, Command} from "src/Command.sol";
 
 contract ExampleTest is Test {
     using vulcan for *;
-    using AccountsLib for *;
+    using accounts for *;
 
     function beforeEach() internal view override {
         // console.log("before each");

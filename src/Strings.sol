@@ -3,9 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
 
-type Strings is bytes32;
-
-library StringsLib {
+library strings {
     function toString(address value) internal pure returns (string memory) {
         return vulcan.hevm.toString(value);
     }
@@ -44,7 +42,3 @@ library StringsLib {
         return vulcan.hevm.parseBool(value);
     }
 }
-
-Strings constant strings = Strings.wrap(0);
-
-using StringsLib for Strings global;
