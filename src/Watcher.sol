@@ -235,3 +235,4 @@ contract WatcherProxy {
     }
 }
 
+using watchers for Watcher global;
