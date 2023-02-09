@@ -504,6 +504,10 @@ library vulcan {
         return self;
     }
 
+    function calls(address self) internal view returns (Call[] memory) {
+        return watchers.calls(self);
+    }
+
     function getCall(address self, uint256 index) internal view returns (Call memory) {
         return watchers.getCall(self, index);
     }

@@ -365,7 +365,7 @@ contract ExpectTest is Test {
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).getCall(0)).toHaveEmitted(
+        expect(address(t).calls()[0]).toHaveEmitted(
             "Event(string,uint256)",
             [any.topic()]
         );
@@ -378,7 +378,7 @@ contract ExpectTest is Test {
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).getCall(0)).toHaveEmitted(
+        expect(address(t).calls()[0]).toHaveEmitted(
             "Fake(string,uint256)",
             [string("bar").topic()],
             abi.encode(uint256(123))
