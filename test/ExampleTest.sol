@@ -2,6 +2,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, VulcanVm, console, vulcan, Watcher} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
+import {commands, Command} from "src/Command.sol";
 
 library TestExtension {
     using vulcan for *;
@@ -178,5 +179,17 @@ contract ExampleTest is Test {
         expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
 
         expect(address(vulcan.storages()[address(sender)])).toEqual(address(0));
+    }
+
+    function testCommand() external {
+        string[] memory inputs = new string[](2);
+        inputs[0] = "echo";
+        inputs[1] = "'Hello, World!'";
+
+        expect(string(commands.run(inputs))).toEqual("'Hello, World!'");
+        expect(string(commands.make(inputs).run())).toEqual("'Hello, World!'");
+
+        Command memory cmd = commands.make(inputs);
+        expect(string(cmd.run())).toEqual("'Hello, World!'");
     }
 }
