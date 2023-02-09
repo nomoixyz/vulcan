@@ -32,13 +32,6 @@ library vulcan {
     // This address doesn't contain any code
     VulcanVm internal constant vm = VulcanVm(address(bytes20(uint160(uint256(keccak256('vulcan.vm.address'))))));
 
-    /// @dev performs a foreign function call via the terminal, (stringInputs) => (result)
-    /// @param inputs the command splitted into strings. eg ["mkdir", "-p", "tests"]
-    /// @return the output of the command
-    function runCommand(VulcanVmSafe, string[] memory inputs) internal returns (bytes memory) {
-        return hevm.ffi(inputs);
-    }
-
     /// @dev Using the address that calls the test contract, has the next call (at this call depth only) create a transaction that can later be signed and sent onchain
     function broadcast(VulcanVmSafe) internal {
         hevm.broadcast();
@@ -138,4 +131,3 @@ library vulcan {
         return watchers.lastCall(self);
     }
 }
-
