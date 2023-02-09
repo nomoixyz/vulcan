@@ -3,7 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
 
-type _Watcher is bytes32;
+type WatchersNamespace is bytes32;
 
 struct Watcher {
     WatcherStorage watcherStorage;
@@ -29,14 +29,14 @@ library WatcherLib {
         }
     }
 
-    function watcher(_Watcher, address target) internal returns (Watcher memory) {
+    function watcher(WatchersNamespace, address target) internal returns (Watcher memory) {
         WatcherStorage watcherStorage = storages()[target];
         require(address(watcherStorage) != address(0), "Addess doesn't have a watcher");
 
         return Watcher(watcherStorage);
     }
 
-    function watch(_Watcher, address target) internal returns (Watcher memory) {
+    function watch(WatchersNamespace, address target) internal returns (Watcher memory) {
         require(address(storages()[target]) == address(0), "Address already has a watcher");
 
         WatcherStorage proxyStorage = new WatcherStorage();
@@ -57,7 +57,7 @@ library WatcherLib {
         return Watcher(proxyStorage);
     }
 
-    function stop(_Watcher, address target) internal {
+    function stop(WatchersNamespace, address target) internal {
         Watcher(storages()[target]).stop();
     }
 
@@ -74,7 +74,7 @@ library WatcherLib {
         delete storages()[target];
     }
 
-    function calls(_Watcher, address target) internal view returns (Call[] memory) {
+    function calls(WatchersNamespace, address target) internal view returns (Call[] memory) {
         return Watcher(storages()[target]).calls();
     }
 
@@ -83,7 +83,7 @@ library WatcherLib {
         return self.watcherStorage.calls();
     }
 
-    function getCall(_Watcher, address target, uint256 index) internal view returns (Call memory) {
+    function getCall(WatchersNamespace, address target, uint256 index) internal view returns (Call memory) {
         return Watcher(storages()[target]).getCall(index);
     }
 
@@ -92,7 +92,7 @@ library WatcherLib {
         return self.watcherStorage.getCall(index);
     }
 
-    function firstCall(_Watcher, address target) internal view returns(Call memory) {
+    function firstCall(WatchersNamespace, address target) internal view returns(Call memory) {
         return Watcher(storages()[target]).firstCall();
     }
 
@@ -101,7 +101,7 @@ library WatcherLib {
         return self.watcherStorage.firstCall();
     }
 
-    function lastCall(_Watcher, address target) internal view returns(Call memory) {
+    function lastCall(WatchersNamespace, address target) internal view returns(Call memory) {
         return Watcher(storages()[target]).lastCall();
     }
 
@@ -110,7 +110,7 @@ library WatcherLib {
         return self.watcherStorage.lastCall();
     }
 
-    function captureReverts(_Watcher, address target) internal returns (Watcher memory) {
+    function captureReverts(WatchersNamespace, address target) internal returns (Watcher memory) {
         return Watcher(storages()[target]).captureReverts();
     }
 
@@ -120,7 +120,7 @@ library WatcherLib {
         return self;
     }
 
-    function disableCaptureReverts(_Watcher, address target) internal returns (Watcher memory) {
+    function disableCaptureReverts(WatchersNamespace, address target) internal returns (Watcher memory) {
         return Watcher(storages()[target]).disableCaptureReverts();
     }
 
@@ -232,7 +232,7 @@ contract WatcherProxy {
     }
 }
 
-_Watcher constant watchers = _Watcher.wrap(0);
+WatchersNamespace constant watchers = WatchersNamespace.wrap(0);
 
-using WatcherLib for _Watcher global;
+using WatcherLib for WatchersNamespace global;
 using WatcherLib for Watcher global;
