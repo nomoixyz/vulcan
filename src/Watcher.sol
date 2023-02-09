@@ -74,13 +74,13 @@ library WatcherLib {
         delete storages()[target];
     }
 
-    function calls(_Watcher, address target, uint256 index) internal view returns (Call memory) {
-        return Watcher(storages()[target]).calls(index);
+    function getCall(_Watcher, address target, uint256 index) internal view returns (Call memory) {
+        return Watcher(storages()[target]).getCall(index);
     }
 
-    function calls(Watcher memory self, uint256 index) internal view returns(Call memory) {
+    function getCall(Watcher memory self, uint256 index) internal view returns(Call memory) {
         require(address(self.watcherStorage) != address(0), "Address doesn't have a watcher");
-        return self.watcherStorage.calls(index);
+        return self.watcherStorage.getCall(index);
     }
 
     function firstCall(_Watcher, address target) internal view returns(Call memory) {
@@ -146,7 +146,7 @@ contract WatcherStorage {
         }
     }
 
-    function calls(uint256 index) external view returns (Call memory) {
+    function getCall(uint256 index) external view returns (Call memory) {
         return _calls[index];
     }
 

@@ -275,11 +275,11 @@ contract ExpectTest is Test {
         t.failWithRequireMessage();
         t.failWithCustomError();
 
-        expect(address(t).calls(0)).toHaveReverted();
-        expect(address(t).calls(1)).toHaveReverted();
-        expect(address(t).calls(2)).toHaveReverted();
-        expect(address(t).calls(3)).toHaveReverted();
-        expect(address(t).calls(4)).toHaveReverted();
+        expect(address(t).getCall(0)).toHaveReverted();
+        expect(address(t).getCall(1)).toHaveReverted();
+        expect(address(t).getCall(2)).toHaveReverted();
+        expect(address(t).getCall(3)).toHaveReverted();
+        expect(address(t).getCall(4)).toHaveReverted();
         expect(address(t).firstCall()).toHaveReverted();
         expect(address(t).lastCall()).toHaveReverted();
     }
@@ -291,7 +291,7 @@ contract ExpectTest is Test {
 
         uint256 result = t.ok();
 
-        expect(address(t).calls(0)).toHaveSucceeded();
+        expect(address(t).getCall(0)).toHaveSucceeded();
         expect(address(t).firstCall()).toHaveSucceeded();
         expect(address(t).lastCall()).toHaveSucceeded();
         expect(result).toEqual(uint256(keccak256(abi.encodePacked(uint256(69)))));
@@ -306,14 +306,14 @@ contract ExpectTest is Test {
         t.failWithRequireMessage();
         t.failWithCustomError();
 
-        expect(address(t).calls(0)).toHaveRevertedWith(string("Error"));
-        expect(address(t).calls(1)).toHaveRevertedWith(string("Require message"));
-        expect(address(t).calls(2)).toHaveRevertedWith(CallTest.CustomError.selector);
+        expect(address(t).getCall(0)).toHaveRevertedWith(string("Error"));
+        expect(address(t).getCall(1)).toHaveRevertedWith(string("Require message"));
+        expect(address(t).getCall(2)).toHaveRevertedWith(CallTest.CustomError.selector);
         expect(address(t).firstCall()).toHaveRevertedWith(string("Error"));
         expect(address(t).lastCall()).toHaveRevertedWith(CallTest.CustomError.selector);
 
         bytes memory expectedError = abi.encodeWithSelector(CallTest.CustomError.selector, uint256(69));
-        expect(address(t).calls(2)).toHaveRevertedWith(expectedError);
+        expect(address(t).getCall(2)).toHaveRevertedWith(expectedError);
     }
 
     function testToHaveEmittedPass() external {
@@ -323,7 +323,7 @@ contract ExpectTest is Test {
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).calls(0)).toHaveEmitted("Event(string,uint256)");
+        expect(address(t).getCall(0)).toHaveEmitted("Event(string,uint256)");
     }
 
     function testToHaveEmittedFail() external shouldFail {
@@ -333,7 +333,7 @@ contract ExpectTest is Test {
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).calls(0)).toHaveEmitted("Fake(string,uint256)");
+        expect(address(t).getCall(0)).toHaveEmitted("Fake(string,uint256)");
     }
 
     function testToHaveEmittedWithDataPass() external {
@@ -343,7 +343,7 @@ contract ExpectTest is Test {
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).calls(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(123)));
+        expect(address(t).getCall(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(123)));
     }
 
     function testToHaveEmittedWithDataFail() external shouldFail {
@@ -353,7 +353,7 @@ contract ExpectTest is Test {
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).calls(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(321)));
+        expect(address(t).getCall(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(321)));
     }
 
     event Event(string indexed a, uint256 b);
@@ -365,7 +365,7 @@ contract ExpectTest is Test {
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).calls(0)).toHaveEmitted(
+        expect(address(t).getCall(0)).toHaveEmitted(
             "Event(string,uint256)",
             [any.topic()]
         );
@@ -378,7 +378,7 @@ contract ExpectTest is Test {
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).calls(0)).toHaveEmitted(
+        expect(address(t).getCall(0)).toHaveEmitted(
             "Fake(string,uint256)",
             [string("bar").topic()],
             abi.encode(uint256(123))
