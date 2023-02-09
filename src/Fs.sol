@@ -57,6 +57,19 @@ library FsLib {
     function removeFile(Fs, string memory path) internal {
         vulcan.hevm.removeFile(path);
     }
+
+    /// @dev Gets the creation bytecode from an artifact file. Takes in the relative path to the json file
+    /// @param path the relative path to the json file
+    /// @return the creation code
+    function getCode(Fs, string memory path) internal view returns (bytes memory) {
+        return vulcan.evm.getCode(path);
+    }
+    /// @dev Gets the deployed bytecode from an artifact file. Takes in the relative path to the json file
+    /// @param path the relative path to the json file
+    /// @return the deployed code
+    function getDeployedCode(Fs, string memory path) internal view returns (bytes memory) {
+        return vulcan.hevm.getDeployedCode(path);
+    }
 }
 
 Fs constant fs = Fs.wrap(0);

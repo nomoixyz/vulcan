@@ -1,18 +1,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, VulcanVm, console, vulcan, Watcher} from "../src/lib.sol";
+import {Test, expect, console, vulcan, accounts, Watcher} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
-
-library TestExtension {
-    using vulcan for *;
-
-    function increaseBlockTimestamp(VulcanVm self, uint256 increase) internal returns (VulcanVm) {
-        self.setBlockTimestamp(block.timestamp + increase);
-        return self;
-    }
-}
-
-using TestExtension for VulcanVm;
 
 contract ExampleTest is Test {
     using vulcan for *;
@@ -99,11 +88,11 @@ contract ExampleTest is Test {
         address expectedOrigin = address(7331);
         Sender sender = new Sender();
 
-        vm.impersonateOnce(expectedSender);
+        accounts.impersonateOnce(expectedSender);
         expect(sender.get()).toEqual(expectedSender);
         expect(sender.get()).toEqual(address(this));
 
-        vm.impersonateOnce(expectedSender, expectedOrigin);
+        accounts.impersonateOnce(expectedSender, expectedOrigin);
         (address resultSender, address resultOrigin) = sender.getWithOrigin();
         expect(resultSender).toEqual(expectedSender);
         expect(resultOrigin).toEqual(expectedOrigin);
@@ -119,7 +108,7 @@ contract ExampleTest is Test {
 
         expect(sender.get()).toEqual(address(this));
 
-        vm.impersonate(expectedSender, expectedOrigin);
+        accounts.impersonate(expectedSender, expectedOrigin);
         (resultSender, resultOrigin) = sender.getWithOrigin();
         expect(resultSender).toEqual(expectedSender);
         expect(resultOrigin).toEqual(expectedOrigin);
@@ -129,7 +118,7 @@ contract ExampleTest is Test {
         (resultSender, resultOrigin) = sender.getWithOrigin();
         expect(resultSender).toEqual(expectedSender);
         expect(resultOrigin).toEqual(expectedOrigin);
-        vm.stopImpersonate();
+        accounts.stopImpersonate();
 
         (resultSender, resultOrigin) = sender.getWithOrigin();
         expect(resultSender).toEqual(address(this));

@@ -38,7 +38,6 @@ library ForkingLib {
         return self;
     }
 
-
     function persistBetweenForks(address self) internal returns(address) {
         vulcan.hevm.makePersistent(self);
         return self;
