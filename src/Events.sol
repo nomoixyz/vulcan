@@ -1,31 +1,32 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.13 <0.9.0;
 
+import { Vm as Hevm } from "forge-std/Vm.sol";
 import "./Vulcan.sol";
 
 type Events is bytes32;
 
 // @dev Main entry point to sest tests
 library EventsLib {
-    function toDynamic(Events, bytes32[1] memory topics) pure internal returns (bytes32[] memory _topics) {
+    function toDynamic(bytes32[1] memory topics) pure internal returns (bytes32[] memory _topics) {
         _topics = new bytes32[](1);
         _topics[0] = topics[0];
     }
 
-    function toDynamic(Events, bytes32[2] memory topics) pure internal returns (bytes32[] memory _topics) {
+    function toDynamic(bytes32[2] memory topics) pure internal returns (bytes32[] memory _topics) {
         _topics = new bytes32[](2);
         _topics[0] = topics[0];
         _topics[1] = topics[1];
     }
 
-    function toDynamic(Events, bytes32[3] memory topics) pure internal returns (bytes32[] memory _topics) {
+    function toDynamic(bytes32[3] memory topics) pure internal returns (bytes32[] memory _topics) {
         _topics = new bytes32[](3);
         _topics[0] = topics[0];
         _topics[1] = topics[1];
         _topics[2] = topics[2];
     }
 
-    function toDynamic(Events, bytes32[4] memory topics) pure internal returns (bytes32[] memory _topics) {
+    function toDynamic(bytes32[4] memory topics) pure internal returns (bytes32[] memory _topics) {
         _topics = new bytes32[](4);
         _topics[0] = topics[0];
         _topics[1] = topics[1];
@@ -63,10 +64,10 @@ library EventsLib {
         return bytes32(uint256(_param));
     }
 
-    function recordLogs(VulcanVmSafe) internal {
+    function recordLogs(Events) internal {
         vulcan.hevm.recordLogs();
     }
-    function getRecordedLogs(VulcanVmSafe) internal returns (Log[] memory logs) {
+    function getRecordedLogs(Events) internal returns (Log[] memory logs) {
         Hevm.Log[] memory recorded = vulcan.hevm.getRecordedLogs();
         assembly {
             logs := recorded

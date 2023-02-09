@@ -8,35 +8,35 @@ type Context is bytes32;
 library ContextLib {
     /// @dev sets the `block.timestamp` to `ts`
     /// @param ts the new block timestamp
-    function setBlockTimestamp(VulcanVm self, uint256 ts) internal returns(VulcanVm) {
+    function setBlockTimestamp(Context self, uint256 ts) internal returns(Context) {
         vulcan.hevm.warp(ts);
         return self;
     }
 
     /// @dev sets the `block.number` to `blockNumber`
     /// @param blockNumber the new block number
-    function setBlockNumber(VulcanVm self, uint256 blockNumber) internal returns(VulcanVm) {
+    function setBlockNumber(Context self, uint256 blockNumber) internal returns(Context) {
         vulcan.hevm.roll(blockNumber);
         return self;
     }
 
     /// @dev sets the `block.basefee` to `baseFee`
     /// @param baseFee the new block base fee
-    function setBlockBaseFee(VulcanVm self, uint256 baseFee) internal returns(VulcanVm) {
+    function setBlockBaseFee(Context self, uint256 baseFee) internal returns(Context) {
         vulcan.hevm.fee(baseFee);
         return self;
     }
 
     /// @dev sets the `block.difficulty` to `difficulty`
     /// @param difficulty the new block difficulty
-    function setBlockDifficulty(VulcanVm self, uint256 difficulty) internal returns(VulcanVm) {
+    function setBlockDifficulty(Context self, uint256 difficulty) internal returns(Context) {
         vulcan.hevm.difficulty(difficulty);
         return self;
     }
 
     /// @dev sets the `block.chainid` to `chainId`
     /// @param chainId the new block chain id
-    function setChainId(VulcanVm self, uint256 chainId) internal returns(VulcanVm){
+    function setChainId(Context self, uint256 chainId) internal returns(Context){
         vulcan.hevm.chainId(chainId);
         return self;
     }
@@ -82,16 +82,16 @@ library ContextLib {
         vulcan.hevm.expectCall(callee, msgValue, data);
     }
 
-    function setBlockCoinbase(VulcanVm self, address who) internal returns (VulcanVm){
+    function setBlockCoinbase(Context self, address who) internal returns (Context){
         vulcan.hevm.coinbase(who);
         return self;
     }
     
-    function snapshot(VulcanVm) internal returns (uint256) {
+    function snapshot(Context) internal returns (uint256) {
         return vulcan.hevm.snapshot();
     }
 
-    function revertToSnapshot(VulcanVm, uint256 snapshotId) internal returns (bool) {
+    function revertToSnapshot(Context, uint256 snapshotId) internal returns (bool) {
         return vulcan.hevm.revertTo(snapshotId);
     }
 }

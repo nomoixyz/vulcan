@@ -120,6 +120,7 @@ function abs(int256 a) pure returns (uint256) {
 
 library ExpectLib {
     using vulcan for *;
+    using EventsLib for *;
 
     /* BOOL */
 
@@ -571,7 +572,7 @@ library ExpectLib {
         bytes32[] memory _topics;
         if (bytes(eventSig).length > 0) {
             _topics = new bytes32[](topics.length + 1);
-            _topics[0] = eventSig.topic();
+            _topics[0] = events.topic(eventSig);
             for (uint256 i = 0; i < topics.length; i++) {
                 _topics[i+1] = topics[i];
             }

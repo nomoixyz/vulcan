@@ -62,7 +62,7 @@ library FsLib {
     /// @param path the relative path to the json file
     /// @return the creation code
     function getCode(Fs, string memory path) internal view returns (bytes memory) {
-        return vulcan.evm.getCode(path);
+        return vulcan.hevm.getCode(path);
     }
     /// @dev Gets the deployed bytecode from an artifact file. Takes in the relative path to the json file
     /// @param path the relative path to the json file
