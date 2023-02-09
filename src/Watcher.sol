@@ -57,7 +57,7 @@ library watchers {
     }
 
     function stop(address target) internal {
-        Watcher(storages()[target]).stop();
+        target.stopWatcher();
     }
 
     function stopWatcher(address target) internal {
