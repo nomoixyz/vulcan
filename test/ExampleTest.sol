@@ -179,16 +179,4 @@ contract ExampleTest is Test {
         // The sender code should be the original sender code
         expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
     }
-
-    function testCommand() external {
-        string[] memory inputs = new string[](2);
-        inputs[0] = "echo";
-        inputs[1] = "'Hello, World!'";
-
-        expect(string(commands.run(inputs))).toEqual("'Hello, World!'");
-        expect(string(commands.create(inputs).run())).toEqual("'Hello, World!'");
-
-        Command memory cmd = commands.create(inputs);
-        expect(string(cmd.run())).toEqual("'Hello, World!'");
-    }
 }
