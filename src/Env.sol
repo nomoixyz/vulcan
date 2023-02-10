@@ -3,62 +3,60 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
 
-type Env is bytes32;
-
-library EnvLib {
+library env {
     /// @dev sets the value of the  environment variable with name `name` to `value`
     /// @param name the name of the environment variable
     /// @param value the new value of the environment variable
-    function set(Env, string memory name, string memory value) internal {
+    function set(string memory name, string memory value) internal {
         vulcan.hevm.setEnv(name, value);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `bool`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `bool`
-    function getBool(Env, string memory name) internal view returns (bool) {
+    function getBool(string memory name) internal view returns (bool) {
         return vulcan.hevm.envBool(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `uint256`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `uint256`
-    function getUint(Env, string memory name) internal view returns (uint256) {
+    function getUint(string memory name) internal view returns (uint256) {
         return vulcan.hevm.envUint(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `int256`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `int256`
-    function getInt(Env, string memory name) internal view returns (int256) {
+    function getInt(string memory name) internal view returns (int256) {
         return vulcan.hevm.envInt(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `address`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `address`
-    function getAddress(Env, string memory name) internal view returns (address) {
+    function getAddress(string memory name) internal view returns (address) {
         return vulcan.hevm.envAddress(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `bytes32`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `bytes32`
-    function getBytes32(Env, string memory name) internal view returns (bytes32) {
+    function getBytes32(string memory name) internal view returns (bytes32) {
         return vulcan.hevm.envBytes32(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `string`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `string`
-    function getString(Env, string memory name) internal view returns (string memory) {
+    function getString(string memory name) internal view returns (string memory) {
         return vulcan.hevm.envString(name);
     }
 
     /// @dev Reads the environment variable with name `name` and returns the value as `bytes`
     /// @param name the name of the environment variable to read
     /// @return the value of the environment variable as `bytes`
-    function getBytes(Env, string memory name) internal view returns (bytes memory) {
+    function getBytes(string memory name) internal view returns (bytes memory) {
         return vulcan.hevm.envBytes(name);
     }
 
@@ -66,7 +64,7 @@ library EnvLib {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `bool[]`
-    function getBoolArray(Env, string memory name, string memory delim) internal view returns (bool[] memory) {
+    function getBoolArray(string memory name, string memory delim) internal view returns (bool[] memory) {
         return vulcan.hevm.envBool(name, delim);
     }
 
@@ -74,7 +72,7 @@ library EnvLib {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `uint256[]`
-    function getUintArray(Env, string memory name, string memory delim) internal view returns (uint256[] memory) {
+    function getUintArray(string memory name, string memory delim) internal view returns (uint256[] memory) {
         return vulcan.hevm.envUint(name, delim);
     }
 
@@ -82,7 +80,7 @@ library EnvLib {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `int256[]`
-    function getIntArray(Env, string memory name, string memory delim) internal view returns (int256[] memory) {
+    function getIntArray(string memory name, string memory delim) internal view returns (int256[] memory) {
         return vulcan.hevm.envInt(name, delim);
     }
 
@@ -90,7 +88,7 @@ library EnvLib {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `address[]`
-    function getAddressArray(Env, string memory name, string memory delim) internal view returns (address[] memory) {
+    function getAddressArray(string memory name, string memory delim) internal view returns (address[] memory) {
         return vulcan.hevm.envAddress(name, delim);
     }
 
@@ -98,7 +96,7 @@ library EnvLib {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `bytes32[]`
-    function getBytes32Array(Env, string memory name, string memory delim) internal view returns (bytes32[] memory) {
+    function getBytes32Array(string memory name, string memory delim) internal view returns (bytes32[] memory) {
         return vulcan.hevm.envBytes32(name, delim);
     }
 
@@ -106,7 +104,7 @@ library EnvLib {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `string[]`
-    function getStringArray(Env, string memory name, string memory delim) internal view returns (string[] memory) {
+    function getStringArray(string memory name, string memory delim) internal view returns (string[] memory) {
         return vulcan.hevm.envString(name, delim);
     }
 
@@ -114,7 +112,7 @@ library EnvLib {
     /// @param name the name of the environment variable to read
     /// @param delim the delimiter used to split the values 
     /// @return the value of the environment variable as `bytes[]`
-    function getBytesArray(Env, string memory name, string memory delim) internal view returns (bytes[] memory) {
+    function getBytesArray(string memory name, string memory delim) internal view returns (bytes[] memory) {
         return vulcan.hevm.envBytes(name, delim);
     }
 
@@ -184,7 +182,3 @@ library EnvLib {
         return vulcan.hevm.envOr(name, delim, defaultValue);
     }
 }
-
-Env constant env = Env.wrap(0);
-
-using EnvLib for Env global;

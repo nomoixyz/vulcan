@@ -3,14 +3,12 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
 
-type Json is bytes32;
-
 struct JsonObject {
     string id;
     string serialized;
 }
 
-library JsonLib {
+library json {
     //
     // parseJson
     //
@@ -29,18 +27,18 @@ library JsonLib {
     // decode the tuple in that order, and thus fail.
     // ----
     // Given a string of JSON, return it as ABI-encoded
-    function parseObject(Json, string memory json, string memory key) external pure returns (bytes memory abiEncodedData) {
+    function parseObject(string memory json, string memory key) external pure returns (bytes memory abiEncodedData) {
         return vulcan.hevm.parseJson(json, key);
     }
-    function parseObject(Json, string memory json) external pure returns (bytes memory abiEncodedData) {
+    function parseObject(string memory json) external pure returns (bytes memory abiEncodedData) {
         return vulcan.hevm.parseJson(json);
     }
 
-    function parseObject(Json, JsonObject memory json, string memory key) external pure returns (bytes memory abiEncodedData) {
+    function parseObject(JsonObject memory json, string memory key) external pure returns (bytes memory abiEncodedData) {
         return vulcan.hevm.parseJson(json.serialized, key);
     }
 
-    function parseObject(Json, JsonObject memory json) external pure returns (bytes memory abiEncodedData) {
+    function parseObject(JsonObject memory json) external pure returns (bytes memory abiEncodedData) {
         return vulcan.hevm.parseJson(json.serialized);
     }
 
@@ -49,52 +47,52 @@ library JsonLib {
     // and hex numbers '0xEF'.
     // Type coercion works ONLY for discrete values or arrays. That means that the key must return a value or array, not
     // a JSON object.
-    function parseUint(Json, string memory json, string memory key) external returns (uint256) {
+    function parseUint(string memory json, string memory key) external returns (uint256) {
         return vulcan.hevm.parseJsonUint(json, key);
     }
-    function parseUintArray(Json, string memory json, string memory key) external returns (uint256[] memory) {
+    function parseUintArray(string memory json, string memory key) external returns (uint256[] memory) {
         return vulcan.hevm.parseJsonUintArray(json, key);
     }
-    function parseInt(Json, string memory json, string memory key) external returns (int256) {
+    function parseInt(string memory json, string memory key) external returns (int256) {
         return vulcan.hevm.parseJsonInt(json, key);
     }
-    function parseIntArray(Json, string memory json, string memory key) external returns (int256[] memory) {
+    function parseIntArray(string memory json, string memory key) external returns (int256[] memory) {
         return vulcan.hevm.parseJsonIntArray(json, key);
     }
-    function parseBool(Json, string memory json, string memory key) external returns (bool) {
+    function parseBool(string memory json, string memory key) external returns (bool) {
         return vulcan.hevm.parseJsonBool(json, key);
     }
-    function parseJsonBoolArray(Json, string memory json, string memory key) external returns (bool[] memory) {
+    function parseBoolArray(string memory json, string memory key) external returns (bool[] memory) {
         return vulcan.hevm.parseJsonBoolArray(json, key);
     }
-    function parseAddress(Json, string memory json, string memory key) external returns (address) {
+    function parseAddress(string memory json, string memory key) external returns (address) {
         return vulcan.hevm.parseJsonAddress(json, key);
 
     }
-    function parseAddressArray(Json, string memory json, string memory key) external returns (address[] memory) {
+    function parseAddressArray(string memory json, string memory key) external returns (address[] memory) {
         return vulcan.hevm.parseJsonAddressArray(json, key);
     }
-    function parseString(Json, string memory json, string memory key) external returns (string memory) {
+    function parseString(string memory json, string memory key) external returns (string memory) {
         return vulcan.hevm.parseJsonString(json, key);
     }
-    function parseStringArray(Json, string memory json, string memory key) external returns (string[] memory) {
+    function parseStringArray(string memory json, string memory key) external returns (string[] memory) {
         return vulcan.hevm.parseJsonStringArray(json, key);
     }
-    function parseBytes(Json, string memory json, string memory key) external returns (bytes memory) {
+    function parseBytes(string memory json, string memory key) external returns (bytes memory) {
         return vulcan.hevm.parseJsonBytes(json, key);
     }
-    function parseBytesArray(Json, string memory json, string memory key) external returns (bytes[] memory) {
+    function parseBytesArray(string memory json, string memory key) external returns (bytes[] memory) {
         return vulcan.hevm.parseJsonBytesArray(json, key);
     }
-    function parseBytes32(Json, string memory json, string memory key) external returns (bytes32) {
+    function parseBytes32(string memory json, string memory key) external returns (bytes32) {
         return vulcan.hevm.parseJsonBytes32(json, key);
     }
-    function parseBytes32Array(Json, string memory json, string memory key) external returns (bytes32[] memory) {
+    function parseBytes32Array(string memory json, string memory key) external returns (bytes32[] memory) {
         return vulcan.hevm.parseJsonBytes32Array(json, key);
     }
 
 
-    function create(Json, string memory id) external pure returns (JsonObject memory) {
+    function create(string memory id) external pure returns (JsonObject memory) {
         return JsonObject({id: id, serialized: ""});
     }
 
@@ -230,7 +228,4 @@ library JsonLib {
     }
 }
 
-Json constant json = Json.wrap(0);
-
-using JsonLib for Json global;
-using JsonLib for JsonObject global;
+using json for JsonObject global;
