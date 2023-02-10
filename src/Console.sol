@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.7.0;
+pragma solidity >=0.8.13 <0.9.0;
 
 // It's basically the same as forge-std console2 but using a custom type so it is extendable.
 // TODO: give proper credits, add license, etc

@@ -1,37 +1,21 @@
-pragma solidity ^0.8.13;
+pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, VulcanVm, console, vulcan, Watcher} from "../src/lib.sol";
+import {Test, expect, accounts, ctx, console, vulcan, accounts, watchers, Watcher} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
-
-library TestExtension {
-    using vulcan for *;
-
-    function increaseBlockTimestamp(VulcanVm self, uint256 increase) internal returns (VulcanVm) {
-        self.setBlockTimestamp(block.timestamp + increase);
-        return self;
-    }
-}
-
-using TestExtension for VulcanVm;
+import {commands, Command} from "src/Command.sol";
 
 contract ExampleTest is Test {
     using vulcan for *;
+    using accounts for *;
+    using watchers for *;
 
     function beforeEach() internal view override {
         // console.log("before each");
     }
 
-    function testIncreaseTime() external {
-        uint256 increase = 1000;
-        uint256 current = block.timestamp;
-        vm.increaseBlockTimestamp(increase);
-
-        expect(block.timestamp).toEqual(current + increase);
-    }
-
     function testSetBlockNumber() external {
         uint256 blockNumber = block.number + 1000;
-        vm.setBlockNumber(blockNumber);
+        ctx.setBlockNumber(blockNumber);
 
         expect(block.number).toEqual(blockNumber);
     }
@@ -48,48 +32,48 @@ contract ExampleTest is Test {
     }
 
     function testGetNonce() external {
-        expect(vm.getNonce(address(1))).toEqual(0);
+        expect(accounts.getNonce(address(1))).toEqual(0);
     }
 
     function testSetNonce() external {
         uint64 nonce = 1337;
         address target = address(1);
 
-        expect(vm.setNonce(target, nonce).getNonce()).toEqual(nonce);
+        expect(accounts.setNonce(target, nonce).getNonce()).toEqual(nonce);
     }
 
-    function testWrappedAddress() external {
+    function testChainedAddress() external {
         uint256 balance = 1e18;
         uint64 nonce = 1337;
 
-        address alice = vm.createAddress("ALICE").setBalance(balance).setNonce(nonce);
+        address alice = accounts.create("ALICE").setBalance(balance).setNonce(nonce);
 
         expect(alice.balance).toEqual(balance);
-        expect(vm.getNonce(alice)).toEqual(nonce);
+        expect(accounts.getNonce(alice)).toEqual(nonce);
 
         Sender sender = new Sender();
-        address bob = vm.createAddress("BOB").impersonateOnce().setNonce(nonce).setBalance(balance);
+        address bob = accounts.create("BOB").impersonateOnce().setNonce(nonce).setBalance(balance);
         expect(sender.get()).toEqual(bob);
         expect(sender.get()).toEqual(address(this));
     }
 
     function testSetBlockBaseFee() external {
         uint256 baseFee = 1337;
-        vm.setBlockBaseFee(baseFee);
+        ctx.setBlockBaseFee(baseFee);
 
         expect(block.basefee).toEqual(baseFee);
     }
 
     function testSetBlockDifficulty() external {
         uint256 difficulty = 1337;
-        vm.setBlockDifficulty(difficulty);
+        ctx.setBlockDifficulty(difficulty);
 
         expect(block.difficulty).toEqual(difficulty);
     }
 
     function testSetChainId() external {
         uint256 chainId = 1337;
-        vm.setChainId(chainId);
+        ctx.setChainId(chainId);
 
         expect(block.chainid).toEqual(chainId);
     }
@@ -99,11 +83,11 @@ contract ExampleTest is Test {
         address expectedOrigin = address(7331);
         Sender sender = new Sender();
 
-        vm.impersonateOnce(expectedSender);
+        accounts.impersonateOnce(expectedSender);
         expect(sender.get()).toEqual(expectedSender);
         expect(sender.get()).toEqual(address(this));
 
-        vm.impersonateOnce(expectedSender, expectedOrigin);
+        accounts.impersonateOnce(expectedSender, expectedOrigin);
         (address resultSender, address resultOrigin) = sender.getWithOrigin();
         expect(resultSender).toEqual(expectedSender);
         expect(resultOrigin).toEqual(expectedOrigin);
@@ -111,15 +95,15 @@ contract ExampleTest is Test {
         expect(resultSender).toEqual(address(this));
         expect(resultOrigin).toEqual(tx.origin);
 
-        vm.impersonate(expectedSender);
+        accounts.impersonate(expectedSender);
         expect(sender.get()).toEqual(expectedSender);
         expect(sender.get()).toEqual(expectedSender);
         expect(sender.get()).toEqual(expectedSender);
-        vm.stopImpersonate();
+        accounts.stopImpersonate();
 
         expect(sender.get()).toEqual(address(this));
 
-        vm.impersonate(expectedSender, expectedOrigin);
+        accounts.impersonate(expectedSender, expectedOrigin);
         (resultSender, resultOrigin) = sender.getWithOrigin();
         expect(resultSender).toEqual(expectedSender);
         expect(resultOrigin).toEqual(expectedOrigin);
@@ -129,33 +113,51 @@ contract ExampleTest is Test {
         (resultSender, resultOrigin) = sender.getWithOrigin();
         expect(resultSender).toEqual(expectedSender);
         expect(resultOrigin).toEqual(expectedOrigin);
-        vm.stopImpersonate();
+        accounts.stopImpersonate();
 
         (resultSender, resultOrigin) = sender.getWithOrigin();
         expect(resultSender).toEqual(address(this));
         expect(resultOrigin).toEqual(tx.origin);
     }
 
-    function testVmWatchers() external {
+    function testNamespacedWatchers() external {
         Sender sender = new Sender();
         uint256 senderCode = uint256(keccak256(address(sender).code));
 
-        Watcher memory watcher = vm.watch(address(sender));
-        uint256 watcherCode = uint256(keccak256(watcher.watcherStorage.proxy().code));
+        Watcher memory watcher = watchers.watch(address(sender));
 
+        uint256 watcherProxyCode = uint256(keccak256(watcher.watcherStorage.proxy().code));
         uint256 watcherTargetCode = uint256(keccak256(watcher.watcherStorage.target().code));
 
         // The target of the watcher should have the sender code
         expect(watcherTargetCode).toEqual(senderCode);
         // The sender code should have the watcher code
-        expect(uint256(keccak256(address(sender).code))).toEqual(watcherCode);
+        expect(uint256(keccak256(address(sender).code))).toEqual(watcherProxyCode);
 
-        vm.stopWatcher(address(sender));
+        watchers.stop(address(sender));
 
         // The sender code should be the original sender code
         expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
+    }
 
-        expect(address(vulcan.storages()[address(sender)])).toEqual(address(0));
+    function testVmWatchers() external {
+        Sender sender = new Sender();
+        uint256 senderCode = uint256(keccak256(address(sender).code));
+
+        Watcher memory watcher = watchers.watch(address(sender));
+
+        uint256 watcherProxyCode = uint256(keccak256(watcher.watcherStorage.proxy().code));
+        uint256 watcherTargetCode = uint256(keccak256(watcher.watcherStorage.target().code));
+
+        // The target of the watcher should have the sender code
+        expect(watcherTargetCode).toEqual(senderCode);
+        // The sender code should have the watcher code
+        expect(uint256(keccak256(address(sender).code))).toEqual(watcherProxyCode);
+
+        watchers.stop(address(sender));
+
+        // The sender code should be the original sender code
+        expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
     }
 
     function testVmWatchersFromAddress() external {
@@ -163,20 +165,30 @@ contract ExampleTest is Test {
         uint256 senderCode = uint256(keccak256(address(sender).code));
 
         Watcher memory watcher = address(sender).watch();
-        uint256 watcherCode = uint256(keccak256(watcher.watcherStorage.proxy().code));
 
+        uint256 watcherProxyCode = uint256(keccak256(watcher.watcherStorage.proxy().code));
         uint256 watcherTargetCode = uint256(keccak256(watcher.watcherStorage.target().code));
 
         // The target of the watcher should have the sender code
         expect(watcherTargetCode).toEqual(senderCode);
         // The sender code should have the watcher code
-        expect(uint256(keccak256(address(sender).code))).toEqual(watcherCode);
+        expect(uint256(keccak256(address(sender).code))).toEqual(watcherProxyCode);
 
-        address(sender).watcher().stop();
+        address(sender).stopWatcher();
 
         // The sender code should be the original sender code
         expect(uint256(keccak256(address(sender).code))).toEqual(senderCode);
+    }
 
-        expect(address(vulcan.storages()[address(sender)])).toEqual(address(0));
+    function testCommand() external {
+        string[] memory inputs = new string[](2);
+        inputs[0] = "echo";
+        inputs[1] = "'Hello, World!'";
+
+        expect(string(commands.run(inputs))).toEqual("'Hello, World!'");
+        expect(string(commands.create(inputs).run())).toEqual("'Hello, World!'");
+
+        Command memory cmd = commands.create(inputs);
+        expect(string(cmd.run())).toEqual("'Hello, World!'");
     }
 }

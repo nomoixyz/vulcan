@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+pragma solidity >=0.8.13 <0.9.0;
+
+import { Vm as Hevm } from "forge-std/Vm.sol";
+import "./Vulcan.sol";
 
 // @dev Main entry point to sest tests
 library events {
@@ -57,5 +60,15 @@ library events {
     function topic(int256 _param) internal pure returns (bytes32) {
         // TODO: is this correct?
         return bytes32(uint256(_param));
+    }
+
+    function recordLogs() internal {
+        vulcan.hevm.recordLogs();
+    }
+    function getRecordedLogs() internal returns (Log[] memory logs) {
+        Hevm.Log[] memory recorded = vulcan.hevm.getRecordedLogs();
+        assembly {
+            logs := recorded
+        }
     }
 }

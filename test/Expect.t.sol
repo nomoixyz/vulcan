@@ -1,7 +1,8 @@
-pragma solidity ^0.8.13;
+pragma solidity >=0.8.13 <0.9.0;
 
-import {any, Test, expect, events, console, vulcan, Watcher} from "../src/lib.sol";
+import {any, Test, expect, events, console, vulcan} from "../src/lib.sol";
 import {Sender} from "./mocks/Sender.sol";
+import {watchers, Watcher} from "src/Watcher.sol";
 
 contract CallTest {
     error CustomError(uint256 i);
@@ -45,7 +46,7 @@ contract CallTest {
 
 contract ExpectTest is Test {
     using vulcan for *;
-    using events for *;
+    using watchers for *;
 
     modifier shouldFail() {
         bool pre = vulcan.failed();
@@ -137,6 +138,7 @@ contract ExpectTest is Test {
 
     function testIntToBeCloseToFail(int256 a, uint256 delta, bool add) external shouldFail {
         // TODO
+        vulcan.fail();
     }
 
     function testIntToBeLessThanPass(int256 a, int256 b) external {
@@ -266,7 +268,7 @@ contract ExpectTest is Test {
     function testToHaveReverted() external {
         CallTest t = new CallTest();
 
-        vm.watch(address(t)).captureReverts();
+        watchers.watch(address(t)).captureReverts();
 
         t.failWithRevert();
         t.failWithStringRevert();
@@ -274,11 +276,11 @@ contract ExpectTest is Test {
         t.failWithRequireMessage();
         t.failWithCustomError();
 
-        expect(address(t).calls(0)).toHaveReverted();
-        expect(address(t).calls(1)).toHaveReverted();
-        expect(address(t).calls(2)).toHaveReverted();
-        expect(address(t).calls(3)).toHaveReverted();
-        expect(address(t).calls(4)).toHaveReverted();
+        expect(address(t).getCall(0)).toHaveReverted();
+        expect(address(t).getCall(1)).toHaveReverted();
+        expect(address(t).getCall(2)).toHaveReverted();
+        expect(address(t).getCall(3)).toHaveReverted();
+        expect(address(t).getCall(4)).toHaveReverted();
         expect(address(t).firstCall()).toHaveReverted();
         expect(address(t).lastCall()).toHaveReverted();
     }
@@ -286,11 +288,11 @@ contract ExpectTest is Test {
     function testToHaveSucceeded() external {
         CallTest t = new CallTest();
 
-        vm.watch(address(t));
+        watchers.watch(address(t));
 
         uint256 result = t.ok();
 
-        expect(address(t).calls(0)).toHaveSucceeded();
+        expect(address(t).getCall(0)).toHaveSucceeded();
         expect(address(t).firstCall()).toHaveSucceeded();
         expect(address(t).lastCall()).toHaveSucceeded();
         expect(result).toEqual(uint256(keccak256(abi.encodePacked(uint256(69)))));
@@ -299,60 +301,60 @@ contract ExpectTest is Test {
     function testToHaveRevertedWith() external {
         CallTest t = new CallTest();
 
-        vm.watch(address(t)).captureReverts();
+        watchers.watch(address(t)).captureReverts();
 
         t.failWithStringRevert();
         t.failWithRequireMessage();
         t.failWithCustomError();
 
-        expect(address(t).calls(0)).toHaveRevertedWith(string("Error"));
-        expect(address(t).calls(1)).toHaveRevertedWith(string("Require message"));
-        expect(address(t).calls(2)).toHaveRevertedWith(CallTest.CustomError.selector);
+        expect(address(t).getCall(0)).toHaveRevertedWith(string("Error"));
+        expect(address(t).getCall(1)).toHaveRevertedWith(string("Require message"));
+        expect(address(t).getCall(2)).toHaveRevertedWith(CallTest.CustomError.selector);
         expect(address(t).firstCall()).toHaveRevertedWith(string("Error"));
         expect(address(t).lastCall()).toHaveRevertedWith(CallTest.CustomError.selector);
 
         bytes memory expectedError = abi.encodeWithSelector(CallTest.CustomError.selector, uint256(69));
-        expect(address(t).calls(2)).toHaveRevertedWith(expectedError);
+        expect(address(t).getCall(2)).toHaveRevertedWith(expectedError);
     }
 
     function testToHaveEmittedPass() external {
         CallTest t = new CallTest();
 
-        vm.watch(payable(address(t)));
+        watchers.watch(payable(address(t)));
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).calls(0)).toHaveEmitted("Event(string,uint256)");
+        expect(address(t).getCall(0)).toHaveEmitted("Event(string,uint256)");
     }
 
     function testToHaveEmittedFail() external shouldFail {
         CallTest t = new CallTest();
 
-        Watcher memory watcher = vm.watch(address(t));
+        watchers.watch(address(t));
 
         t.emitEvent("foo", 123);
 
-        expect(watcher.calls(0)).toHaveEmitted("Fake(string,uint256)");
+        expect(address(t).getCall(0)).toHaveEmitted("Fake(string,uint256)");
     }
 
     function testToHaveEmittedWithDataPass() external {
         CallTest t = new CallTest();
 
-        Watcher memory watcher = vm.watch(address(t));
+        watchers.watch(address(t));
 
         t.emitEvent("foo", 123);
 
-        expect(watcher.calls(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(123)));
+        expect(address(t).getCall(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(123)));
     }
 
     function testToHaveEmittedWithDataFail() external shouldFail {
         CallTest t = new CallTest();
 
-        Watcher memory watcher = vm.watch(address(t));
+        watchers.watch(address(t));
 
         t.emitEvent("foo", 123);
 
-        expect(watcher.calls(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(321)));
+        expect(address(t).getCall(0)).toHaveEmitted("Event(string,uint256)", abi.encode(uint256(321)));
     }
 
     event Event(string indexed a, uint256 b);
@@ -360,11 +362,11 @@ contract ExpectTest is Test {
     function testToHaveEmittedWithTopicsPass() external {
         CallTest t = new CallTest();
 
-        vm.watch(payable(address(t)));
+        watchers.watch(payable(address(t)));
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).calls(0)).toHaveEmitted(
+        expect(address(t).calls()[0]).toHaveEmitted(
             "Event(string,uint256)",
             [any.topic()]
         );
@@ -373,13 +375,13 @@ contract ExpectTest is Test {
     function testToHaveEmittedWithTopicsFail() external shouldFail {
         CallTest t = new CallTest();
 
-        vm.watch(payable(address(t)));
+        watchers.watch(payable(address(t)));
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).calls(0)).toHaveEmitted(
+        expect(address(t).calls()[0]).toHaveEmitted(
             "Fake(string,uint256)",
-            [string("bar").topic()],
+            [events.topic(string("bar"))],
             abi.encode(uint256(123))
         );
     }

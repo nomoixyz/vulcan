@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.7.0;
+pragma solidity >=0.8.13 <0.9.0;
 import { console } from "./Console.sol";
 import "./Events.sol";
 import "./Vulcan.sol";
@@ -572,7 +572,7 @@ library ExpectLib {
         bytes32[] memory _topics;
         if (bytes(eventSig).length > 0) {
             _topics = new bytes32[](topics.length + 1);
-            _topics[0] = eventSig.topic();
+            _topics[0] = events.topic(eventSig);
             for (uint256 i = 0; i < topics.length; i++) {
                 _topics[i+1] = topics[i];
             }
