@@ -3,10 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
 import "./Events.sol";
-
-struct Watcher {
-    WatcherStorage watcherStorage;
-}
+import "./Accounts.sol";
 
 struct Call {
     bytes callData;
@@ -18,32 +15,26 @@ struct Call {
 library watchers {
     using watchers for *;
 
-    bytes32 constant STORAGES_SLOT = keccak256("vulcan.watchers.storages.slot");
+    bytes32 constant WATCHERS_MAGIC = keccak256("vulcan.watchers.magic");
 
-    function storages() internal pure returns (mapping(address => WatcherStorage) storage s) {
-        bytes32 SLOT = STORAGES_SLOT;
-
-        assembly {
-            s.slot := SLOT
-        }
+    function watcherAddress(address target) internal view returns (address) {
+        return address(uint160(uint256(keccak256(abi.encodePacked(target, WATCHERS_MAGIC)))));
     }
 
     function watcher(address target) internal returns (Watcher memory) {
-        WatcherStorage watcherStorage = storages()[target];
-        require(address(watcherStorage) != address(0), "Addess doesn't have a watcher");
+        address _watcher = watcherAddress(target);
+        require(_watcher.code != bytes(0), "Address doesn't have a watcher");
 
-        return Watcher(watcherStorage);
+        return Watcher(_watcher);
     }
 
     function watch(address target) internal returns (Watcher memory) {
-        require(address(storages()[target]) == address(0), "Address already has a watcher");
+        address _watcher = watcherAddress(target);
+        require(_watcher.code == bytes(0), "Address already has a watcher");
 
-        WatcherStorage proxyStorage = new WatcherStorage();
+        accounts.setCode(_watcher, type(Watcher).runtimeBytecode);
 
-        WatcherProxy proxy = new WatcherProxy(proxyStorage);
-
-        proxyStorage.setTarget(address(proxy));
-        proxyStorage.setProxy(target);
+        WatcherProxy proxy = new WatcherProxy(_watcher);
 
         bytes memory targetCode = target.code;
 
@@ -51,9 +42,7 @@ library watchers {
         vulcan.hevm.etch(target, address(proxy).code);
         vulcan.hevm.etch(address(proxy), targetCode);
 
-        storages()[target] = proxyStorage;
-
-        return Watcher(proxyStorage);
+        return Watcher(_watcher);
     }
 
     function stop(address target) internal {
@@ -61,10 +50,10 @@ library watchers {
     }
 
     function stopWatcher(address target) internal {
-        Watcher(storages()[target]).stop();
+        watcher(target).stop();
     }
 
-    function stop(Watcher memory self) internal {
+    function stop(Watcher self) internal {
         require(address(self.watcherStorage) != address(0), "Address doesn't have a watcher");
 
         address proxy = self.watcherStorage.proxy();
@@ -72,69 +61,35 @@ library watchers {
 
         // reverse-Switcheroo
         vulcan.hevm.etch(proxy, target.code);
-        vulcan.hevm.etch(target, proxy.code);
-
-        delete storages()[target];
+        vulcan.hevm.etch(target, "");
     }
 
     function calls(address target) internal view returns (Call[] memory) {
-        return Watcher(storages()[target]).calls();
-    }
-
-    function calls(Watcher memory self) internal view returns (Call[] memory) {
-        require(address(self.watcherStorage) != address(0), "Address doesn't have a watcher");
-        return self.watcherStorage.calls();
+        return watcher(target).calls();
     }
 
     function getCall(address target, uint256 index) internal view returns (Call memory) {
-        return Watcher(storages()[target]).getCall(index);
-    }
-
-    function getCall(Watcher memory self, uint256 index) internal view returns(Call memory) {
-        require(address(self.watcherStorage) != address(0), "Address doesn't have a watcher");
-        return self.watcherStorage.getCall(index);
+        return watcher(target).getCall(index);
     }
 
     function firstCall(address target) internal view returns(Call memory) {
-        return Watcher(storages()[target]).firstCall();
-    }
-
-    function firstCall(Watcher memory self) internal view returns(Call memory) {
-        require(address(self.watcherStorage) != address(0), "Address doesn't have a watcher");
-        return self.watcherStorage.firstCall();
+        return watcher(target).firstCall();
     }
 
     function lastCall(address target) internal view returns(Call memory) {
-        return Watcher(storages()[target]).lastCall();
+        return watcher(target).lastCall();
     }
 
-    function lastCall(Watcher memory self) internal view returns(Call memory) {
-        require(address(self.watcherStorage) != address(0), "Address doesn't have a watcher");
-        return self.watcherStorage.lastCall();
+    function captureReverts(address target) internal returns (Watcher) {
+        return watcher(target).captureReverts();
     }
 
-    function captureReverts(address target) internal returns (Watcher memory) {
-        return Watcher(storages()[target]).captureReverts();
-    }
-
-    function captureReverts(Watcher memory self) internal returns (Watcher memory) {
-        require(address(self.watcherStorage) != address(0), "Address doesn't have a watcher");
-        self.watcherStorage.setCaptureReverts(true);
-        return self;
-    }
-
-    function disableCaptureReverts(address target) internal returns (Watcher memory) {
-        return Watcher(storages()[target]).disableCaptureReverts();
-    }
-
-    function disableCaptureReverts(Watcher memory self) internal returns (Watcher memory) {
-        require(address(self.watcherStorage) != address(0), "Address doesn't have a watcher");
-        self.watcherStorage.setCaptureReverts(false);
-        return self;
+    function disableCaptureReverts(address target) internal returns (Watcher) {
+        return watcher(target).disableCaptureReverts();
     }
 }
 
-contract WatcherStorage {
+contract Watcher {
     address public proxy;
     address public target;
     bool public shouldCaptureReverts;
@@ -176,8 +131,12 @@ contract WatcherStorage {
         return currentCalls[currentCalls.length - 1];
     }
 
-    function setCaptureReverts(bool _value) external {
-        shouldCaptureReverts = _value;
+    function captureReverts() external {
+        shouldCaptureReverts = true;
+    }
+
+    function disableCaptureReverts() external {
+        shouldCaptureReverts = false;
     }
 
     function setTarget(address _target) external {
@@ -192,11 +151,9 @@ contract WatcherStorage {
 contract WatcherProxy {
     using vulcan for *;
 
-    WatcherStorage immutable _storage;
     address immutable _target;
 
-    constructor(WatcherStorage _watcherStorage) {
-        _storage = _watcherStorage;
+    constructor() {
         _target = address(this);
     }
 
@@ -223,9 +180,10 @@ contract WatcherProxy {
             filteredLogs[i] = logs[i];
         }
 
-        _storage.storeCall(_callData, success, returnData, filteredLogs);
+        Watcher watcher = watchers.watcher(address(this));
+        watcher.storeCall(_callData, success, returnData, filteredLogs);
 
-        if (!_storage.shouldCaptureReverts() && !success) {
+        if (!watcher.shouldCaptureReverts() && !success) {
             assembly {
                 revert(add(returnData, 32), mload(returnData))
             }
