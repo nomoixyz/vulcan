@@ -96,7 +96,7 @@ library vulcan {
         vulcan.hevm.store(address(hevm), GLOBAL_FAILED_SLOT, bytes32(uint256(0)));
     }
 
-    function watch(address _target) internal returns (Watcher memory) {
+    function watch(address _target) internal returns (Watcher) {
         return watchers.watch(_target);
     }
 

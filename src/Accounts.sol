@@ -27,15 +27,15 @@ library accounts {
         return vulcan.hevm.addr(privKey);
     }
 
-    function deriveKey(VulcanVmSafe, string memory mnemonicOrPath, uint32 index) internal pure returns (uint256) {
+    function deriveKey(string memory mnemonicOrPath, uint32 index) internal pure returns (uint256) {
         return vulcan.hevm.deriveKey(mnemonicOrPath, index);
     }
 
-    function deriveKey(VulcanVmSafe, string memory mnemonicOrPath, string memory derivationPath, uint32 index) internal pure returns (uint256) {
+    function deriveKey(string memory mnemonicOrPath, string memory derivationPath, uint32 index) internal pure returns (uint256) {
         return vulcan.hevm.deriveKey(mnemonicOrPath, derivationPath, index);
     }
 
-    function rememberKey(VulcanVmSafe, uint256 privKey) internal returns (address) {
+    function rememberKey(uint256 privKey) internal returns (address) {
         return vulcan.hevm.rememberKey(privKey);
     }
 

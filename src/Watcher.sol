@@ -23,18 +23,18 @@ library watchers {
 
     function watcher(address target) internal returns (Watcher) {
         address _watcher = watcherAddress(target);
-        require(_watcher.code != bytes(0), "Address doesn't have a watcher");
+        require(_watcher.code.length != 0, "Address doesn't have a watcher");
 
         return Watcher(_watcher);
     }
 
     function watch(address target) internal returns (Watcher) {
         address _watcher = watcherAddress(target);
-        require(_watcher.code == bytes(0), "Address already has a watcher");
+        require(_watcher.code.length > 0, "Address already has a watcher");
 
-        accounts.setCode(_watcher, type(Watcher).runtimeBytecode);
+        accounts.setCode(_watcher, type(Watcher).runtimeCode);
 
-        WatcherProxy proxy = new WatcherProxy(_watcher);
+        WatcherProxy proxy = new WatcherProxy();
 
         bytes memory targetCode = target.code;
 
@@ -54,14 +54,13 @@ library watchers {
     }
 
     function stop(Watcher self) internal {
-        require(address(self.watcherStorage) != address(0), "Address doesn't have a watcher");
-
-        address proxy = self.watcherStorage.proxy();
-        address target = self.watcherStorage.target();
+        // TODO
+        // address proxy = self.watcherStorage.proxy();
+        // address target = self.watcherStorage.target();
 
         // reverse-Switcheroo
-        vulcan.hevm.etch(proxy, target.code);
-        vulcan.hevm.etch(target, "");
+        // vulcan.hevm.etch(proxy, target.code);
+        // vulcan.hevm.etch(target, "");
     }
 
     function calls(address target) internal view returns (Call[] memory) {
@@ -81,11 +80,15 @@ library watchers {
     }
 
     function captureReverts(address target) internal returns (Watcher) {
-        return watcher(target).captureReverts();
+        Watcher _watcher = watcher(target);
+        _watcher.captureReverts();
+        return _watcher;
     }
 
     function disableCaptureReverts(address target) internal returns (Watcher) {
-        return watcher(target).disableCaptureReverts();
+        Watcher _watcher = watcher(target);
+        _watcher.disableCaptureReverts();
+        return _watcher;
     }
 }
 
