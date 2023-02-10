@@ -13,6 +13,8 @@ contract Test {
     bool first = false;
 
     function setUp() external {
+        vulcan.init();
+
         if (!first) {
             first = true;
             before();

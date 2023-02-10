@@ -3,6 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import { Vm as Hevm } from "forge-std/Vm.sol";
 import {watchers, Call, Watcher} from "./Watcher.sol";
+import {ctx} from "./Context.sol";
 
 interface VulcanVm {}
 
@@ -18,6 +19,7 @@ struct Rpc {
     string name;
     string url;
 }
+
 // TODO: most variable names and comments are the ones provided by the forge-std library, figure out if we should change/improve/remove some of them
 /// @dev Main entry point to vm functionality
 library vulcan {
@@ -30,6 +32,11 @@ library vulcan {
 
     // This address doesn't contain any code
     VulcanVm internal constant vm = VulcanVm(address(bytes20(uint160(uint256(keccak256('vulcan.vm.address'))))));
+
+    // @dev Initialize other modules, deploy contracts, etc
+    function init() internal {
+        ctx.init();
+    }
 
     /// @dev Using the address that calls the test contract, has the next call (at this call depth only) create a transaction that can later be signed and sent onchain
     function broadcast() internal {

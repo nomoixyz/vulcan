@@ -1,6 +1,22 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, watchers} from "../src/lib.sol";
+import {Test, console, expect, watchers} from "../src/lib.sol";
+
+contract WatcherTarget {
+    uint256 public i;
+
+    function success(uint256 val) external returns (uint256) {
+        i = val;
+
+        return val;
+    }
+
+    function fail() external {
+        // Silcence function visibility warning
+        i = 0;
+        revert("Fail");
+    }
+}
 
 contract WatcherTest is Test {
     using watchers for *;
@@ -11,7 +27,7 @@ contract WatcherTest is Test {
 
         watchers.watch(t);
 
-        expect(address(t.watcher().watcherStorage)).toBeAContract();
+        expect(address(t.watcher())).toBeAContract();
     }
 
     function testItCanCaptureCalls(uint256 i) external {
@@ -42,7 +58,7 @@ contract WatcherTest is Test {
         }
     }
 
-    function testItCanCaptureCallsThatRevert(uint256 i) external {
+    function testItCanCaptureCallsThatRevert() external {
         WatcherTarget target = new WatcherTarget();
         address t = address(target);
 
@@ -50,7 +66,7 @@ contract WatcherTest is Test {
 
         watchers.watch(t).captureReverts();
 
-        target.fail(i);
+        target.fail();
 
         expect(t.calls()[0].success).toBeFalse();
         expect(t.calls()[0].returnData).toEqual(expectedError);
@@ -65,7 +81,7 @@ contract WatcherTest is Test {
         watchers.watch(t).captureReverts();
 
         for (uint256 i; i < 10; ++i) {
-            target.fail(i);
+            target.fail();
         }
 
         for (uint256 i; i <10; ++i) {
@@ -82,7 +98,7 @@ contract WatcherTest is Test {
 
         watchers.watch(t).captureReverts();
 
-        target.fail(i);
+        target.fail();
         target.success(i);
 
         expect(t.calls()[0].success).toBeFalse();
@@ -90,23 +106,5 @@ contract WatcherTest is Test {
 
         expect(t.calls()[1].success).toBeTrue();
         expect(t.calls()[1].returnData).toEqual(abi.encodePacked(i));
-    }
-}
-
-contract WatcherTarget {
-    uint256 public i;
-
-    function success(uint256 val) external returns (uint256) {
-        i = val;
-
-        return val;
-    }
-
-    function fail(uint256 val) external {
-        if (val >= 0) {
-            revert("Fail");
-        }
-
-        i = val;
     }
 }

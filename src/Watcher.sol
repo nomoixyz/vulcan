@@ -4,6 +4,8 @@ pragma solidity >=0.8.13 <0.9.0;
 import "./Vulcan.sol";
 import "./Events.sol";
 import "./Accounts.sol";
+import "./Context.sol";
+import "./Console.sol";
 
 struct Call {
     bytes callData;
@@ -17,11 +19,16 @@ library watchers {
 
     bytes32 constant WATCHERS_MAGIC = keccak256("vulcan.watchers.magic");
 
-    function watcherAddress(address target) internal view returns (address) {
-        return address(uint160(uint256(keccak256(abi.encodePacked(target, WATCHERS_MAGIC)))));
+    function watcherAddress(address target) internal pure returns (address) {
+        // Not sure if this is the best way but whatever
+        return address(uint160(uint256(uint160(target)) + uint256(WATCHERS_MAGIC)));
     }
 
-    function watcher(address target) internal returns (Watcher) {
+    function targetAddress(address _watcher) internal pure returns (address) {
+        return address(uint160(uint256(uint160(_watcher)) - uint256(WATCHERS_MAGIC)));
+    }
+
+    function watcher(address target) internal view returns (Watcher) {
         address _watcher = watcherAddress(target);
         require(_watcher.code.length != 0, "Address doesn't have a watcher");
 
@@ -30,7 +37,7 @@ library watchers {
 
     function watch(address target) internal returns (Watcher) {
         address _watcher = watcherAddress(target);
-        require(_watcher.code.length > 0, "Address already has a watcher");
+        require(_watcher.code.length == 0, "Address already has a watcher");
 
         accounts.setCode(_watcher, type(Watcher).runtimeCode);
 
@@ -39,8 +46,10 @@ library watchers {
         bytes memory targetCode = target.code;
 
         // Switcheroo
-        vulcan.hevm.etch(target, address(proxy).code);
-        vulcan.hevm.etch(address(proxy), targetCode);
+        accounts.setCode(target, address(proxy).code);
+        accounts.setCode(address(proxy), targetCode);
+
+        Watcher(_watcher).setImplementationAddress(address(proxy));
 
         return Watcher(_watcher);
     }
@@ -51,16 +60,6 @@ library watchers {
 
     function stopWatcher(address target) internal {
         watcher(target).stop();
-    }
-
-    function stop(Watcher self) internal {
-        // TODO
-        // address proxy = self.watcherStorage.proxy();
-        // address target = self.watcherStorage.target();
-
-        // reverse-Switcheroo
-        // vulcan.hevm.etch(proxy, target.code);
-        // vulcan.hevm.etch(target, "");
     }
 
     function calls(address target) internal view returns (Call[] memory) {
@@ -93,10 +92,10 @@ library watchers {
 }
 
 contract Watcher {
-    address public proxy;
-    address public target;
     bool public shouldCaptureReverts;
-    Call[] _calls;
+    address public implementation;
+
+    Call[] private _calls;
 
     function storeCall(
         bytes memory _callData,
@@ -142,51 +141,64 @@ contract Watcher {
         shouldCaptureReverts = false;
     }
 
-    function setTarget(address _target) external {
-        target = _target;
+    function stop() external {
+        address target = watchers.targetAddress(address(this));
+        accounts.setCode(target, implementation.code);
+        selfdestruct(payable(address(0)));
     }
 
-    function setProxy(address _proxy) external {
-        proxy = _proxy;
+    function setImplementationAddress(address _implementation) external {
+        implementation = _implementation;
     }
 }
 
 contract WatcherProxy {
     using vulcan for *;
 
-    address immutable _target;
+    address private immutable _target;
 
     constructor() {
         _target = address(this);
     }
 
     fallback(bytes calldata _callData) external payable returns (bytes memory) {
-        events.recordLogs();
+        bool isStatic = ctx.isStaticCall();
+
+        if (!isStatic) {
+            events.recordLogs();
+        }
 
         (bool success, bytes memory returnData) = _target.delegatecall(_callData);
 
-        Log[] memory logs = events.getRecordedLogs();
+        // TODO: ugly, try to clean up
+        if (!isStatic) {
+            Log[] memory logs = events.getRecordedLogs();
 
-        // Filter logs by address and replace in place
-        uint256 watcherLogCount = 0;
-        for (uint256 i = 0; i < logs.length; i++) {
-            if (logs[i].emitter == address(this)) {
-                logs[watcherLogCount] = logs[i];
-                watcherLogCount++;
+            // Filter logs by address and replace in place
+            uint256 watcherLogCount = 0;
+            for (uint256 i = 0; i < logs.length; i++) {
+                if (logs[i].emitter == address(this)) {
+                    logs[watcherLogCount] = logs[i];
+                    watcherLogCount++;
+                }
             }
-        }
 
-        Log[] memory filteredLogs = new Log[](watcherLogCount);
+            Log[] memory filteredLogs = new Log[](watcherLogCount);
 
-        // Add logs to call
-        for (uint256 i = 0; i < watcherLogCount; i++) {
-            filteredLogs[i] = logs[i];
-        }
+            // Add logs to call
+            for (uint256 i = 0; i < watcherLogCount; i++) {
+                filteredLogs[i] = logs[i];
+            }
 
-        Watcher watcher = watchers.watcher(address(this));
-        watcher.storeCall(_callData, success, returnData, filteredLogs);
+            Watcher watcher = watchers.watcher(address(this));
+            watcher.storeCall(_callData, success, returnData, filteredLogs);
 
-        if (!watcher.shouldCaptureReverts() && !success) {
+            if (!watcher.shouldCaptureReverts() && !success) {
+                assembly {
+                    revert(add(returnData, 32), mload(returnData))
+                }
+            }
+        } else if (!success) {
             assembly {
                 revert(add(returnData, 32), mload(returnData))
             }
@@ -195,5 +207,3 @@ contract WatcherProxy {
         return returnData;
     }
 }
-
-using watchers for Watcher global;

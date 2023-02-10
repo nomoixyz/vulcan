@@ -2,10 +2,42 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
+import "./Accounts.sol";
 
 type Context is bytes32;
 
+interface IMutator {
+    function mutate() external pure;
+}
+
+contract CallContext {
+    uint256 private val = 0;
+
+    function mutate() external {
+        val = 0;
+    }
+
+    function isStaticcall() external view returns (bool) {
+        try IMutator(address(this)).mutate() {
+            return false;
+        } catch {
+            return true;
+        }
+    }
+}
+
+
 library ctx {
+    address constant private CALL_CONTEXT_ADDRESS = address(uint160(uint256(keccak256("vulcan.ctx.callContext"))));
+
+    function init() internal {
+        accounts.setCode(CALL_CONTEXT_ADDRESS, type(CallContext).runtimeCode);
+    }
+
+    function isStaticCall() internal view returns (bool) {
+        return CallContext(CALL_CONTEXT_ADDRESS).isStaticcall();
+    }
+
     /// @dev sets the `block.timestamp` to `ts`
     /// @param ts the new block timestamp
     function setBlockTimestamp(Context self, uint256 ts) internal returns(Context) {
@@ -128,6 +160,7 @@ library ctx {
     function revertToSnapshot(Context, uint256 snapshotId) internal returns (bool) {
         return vulcan.hevm.revertTo(snapshotId);
     }
+
 }
 
 using ctx for Context global;
