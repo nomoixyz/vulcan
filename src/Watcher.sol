@@ -21,14 +21,14 @@ library watchers {
         return address(uint160(uint256(keccak256(abi.encodePacked(target, WATCHERS_MAGIC)))));
     }
 
-    function watcher(address target) internal returns (Watcher memory) {
+    function watcher(address target) internal returns (Watcher) {
         address _watcher = watcherAddress(target);
         require(_watcher.code != bytes(0), "Address doesn't have a watcher");
 
         return Watcher(_watcher);
     }
 
-    function watch(address target) internal returns (Watcher memory) {
+    function watch(address target) internal returns (Watcher) {
         address _watcher = watcherAddress(target);
         require(_watcher.code == bytes(0), "Address already has a watcher");
 

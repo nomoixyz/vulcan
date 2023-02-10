@@ -24,23 +24,39 @@ contract CallTest {
     }
 
     function failWithRevert() external {
-        revert();
+        if (true) {
+            revert();
+        }
+
+        num = 0;
     }
 
     function failWithStringRevert() external {
-        revert("Error");
+        if (true) {
+            revert("Error");
+        }
+
+        num = 0;
     }
 
     function failWithRequire() external {
         require(true == false);
+
+        num = 0;
     }
 
     function failWithRequireMessage() external {
         require(true == false, "Require message");
+
+        num = 0;
     }
 
     function failWithCustomError() external {
-        revert CustomError(num);
+        if (true) {
+            revert CustomError(num);
+        }
+
+        num = 0;
     }
 }
 
