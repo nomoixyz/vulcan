@@ -46,6 +46,7 @@ contract CallTest {
 
 contract ExpectTest is Test {
     using vulcan for *;
+    using watchers for *;
 
     modifier shouldFail() {
         bool pre = vulcan.failed();
@@ -137,6 +138,7 @@ contract ExpectTest is Test {
 
     function testIntToBeCloseToFail(int256 a, uint256 delta, bool add) external shouldFail {
         // TODO
+        vulcan.fail();
     }
 
     function testIntToBeLessThanPass(int256 a, int256 b) external {
