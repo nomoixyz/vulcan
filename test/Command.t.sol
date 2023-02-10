@@ -27,7 +27,7 @@ contract CommandTest is Test {
         expect(string(output)).toEqual(inputs[1]);
     }
 
-    function _echo() internal returns (string[] memory) {
+    function _echo() internal pure returns (string[] memory) {
         string[] memory echoInputs = new string[](2);
 
         echoInputs[0] = "echo";
