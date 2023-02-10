@@ -94,7 +94,7 @@ library any {
         return false;
     }
 
-    function _getData() private view returns (_AnyData storage data) {
+    function _getData() private pure returns (_AnyData storage data) {
         uint256 slot = uint256(keccak256("any"));
         assembly {
             data.slot := slot
