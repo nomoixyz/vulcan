@@ -28,7 +28,7 @@ library watchers {
         }
     }
 
-    function watcher(address target) internal returns (Watcher memory) {
+    function watcher(address target) internal view returns (Watcher memory) {
         WatcherStorage watcherStorage = storages()[target];
         require(address(watcherStorage) != address(0), "Addess doesn't have a watcher");
 
