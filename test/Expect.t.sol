@@ -384,7 +384,7 @@ contract ExpectTest is Test {
 
         expect(address(t).calls()[0]).toHaveEmitted(
             "Event(string,uint256)",
-            [any.topic()]
+            [any()]
         );
     }
 
