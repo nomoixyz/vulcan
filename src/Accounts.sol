@@ -8,7 +8,7 @@ library accounts {
     /// @param who the target address from which the storage slot will be read
     /// @param slot the storage slot to read
     /// @return the content of the storage at slot `slot` on the address `who`
-    function readStorage(address who, bytes32 slot) internal view returns(bytes32) {
+    function readStorage(address who, bytes32 slot) internal view returns (bytes32) {
         return vulcan.hevm.load(who, slot);
     }
 
@@ -31,7 +31,11 @@ library accounts {
         return vulcan.hevm.deriveKey(mnemonicOrPath, index);
     }
 
-    function deriveKey(string memory mnemonicOrPath, string memory derivationPath, uint32 index) internal pure returns (uint256) {
+    function deriveKey(string memory mnemonicOrPath, string memory derivationPath, uint32 index)
+        internal
+        pure
+        returns (uint256)
+    {
         return vulcan.hevm.deriveKey(mnemonicOrPath, derivationPath, index);
     }
 
@@ -85,7 +89,7 @@ library accounts {
     /// @param slot the slot to update
     /// @param value the new value of the slot `slot` on the address `self`
     /// @return the modified address so other methods can be chained
-    function setStorage(address self, bytes32 slot, bytes32 value) internal returns(address) {
+    function setStorage(address self, bytes32 slot, bytes32 value) internal returns (address) {
         vulcan.hevm.store(self, slot, value);
         return self;
     }
@@ -94,7 +98,7 @@ library accounts {
     /// @param self the address that will be updated
     /// @param n the new nonce
     /// @return the address that was updated
-    function setNonce(address self, uint64 n) internal returns(address) {
+    function setNonce(address self, uint64 n) internal returns (address) {
         vulcan.hevm.setNonce(self, n);
         return self;
     }
@@ -102,7 +106,7 @@ library accounts {
     /// @dev sets the next call's `msg.sender` to `sender`
     /// @param self the address to set the `msg.sender`
     /// @return the `msg.sender` for the next call
-    function impersonateOnce(address self) internal returns(address) {
+    function impersonateOnce(address self) internal returns (address) {
         vulcan.hevm.prank(self);
         return self;
     }
@@ -110,7 +114,7 @@ library accounts {
     /// @dev sets all subsequent call's `msg.sender` to `sender` until `stopPrank` is called
     /// @param self the address to set the `msg.sender`
     /// @return the `msg.sender` for the next calls
-    function impersonate(address self) internal returns(address) {
+    function impersonate(address self) internal returns (address) {
         vulcan.hevm.startPrank(self);
         return self;
     }
@@ -119,7 +123,7 @@ library accounts {
     /// @param self the address to set the `msg.sender`
     /// @param origin the address to set the `tx.origin`
     /// @return the `msg.sender` for the next call
-    function impersonateOnce(address self, address origin) internal returns(address) {
+    function impersonateOnce(address self, address origin) internal returns (address) {
         vulcan.hevm.prank(self, origin);
         return self;
     }
@@ -128,7 +132,7 @@ library accounts {
     /// @param self the address to set the `msg.sender`
     /// @param origin the address to set the `tx.origin`
     /// @return the `msg.sender` for the next calls
-    function impersonate(address self, address origin) internal returns(address) {
+    function impersonate(address self, address origin) internal returns (address) {
         vulcan.hevm.startPrank(self, origin);
         return self;
     }
@@ -142,12 +146,12 @@ library accounts {
     /// @param self the address that will be updated
     /// @param bal the new balance
     /// @return the address that was updated
-    function setBalance(address self, uint256 bal) internal returns(address) {
+    function setBalance(address self, uint256 bal) internal returns (address) {
         vulcan.hevm.deal(self, bal);
         return self;
     }
 
-    function setCode(address self, bytes memory code) internal returns(address) {
+    function setCode(address self, bytes memory code) internal returns (address) {
         vulcan.hevm.etch(self, code);
         return self;
     }

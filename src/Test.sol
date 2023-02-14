@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.13 <0.9.0;
 
-import { vulcan } from "./Vulcan.sol";
+import {vulcan} from "./Vulcan.sol";
 import "./Console.sol";
 
 // @dev Main entry point to Vulcan tests
@@ -23,11 +23,11 @@ contract Test {
         beforeEach();
     }
 
-    function before() virtual internal {}
+    function before() internal virtual {}
 
-    function beforeEach() virtual internal {}
+    function beforeEach() internal virtual {}
 
     function failed() public view returns (bool) {
         return vulcan.failed();
-    } 
+    }
 }

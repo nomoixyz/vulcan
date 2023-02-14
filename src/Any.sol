@@ -7,7 +7,7 @@ library AnyLib {
     }
 
     function value() internal returns (bytes32) {
-       return _any();
+        return _any();
     }
 
     function check(bytes32 val) internal returns (bool res) {

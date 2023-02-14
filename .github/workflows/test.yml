@@ -33,3 +33,18 @@ jobs:
         run: |
           forge test -vvv
         id: test
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Foundry
+        uses: onbjerg/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Print forge version
+        run: forge --version
+
+      - name: Check formatting
+        run: forge fmt --check

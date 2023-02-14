@@ -26,9 +26,8 @@ contract CallContext {
     }
 }
 
-
 library ctx {
-    address constant private CALL_CONTEXT_ADDRESS = address(uint160(uint256(keccak256("vulcan.ctx.callContext"))));
+    address private constant CALL_CONTEXT_ADDRESS = address(uint160(uint256(keccak256("vulcan.ctx.callContext"))));
 
     function init() internal {
         accounts.setCode(CALL_CONTEXT_ADDRESS, type(CallContext).runtimeCode);
@@ -40,75 +39,75 @@ library ctx {
 
     /// @dev sets the `block.timestamp` to `ts`
     /// @param ts the new block timestamp
-    function setBlockTimestamp(Context self, uint256 ts) internal returns(Context) {
+    function setBlockTimestamp(Context self, uint256 ts) internal returns (Context) {
         vulcan.hevm.warp(ts);
         return self;
     }
 
     /// @dev sets the `block.timestamp` to `ts`
     /// @param ts the new block timestamp
-    function setBlockTimestamp(uint256 ts) internal returns(Context) {
+    function setBlockTimestamp(uint256 ts) internal returns (Context) {
         return setBlockTimestamp(Context.wrap(0), ts);
     }
 
     /// @dev sets the `block.number` to `blockNumber`
     /// @param blockNumber the new block number
-    function setBlockNumber(Context self, uint256 blockNumber) internal returns(Context) {
+    function setBlockNumber(Context self, uint256 blockNumber) internal returns (Context) {
         vulcan.hevm.roll(blockNumber);
         return self;
     }
 
     /// @dev sets the `block.number` to `blockNumber`
     /// @param blockNumber the new block number
-    function setBlockNumber(uint256 blockNumber) internal returns(Context) {
+    function setBlockNumber(uint256 blockNumber) internal returns (Context) {
         return setBlockNumber(Context.wrap(0), blockNumber);
     }
 
     /// @dev sets the `block.basefee` to `baseFee`
     /// @param baseFee the new block base fee
-    function setBlockBaseFee(Context self, uint256 baseFee) internal returns(Context) {
+    function setBlockBaseFee(Context self, uint256 baseFee) internal returns (Context) {
         vulcan.hevm.fee(baseFee);
         return self;
     }
 
     /// @dev sets the `block.basefee` to `baseFee`
     /// @param baseFee the new block base fee
-    function setBlockBaseFee(uint256 baseFee) internal returns(Context) {
+    function setBlockBaseFee(uint256 baseFee) internal returns (Context) {
         return setBlockBaseFee(Context.wrap(0), baseFee);
     }
 
     /// @dev sets the `block.difficulty` to `difficulty`
     /// @param difficulty the new block difficulty
-    function setBlockDifficulty(Context self, uint256 difficulty) internal returns(Context) {
+    function setBlockDifficulty(Context self, uint256 difficulty) internal returns (Context) {
         vulcan.hevm.difficulty(difficulty);
         return self;
     }
 
     /// @dev sets the `block.difficulty` to `difficulty`
     /// @param difficulty the new block difficulty
-    function setBlockDifficulty(uint256 difficulty) internal returns(Context) {
+    function setBlockDifficulty(uint256 difficulty) internal returns (Context) {
         return setBlockDifficulty(Context.wrap(0), difficulty);
     }
 
     /// @dev sets the `block.chainid` to `chainId`
     /// @param chainId the new block chain id
-    function setChainId(Context self, uint256 chainId) internal returns(Context){
+    function setChainId(Context self, uint256 chainId) internal returns (Context) {
         vulcan.hevm.chainId(chainId);
         return self;
     }
 
     /// @dev sets the `block.chainid` to `chainId`
     /// @param chainId the new block chain id
-    function setChainId(uint256 chainId) internal returns(Context){
+    function setChainId(uint256 chainId) internal returns (Context) {
         return setChainId(Context.wrap(0), chainId);
     }
 
-    function setBlockCoinbase(Context self, address who) internal returns (Context){
+    function setBlockCoinbase(Context self, address who) internal returns (Context) {
         vulcan.hevm.coinbase(who);
         return self;
     }
 
-    function setBlockCoinbase(address who) internal returns (Context){
+    function setBlockCoinbase(address who) internal returns (Context) {
         return setBlockCoinbase(Context.wrap(0), who);
     }
 
@@ -127,6 +126,7 @@ library ctx {
     function expectEmit(bool checkTopic1, bool checkTopic2, bool checkTopic3, bool checkData) internal {
         vulcan.hevm.expectEmit(checkTopic1, checkTopic2, checkTopic3, checkData);
     }
+
     function expectEmit(bool checkTopic1, bool checkTopic2, bool checkTopic3, bool checkData, address emitter)
         internal
     {
@@ -152,7 +152,7 @@ library ctx {
     function expectCall(address callee, uint256 msgValue, bytes memory data) internal {
         vulcan.hevm.expectCall(callee, msgValue, data);
     }
-    
+
     function snapshot(Context) internal returns (uint256) {
         return vulcan.hevm.snapshot();
     }
@@ -160,7 +160,6 @@ library ctx {
     function revertToSnapshot(Context, uint256 snapshotId) internal returns (bool) {
         return vulcan.hevm.revertTo(snapshotId);
     }
-
 }
 
 using ctx for Context global;

@@ -1,30 +1,30 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.13 <0.9.0;
 
-import { Vm as Hevm } from "forge-std/Vm.sol";
+import {Vm as Hevm} from "forge-std/Vm.sol";
 import "./Vulcan.sol";
 
 // @dev Main entry point to sest tests
 library events {
-    function toDynamic(bytes32[1] memory topics) pure internal returns (bytes32[] memory _topics) {
+    function toDynamic(bytes32[1] memory topics) internal pure returns (bytes32[] memory _topics) {
         _topics = new bytes32[](1);
         _topics[0] = topics[0];
     }
 
-    function toDynamic(bytes32[2] memory topics) pure internal returns (bytes32[] memory _topics) {
+    function toDynamic(bytes32[2] memory topics) internal pure returns (bytes32[] memory _topics) {
         _topics = new bytes32[](2);
         _topics[0] = topics[0];
         _topics[1] = topics[1];
     }
 
-    function toDynamic(bytes32[3] memory topics) pure internal returns (bytes32[] memory _topics) {
+    function toDynamic(bytes32[3] memory topics) internal pure returns (bytes32[] memory _topics) {
         _topics = new bytes32[](3);
         _topics[0] = topics[0];
         _topics[1] = topics[1];
         _topics[2] = topics[2];
     }
 
-    function toDynamic(bytes32[4] memory topics) pure internal returns (bytes32[] memory _topics) {
+    function toDynamic(bytes32[4] memory topics) internal pure returns (bytes32[] memory _topics) {
         _topics = new bytes32[](4);
         _topics[0] = topics[0];
         _topics[1] = topics[1];
@@ -65,6 +65,7 @@ library events {
     function recordLogs() internal {
         vulcan.hevm.recordLogs();
     }
+
     function getRecordedLogs() internal returns (Log[] memory logs) {
         Hevm.Log[] memory recorded = vulcan.hevm.getRecordedLogs();
         assembly {

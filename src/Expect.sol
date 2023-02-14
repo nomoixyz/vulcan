@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.13 <0.9.0;
-import { console } from "./Console.sol";
+
+import {console} from "./Console.sol";
 import "./Events.sol";
 import "./Any.sol";
 import "./Vulcan.sol";
@@ -81,7 +82,6 @@ function abs(int256 a) pure returns (uint256) {
 
     return uint256(a > 0 ? a : -a);
 }
-
 
 library ExpectLib {
     using vulcan for *;
@@ -380,7 +380,6 @@ library ExpectLib {
         }
     }
 
-
     function toBeLessThan(_IntExpectation memory self, int256 expected) internal {
         if (self.actual >= expected) {
             console.log("Error: a < b not satisfied [int]");
@@ -466,7 +465,6 @@ library ExpectLib {
         }
     }
 
-
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig) internal {
         self.toHaveEmitted(eventSig, new bytes32[](0), new bytes(0));
     }
@@ -519,19 +517,39 @@ library ExpectLib {
         self.toHaveEmitted("", topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[1] memory topics, bytes memory data) internal {
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[1] memory topics,
+        bytes memory data
+    ) internal {
         self.toHaveEmitted(eventSig, topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[2] memory topics, bytes memory data) internal {
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[2] memory topics,
+        bytes memory data
+    ) internal {
         self.toHaveEmitted(eventSig, topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[3] memory topics, bytes memory data) internal {
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[3] memory topics,
+        bytes memory data
+    ) internal {
         self.toHaveEmitted(eventSig, topics.toDynamic(), data);
     }
 
-    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[] memory topics, bytes memory data) internal {
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[] memory topics,
+        bytes memory data
+    ) internal {
         self.toHaveSucceeded();
 
         bytes32[] memory _topics;
@@ -539,7 +557,7 @@ library ExpectLib {
             _topics = new bytes32[](topics.length + 1);
             _topics[0] = events.topic(eventSig);
             for (uint256 i = 0; i < topics.length; i++) {
-                _topics[i+1] = topics[i];
+                _topics[i + 1] = topics[i];
             }
         }
 
