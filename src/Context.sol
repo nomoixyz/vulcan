@@ -19,9 +19,9 @@ contract CallContext {
 
     function isStaticcall() external view returns (bool) {
         try IMutator(address(this)).mutate() {
-            return false;
-        } catch {
             return true;
+        } catch {
+            return false;
         }
     }
 }
@@ -34,7 +34,7 @@ library ctx {
         accounts.setCode(CALL_CONTEXT_ADDRESS, type(CallContext).runtimeCode);
     }
 
-    function isStaticCall() internal view returns (bool) {
+    function isStaticcall() internal view returns (bool) {
         return CallContext(CALL_CONTEXT_ADDRESS).isStaticcall();
     }
 

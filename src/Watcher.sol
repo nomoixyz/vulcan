@@ -162,13 +162,18 @@ contract WatcherProxy {
     }
 
     fallback(bytes calldata _callData) external payable returns (bytes memory) {
-        bool isStatic = ctx.isStaticCall();
+        vulcan.pauseGasMetering();
+        bool isStatic = ctx.isStaticcall();
 
         if (!isStatic) {
             events.recordLogs();
         }
 
+        vulcan.resumeGasMetering();
+
         (bool success, bytes memory returnData) = _target.delegatecall(_callData);
+
+        vulcan.pauseGasMetering();
 
         // TODO: ugly, try to clean up
         if (!isStatic) {
@@ -194,15 +199,19 @@ contract WatcherProxy {
             watcher.storeCall(_callData, success, returnData, filteredLogs);
 
             if (!watcher.shouldCaptureReverts() && !success) {
+                vulcan.resumeGasMetering();
                 assembly {
                     revert(add(returnData, 32), mload(returnData))
                 }
             }
         } else if (!success) {
+            vulcan.resumeGasMetering();
             assembly {
                 revert(add(returnData, 32), mload(returnData))
             }
         }
+
+        vulcan.resumeGasMetering();
         
         return returnData;
     }

@@ -85,8 +85,8 @@ contract WatcherTest is Test {
         }
 
         for (uint256 i; i <10; ++i) {
-            expect(t.calls()[i].success).toBeFalse();
-            expect(t.calls()[i].returnData).toEqual(expectedError);
+            expect(t.getCall(i).success).toBeFalse();
+            expect(t.getCall(i).returnData).toEqual(expectedError);
         }
     }
 

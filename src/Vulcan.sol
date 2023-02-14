@@ -80,11 +80,11 @@ library vulcan {
         hevm.assume(condition);
     }
 
-    function pauseGasMetering() external {
+    function pauseGasMetering() internal {
         hevm.pauseGasMetering();
     }
 
-    function resumeGasMetering() external {
+    function resumeGasMetering() internal {
         hevm.resumeGasMetering();
     }
 
