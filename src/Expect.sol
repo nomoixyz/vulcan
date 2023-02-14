@@ -2,6 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 import { console } from "./Console.sol";
 import "./Events.sol";
+import "./Any.sol";
 import "./Vulcan.sol";
 
 struct _BoolExpectation {
@@ -69,42 +70,6 @@ struct _StringExpectationNot {
 
 struct _CallExpectation {
     Call call;
-}
-
-library any {
-    struct _AnyData {
-        uint256 used;
-        uint256 checked;
-    }
-
-    function topic() internal returns (bytes32) {
-       return _any();
-    }
-
-    function check(bytes32 val) internal returns (bool) {
-        _AnyData storage data = _getData();
-
-        for (uint256 i = data.checked; i < data.used; i++) {
-            if (keccak256(abi.encode(msg.data, i)) == val) {
-                data.checked++;
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    function _getData() private pure returns (_AnyData storage data) {
-        uint256 slot = uint256(keccak256("any"));
-        assembly {
-            data.slot := slot
-        }
-    }
-
-    function _any() private returns (bytes32) {
-        _AnyData storage data = _getData();
-        return keccak256(abi.encode(msg.data, data.used++));
-    }
 }
 
 // TODO: move somewhere else?
@@ -593,7 +558,7 @@ library ExpectLib {
 
             bool topicsMatch = true;
             for (uint256 j = 0; j < _topics.length; j++) {
-                if (!any.check(_topics[j]) && log.topics[j] != _topics[j]) {
+                if (!AnyLib.check(_topics[j]) && log.topics[j] != _topics[j]) {
                     console.log("topics don't match");
                     topicsMatch = false;
                     break;
