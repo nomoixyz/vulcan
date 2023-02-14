@@ -14,3 +14,4 @@ import "./Watcher.sol";
 import "./Console.sol";
 import "./Context.sol";
 import "./Command.sol";
+import "./Json.sol";
