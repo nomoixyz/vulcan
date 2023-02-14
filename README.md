@@ -3,12 +3,32 @@
 ## Usage
 
 ```Solidity
-import { Test, vm, expect } from  "../src/Vulcan.sol";
+import { Test, accounts, watchers, expect } from  "vulcan/test.sol";
+import "MyContract.sol";
 
-contract TestFoo is Test {
+contract TestMyContract is Test {
+    using accounts for *;
+    using watchers for *;
 
-    function testSomething() external {
-        vm.doSomething();
+    function testMyContract() external {
+        MyContract myContract = new MyContract();
+        
+        address alice = accounts.create("Alice").setBalance(123).impersonate();
+        
+        myContract.setValue(1);
+        uint256 val = myContract.getValue();
+        
+        expect(val).toEqual(1);
+    }
+    
+    function testSomethingElse() external {
+        MyContract myContract = new MyContract();
+        
+        address(myContract).watch();
+        
+        myContract.doSomethingThatReverts();
+        
+        expect(address(myContract).lastCall()).toHaveRevertedWith("Reverted!");
     }
 }
 ```
