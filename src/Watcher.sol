@@ -70,11 +70,11 @@ library watchers {
         return watcher(target).getCall(index);
     }
 
-    function firstCall(address target) internal view returns(Call memory) {
+    function firstCall(address target) internal view returns (Call memory) {
         return watcher(target).firstCall();
     }
 
-    function lastCall(address target) internal view returns(Call memory) {
+    function lastCall(address target) internal view returns (Call memory) {
         return watcher(target).lastCall();
     }
 
@@ -97,12 +97,7 @@ contract Watcher {
 
     Call[] private _calls;
 
-    function storeCall(
-        bytes memory _callData,
-        bool _success,
-        bytes memory _returnData,
-        Log[] memory _logs
-    ) external {
+    function storeCall(bytes memory _callData, bool _success, bytes memory _returnData, Log[] memory _logs) external {
         Call storage call = _calls.push();
         call.callData = _callData;
         call.success = _success;
@@ -212,7 +207,7 @@ contract WatcherProxy {
         }
 
         vulcan.resumeGasMetering();
-        
+
         return returnData;
     }
 }

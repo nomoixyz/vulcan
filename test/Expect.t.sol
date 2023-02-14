@@ -382,10 +382,7 @@ contract ExpectTest is Test {
 
         t.emitEvent("foo", 123);
 
-        expect(address(t).calls()[0]).toHaveEmitted(
-            "Event(string,uint256)",
-            [any()]
-        );
+        expect(address(t).calls()[0]).toHaveEmitted("Event(string,uint256)", [any()]);
     }
 
     function testToHaveEmittedWithTopicsFail() external shouldFail {
@@ -396,9 +393,7 @@ contract ExpectTest is Test {
         t.emitEvent("foo", 123);
 
         expect(address(t).calls()[0]).toHaveEmitted(
-            "Fake(string,uint256)",
-            [events.topic(string("bar"))],
-            abi.encode(uint256(123))
+            "Fake(string,uint256)", [events.topic(string("bar"))], abi.encode(uint256(123))
         );
     }
 }

@@ -36,4 +36,3 @@ contract CommandTest is Test {
         return echoInputs;
     }
 }
-

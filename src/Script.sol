@@ -8,7 +8,5 @@ import "./Console.sol";
 contract Script {
     using vulcan for *;
 
-
-    constructor() {
-    }
+    constructor() {}
 }

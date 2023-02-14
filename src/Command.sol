@@ -15,7 +15,7 @@ library commands {
     }
 
     function run(string[] memory inputs) internal returns (bytes memory) {
-        return vulcan.hevm.ffi(inputs);       
+        return vulcan.hevm.ffi(inputs);
     }
 
     function run(Command memory self) internal returns (bytes memory) {

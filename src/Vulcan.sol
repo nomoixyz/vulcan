@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.13 <0.9.0;
 
-import { Vm as Hevm } from "forge-std/Vm.sol";
+import {Vm as Hevm} from "forge-std/Vm.sol";
 import {watchers, Call, Watcher} from "./Watcher.sol";
 import {ctx} from "./Context.sol";
 
@@ -28,10 +28,10 @@ library vulcan {
     bytes32 constant GLOBAL_FAILED_SLOT = bytes32("failed");
 
     /// @dev forge-std VM
-    Hevm internal constant hevm = Hevm(address(bytes20(uint160(uint256(keccak256('hevm cheat code'))))));
+    Hevm internal constant hevm = Hevm(address(bytes20(uint160(uint256(keccak256("hevm cheat code"))))));
 
     // This address doesn't contain any code
-    VulcanVm internal constant vm = VulcanVm(address(bytes20(uint160(uint256(keccak256('vulcan.vm.address'))))));
+    VulcanVm internal constant vm = VulcanVm(address(bytes20(uint160(uint256(keccak256("vulcan.vm.address"))))));
 
     // @dev Initialize other modules, deploy contracts, etc
     function init() internal {
@@ -93,7 +93,7 @@ library vulcan {
     function failed() internal view returns (bool) {
         bytes32 globalFailed = vulcan.hevm.load(address(hevm), GLOBAL_FAILED_SLOT);
         return globalFailed == bytes32(uint256(1));
-    } 
+    }
 
     function fail() internal {
         vulcan.hevm.store(address(hevm), GLOBAL_FAILED_SLOT, bytes32(uint256(1)));
