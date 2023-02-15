@@ -77,4 +77,3 @@ contract StringsTest is Test {
         expect(value.parseBool()).toBeFalse();
     }
 }
-
