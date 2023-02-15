@@ -59,13 +59,14 @@ contract AccountsTest is Test {
     function testItCanDeriveAnAddress() external {
         // from https://privatekeyfinder.io/private-keys/ethereum/
         uint256 privateKey = uint256(0x0000000000000000000000000000000000000000000000000000000000000001);
-        address expectedAddress = 0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf; 
+        address expectedAddress = 0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf;
 
         expect(accounts.derive(privateKey)).toEqual(expectedAddress);
     }
 
     function testItCanDeriveAPrivateKey() external {
-        string memory mnemonic = "secret never hurt wife tenant spawn conduct arena disagree fold lamp december huge gloom bomb evolve page cigar pool little ensure gentle patrol drop";
+        string memory mnemonic =
+            "secret never hurt wife tenant spawn conduct arena disagree fold lamp december huge gloom bomb evolve page cigar pool little ensure gentle patrol drop";
         // from https://iancoleman.io/bip39/
         uint256 expectedKey = uint256(0xc65435a2e284fd482ef1e53b28bc7c19d6fdabb19236068cd676a18519f88b5d);
 
@@ -73,7 +74,8 @@ contract AccountsTest is Test {
     }
 
     function testItCanDeriveAPrivateKeyWithPath() external {
-        string memory mnemonic = "secret never hurt wife tenant spawn conduct arena disagree fold lamp december huge gloom bomb evolve page cigar pool little ensure gentle patrol drop";
+        string memory mnemonic =
+            "secret never hurt wife tenant spawn conduct arena disagree fold lamp december huge gloom bomb evolve page cigar pool little ensure gentle patrol drop";
         string memory derivationPath = "m/44'/60'/1'/0";
         // from https://iancoleman.io/bip39/
         uint256 expectedKey = uint256(0x406de23ee0077ad30b6d7dfd949c1d83254b73bfdaa497c352fbb7f36a20f990);
