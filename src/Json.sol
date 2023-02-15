@@ -113,19 +113,14 @@ library json {
         return vulcan.hevm.parseJsonBytes32Array(jsonStr, key);
     }
 
-    function create(string memory serialized) internal returns (JsonObject memory) {
+    function create() internal returns (JsonObject memory) {
         bytes32 slot = keccak256("vulcan.json.id.counter");
         uint256 next = uint256(accounts.readStorage(address(this), slot)) + 1;
         accounts.setStorage(address(this), slot, bytes32(next));
 
         string memory id = string(abi.encodePacked(address(this), next));
 
-        return JsonObject({id: id, serialized: serialized});
-    }
-
-    function create() internal returns(JsonObject memory) {
-        // TODO: maybe it should be "{}"?
-        return create("");
+        return JsonObject({id: id, serialized: ""});
     }
 
     // Serialize a key and value to a JSON object stored in-memory that can be later written to a file
