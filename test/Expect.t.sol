@@ -152,7 +152,7 @@ contract ExpectTest is Test {
         // TODO
     }
 
-    function testIntToBeCloseToFail(int256 a, uint256 delta, bool add) external shouldFail {
+    function testIntToBeCloseToFail(int256 a, uint256 delta) external shouldFail {
         // TODO
         vulcan.fail();
     }
