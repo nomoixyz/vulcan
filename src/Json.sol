@@ -221,7 +221,7 @@ library json {
         obj.serialized = vulcan.hevm.serializeString(obj.id, valueKey, value.serialized);
         return obj;
     }
-    
+
     function write(JsonObject memory obj, string memory path) internal {
         vulcan.hevm.writeJson(obj.serialized, path);
     }
