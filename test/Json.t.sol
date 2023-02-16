@@ -92,11 +92,15 @@ contract JsonTest is Test {
     }
 
     function testParseBytes32() external {
-        expect(json.parseBytes32('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}', ".foo")).toEqual(bytes32(uint256(1)));
+        expect(
+            json.parseBytes32('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}', ".foo")
+        ).toEqual(bytes32(uint256(1)));
     }
 
     function testParseBytes32Array() external {
-        bytes32[] memory arr = json.parseBytes32Array('{"foo":["0x0000000000000000000000000000000000000000000000000000000000000001"]}', ".foo");
+        bytes32[] memory arr = json.parseBytes32Array(
+            '{"foo":["0x0000000000000000000000000000000000000000000000000000000000000001"]}', ".foo"
+        );
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(bytes32(uint256(1)));
     }
