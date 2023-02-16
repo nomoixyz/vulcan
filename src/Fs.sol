@@ -58,6 +58,15 @@ library fs {
         vulcan.hevm.removeFile(path);
     }
 
+    function copyFile(string memory origin, string memory target) internal {
+        writeFileBinary(target, readFileBinary(origin));
+    }
+
+    function moveFile(string memory origin, string memory target) internal {
+        copyFile(origin, target);
+        removeFile(origin);
+    }
+
     /// @dev Gets the creation bytecode from an artifact file. Takes in the relative path to the json file
     /// @param path the relative path to the json file
     /// @return the creation code
