@@ -42,7 +42,7 @@ contract FsTest is Test {
 
         fs.removeFile(path);
 
-        // TODO: check that the file was removed
+        expect(fs.fileExists(path)).toBeFalse();
     }
 
     function testItCanCopyAFile() external {
@@ -64,7 +64,7 @@ contract FsTest is Test {
 
         expect(fs.readFile(newPath)).toEqual("Hello, World!\n");
 
-        // TODO: check that the original file was removed
+        expect(fs.fileExists(path)).toBeFalse();
 
         fs.removeFile(newPath);
     }
