@@ -75,11 +75,7 @@ library fs {
         } catch (bytes memory reason) {
             bytes4 selector = 0x0bc44503;
             string memory errorMessage = string.concat(
-                "The path \"",
-                string.concat(
-                    path,
-                    "\" is not allowed to be accessed for read operations."
-                )
+                "The path \"", string.concat(path, "\" is not allowed to be accessed for read operations.")
             );
             bytes32 errorHash = keccak256(abi.encodeWithSelector(selector, errorMessage));
             if (keccak256(reason) == errorHash) {
