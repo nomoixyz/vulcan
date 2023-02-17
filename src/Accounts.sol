@@ -4,33 +4,42 @@ pragma solidity >=0.8.13 <0.9.0;
 import "./Vulcan.sol";
 
 library accounts {
-    /// @dev reads an storage slot from an adress and returns the content
-    /// @param who the target address from which the storage slot will be read
-    /// @param slot the storage slot to read
-    /// @return the content of the storage at slot `slot` on the address `who`
+    /// @dev Reads the storage at the specified `slot` for the given `who` address and returns the content.
+    /// @param who The address whose storage will be read.
+    /// @param slot The position of the storage slot to read.
+    /// @return The contents of the specified storage slot as a bytes32 value.
     function readStorage(address who, bytes32 slot) internal view returns (bytes32) {
         return vulcan.hevm.load(who, slot);
     }
 
-    /// @dev signs `digest` using `privKey`
-    /// @param privKey the private key used to sign
-    /// @param digest the data to sign
-    /// @return signature in the form of (v, r, s)
+    /// @dev Signs the specified `digest` using the provided `privKey` and returns the signature in the form of `(v, r, s)`.
+    /// @param privKey The private key to use for signing the digest.
+    /// @param digest The message digest to sign.
+    /// @return A tuple containing the signature parameters `(v, r, s)` as a `uint8`, `bytes32`, and `bytes32`, respectively.
     function sign(uint256 privKey, bytes32 digest) internal pure returns (uint8, bytes32, bytes32) {
         return vulcan.hevm.sign(privKey, digest);
     }
 
-    /// @dev obtains the address derived from `privKey`
-    /// @param privKey the private key to derive
-    /// @return the address derived from `privKey`
+    /// @dev Derives the Ethereum address corresponding to the provided `privKey`.
+    /// @param privKey The private key to use for deriving the Ethereum address.
+    /// @return The Ethereum address derived from the provided private key.
     function derive(uint256 privKey) internal pure returns (address) {
         return vulcan.hevm.addr(privKey);
     }
 
+    /// @dev Derives the private key corresponding to the specified `mnemonicOrPath` and `index`.
+    /// @param mnemonicOrPath The mnemonic or derivation path to use for deriving the private key.
+    /// @param index The index of the derived private key to retrieve.
+    /// @return The private key derived from the specified mnemonic and index as a `uint256` value.
     function deriveKey(string memory mnemonicOrPath, uint32 index) internal pure returns (uint256) {
         return vulcan.hevm.deriveKey(mnemonicOrPath, index);
     }
 
+    /// @dev Derives the private key corresponding to the specified `mnemonicOrPath`, `derivationPath`, and `index`.
+    /// @param mnemonicOrPath The mnemonic or derivation path to use for deriving the master key.
+    /// @param derivationPath The specific derivation path to use for deriving the private key (optional).
+    /// @param index The index of the derived private key to retrieve.
+    /// @return The private key derived from the specified mnemonic, derivation path, and index as a `uint256` value.
     function deriveKey(string memory mnemonicOrPath, string memory derivationPath, uint32 index)
         internal
         pure
@@ -39,118 +48,133 @@ library accounts {
         return vulcan.hevm.deriveKey(mnemonicOrPath, derivationPath, index);
     }
 
+    /// @dev Adds the specified `privKey` to the local forge wallet.
+    /// @param privKey The private key to add to the local forge wallet.
+    /// @return The Ethereum address corresponding to the added private key.
     function rememberKey(uint256 privKey) internal returns (address) {
         return vulcan.hevm.rememberKey(privKey);
     }
 
-    /// @dev obtains the nonce of the address `who`
-    /// @param who the target address
-    /// @return the nonce of address `who`
+    /// @dev Returns the current `nonce` of the specified `who` address.
+    /// @param who The address for which to obtain the current `nonce`.
+    /// @return The current `nonce` of the specified address as a `uint64` value.
     function getNonce(address who) internal view returns (uint64) {
         return vulcan.hevm.getNonce(who);
     }
 
     /* Maybe this should be in a storage module? */
 
-    /// @dev records all storage reads and writes
+    /// @dev Starts recording all storage reads and writes for later analysis.
     function recordStorage() internal {
         vulcan.hevm.record();
     }
 
-    /// @dev obtains all reads and writes to the storage from address `who`
-    /// @param who the target address to read all accesses to the storage
-    /// @return reads and writes in the form of (bytes32[] reads, bytes32[] writes)
+    /// @dev Returns an array of slots that have been read and written for the specified address `who`.
+    /// @param who The address for which to obtain the storage accesses.
+    /// @return An array of storage slots that have been read, and an array of storage slots that have been written.
     function getStorageAccesses(address who) internal returns (bytes32[] memory reads, bytes32[] memory writes) {
         return vulcan.hevm.accesses(who);
     }
 
-    /// @dev labels the address `who` with label `lbl`
-    /// @param who the address to label
-    /// @param lbl the new label for address `who`
+    /// @dev Adds a label to the specified address `who` for identification purposes in debug traces.
+    /// @param who The address to label.
+    /// @param lbl The label to apply to the address.
+    /// @return The same address that was passed as input.
     function label(address who, string memory lbl) internal returns (address) {
         vulcan.hevm.label(who, lbl);
         return who;
     }
 
-    /// @dev creates an address from `name`
+    /// @dev Creates an address using the hash of the specified `name` as the private key and adds a label to the address.
+    /// @param name The name to use as the basis for the address.
+    /// @return The newly created address.
     function create(string memory name) internal returns (address) {
         return create(name, name);
     }
 
-    /// @dev creates an address from `name` and labels it with `lbl`
+    /// @dev Creates an address using the hash of the specified `name` as the private key and adds a label to the address.
+    /// @param name The name to use as the basis for the address.
+    /// @param lbl The label to apply to the address.
+    /// @return The newly created address.
     function create(string memory name, string memory lbl) internal returns (address) {
         address addr = derive(uint256(keccak256(abi.encodePacked(name))));
 
         return label(addr, lbl);
     }
 
-    /// @dev sets the value of the storage slot `slot` to `value`
-    /// @param self the address that will be updated
-    /// @param slot the slot to update
-    /// @param value the new value of the slot `slot` on the address `self`
-    /// @return the modified address so other methods can be chained
+    /// @dev Sets the specified `slot` in the storage of the given `self` address to the provided `value`.
+    /// @param self The address to modify the storage of.
+    /// @param slot The storage slot to set.
+    /// @param value The value to set the storage slot to.
+    /// @return The address that was modified.
     function setStorage(address self, bytes32 slot, bytes32 value) internal returns (address) {
         vulcan.hevm.store(self, slot, value);
         return self;
     }
 
-    /// @dev sets the nonce of the address `addr` to `n`
-    /// @param self the address that will be updated
-    /// @param n the new nonce
-    /// @return the address that was updated
+    /// @dev Sets the nonce of the given `self` address to the provided value `n`.
+    /// @param self The address to set the nonce for.
+    /// @param n The value to set the nonce to.
+    /// @return The updated address with the modified nonce.
     function setNonce(address self, uint64 n) internal returns (address) {
         vulcan.hevm.setNonce(self, n);
         return self;
     }
 
-    /// @dev sets the next call's `msg.sender` to `sender`
-    /// @param self the address to set the `msg.sender`
-    /// @return the `msg.sender` for the next call
+    /// @dev Sets the `msg.sender` of the next call to `self`.
+    /// @param self The address to impersonate.
+    /// @return The address that was impersonated.
     function impersonateOnce(address self) internal returns (address) {
         vulcan.hevm.prank(self);
         return self;
     }
 
-    /// @dev sets all subsequent call's `msg.sender` to `sender` until `stopPrank` is called
-    /// @param self the address to set the `msg.sender`
-    /// @return the `msg.sender` for the next calls
+    /// @notice Sets the `msg.sender` of all subsequent calls to `self` until `stopImpersonate` is called
+    /// @param self The address to impersonate.
+    /// @return The address being impersonated.
     function impersonate(address self) internal returns (address) {
         vulcan.hevm.startPrank(self);
         return self;
     }
 
-    /// @dev sets the next call's `msg.sender` to `sender` and `tx.origin` to `origin`
-    /// @param self the address to set the `msg.sender`
-    /// @param origin the address to set the `tx.origin`
-    /// @return the `msg.sender` for the next call
+    /// @dev Sets the `msg.sender` of the next call to `self` and the `tx.origin`
+    /// to `origin`.
+    /// @param self The address to impersonate.
+    /// @param origin The new `tx.origin`.
+    /// @return The address that was impersonated.
     function impersonateOnce(address self, address origin) internal returns (address) {
         vulcan.hevm.prank(self, origin);
         return self;
     }
 
-    /// @dev sets all subsequent call's `msg.sender` to `sender` and `tx.origin` to `origin` until `stopPrank` is called
-    /// @param self the address to set the `msg.sender`
-    /// @param origin the address to set the `tx.origin`
-    /// @return the `msg.sender` for the next calls
+    /// @dev Sets the `msg.sender` and `tx.origin` of all the subsequent calls to `self` and `origin`
+    /// respectively until `stopImpersonate` is called.
+    /// @param self The address to impersonate.
+    /// @param origin The new value for `tx.origin`.
+    /// @return The address being impersonated.
     function impersonate(address self, address origin) internal returns (address) {
         vulcan.hevm.startPrank(self, origin);
         return self;
     }
 
-    /// @dev resets the values of `msg.sender` and `tx.origin` to their original values
+    /// @notice Resets the values of `msg.sender` and `tx.origin` to the original values.
     function stopImpersonate() internal {
         vulcan.hevm.stopPrank();
     }
 
-    /// @dev sets the balance of the address `addr` to `bal`
-    /// @param self the address that will be updated
-    /// @param bal the new balance
-    /// @return the address that was updated
+    /// @dev Sets the balance of an address and returns the address that was modified.
+    /// @param self The address to set the balance of.
+    /// @param bal The new balance to set.
+    /// @return The address that was modified.
     function setBalance(address self, uint256 bal) internal returns (address) {
         vulcan.hevm.deal(self, bal);
         return self;
     }
 
+    /// @dev Sets the code of an address.
+    /// @param self The address to set the code for.
+    /// @param code The new code to set for the address.
+    /// @return The address that was modified.
     function setCode(address self, bytes memory code) internal returns (address) {
         vulcan.hevm.etch(self, code);
         return self;
