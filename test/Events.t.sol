@@ -73,7 +73,6 @@ contract EventsTest is Test {
 
         expect(logs.length).toEqual(1);
         expect(logs[0].emitter).toEqual(address(this));
-        expect(logs[0].emitter).toEqual(address(this));
         expect(logs[0].topics[0]).toEqual(SomeEvent.selector);
         expect(logs[0].topics[1]).toEqual(a.topic());
         expect(logs[0].data).toEqual(abi.encode(b));
