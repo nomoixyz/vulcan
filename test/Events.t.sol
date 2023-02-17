@@ -79,4 +79,3 @@ contract EventsTest is Test {
         expect(logs[0].data).toEqual(abi.encodePacked(b.topic()));
     }
 }
-
