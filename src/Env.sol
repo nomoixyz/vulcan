@@ -143,7 +143,6 @@ library env {
     function getBytes(string memory name, bytes memory defaultValue) external returns (bytes memory value) {
         return vulcan.hevm.envOr(name, defaultValue);
     }
-    // Read environment variables as arrays with default value
 
     function getBoolArray(string memory name, string memory delim, bool[] memory defaultValue)
         external
