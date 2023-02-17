@@ -69,9 +69,10 @@ library accounts {
         vulcan.hevm.record();
     }
 
-    /// @dev Returns an array of slots that have been read and written for the specified address `who`.
+    /// @dev Obtains an array of slots that have been read and written for the specified address `who`.
     /// @param who The address for which to obtain the storage accesses.
-    /// @return An array of storage slots that have been read, and an array of storage slots that have been written.
+    /// @return reads An array of storage slots that have been read.
+    /// @return writes An array of storage slots that have been written.
     function getStorageAccesses(address who) internal returns (bytes32[] memory reads, bytes32[] memory writes) {
         return vulcan.hevm.accesses(who);
     }
