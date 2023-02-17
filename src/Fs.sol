@@ -58,6 +58,35 @@ library fs {
         vulcan.hevm.removeFile(path);
     }
 
+    function copyFile(string memory origin, string memory target) internal {
+        writeFileBinary(target, readFileBinary(origin));
+    }
+
+    function moveFile(string memory origin, string memory target) internal {
+        copyFile(origin, target);
+        removeFile(origin);
+    }
+
+    function fileExists(string memory path) internal returns (bool) {
+        try vulcan.hevm.fsMetadata(path) {
+            return true;
+        } catch Error(string memory) {
+            return false;
+        } catch (bytes memory reason) {
+            bytes4 selector = 0x0bc44503;
+            string memory errorMessage = string.concat(
+                "The path \"", string.concat(path, "\" is not allowed to be accessed for read operations.")
+            );
+            bytes32 errorHash = keccak256(abi.encodeWithSelector(selector, errorMessage));
+            if (keccak256(reason) == errorHash) {
+                assembly {
+                    revert(add(reason, 32), mload(reason))
+                }
+            }
+            return false;
+        }
+    }
+
     /// @dev Gets the creation bytecode from an artifact file. Takes in the relative path to the json file
     /// @param path the relative path to the json file
     /// @return the creation code
