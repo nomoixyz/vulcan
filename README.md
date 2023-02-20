@@ -6,16 +6,24 @@
 forge install nomoixyz/vulcan
 ```
 
-## Writting tests with Vulcan
+## Writing tests with Vulcan
 
 ```Solidity
 import { Test, expect } from "vulcan/lib.sol";
 
 contract TestSomething {
     function testSomething() external {
-        expect(true).toBe(true);
+        expect(true).toBeTrue;
+        expect(true).toEqual(true);
         expect(123).toBeGreaterThanOrEqual(123);
-        expect("Hello world!").not.toContain("Goodbye");
+        expect(123).not.toEqual(321);
+        expect("Hello world!").toContain("Hello");
+
+        MyContract mc = new MyContract();
+        address(mc).watch().captureReverts();
+        mc.doSomething();
+
+        expect(address(mc).calls[0]).toHaveRevertedWith("Something went wrong");
     }
 }
 ```
@@ -23,6 +31,8 @@ contract TestSomething {
 ## Modules
 
 ### Accounts
+
+Account operations (balances, impersonation, etc.)
 
 ```Solidity
 import { Test, accounts } from "vulcan/lib.sol";
@@ -41,6 +51,8 @@ contract TestMyContract is Test {
 ```
 
 ### Commands
+
+Execute external commands.
 
 ```Solidity
 import { Test, Command, commands } from "vulcan/lib.sol";
@@ -61,11 +73,22 @@ contract TestMyContract is Test {
 
 ### Console
 
+Print to the console.
+
 ```Solidity
-TODO
+import { Test, console } from "vulcan/lib.sol";
+
+contract TestMyContract is Test {
+    function testMyContract() external {
+        // Same API as forge-std's console2
+        console.log("Hello World");
+    }
+}
 ```
 
 ### Context
+
+Functionality to change the current block data.
 
 ```Solidity
 import { Test, ctx } from "vulcan/lib.sol";
@@ -82,6 +105,8 @@ contract TestMyContract is Test {
 
 ### Env
 
+Set and read environmental variables.
+
 ```Solidity
 import { Test, env } from "vulcan/lib.sol";
 
@@ -96,10 +121,14 @@ contract TestMyContract is Test {
 
 ### Events
 
+// TODO
+
 ```Solidity
 import { Test, events } from "vulcan/lib.sol";
 
 contract TestMyContract is Test {
+    using events for *;
+
     function testMyContract() external {
         // TODO
     }
@@ -107,6 +136,8 @@ contract TestMyContract is Test {
 ```
 
 ### Fs
+
+Filesystem access.
 
 ```Solidity
 import { Test, fs } from "vulcan/lib.sol";
@@ -121,48 +152,66 @@ contract TestMyContract is Test {
 
 ### Json
 
+Manipulate JSON data.
+
 ```Solidity
-import { Test, json } from "vulcan/lib.sol";
+import { Test, JsonObject, json } from "vulcan/lib.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
-        // TODO
+        JsonObject memory obj = json.create();
+        obj.serialize("foo", true);
+        expect(obj.serialized).toEqual('{"foo":true}');
     }
 }
 ```
 
 ### Strings
 
+Convert basic types from / to strings.
+
 ```Solidity
 import { Test, strings } from "vulcan/lib.sol";
 
 contract TestMyContract is Test {
+    using strings for *;
+
     function testMyContract() external {
-        // TODO
+        uint256 val = 1;
+
+        expect(val.toString()).toEqual("1");
+
+        expect("1".parseUint()).toEqual(1);
     }
 }
 ```
 
 ### Watchers
 
+Monitor contract calls.
+
+Watchers work by replacing an address code with a proxy contract that records all calls and events.
+
 ```Solidity
-import { Test, watchers, expect } from "vulcan/lib.sol";
+import { Test, watchers, expect, any } from "vulcan/lib.sol";
 
 contract TestMyContract is Test {
     using watchers for *;
     function testMyContract() external {
         MyContract mc = new MyContract();
 
-        address(mc).watch().caputureReverts();
+        address(mc).watch().captureReverts();
 
         mc.doSomething();
+        mc.doSomethingElse();
 
+        expect(address(mc).calls.length).toEqual(2);
         expect(address(mc).calls[0]).toHaveRevertedWith("Something went wrong");
+        expect(address(mc).calls[1]).toHaveEmitted(
+            "SomeEvent(address,bytes32,uint256)",
+            [address(1).topic(), any()], // Event topics (indexed arguments)
+            abi.encode(123) // Event data
+        );
     }
 }
-```
-
-### Expect
-
-```Solidity
 ```
