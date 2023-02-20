@@ -15,9 +15,14 @@ forge install nomoixyz/vulcan
 ```Solidity
 import { Test, expect } from "vulcan/lib.sol";
 
-contract TestSomething {
+contract TestSomething is Test {
+
+    function before() internal override { } // Optional
+
+    function beforeEach() internal override { } // Optional
+
     function testSomething() external {
-        expect(true).toBeTrue;
+        expect(true).toBeTrue();
         expect(true).toEqual(true);
         expect(123).toBeGreaterThanOrEqual(123);
         expect(123).not.toEqual(321);
