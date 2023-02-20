@@ -1,5 +1,9 @@
 ![Vulcan](./assets/landscape.png)
 
+## WARNING
+
+This library should be treated as highly experimental, its API WILL change, and there might be bugs in it. Don't use in production yet.
+
 ## Install
 
 ```
