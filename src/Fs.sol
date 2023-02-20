@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Vm as Hevm} from "forge-std/Vm.sol";
@@ -87,15 +87,9 @@ library fs {
         }
     }
 
-    /// @dev Gets the creation bytecode from an artifact file. Takes in the relative path to the json file
-    /// @param path the relative path to the json file
-    /// @return the creation code
     function getCode(string memory path) internal view returns (bytes memory) {
         return vulcan.hevm.getCode(path);
     }
-    /// @dev Gets the deployed bytecode from an artifact file. Takes in the relative path to the json file
-    /// @param path the relative path to the json file
-    /// @return the deployed code
 
     function getDeployedCode(string memory path) internal view returns (bytes memory) {
         return vulcan.hevm.getDeployedCode(path);

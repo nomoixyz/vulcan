@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
 import {console} from "./Console.sol";
@@ -231,7 +231,7 @@ library ExpectLib {
 
     // TODO: add not variation
     function toContain(_StringExpectation memory self, string memory contained) internal {
-        // TODO: optimize
+        // TODO: optimize?
         bool found = false;
         if (bytes(self.actual).length >= bytes(contained).length) {
             for (uint256 i = 0; i < bytes(self.actual).length - bytes(contained).length + 1; i++) {
