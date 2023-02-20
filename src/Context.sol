@@ -201,14 +201,14 @@ library ctx {
     }
 
     /// @dev Takes a snapshot of the current state of the vm and returns an identifier.
-    /// @returns The snapshot identifier.
+    /// @return The snapshot identifier.
     function snapshot(Context) internal returns (uint256) {
         return vulcan.hevm.snapshot();
     }
 
     /// @dev Reverts the state of the vm to the snapshot with id `snapshotId`.
     /// @param snapshotId The id of the snapshot to revert to.
-    /// @returns true if the vm was reverted to the selected snapshot.
+    /// @return true if the vm was reverted to the selected snapshot.
     function revertToSnapshot(Context, uint256 snapshotId) internal returns (bool) {
         return vulcan.hevm.revertTo(snapshotId);
     }
