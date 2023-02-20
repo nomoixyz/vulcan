@@ -4,7 +4,6 @@ pragma solidity >=0.8.13 <0.9.0;
 import {Vm as Hevm} from "forge-std/Vm.sol";
 import "./Vulcan.sol";
 
-// @dev Main entry point to sest tests
 library events {
     function toDynamic(bytes32[1] memory topics) internal pure returns (bytes32[] memory _topics) {
         _topics = new bytes32[](1);

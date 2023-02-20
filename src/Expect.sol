@@ -229,6 +229,7 @@ library ExpectLib {
         }
     }
 
+    // TODO: add not variation
     function toContain(_StringExpectation memory self, string memory contained) internal {
         // TODO: optimize
         bool found = false;
