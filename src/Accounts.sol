@@ -100,7 +100,6 @@ library accountsSafe {
 
         return label(addr, lbl);
     }
-
 }
 
 library accounts {
@@ -155,7 +154,6 @@ library accounts {
     function create(string memory name, string memory lbl) internal returns (address) {
         return accountsSafe.create(name, lbl);
     }
-
 
     /// @dev Sets the specified `slot` in the storage of the given `self` address to the provided `value`.
     /// @param self The address to modify the storage of.
