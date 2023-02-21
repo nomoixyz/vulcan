@@ -10,22 +10,9 @@ contract Test {
 
     bool public IS_TEST = true;
 
-    bool first = false;
-
-    function setUp() external {
+    constructor() {
         vulcan.init();
-
-        if (!first) {
-            first = true;
-            before();
-        }
-
-        beforeEach();
     }
-
-    function before() internal virtual {}
-
-    function beforeEach() internal virtual {}
 
     function failed() public view returns (bool) {
         return vulcan.failed();

@@ -7,10 +7,6 @@ contract ExampleTest is Test {
     using vulcan for *;
     using accounts for *;
 
-    function beforeEach() internal view override {
-        // console.log("before each");
-    }
-
     function testSetBlockNumber() external {
         uint256 blockNumber = block.number + 1000;
         ctx.setBlockNumber(blockNumber);
