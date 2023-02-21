@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, accounts, ctx, console, vulcan, accounts} from "../src/lib.sol";
+import {Test, expect, accounts, ctx, console, vulcan, accounts} from "../src/test.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract ExampleTest is Test {

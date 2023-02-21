@@ -3,7 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
 
-library accounts {
+library accountsSafe {
     /// @dev Reads the storage at the specified `slot` for the given `who` address and returns the content.
     /// @param who The address whose storage will be read.
     /// @param slot The position of the storage slot to read.
@@ -62,8 +62,6 @@ library accounts {
         return vulcan.hevm.getNonce(who);
     }
 
-    /* Maybe this should be in a storage module? */
-
     /// @dev Starts recording all storage reads and writes for later analysis.
     function recordStorage() internal {
         vulcan.hevm.record();
@@ -102,6 +100,62 @@ library accounts {
 
         return label(addr, lbl);
     }
+
+}
+
+library accounts {
+    function readStorage(address who, bytes32 slot) internal view returns (bytes32) {
+        return accountsSafe.readStorage(who, slot);
+    }
+
+    function sign(uint256 privKey, bytes32 digest) internal pure returns (uint8, bytes32, bytes32) {
+        return accountsSafe.sign(privKey, digest);
+    }
+
+    function derive(uint256 privKey) internal pure returns (address) {
+        return accountsSafe.derive(privKey);
+    }
+
+    function deriveKey(string memory mnemonicOrPath, uint32 index) internal pure returns (uint256) {
+        return accountsSafe.deriveKey(mnemonicOrPath, index);
+    }
+
+    function deriveKey(string memory mnemonicOrPath, string memory derivationPath, uint32 index)
+        internal
+        pure
+        returns (uint256)
+    {
+        return accountsSafe.deriveKey(mnemonicOrPath, derivationPath, index);
+    }
+
+    function rememberKey(uint256 privKey) internal returns (address) {
+        return accountsSafe.rememberKey(privKey);
+    }
+
+    function getNonce(address who) internal view returns (uint64) {
+        return accountsSafe.getNonce(who);
+    }
+
+    function recordStorage() internal {
+        return accountsSafe.recordStorage();
+    }
+
+    function getStorageAccesses(address who) internal returns (bytes32[] memory reads, bytes32[] memory writes) {
+        return accountsSafe.getStorageAccesses(who);
+    }
+
+    function label(address who, string memory lbl) internal returns (address) {
+        return accountsSafe.label(who, lbl);
+    }
+
+    function create(string memory name) internal returns (address) {
+        return accountsSafe.create(name);
+    }
+
+    function create(string memory name, string memory lbl) internal returns (address) {
+        return accountsSafe.create(name, lbl);
+    }
+
 
     /// @dev Sets the specified `slot` in the storage of the given `self` address to the provided `value`.
     /// @param self The address to modify the storage of.

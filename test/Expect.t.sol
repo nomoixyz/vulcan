@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {any, Test, expect, events, console, vulcan} from "../src/lib.sol";
+import {any, Test, expect, events, console, vulcan} from "../src/test.sol";
 import {Sender} from "./mocks/Sender.sol";
 import {watchers, Watcher} from "src/Watcher.sol";
 

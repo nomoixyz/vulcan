@@ -1,11 +1,9 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Vm as Hevm} from "forge-std/Vm.sol";
 import {watchers, Call, Watcher} from "./Watcher.sol";
 import {ctx} from "./Context.sol";
-
-interface VulcanVm {}
 
 /// @dev Struct that represent an EVM log
 struct Log {
@@ -71,8 +69,6 @@ library vulcan {
     function resumeGasMetering() internal {
         hevm.resumeGasMetering();
     }
-
-    /* VulcanVm */
 
     function failed() internal view returns (bool) {
         bytes32 globalFailed = vulcan.hevm.load(address(hevm), GLOBAL_FAILED_SLOT);
