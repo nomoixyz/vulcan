@@ -144,6 +144,22 @@ contract AccountsTest is Test {
         (msgSender, txOrigin) = sender.getWithOrigin();
         expect(msgSender).toEqual(address(this));
     }
+
+    function testItCanImpersonateMultipleTimes() external {
+        address addr1 = address(1);
+        address addr2 = address(2);
+
+        Sender sender = new Sender();
+
+        addr1.impersonate();
+        expect(sender.get()).toEqual(addr1);
+        expect(sender.get()).toEqual(addr1);
+        addr2.impersonate();
+        expect(sender.get()).toEqual(addr2);
+        expect(sender.get()).toEqual(addr2);
+        addr1.impersonateOnce();
+        expect(sender.get()).toEqual(addr1);
+    }
 }
 
 contract StorageMock {

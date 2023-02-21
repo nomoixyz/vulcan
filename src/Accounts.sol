@@ -126,6 +126,7 @@ library accounts {
     /// @param self The address to impersonate.
     /// @return The address that was impersonated.
     function impersonateOnce(address self) internal returns (address) {
+        stopImpersonate();
         vulcan.hevm.prank(self);
         return self;
     }
@@ -134,6 +135,7 @@ library accounts {
     /// @param self The address to impersonate.
     /// @return The address being impersonated.
     function impersonate(address self) internal returns (address) {
+        stopImpersonate();
         vulcan.hevm.startPrank(self);
         return self;
     }
@@ -144,6 +146,7 @@ library accounts {
     /// @param origin The new `tx.origin`.
     /// @return The address that was impersonated.
     function impersonateOnce(address self, address origin) internal returns (address) {
+        stopImpersonate();
         vulcan.hevm.prank(self, origin);
         return self;
     }
@@ -154,6 +157,7 @@ library accounts {
     /// @param origin The new value for `tx.origin`.
     /// @return The address being impersonated.
     function impersonate(address self, address origin) internal returns (address) {
+        stopImpersonate();
         vulcan.hevm.startPrank(self, origin);
         return self;
     }
