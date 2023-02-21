@@ -18,28 +18,12 @@ import "./Console.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test {
-    using vulcan for *;
 
-    bytes32 constant GLOBAL_FAILED_SLOT = bytes32("failed");
+    bool public IS_TEST = true;
 
-    bool public constant IS_TEST = true;
-
-    bool first = false;
-
-    function setUp() external {
+    constructor() {
         vulcan.init();
-
-        if (!first) {
-            first = true;
-            before();
-        }
-
-        beforeEach();
     }
-
-    function before() internal virtual {}
-
-    function beforeEach() internal virtual {}
 
     function failed() public view returns (bool) {
         return vulcan.failed();
