@@ -18,7 +18,6 @@ import "./Console.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test {
-
     bool public IS_TEST = true;
 
     constructor() {
