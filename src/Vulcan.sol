@@ -30,46 +30,7 @@ library vulcan {
         ctx.init();
     }
 
-    function broadcast() internal {
-        hevm.broadcast();
-    }
-
-    function broadcast(address from) internal {
-        hevm.broadcast(from);
-    }
-
-    function broadcast(uint256 privKey) internal {
-        hevm.broadcast(privKey);
-    }
-
-    function startBroadcast() internal {
-        hevm.startBroadcast();
-    }
-
-    function startBroadcast(address from) internal {
-        hevm.startBroadcast(from);
-    }
-
-    function startBroadcast(uint256 privKey) internal {
-        hevm.startBroadcast(privKey);
-    }
-
-    function stopBroadcast() internal {
-        hevm.stopBroadcast();
-    }
-
-    function assume(bool condition) internal pure {
-        hevm.assume(condition);
-    }
-
-    function pauseGasMetering() internal {
-        hevm.pauseGasMetering();
-    }
-
-    function resumeGasMetering() internal {
-        hevm.resumeGasMetering();
-    }
-
+    // TODO: move these to some other module?
     function failed() internal view returns (bool) {
         bytes32 globalFailed = vulcan.hevm.load(address(hevm), GLOBAL_FAILED_SLOT);
         return globalFailed == bytes32(uint256(1));

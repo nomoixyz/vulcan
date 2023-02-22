@@ -4,7 +4,7 @@ pragma solidity >=0.8.13 <0.9.0;
 import {vulcan} from "./Vulcan.sol";
 import {accountsSafe as accounts, accounts as accountsUnsafe} from "./Accounts.sol";
 import {commands} from "./Command.sol";
-import {ctx as ctxUnsafe} from "./Context.sol";
+import {ctxSafe as ctx, ctx as ctxUnsafe} from "./Context.sol";
 import {env} from "./Env.sol";
 import {events} from "./Events.sol";
 import {forks as forksUnsafe} from "./Fork.sol";

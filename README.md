@@ -13,7 +13,7 @@ forge install nomoixyz/vulcan
 ## Writing tests with Vulcan
 
 ```Solidity
-import { Test, expect } from "vulcan/lib.sol";
+import { Test, expect } from "vulcan/test.sol";
 
 contract TestSomething is Test {
 
@@ -40,7 +40,7 @@ contract TestSomething is Test {
 Account operations (balances, impersonation, etc.)
 
 ```Solidity
-import { Test, accounts } from "vulcan/lib.sol";
+import { Test, accounts } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     using accounts for *;
@@ -60,7 +60,7 @@ contract TestMyContract is Test {
 Execute external commands.
 
 ```Solidity
-import { Test, Command, commands } from "vulcan/lib.sol";
+import { Test, Command, commands } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
@@ -81,7 +81,7 @@ contract TestMyContract is Test {
 Print to the console.
 
 ```Solidity
-import { Test, console } from "vulcan/lib.sol";
+import { Test, console } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
@@ -96,7 +96,7 @@ contract TestMyContract is Test {
 Functionality to change the current block data.
 
 ```Solidity
-import { Test, ctx } from "vulcan/lib.sol";
+import { Test, ctx } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
@@ -113,7 +113,7 @@ contract TestMyContract is Test {
 Set and read environmental variables.
 
 ```Solidity
-import { Test, env } from "vulcan/lib.sol";
+import { Test, env } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
@@ -129,7 +129,7 @@ contract TestMyContract is Test {
 // TODO
 
 ```Solidity
-import { Test, events } from "vulcan/lib.sol";
+import { Test, events } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     using events for *;
@@ -145,7 +145,7 @@ contract TestMyContract is Test {
 Filesystem access.
 
 ```Solidity
-import { Test, fs } from "vulcan/lib.sol";
+import { Test, fs } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
@@ -160,7 +160,7 @@ contract TestMyContract is Test {
 Manipulate JSON data.
 
 ```Solidity
-import { Test, JsonObject, json } from "vulcan/lib.sol";
+import { Test, JsonObject, json } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
@@ -176,7 +176,7 @@ contract TestMyContract is Test {
 Convert basic types from / to strings.
 
 ```Solidity
-import { Test, strings } from "vulcan/lib.sol";
+import { Test, strings } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     using strings for *;
@@ -198,7 +198,7 @@ Monitor contract calls.
 Watchers work by replacing an address code with a proxy contract that records all calls and events.
 
 ```Solidity
-import { Test, watchers, expect, any } from "vulcan/lib.sol";
+import { Test, watchers, expect, any } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     using watchers for *;

@@ -19,7 +19,7 @@ contract CallContext {
         val = 0;
     }
 
-    /// @dev Function to check if the current call is static.
+    /// @dev Function to check if the current call is a staticcall.
     function isStaticcall() external view returns (bool) {
         try IMutator(address(this)).mutate() {
             return true;
@@ -29,13 +29,96 @@ contract CallContext {
     }
 }
 
+library ctxSafe {
+    function broadcast() internal {
+        vulcan.hevm.broadcast();
+    }
+
+    function broadcast(address from) internal {
+        vulcan.hevm.broadcast(from);
+    }
+
+    function broadcast(uint256 privKey) internal {
+        vulcan.hevm.broadcast(privKey);
+    }
+
+    function startBroadcast() internal {
+        vulcan.hevm.startBroadcast();
+    }
+
+    function startBroadcast(address from) internal {
+        vulcan.hevm.startBroadcast(from);
+    }
+
+    function startBroadcast(uint256 privKey) internal {
+        vulcan.hevm.startBroadcast(privKey);
+    }
+
+    function stopBroadcast() internal {
+        vulcan.hevm.stopBroadcast();
+    }
+
+    function assume(bool condition) internal pure {
+        vulcan.hevm.assume(condition);
+    }
+
+    function pauseGasMetering() internal {
+        vulcan.hevm.pauseGasMetering();
+    }
+
+    function resumeGasMetering() internal {
+        vulcan.hevm.resumeGasMetering();
+    }
+}
+
 library ctx {
     /// @dev Deterministic address that will hold the code of the `CallContext` contract.
-    address private constant CALL_CONTEXT_ADDRESS = address(uint160(uint256(keccak256("vulcan.ctx.callContext"))));
+    address internal constant CALL_CONTEXT_ADDRESS = address(uint160(uint256(keccak256("vulcan.ctx.callContext"))));
 
     /// @dev Function to initialize and set the code of `CALL_CONTEXT_ADDRESS`.
     function init() internal {
         accounts.setCode(CALL_CONTEXT_ADDRESS, type(CallContext).runtimeCode);
+    }
+
+    function broadcast() internal {
+        ctxSafe.broadcast();
+    }
+
+    function broadcast(address from) internal {
+        ctxSafe.broadcast(from);
+    }
+
+    function broadcast(uint256 privKey) internal {
+        ctxSafe.broadcast(privKey);
+    }
+
+    function startBroadcast() internal {
+        ctxSafe.startBroadcast();
+    }
+
+    function startBroadcast(address from) internal {
+        ctxSafe.startBroadcast(from);
+    }
+
+    function startBroadcast(uint256 privKey) internal {
+        ctxSafe.startBroadcast(privKey);
+    }
+
+    function stopBroadcast() internal {
+        ctxSafe.stopBroadcast();
+    }
+
+
+    function assume(bool condition) internal pure {
+        ctxSafe.assume(condition);
+    }
+
+    function pauseGasMetering() internal {
+        ctxSafe.pauseGasMetering();
+    }
+
+    function resumeGasMetering() internal {
+        ctxSafe.resumeGasMetering();
     }
 
     /// @dev Checks whether the current call is a static call or not.
