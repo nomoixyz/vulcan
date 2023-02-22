@@ -93,7 +93,11 @@ contract TestMyContract is Test {
 
 ### Context
 
-Functionality to change the current block data.
+Functionality to interact with the current runtime context:
+- Block data
+- Gas metering
+- Forge's `expectRevert`, `expectEmit` and `mockCall` (for an alternative, see `watchers`)
+- Vm state snapshots
 
 ```Solidity
 import { Test, ctx } from "vulcan/test.sol";
