@@ -8,7 +8,6 @@ import "./Vulcan.sol";
 type Fork is uint256;
 
 library forks {
-
     /// @dev Create a new fork using the provided endpoint at a given block number.
     /// @param endpoint The endpoint to use for the fork.
     /// @param blockNumber The block number to fork from.
@@ -32,7 +31,7 @@ library forks {
         return Fork.wrap(vulcan.hevm.createFork(endpoint, txHash));
     }
 
-    /// @dev Set the provided fork as the current active fork. 
+    /// @dev Set the provided fork as the current active fork.
     /// @param self The fork to set as active.
     /// @return The fork that was set as active.
     function select(Fork self) internal returns (Fork) {
