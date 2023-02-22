@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, VulcanVm, console, json, vulcan, env} from "../src/lib.sol";
+import {Test, expect, console, json, vulcan, env} from "../src/test.sol";
 
 contract EnvTest is Test {
     using vulcan for *;

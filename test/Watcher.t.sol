@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, console, expect, watchers} from "../src/lib.sol";
+import {Test, console, expect, watchers} from "../src/test.sol";
 
 contract WatcherTarget {
     uint256 public i;

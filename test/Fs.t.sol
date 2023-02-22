@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, VulcanVm, console, fs, FsMetadata, commands} from "../src/lib.sol";
+import {Test, expect, console, fs, FsMetadata, commands} from "../src/test.sol";
 
 contract FsTest is Test {
     string constant HELLO_WORLD = "./test/fixtures/fs/read/hello_world.txt";

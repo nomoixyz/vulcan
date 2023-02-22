@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {any, Test, expect, events, console, vulcan} from "../src/lib.sol";
+import {any, Test, ctx, expect, events, console, vulcan} from "../src/test.sol";
 import {Sender} from "./mocks/Sender.sol";
 import {watchers, Watcher} from "src/Watcher.sol";
 
@@ -85,12 +85,12 @@ contract ExpectTest is Test {
     }
 
     function testUintToEqualFail(uint256 a, uint256 b) external shouldFail {
-        vulcan.assume(a != b);
+        ctx.assume(a != b);
         expect(a).toEqual(b);
     }
 
     function testUintNotToEqualPass(uint256 a, uint256 b) external {
-        vulcan.assume(a != b);
+        ctx.assume(a != b);
         expect(a).not.toEqual(b);
     }
 
@@ -99,33 +99,33 @@ contract ExpectTest is Test {
     }
 
     function testUintToBeCloseToPass(uint256 a, uint256 b, uint256 delta) external {
-        vulcan.assume((a < b ? b - a : a - b) <= delta);
+        ctx.assume((a < b ? b - a : a - b) <= delta);
         expect(a).toBeCloseTo(b, delta);
     }
 
     function testUintToBeCloseToFail(uint256 a, uint256 b, uint256 delta) external shouldFail {
-        vulcan.assume((a < b ? b - a : a - b) > delta);
+        ctx.assume((a < b ? b - a : a - b) > delta);
         expect(a).toBeCloseTo(b, delta);
     }
 
     function testUintToBeLessThanPass(uint256 a, uint256 b) external {
-        vulcan.assume(a < b);
+        ctx.assume(a < b);
         expect(a).toBeLessThan(b);
     }
 
     function testUintToBeLessThanOrEqualPass(uint256 a, uint256 b) external {
-        vulcan.assume(a <= b);
+        ctx.assume(a <= b);
         expect(a).toBeLessThanOrEqual(b);
         expect(a).toBeLessThanOrEqual(a);
     }
 
     function testUintToBeGreaterThanPass(uint256 a, uint256 b) external {
-        vulcan.assume(a > b);
+        ctx.assume(a > b);
         expect(a).toBeGreaterThan(b);
     }
 
     function testUintToBeGreaterThanOrEqualPass(uint256 a, uint256 b) external {
-        vulcan.assume(a >= b);
+        ctx.assume(a >= b);
         expect(a).toBeGreaterThanOrEqual(b);
         expect(a).toBeGreaterThanOrEqual(a);
     }
@@ -135,12 +135,12 @@ contract ExpectTest is Test {
     }
 
     function testIntToEqualFail(int256 a, int256 b) external shouldFail {
-        vulcan.assume(a != b);
+        ctx.assume(a != b);
         expect(a).toEqual(b);
     }
 
     function testIntNotToEqualPass(int256 a, int256 b) external {
-        vulcan.assume(a != b);
+        ctx.assume(a != b);
         expect(a).not.toEqual(b);
     }
 
@@ -158,44 +158,44 @@ contract ExpectTest is Test {
     }
 
     function testIntToBeLessThanPass(int256 a, int256 b) external {
-        vulcan.assume(a < b);
+        ctx.assume(a < b);
         expect(a).toBeLessThan(b);
     }
 
     function testIntToBeLessThanFail(int256 a, int256 b) external shouldFail {
-        vulcan.assume(a >= b);
+        ctx.assume(a >= b);
         expect(a).toBeLessThan(b);
     }
 
     function testIntToBeLessThanOrEqualPass(int256 a, int256 b) external {
-        vulcan.assume(a <= b);
+        ctx.assume(a <= b);
         expect(a).toBeLessThanOrEqual(b);
         expect(a).toBeLessThanOrEqual(a);
     }
 
     function testIntToBeLessThanOrEqualFail(int256 a, int256 b) external shouldFail {
-        vulcan.assume(a > b);
+        ctx.assume(a > b);
         expect(a).toBeLessThanOrEqual(b);
     }
 
     function testIntToBeGreaterThanPass(int256 a, int256 b) external {
-        vulcan.assume(a > b);
+        ctx.assume(a > b);
         expect(a).toBeGreaterThan(b);
     }
 
     function testIntToBeGreaterThanFail(int256 a, int256 b) external shouldFail {
-        vulcan.assume(a <= b);
+        ctx.assume(a <= b);
         expect(a).toBeGreaterThan(b);
     }
 
     function testIntToBeGreaterThanOrEqualPass(int256 a, int256 b) external {
-        vulcan.assume(a >= b);
+        ctx.assume(a >= b);
         expect(a).toBeGreaterThanOrEqual(b);
         expect(a).toBeGreaterThanOrEqual(a);
     }
 
     function testIntToBeGreaterThanOrEqualFail(int256 a, int256 b) external shouldFail {
-        vulcan.assume(a < b);
+        ctx.assume(a < b);
         expect(a).toBeGreaterThanOrEqual(b);
     }
 
@@ -216,12 +216,12 @@ contract ExpectTest is Test {
     }
 
     function testBytes32ToEqualFail(bytes32 a, bytes32 b) external shouldFail {
-        vulcan.assume(a != b);
+        ctx.assume(a != b);
         expect(a).toEqual(b);
     }
 
     function testBytes32NotToEqualPass(bytes32 a, bytes32 b) external {
-        vulcan.assume(a != b);
+        ctx.assume(a != b);
         expect(a).not.toEqual(b);
     }
 
@@ -234,12 +234,12 @@ contract ExpectTest is Test {
     }
 
     function testBytes32ToBeTheHashOfFail(bytes32 a, bytes memory b) external shouldFail {
-        vulcan.assume(keccak256(b) != a);
+        ctx.assume(keccak256(b) != a);
         expect(a).toBeTheHashOf(b);
     }
 
     function testBytes32NotToBeTheHashOfPass(bytes32 a, bytes memory b) external {
-        vulcan.assume(keccak256(b) != a);
+        ctx.assume(keccak256(b) != a);
         expect(a).not.toBeTheHashOf(b);
     }
 
@@ -250,12 +250,12 @@ contract ExpectTest is Test {
     }
 
     function testStringToEqualFail(string memory a, string memory b) external shouldFail {
-        vulcan.assume(keccak256(bytes(a)) != keccak256(bytes(b)));
+        ctx.assume(keccak256(bytes(a)) != keccak256(bytes(b)));
         expect(a).toEqual(b);
     }
 
     function testStringNotToEqualPass(string memory a, string memory b) external {
-        vulcan.assume(keccak256(bytes(a)) != keccak256(bytes(b)));
+        ctx.assume(keccak256(bytes(a)) != keccak256(bytes(b)));
         expect(a).not.toEqual(b);
     }
 
@@ -277,7 +277,7 @@ contract ExpectTest is Test {
     }
 
     function testStringToHaveLengthFail(string memory a, uint256 len) external shouldFail {
-        vulcan.assume(len != bytes(a).length);
+        ctx.assume(len != bytes(a).length);
         expect(a).toHaveLength(len);
     }
 
