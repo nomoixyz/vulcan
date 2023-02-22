@@ -108,7 +108,6 @@ library ctx {
         ctxSafe.stopBroadcast();
     }
 
-
     function assume(bool condition) internal pure {
         ctxSafe.assume(condition);
     }
@@ -247,18 +246,18 @@ library ctx {
     }
 
     /// @dev Function to mock a call to a specified address.
-    /// @param callee The address that should be called.
-    /// @param data The data that should be sent in the call.
-    /// @param returnData The data that should be returned if `data` matches the sent data in the call.
+    /// @param callee The address for which the call should be mocked.
+    /// @param data The data for which the call should be mocked.
+    /// @param returnData The data that should be returned if `data` matches the provided call data.
     function mockCall(address callee, bytes memory data, bytes memory returnData) internal {
         vulcan.hevm.mockCall(callee, data, returnData);
     }
 
     /// @dev Function to mock a call to a specified address.
-    /// @param callee The address that should be called.
-    /// @param msgValue The `msg.value` that should be sent in the call.
-    /// @param data The data that should be sent in the call.
-    /// @param returnData The data that should be returned if `data` matches the sent data in the call.
+    /// @param callee The address for which the call should be mocked.
+    /// @param msgValue The `msg.value` for which the call should be mocked.
+    /// @param data The data for which the call should be mocked.
+    /// @param returnData The data that should be returned if `data` matches the provided call data.
     function mockCall(address callee, uint256 msgValue, bytes memory data, bytes memory returnData) internal {
         vulcan.hevm.mockCall(callee, msgValue, data, returnData);
     }
@@ -269,16 +268,16 @@ library ctx {
     }
 
     /// @dev Used to check if a call to `callee` with `data` was made.
-    /// @param callee The address that should have been called.
-    /// @param data The data that should have been sent.
+    /// @param callee The address that is expected to be called.
+    /// @param data The call data that is expected to be used.
     function expectCall(address callee, bytes memory data) internal {
         vulcan.hevm.expectCall(callee, data);
     }
 
     /// @dev Used to check if a call to `callee` with `data` and `msgValue` was made.
-    /// @param callee The address that should have been called.
-    /// @param msgValue The `msg.value` that should have been sent.
-    /// @param data The data that should have been sent.
+    /// @param callee The address that is expected to be called.
+    /// @param msgValue The `msg.value` that is expected to be sent.
+    /// @param data The call data that is expected to be used.
     function expectCall(address callee, uint256 msgValue, bytes memory data) internal {
         vulcan.hevm.expectCall(callee, msgValue, data);
     }
