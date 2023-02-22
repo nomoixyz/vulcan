@@ -272,6 +272,15 @@ contract ExpectTest is Test {
         expect(string("abc")).toContain("d");
     }
 
+    function testStringNotToContainPass() external {
+        expect(string("abc")).not.toContain("d");
+        expect(string("abc")).not.toContain("abcde");
+    }
+
+    function testStringNotToContainFail(string memory a, string memory b, string memory c) external shouldFail {
+        expect(string.concat(a, b, c)).not.toContain(b);
+    }
+
     function testStringToHaveLengthPass(string memory a) external {
         expect(a).toHaveLength(bytes(a).length);
     }
