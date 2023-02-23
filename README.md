@@ -68,7 +68,7 @@ contract TestMyContract is Test {
 
         // Or
 
-        Command memory cmd = commands.create(["echo", "Hello World"]);
+        Command memory cmd = commands.create("echo").arg("Hello World");
         res = cmd.run();
         res = cmd.run();
         res = cmd.run();

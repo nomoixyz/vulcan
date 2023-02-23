@@ -7,7 +7,7 @@ contract ForkTest is Test {
     string private constant ENDPOINT = "http://localhost:8545";
 
     modifier skipIfEndpointFails() {
-        string memory data = "{\"jsonrpc\":\"2.0\",\"method\":\"web3_clientVersion\",\"params\":[],\"id\":67}";
+        string memory data = '{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":67}';
 
         bytes memory res = commands.create("curl").args(
             ["--silent", "-H", "Content-Type: application/json", "-X", "POST", "--data", data, ENDPOINT]
