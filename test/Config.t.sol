@@ -29,4 +29,3 @@ contract ConfigTest is Test {
         expect(rpcs[1].url).toEqual("https://solana-rulz.gg");
     }
 }
-
