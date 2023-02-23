@@ -21,7 +21,7 @@ library config {
     }
 
     /// @dev Obtains all the RPCs from the configuration.
-    /// @return All the RPCs as `Rpc[]`.
+    /// @return rpcs All the RPCs as `Rpc[]`.
     function rpcUrlStructs() internal view returns (Rpc[] memory rpcs) {
         Hevm.Rpc[] memory _rpcs = vulcan.hevm.rpcUrlStructs();
         assembly {
