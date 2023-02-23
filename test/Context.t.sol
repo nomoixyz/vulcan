@@ -74,18 +74,12 @@ contract ContextTest is Test {
     function testItCanMockCalls() external {
         MockTarget target = new MockTarget();
 
-        ctx.mockCall(
-            address(target),
-            abi.encodeWithSelector(MockTarget.truth.selector),
-            abi.encode(false)
-        );
+        ctx.mockCall(address(target), abi.encodeWithSelector(MockTarget.truth.selector), abi.encode(false));
 
         expect(target.truth()).toBeFalse();
 
         ctx.mockCall(
-            address(target),
-            abi.encodeWithSelector(MockTarget.value.selector, uint256(1337)),
-            abi.encode(false)
+            address(target), abi.encodeWithSelector(MockTarget.value.selector, uint256(1337)), abi.encode(false)
         );
 
         expect(target.value{value: uint256(1337)}()).toEqual(uint256(1337));
@@ -94,18 +88,11 @@ contract ContextTest is Test {
     function testItCanExpectCalls() external {
         MockTarget target = new MockTarget();
 
-        ctx.expectCall(
-            address(target),
-            abi.encodeWithSelector(MockTarget.truth.selector)
-        );
+        ctx.expectCall(address(target), abi.encodeWithSelector(MockTarget.truth.selector));
 
         target.truth();
 
-        ctx.expectCall(
-            address(target),
-            uint256(1337),
-            abi.encodeWithSelector(MockTarget.value.selector)
-        );
+        ctx.expectCall(address(target), uint256(1337), abi.encodeWithSelector(MockTarget.value.selector));
 
         target.value{value: uint256(1337)}();
     }
@@ -116,8 +103,7 @@ contract MockTarget {
         return true;
     }
 
-    function value() payable external returns (uint256) {
-       return msg.value; 
+    function value() external payable returns (uint256) {
+        return msg.value;
     }
 }
-
