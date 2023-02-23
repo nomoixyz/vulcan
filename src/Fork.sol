@@ -41,7 +41,7 @@ library forks {
 
     /// @dev Get the current active fork.
     /// @return The current active fork.
-    function activeFork() internal view returns (Fork) {
+    function active() internal view returns (Fork) {
         return Fork.wrap(vulcan.hevm.activeFork());
     }
 
