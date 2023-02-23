@@ -26,28 +26,37 @@ library vulcan {
     /// @dev forge-std VM
     Hevm internal constant hevm = Hevm(address(bytes20(uint160(uint256(keccak256("hevm cheat code"))))));
 
+    /// @dev Initializes the context module
     function init() internal {
         ctx.init();
     }
 
-    // TODO: move these to some other module?
+    /// @dev Checks if `fail` was called at some point.
+    /// @return true if `fail` was called, false otherwise
     function failed() internal view returns (bool) {
         bytes32 globalFailed = vulcan.hevm.load(address(hevm), GLOBAL_FAILED_SLOT);
         return globalFailed == bytes32(uint256(1));
     }
 
+    /// @dev Signal that an expectation/assertion failed.
     function fail() internal {
         vulcan.hevm.store(address(hevm), GLOBAL_FAILED_SLOT, bytes32(uint256(1)));
     }
 
+    /// @dev Resets the failed state.
     function clearFailure() internal {
         vulcan.hevm.store(address(hevm), GLOBAL_FAILED_SLOT, bytes32(uint256(0)));
     }
 
+    /// @dev Starts monitoring an address.
+    /// @param _target The address to monitor.
+    /// @return The Watcher contract that monitors the `_target` address.
     function watch(address _target) internal returns (Watcher) {
         return watchers.watch(_target);
     }
 
+    /// @dev Stops monitoring an address.
+    /// @param _target The address to stop monitoring.
     function stopWatcher(address _target) internal {
         watchers.stop(_target);
     }
