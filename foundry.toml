@@ -9,4 +9,8 @@ fs_permissions = [
     { access = "read-write", path = "./test/fixtures/fs/write" }
 ]
 
+[rpc_endpoints]
+fake = "https://my-fake-rpc-url"
+solana-rulz = "https://solana-rulz.gg"
+
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
