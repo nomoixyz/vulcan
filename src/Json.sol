@@ -13,7 +13,7 @@ library json {
     /// @dev Parses a json object string by key and returns an ABI encoded value.
     /// @param jsonStr The json string.
     /// @param key The key from the `jsonStr` to parse.
-    /// @return abiEncodedData The value of key ABI encoded.
+    /// @return abiEncodedData The ABI encoded tuple representing the value of the provided key.
     function parseObject(string memory jsonStr, string memory key)
         internal
         pure
