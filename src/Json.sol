@@ -32,7 +32,7 @@ library json {
     /// @dev Parses a json object struct by key and returns an ABI encoded value.
     /// @param jsonObj The json object struct.
     /// @param key The key from the `jsonObject` to parse.
-    /// @return abiEncodedData The value of key ABI encoded.
+    /// @return abiEncodedData The ABI encoded tuple representing the value of the provided key.
     function parseObject(JsonObject memory jsonObj, string memory key)
         internal
         pure
