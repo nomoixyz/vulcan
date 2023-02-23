@@ -19,7 +19,7 @@ contract CallContext {
         val = 0;
     }
 
-    /// @dev Function to check if the current call is static.
+    /// @dev Function to check if the current call is a staticcall.
     function isStaticcall() external view returns (bool) {
         try IMutator(address(this)).mutate() {
             return true;
@@ -29,13 +29,95 @@ contract CallContext {
     }
 }
 
+library ctxSafe {
+    function broadcast() internal {
+        vulcan.hevm.broadcast();
+    }
+
+    function broadcast(address from) internal {
+        vulcan.hevm.broadcast(from);
+    }
+
+    function broadcast(uint256 privKey) internal {
+        vulcan.hevm.broadcast(privKey);
+    }
+
+    function startBroadcast() internal {
+        vulcan.hevm.startBroadcast();
+    }
+
+    function startBroadcast(address from) internal {
+        vulcan.hevm.startBroadcast(from);
+    }
+
+    function startBroadcast(uint256 privKey) internal {
+        vulcan.hevm.startBroadcast(privKey);
+    }
+
+    function stopBroadcast() internal {
+        vulcan.hevm.stopBroadcast();
+    }
+
+    function assume(bool condition) internal pure {
+        vulcan.hevm.assume(condition);
+    }
+
+    function pauseGasMetering() internal {
+        vulcan.hevm.pauseGasMetering();
+    }
+
+    function resumeGasMetering() internal {
+        vulcan.hevm.resumeGasMetering();
+    }
+}
+
 library ctx {
     /// @dev Deterministic address that will hold the code of the `CallContext` contract.
-    address private constant CALL_CONTEXT_ADDRESS = address(uint160(uint256(keccak256("vulcan.ctx.callContext"))));
+    address internal constant CALL_CONTEXT_ADDRESS = address(uint160(uint256(keccak256("vulcan.ctx.callContext"))));
 
     /// @dev Function to initialize and set the code of `CALL_CONTEXT_ADDRESS`.
     function init() internal {
         accounts.setCode(CALL_CONTEXT_ADDRESS, type(CallContext).runtimeCode);
+    }
+
+    function broadcast() internal {
+        ctxSafe.broadcast();
+    }
+
+    function broadcast(address from) internal {
+        ctxSafe.broadcast(from);
+    }
+
+    function broadcast(uint256 privKey) internal {
+        ctxSafe.broadcast(privKey);
+    }
+
+    function startBroadcast() internal {
+        ctxSafe.startBroadcast();
+    }
+
+    function startBroadcast(address from) internal {
+        ctxSafe.startBroadcast(from);
+    }
+
+    function startBroadcast(uint256 privKey) internal {
+        ctxSafe.startBroadcast(privKey);
+    }
+
+    function stopBroadcast() internal {
+        ctxSafe.stopBroadcast();
+    }
+
+    function assume(bool condition) internal pure {
+        ctxSafe.assume(condition);
+    }
+
+    function pauseGasMetering() internal {
+        ctxSafe.pauseGasMetering();
+    }
+
+    function resumeGasMetering() internal {
+        ctxSafe.resumeGasMetering();
     }
 
     /// @dev Checks whether the current call is a static call or not.
@@ -164,18 +246,18 @@ library ctx {
     }
 
     /// @dev Function to mock a call to a specified address.
-    /// @param callee The address that should be called.
-    /// @param data The data that should be sent in the call.
-    /// @param returnData The data that should be returned if `data` matches the sent data in the call.
+    /// @param callee The address for which the call should be mocked.
+    /// @param data The data for which the call should be mocked.
+    /// @param returnData The data that should be returned if `data` matches the provided call data.
     function mockCall(address callee, bytes memory data, bytes memory returnData) internal {
         vulcan.hevm.mockCall(callee, data, returnData);
     }
 
     /// @dev Function to mock a call to a specified address.
-    /// @param callee The address that should be called.
-    /// @param msgValue The `msg.value` that should be sent in the call.
-    /// @param data The data that should be sent in the call.
-    /// @param returnData The data that should be returned if `data` matches the sent data in the call.
+    /// @param callee The address for which the call should be mocked.
+    /// @param msgValue The `msg.value` for which the call should be mocked.
+    /// @param data The data for which the call should be mocked.
+    /// @param returnData The data that should be returned if `data` matches the provided call data.
     function mockCall(address callee, uint256 msgValue, bytes memory data, bytes memory returnData) internal {
         vulcan.hevm.mockCall(callee, msgValue, data, returnData);
     }
@@ -186,16 +268,16 @@ library ctx {
     }
 
     /// @dev Used to check if a call to `callee` with `data` was made.
-    /// @param callee The address that should have been called.
-    /// @param data The data that should have been sent.
+    /// @param callee The address that is expected to be called.
+    /// @param data The call data that is expected to be used.
     function expectCall(address callee, bytes memory data) internal {
         vulcan.hevm.expectCall(callee, data);
     }
 
     /// @dev Used to check if a call to `callee` with `data` and `msgValue` was made.
-    /// @param callee The address that should have been called.
-    /// @param msgValue The `msg.value` that should have been sent.
-    /// @param data The data that should have been sent.
+    /// @param callee The address that is expected to be called.
+    /// @param msgValue The `msg.value` that is expected to be sent.
+    /// @param data The call data that is expected to be used.
     function expectCall(address callee, uint256 msgValue, bytes memory data) internal {
         vulcan.hevm.expectCall(callee, msgValue, data);
     }

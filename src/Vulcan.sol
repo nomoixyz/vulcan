@@ -1,11 +1,9 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Vm as Hevm} from "forge-std/Vm.sol";
 import {watchers, Call, Watcher} from "./Watcher.sol";
 import {ctx} from "./Context.sol";
-
-interface VulcanVm {}
 
 /// @dev Struct that represent an EVM log
 struct Log {
@@ -32,48 +30,7 @@ library vulcan {
         ctx.init();
     }
 
-    function broadcast() internal {
-        hevm.broadcast();
-    }
-
-    function broadcast(address from) internal {
-        hevm.broadcast(from);
-    }
-
-    function broadcast(uint256 privKey) internal {
-        hevm.broadcast(privKey);
-    }
-
-    function startBroadcast() internal {
-        hevm.startBroadcast();
-    }
-
-    function startBroadcast(address from) internal {
-        hevm.startBroadcast(from);
-    }
-
-    function startBroadcast(uint256 privKey) internal {
-        hevm.startBroadcast(privKey);
-    }
-
-    function stopBroadcast() internal {
-        hevm.stopBroadcast();
-    }
-
-    function assume(bool condition) internal pure {
-        hevm.assume(condition);
-    }
-
-    function pauseGasMetering() internal {
-        hevm.pauseGasMetering();
-    }
-
-    function resumeGasMetering() internal {
-        hevm.resumeGasMetering();
-    }
-
-    /* VulcanVm */
-
+    // TODO: move these to some other module?
     function failed() internal view returns (bool) {
         bytes32 globalFailed = vulcan.hevm.load(address(hevm), GLOBAL_FAILED_SLOT);
         return globalFailed == bytes32(uint256(1));
