@@ -229,19 +229,23 @@ library ExpectLib {
         }
     }
 
-    // TODO: add not variation
+    // TODO: optimize?
     function toContain(_StringExpectation memory self, string memory contained) internal {
-        // TODO: optimize?
+        bytes memory actual = bytes(self.actual);
+        bytes memory expected = bytes(contained);
         bool found = false;
-        if (bytes(self.actual).length >= bytes(contained).length) {
-            for (uint256 i = 0; i < bytes(self.actual).length - bytes(contained).length + 1; i++) {
+
+        if (actual.length >= expected.length) {
+            for (uint256 i = 0; i < actual.length - expected.length + 1; i++) {
                 found = true;
-                for (uint256 j = 0; j < bytes(contained).length; j++) {
-                    if (bytes(self.actual)[i + j] != bytes(contained)[j]) {
+
+                for (uint256 j = 0; j < expected.length; j++) {
+                    if (actual[i + j] != expected[j]) {
                         found = false;
                         break;
                     }
                 }
+
                 if (found) {
                     break;
                 }
@@ -253,6 +257,33 @@ library ExpectLib {
             console.log("  Value a", self.actual);
             console.log("  Value b", contained);
             vulcan.fail();
+        }
+    }
+
+    function toContain(_StringExpectationNot memory self, string memory contained) internal {
+        bytes memory actual = bytes(self.actual);
+        bytes memory expected = bytes(contained);
+
+        if (actual.length < expected.length) {
+            return;
+        }
+
+        for (uint256 i = 0; i < actual.length - expected.length + 1; i++) {
+            bool found = true;
+
+            for (uint256 j = 0; j < expected.length; j++) {
+                if (actual[i + j] != expected[j]) {
+                    found = false;
+                    break;
+                }
+            }
+
+            if (found) {
+                console.log("Error: a contains b [string]");
+                console.log("  Value a", self.actual);
+                console.log("  Value b", contained);
+                vulcan.fail();
+            }
         }
     }
 
