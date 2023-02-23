@@ -180,14 +180,14 @@ library ctx {
 
     /// @dev sets the `block.chainid` to `chainId`
     /// @param chainId the new block chain id
-    function setChainId(Context self, uint256 chainId) internal returns (Context) {
+    function setChainId(Context self, uint64 chainId) internal returns (Context) {
         vulcan.hevm.chainId(chainId);
         return self;
     }
 
     /// @dev sets the `block.chainid` to `chainId`
     /// @param chainId the new block chain id
-    function setChainId(uint256 chainId) internal returns (Context) {
+    function setChainId(uint64 chainId) internal returns (Context) {
         return setChainId(Context.wrap(0), chainId);
     }
 
@@ -220,7 +220,7 @@ library ctx {
     }
 
     /// @dev Function used to check whether the next call reverts or not.
-    function expectRevert() external {
+    function expectRevert() internal {
         vulcan.hevm.expectRevert();
     }
 
@@ -288,11 +288,24 @@ library ctx {
         return vulcan.hevm.snapshot();
     }
 
+    /// @dev Takes a snapshot of the current state of the vm and returns an identifier.
+    /// @return The snapshot identifier.
+    function snapshot() internal returns (uint256) {
+        return snapshot(Context.wrap(0));
+    }
+
     /// @dev Reverts the state of the vm to the snapshot with id `snapshotId`.
     /// @param snapshotId The id of the snapshot to revert to.
     /// @return true if the vm was reverted to the selected snapshot.
     function revertToSnapshot(Context, uint256 snapshotId) internal returns (bool) {
         return vulcan.hevm.revertTo(snapshotId);
+    }
+
+    /// @dev Reverts the state of the vm to the snapshot with id `snapshotId`.
+    /// @param snapshotId The id of the snapshot to revert to.
+    /// @return true if the vm was reverted to the selected snapshot.
+    function revertToSnapshot(uint256 snapshotId) internal returns (bool) {
+        return revertToSnapshot(Context.wrap(0), snapshotId);
     }
 }
 
