@@ -66,7 +66,7 @@ contract ExampleTest is Test {
     }
 
     function testSetChainId() external {
-        uint256 chainId = 1337;
+        uint64 chainId = 1337;
         ctx.setChainId(chainId);
 
         expect(block.chainid).toEqual(chainId);
