@@ -4,8 +4,6 @@ pragma solidity >=0.8.13 <0.9.0;
 import {Vm as Hevm} from "forge-std/Vm.sol";
 import {vulcan, Rpc} from "./Vulcan.sol";
 
-type Config is bytes32;
-
 library config {
     /// @dev Obtains a specific RPC from the configuration by name.
     /// @param name The name of the RPC to query.
