@@ -2,7 +2,13 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Vm as Hevm} from "forge-std/Vm.sol";
-import {vulcan, Rpc} from "./Vulcan.sol";
+import {vulcan} from "./Vulcan.sol";
+
+/// @dev Struct that represents an RPC endpoint
+struct Rpc {
+    string name;
+    string url;
+}
 
 library config {
     /// @dev Obtains a specific RPC from the configuration by name.
