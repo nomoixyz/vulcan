@@ -77,7 +77,6 @@ contract ContextTest is Test {
         revert CustomError();
     }
 
-
     function testItCanMockCalls() external {
         MockTarget target = new MockTarget();
 
