@@ -68,7 +68,7 @@ contract TestMyContract is Test {
 
         // Or
 
-        Command memory cmd = commands.create(["echo", "Hello World"]);
+        Command memory cmd = commands.create("echo").arg("Hello World");
         res = cmd.run();
         res = cmd.run();
         res = cmd.run();
@@ -140,6 +140,20 @@ contract TestMyContract is Test {
 
     function testMyContract() external {
         // TODO
+    }
+}
+```
+
+### Forks
+
+Forking functionality.
+
+```Solidity
+import { Test, forks, Fork } from "vulcan/test.sol";
+
+contract TestMyContract is Test {
+    function testMyContract() external {
+        Fork fork = forks.create("mainnet"); // Alternatively an endpoint can be passed directly.
     }
 }
 ```

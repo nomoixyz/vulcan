@@ -9,7 +9,7 @@ import {ctx} from "./Context.sol";
 import {env} from "./Env.sol";
 import {events} from "./Events.sol";
 import {expect} from "./Expect.sol";
-import {forks} from "./Fork.sol";
+import {forks, Fork} from "./Fork.sol";
 import {fs, FsMetadata} from "./Fs.sol";
 import {json, JsonObject} from "./Json.sol";
 import {strings} from "./Strings.sol";

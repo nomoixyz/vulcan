@@ -5,34 +5,17 @@ import {Test, expect, commands, Command} from "../src/test.sol";
 contract CommandTest is Test {
     using commands for *;
 
-    function testItCanCreateCommands() external {
-        string[] memory inputs = _echo();
-        Command memory cmd = commands.create(inputs);
-
-        expect(cmd.inputs[0]).toEqual(inputs[0]);
-        expect(cmd.inputs[1]).toEqual(inputs[1]);
-    }
-
     function testItCanRunCommands() external {
-        string[] memory inputs = _echo();
-        Command memory cmd = commands.create(inputs);
+        string[2] memory inputs = ["echo", "'Hello, World!'"];
+        Command memory cmd = commands.create(inputs[0]).arg(inputs[1]);
 
         expect(string(cmd.run())).toEqual(inputs[1]);
     }
 
     function testItCanRunCommandsDirectly() external {
-        string[] memory inputs = _echo();
+        string[2] memory inputs = ["echo", "'Hello, World!'"];
         bytes memory output = commands.run(inputs);
 
         expect(string(output)).toEqual(inputs[1]);
-    }
-
-    function _echo() internal pure returns (string[] memory) {
-        string[] memory echoInputs = new string[](2);
-
-        echoInputs[0] = "echo";
-        echoInputs[1] = "'Hello, World!'";
-
-        return echoInputs;
     }
 }
