@@ -1,6 +1,10 @@
 [book]
-authors = ["Nomoi"]
-language = "en"
-multilingual = false
-src = "src"
-title = "Vulcan Book"
+authors = ['nomoi.xyz']
+src = 'src'
+title = 'Vulcan Book'
+[output.html]
+additional-js = ['solidity.min.js']
+git-repository-url = 'https://github.com/nomoixyz/vulcan'
+
+[output.html.fold]
+enable = true

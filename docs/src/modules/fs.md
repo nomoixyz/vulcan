@@ -2,7 +2,7 @@
 
 Filesystem access.
 
-```Solidity
+```solidity
 import { Test, fs } from "vulcan/test.sol";
 
 contract TestMyContract is Test {

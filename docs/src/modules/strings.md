@@ -2,7 +2,7 @@
 
 Convert basic types from / to strings.
 
-```Solidity
+```solidity
 import { Test, strings } from "vulcan/test.sol";
 
 contract TestMyContract is Test {

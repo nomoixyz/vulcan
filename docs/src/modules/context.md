@@ -6,7 +6,7 @@ Functionality to interact with the current runtime context:
 - Forge's `expectRevert`, `expectEmit` and `mockCall` (for an alternative, see `watchers`)
 - Vm state snapshots
 
-```Solidity
+```solidity
 import { Test, ctx } from "vulcan/test.sol";
 
 contract TestMyContract is Test {

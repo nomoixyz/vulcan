@@ -2,7 +2,7 @@
 
 Print to the console.
 
-```Solidity
+```solidity
 import { Test, console } from "vulcan/test.sol";
 
 contract TestMyContract is Test {

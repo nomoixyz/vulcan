@@ -4,7 +4,7 @@ Monitor contract calls.
 
 Watchers work by replacing an address code with a proxy contract that records all calls and events.
 
-```Solidity
+```solidity
 import { Test, watchers, expect, any } from "vulcan/test.sol";
 
 contract TestMyContract is Test {

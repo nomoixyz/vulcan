@@ -29,7 +29,7 @@ Our goal is to provide:
 
 Vulcan test example:
 
-```Solidity
+```solidity
 import { Test, expect } from "vulcan/test.sol";
 
 contract TestSomething is Test {

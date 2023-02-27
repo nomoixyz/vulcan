@@ -2,7 +2,7 @@
 
 Forking functionality.
 
-```Solidity
+```solidity
 import { Test, forks, Fork } from "vulcan/test.sol";
 
 contract TestMyContract is Test {

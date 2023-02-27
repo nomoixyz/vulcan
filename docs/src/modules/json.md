@@ -2,7 +2,7 @@
 
 Manipulate JSON data.
 
-```Solidity
+```solidity
 import { Test, JsonObject, json } from "vulcan/test.sol";
 
 contract TestMyContract is Test {

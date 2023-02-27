@@ -2,7 +2,7 @@
 
 Account operations (balances, impersonation, etc.)
 
-```Solidity
+```solidity
 import { Test, accounts } from "vulcan/test.sol";
 
 contract TestMyContract is Test {

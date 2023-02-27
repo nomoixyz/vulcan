@@ -1,7 +1,7 @@
 # Commands
 Execute external commands.
 
-```Solidity
+```solidity
 import { Test, Command, commands } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
