@@ -9,11 +9,12 @@ import {ctx} from "./Context.sol";
 import {env} from "./Env.sol";
 import {events} from "./Events.sol";
 import {expect} from "./Expect.sol";
-import {forks} from "./Fork.sol";
+import {forks, Fork} from "./Fork.sol";
 import {fs, FsMetadata} from "./Fs.sol";
 import {json, JsonObject} from "./Json.sol";
 import {strings} from "./Strings.sol";
 import {watchers, Watcher} from "./Watcher.sol";
+import {config, Rpc} from "./Config.sol";
 import "./Console.sol";
 
 // @dev Main entry point to Vulcan tests
