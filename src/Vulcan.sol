@@ -12,12 +12,6 @@ struct Log {
     address emitter;
 }
 
-/// @dev Struct that represents an RPC endpoint
-struct Rpc {
-    string name;
-    string url;
-}
-
 library vulcan {
     using vulcan for *;
 
