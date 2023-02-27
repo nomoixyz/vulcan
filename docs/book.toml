@@ -1,0 +1,6 @@
+[book]
+authors = ["Nomoi"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Vulcan Book"
