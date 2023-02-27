@@ -17,7 +17,7 @@ $ forge install nomoixyz/vulcan
 
 ## Usage
 
-See the [Vulcan Book](https://nomoixyz.github.io/vulcan-book/) for detailed usage information.
+See the [Vulcan Book](https://nomoixyz.github.io/vulcan/) for detailed usage information.
 
 ## Why Vulcan?
 
