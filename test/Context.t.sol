@@ -57,24 +57,22 @@ contract ContextTest is Test {
 
     function testItCanExpectRevert() external {
         ctx.expectRevert();
-        revert();
+        Revert.fail();
     }
 
     function testItCanExpectRevertWithMessage() external {
         ctx.expectRevert(bytes("Reverted"));
-        revert("Reverted");
+        Revert.failWithMessage();
     }
-
-    error CustomError();
 
     function testItCanExpectRevertWithCustomErrror() external {
         ctx.expectRevert();
-        revert CustomError();
+        Revert.failWithCustomError();
     }
 
     function testItCanExpectRevertWithCustomErrorSelector() external {
-        ctx.expectRevert(CustomError.selector);
-        revert CustomError();
+        ctx.expectRevert(Revert.Custom.selector);
+        Revert.failWithCustomError();
     }
 
     function testItCanMockCalls() external {
@@ -112,4 +110,20 @@ contract MockTarget {
     function value() external payable returns (uint256) {
         return msg.value;
     }
+}
+
+library Revert {
+    function fail() external {
+        revert();
+    }
+
+    function failWithMessage() external {
+        revert("Reverted");
+    }
+
+    function failWithCustomError() external {
+        revert Custom();
+    }
+
+    error Custom();
 }
