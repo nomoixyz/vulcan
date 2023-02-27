@@ -113,15 +113,15 @@ contract MockTarget {
 }
 
 library Revert {
-    function fail() pure external {
+    function fail() external pure {
         revert();
     }
 
-    function failWithMessage() pure external {
+    function failWithMessage() external pure {
         revert("Reverted");
     }
 
-    function failWithCustomError() pure external {
+    function failWithCustomError() external pure {
         revert Custom();
     }
 
