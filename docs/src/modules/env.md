@@ -2,7 +2,7 @@
 
 Set and read environmental variables.
 
-```Solidity
+```solidity
 import { Test, env } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
