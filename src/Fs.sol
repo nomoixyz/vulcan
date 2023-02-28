@@ -37,11 +37,11 @@ library fs {
 
     /// @dev Obtains the metadata of the specified file or directory.
     /// @param fileOrDir The path to the file or directory.
-    /// @return metadata The metadata of the file or directory.
-    function fsMetadata(string memory fileOrDir) internal returns (FsMetadata memory metadata) {
+    /// @return data The metadata of the file or directory.
+    function metadata(string memory fileOrDir) internal returns (FsMetadata memory data) {
         Hevm.FsMetadata memory md = vulcan.hevm.fsMetadata(fileOrDir);
         assembly {
-            metadata := md
+            data := md
         }
     }
 

@@ -104,10 +104,10 @@ contract FsTest is Test {
         string memory dirPath = "./test/fixtures/fs/read";
         string memory filePath = HELLO_WORLD;
 
-        FsMetadata memory dirMetadata = fs.fsMetadata(dirPath);
+        FsMetadata memory dirMetadata = fs.metadata(dirPath);
         expect(dirMetadata.isDir).toBeTrue();
 
-        FsMetadata memory fileMetadata = fs.fsMetadata(filePath);
+        FsMetadata memory fileMetadata = fs.metadata(filePath);
         expect(fileMetadata.isDir).toBeFalse();
     }
 }

@@ -8,19 +8,19 @@ import "./Vulcan.sol";
 type Fork is uint256;
 
 library forks {
+    /// @dev Create a new fork using the provided endpoint.
+    /// @param endpoint The endpoint to use for the fork.
+    /// @return The new fork pointer.
+    function create(string memory endpoint) internal returns (Fork) {
+        return Fork.wrap(vulcan.hevm.createFork(endpoint));
+    }
+
     /// @dev Create a new fork using the provided endpoint at a given block number.
     /// @param endpoint The endpoint to use for the fork.
     /// @param blockNumber The block number to fork from.
     /// @return The new fork pointer.
     function createAtBlock(string memory endpoint, uint256 blockNumber) internal returns (Fork) {
         return Fork.wrap(vulcan.hevm.createFork(endpoint, blockNumber));
-    }
-
-    /// @dev Create a new fork using the provided endpoint.
-    /// @param endpoint The endpoint to use for the fork.
-    /// @return The new fork pointer.
-    function create(string memory endpoint) internal returns (Fork) {
-        return Fork.wrap(vulcan.hevm.createFork(endpoint));
     }
 
     /// @dev Create a new fork using the provided endpoint at a state right before the provided transaction hash.
