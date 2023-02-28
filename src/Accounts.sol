@@ -239,7 +239,7 @@ library accounts {
         return self;
     }
 
-    /// @dev Mints an amount of tokens to an address.
+    /// @dev Mints an amount of tokens to an address. This operation modifies the total supply of the token.
     /// @dev self The address that will own the tokens.
     /// @dev token The token to mint.
     /// @dev amount The amount of tokens to mint.
@@ -259,7 +259,7 @@ library accounts {
         return self;
     }
 
-    /// @dev Burns an amount of tokens from an address.
+    /// @dev Burns an amount of tokens from an address.This operation modifies the total supply of the token.
     /// @dev self The address that owns the tokens.
     /// @dev token The token to burn.
     /// @dev amount The amount of tokens to burn.
