@@ -161,26 +161,13 @@ contract AccountsTest is Test {
         expect(sender.get()).toEqual(addr1);
     }
 
-    function testItCanUpdateTheTokenBalanceAndTotalSupply(address user, uint256 balance) external {
+    function testItCanUpdateTheTokenBalance(address user, uint256 balance) external {
         TestToken token = new TestToken();
-
-        uint256 initialTotalSupply = token.totalSupply();
 
         user.setTokenBalance(address(token), balance);
 
         expect(token.balanceOf(user)).toEqual(balance);
-        expect(token.totalSupply()).toEqual(initialTotalSupply + balance);
-    }
-
-    function testItCanUpdateTheTokenBalanceIgnoringTheTotalSupply(address user, uint256 balance) external {
-        TestToken token = new TestToken();
-
-        uint256 initialTotalSupply = token.totalSupply();
-
-        user.setTokenBalance(address(token), balance, false);
-
-        expect(token.balanceOf(user)).toEqual(balance);
-        expect(token.totalSupply()).toEqual(initialTotalSupply);
+        expect(token.totalSupply()).toEqual(0);
     }
 }
 
