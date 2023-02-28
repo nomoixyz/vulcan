@@ -239,24 +239,11 @@ library accounts {
         return self;
     }
 
-    /// @dev Sets the token balance of an address and returns the address that was modified. This is
-    /// a copy of the implementation of `forge-std/StdCheats.deal`.
-    /// @param self The address to set the balance of.
-    /// @param token The token that will be given to `self`.
-    /// @param bal The new token balance of `self`.
-    /// @return The address that was modified.
-    function setTokenBalance(address self, address token, uint256 bal) internal returns (address) {
-        stdStore().target(token).sig(0x70a08231).with_key(self).checked_write(bal);
-
-        return self;
-    }
-
-    function setTotalSupply(address token, uint256 totalSupply) internal returns (address) {
-        stdStore().target(token).sig(0x18160ddd).checked_write(totalSupply);
-
-        return token;
-    }
-
+    /// @dev Mints an amount of tokens to an address.
+    /// @dev self The address that will own the tokens.
+    /// @dev token The token to mint.
+    /// @dev amount The amount of tokens to mint.
+    /// @return The adress that owns the minted tokens.
     function mintToken(address self, address token, uint256 amount) internal returns (address) {
         (, bytes memory balData) = token.call(abi.encodeWithSelector(0x70a08231, self));
 
@@ -272,6 +259,11 @@ library accounts {
         return self;
     }
 
+    /// @dev Burns an amount of tokens from an address.
+    /// @dev self The address that owns the tokens.
+    /// @dev token The token to burn.
+    /// @dev amount The amount of tokens to burn.
+    /// @return The adress that owned the burned tokens.
     function burnToken(address self, address token, uint256 amount) internal returns (address) {
         (, bytes memory balData) = token.call(abi.encodeWithSelector(0x70a08231, self));
 
@@ -285,6 +277,27 @@ library accounts {
         setTotalSupply(token, totSup - amount);
 
         return self;
+    }
+
+    /// @dev Sets the token balance of an address.
+    /// @param self The address to set the balance of.
+    /// @param token The token that will be given to `self`.
+    /// @param bal The new token balance of `self`.
+    /// @return The address that was modified.
+    function setTokenBalance(address self, address token, uint256 bal) internal returns (address) {
+        stdStore().target(token).sig(0x70a08231).with_key(self).checked_write(bal);
+
+        return self;
+    }
+
+    /// @dev Sets the token total supply of a token.
+    /// @param token The token that will be modified.
+    /// @param totalSupply The new total supply of token.
+    /// @return The token address.
+    function setTotalSupply(address token, uint256 totalSupply) private returns (address) {
+        stdStore().target(token).sig(0x18160ddd).checked_write(totalSupply);
+
+        return token;
     }
 
     /// @dev Sets the code of an address.
