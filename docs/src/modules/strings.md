@@ -17,3 +17,17 @@ contract TestMyContract is Test {
     }
 }
 ```
+
+## `toString(value)`
+
+## `parseBytes(value)`
+
+## `parseAddress(value)`
+
+## `parseUint(value)`
+
+## `parseInt(value)`
+
+## `parseBytes32(value)`
+
+## `parseBool(value)`

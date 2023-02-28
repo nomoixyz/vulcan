@@ -1,18 +1,11 @@
 # Testing
 
+Vulcan provides a simple testing framework through the base `Test` contract and the `expect` function.
+
 ```solidity
-import { Test, expect } from "vulcan";
+import { Test, expect } from "vulcan/test.sol";
 
 contract ExampleTest is Test {
-
-    function before() internal override {
-        // Do something only once
-    }
-
-    function beforeEach() internal override {
-        // Do something before each test
-    }
-
     function testSomething() external {
         expect(1).toBeLessThan(2);
         expect(1).not.toEqual(2);

@@ -17,3 +17,41 @@ contract TestMyContract is Test {
     }
 }
 ```
+
+## `readStorage(who, slot)`
+
+## `sign(privKey, digest)`
+
+## `derive(privKey)`
+
+## `deriveKey(mnemonicOrPath, index)`
+
+## `deriveKey(mnemonicOrPath, derivationPath, index)`
+
+## `rememberKey(privKey)`
+
+## `getNonce(who)`
+
+## `recordStorage()`
+
+## `getStorageAccesses(who)`
+
+## `label(who, lbl)`
+
+## `create(name, lbl?)`
+
+## `readStorage(who, slot)`
+
+## `setStorage(who, slot, value)`
+
+## `setNonce(who, nonce)`
+
+## `impersonateOnce(who, origin?)`
+
+## `impersonate(who, origin?)`
+
+## `stopImpersonate()`
+
+## `setBalance(who, balance)`
+
+## `setCode(who, code)`

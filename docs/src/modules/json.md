@@ -13,3 +13,41 @@ contract TestMyContract is Test {
     }
 }
 ```
+
+## `parseObject(jsonStr, key?)`
+
+## `parseObject(jsonObj, key?)`
+
+## `parseUint(jsonStr, key)`
+
+## `parseUintArray(jsonStr, key)`
+
+## `parseInt(jsonStr, key)`
+
+## `parseIntArray(jsonStr, key)`
+
+## `parseBool(jsonStr, key)`
+
+## `parseBoolArray(jsonStr, key)`
+
+## `parseAddress(jsonStr, key)`
+
+## `parseAddressArray(jsonStr, key)`
+
+## `parseString(jsonStr, key)`
+
+## `parseStringArray(jsonStr, key)`
+
+## `parseBytes(jsonStr, key)`
+
+## `parseBytesArray(jsonStr, key)`
+
+## `parseBytes32(jsonStr, key)`
+
+## `parseBytes32Array(jsonStr, key)`
+
+## `create()`
+
+## `serialize(jsonObj, key, value)`
+
+## `write(jsonObj, path, valueKey?)`

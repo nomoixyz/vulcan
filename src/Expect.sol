@@ -448,6 +448,8 @@ library ExpectLib {
         }
     }
 
+    /* CALLS */
+
     function toHaveReverted(_CallExpectation memory self) internal {
         if (self.call.success) {
             console.log("Error: call expected to revert [call]");

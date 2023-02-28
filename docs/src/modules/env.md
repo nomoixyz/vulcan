@@ -13,3 +13,33 @@ contract TestMyContract is Test {
     }
 }
 ```
+
+## `set(name, value)`
+
+## `getUint(name, default?)`
+
+## `getInt(name, default?)`
+
+## `getBool(name, default?)`
+
+## `getAddress(name, default?)`
+
+## `getBytes32(name, default?)`
+
+## `getString(name, default?)`
+
+## `getBytes(name, default?)`
+
+## `getBoolArray(name, delim, default?)`
+
+## `getUintArray(name, delim, default?)`
+
+## `getIntArray(name, delim, default?)`
+
+## `getAddressArray(name, delim, default?)`
+
+## `getBytes32Array(name, delim, default?)`
+
+## `getStringArray(name, delim, default?)`
+
+## `getBytesArray(name, delim, default?)`
