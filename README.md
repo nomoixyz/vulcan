@@ -2,9 +2,13 @@
     Vulcan
 </h1>
 
-<p align=center>
-    Development framework for Foundry projects, with a focus on developer experience and readability.
-</p>
+Development framework for Foundry projects, with a focus on developer experience and readability.
+
+Built on top of [`forge-std`](https://github.com/foundry-rs/forge-std) <i style="color: red" class="fa fa-heart"></i>
+
+Initially, Vulcan will provide functionality similar to what is already included in forge's VM and `forge-std`.
+
+Over time, Vulcan will grow to include more functionality and utilities, eventually becoming a full-featured development framework.
 
 > **Warning**
 > This library should be treated as highly experimental, its API WILL change, and there might be bugs in it. Don't use in production yet.
@@ -23,8 +27,8 @@ See the [Vulcan Book](https://nomoixyz.github.io/vulcan/) for detailed usage inf
 
 Our goal is to provide:
 - Better naming for VM functionality (no more `prank`, `roll`, `warp`, ...)
+- A testing framework with better readability and a familiar syntax
 - Improved ergonomics
-- Familiar testing function syntax
 - ...
 
 Vulcan test example:
