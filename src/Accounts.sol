@@ -2,6 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
+import {stdStorage, StdStorage} from "forge-std/stdStorage.sol";
 
 library accountsSafe {
     /// @dev Reads the storage at the specified `slot` for the given `who` address and returns the content.
@@ -103,6 +104,16 @@ library accountsSafe {
 }
 
 library accounts {
+    using stdStorage for StdStorage;
+
+    function stdStore() internal pure returns (StdStorage storage s) {
+        bytes32 slot = keccak256("vulcan.accounts.stdStore");
+
+        assembly {
+            s.slot := slot
+        }
+    }
+
     function readStorage(address who, bytes32 slot) internal view returns (bytes32) {
         return accountsSafe.readStorage(who, slot);
     }
@@ -225,6 +236,45 @@ library accounts {
     /// @return The address that was modified.
     function setBalance(address self, uint256 bal) internal returns (address) {
         vulcan.hevm.deal(self, bal);
+        return self;
+    }
+
+    /// @dev Sets the token balance of an address and returns the address that was modified. This
+    /// implementation updates the total supply by default.
+    /// @param self The address to set the balance of.
+    /// @param token The token that will be given to `self`.
+    /// @param bal The new token balance of `self`.
+    /// @return The address that was modified.
+    function setTokenBalance(address self, address token, uint256 bal) internal returns (address) {
+        return setTokenBalance(self, token, bal, true);
+    }
+
+    /// @dev Sets the token balance of an address and returns the address that was modified. This is
+    /// a copy of the implementation of `forge-std/StdCheats.deal`.
+    /// @param self The address to set the balance of.
+    /// @param token The token that will be given to `self`.
+    /// @param bal The new token balance of `self`.
+    /// @param updateSupply Whether to update the total supply or not.
+    /// @return The address that was modified.
+    function setTokenBalance(address self, address token, uint256 bal, bool updateSupply) internal returns (address) {
+        (, bytes memory balData) = token.call(abi.encodeWithSelector(0x70a08231, self));
+
+        uint256 prevBal = abi.decode(balData, (uint256));
+
+        stdStore().target(token).sig(0x70a08231).with_key(self).checked_write(bal);
+
+        if (updateSupply) {
+            (, bytes memory totSupData) = token.call(abi.encodeWithSelector(0x18160ddd));
+            uint256 totSup = abi.decode(totSupData, (uint256));
+            if (bal < prevBal) {
+                totSup -= (prevBal - bal);
+            } else {
+                totSup += (bal - prevBal);
+            }
+
+            stdStore().target(token).sig(0x18160ddd).checked_write(totSup);
+        }
+
         return self;
     }
 
