@@ -4,6 +4,7 @@ src = 'src'
 title = 'Vulcan Book'
 [output.html]
 additional-js = ['solidity.min.js']
+additional-css = ['book.css']
 git-repository-url = 'https://github.com/nomoixyz/vulcan'
 
 [output.html.fold]

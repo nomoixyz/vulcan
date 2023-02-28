@@ -14,7 +14,9 @@ function testSomething() external {
 
 ## `.not`
 
-The `.not` property allows you invert the result of the assertion.
+> Note: `.not` is not yet implemented for all matchers.
+
+The `.not` property inverts the result of the assertion.
 
 ```solidity
 function testSomething() external {
@@ -24,37 +26,39 @@ function testSomething() external {
 
 # Matchers
 
-## `toEqual(value)`
+> Note: Matchers are only implemented for basic types for now. Arrays, structs and other types will be supported in the future.
 
-## `toBeTrue()`
+### `toEqual(value)`
 
-## `toBeFalse()`
+### `toBeTrue()`
 
-## `toBeGreaterThan(value)`
+### `toBeFalse()`
 
-## `toBeGreaterThanOrEqual(value)`
+### `toBeGreaterThan(value)`
 
-## `toBeLessThan(value)`
+### `toBeGreaterThanOrEqual(value)`
 
-## `toBeLessThanOrEqual(value)`
+### `toBeLessThan(value)`
 
-## `toBeAContract()`
+### `toBeLessThanOrEqual(value)`
 
-## `toBeTheHashOf(value)`
+### `toBeAContract()`
 
-## `toContain(value)`
+### `toBeTheHashOf(value)`
 
-## `toHaveLength(value)`
+### `toContain(value)`
 
-## `toBeCloseTo(value, delta)`
+### `toHaveLength(value)`
 
-## `toHaveReverted()`
+### `toBeCloseTo(value, delta)`
 
-## `toHaveRevertedWith(selector|message)`
+### `toHaveReverted()`
 
-## `toHaveSucceeded()`
+### `toHaveRevertedWith(selector|message)`
 
-## `toHaveEmitted(topics)`
-## `toHaveEmitted(topics, data)`
-## `toHaveEmitted(signature, topics, data)`
+### `toHaveSucceeded()`
+
+### `toHaveEmitted(topics)`
+### `toHaveEmitted(topics, data)`
+### `toHaveEmitted(signature, topics, data)`
 
