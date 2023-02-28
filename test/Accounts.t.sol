@@ -160,6 +160,55 @@ contract AccountsTest is Test {
         addr1.impersonateOnce();
         expect(sender.get()).toEqual(addr1);
     }
+
+    function testItCanUpdateTheTokenBalance(address user, uint256 balance) external {
+        TestToken token = new TestToken();
+
+        user.setTokenBalance(address(token), balance);
+
+        expect(token.balanceOf(user)).toEqual(balance);
+        expect(token.totalSupply()).toEqual(0);
+    }
+
+    function testItCanMintTokens(address user, uint128 firstMint, uint128 secondMint) external {
+        TestToken token = new TestToken();
+
+        user.mintToken(address(token), firstMint);
+
+        expect(token.balanceOf(user)).toEqual(firstMint);
+        expect(token.totalSupply()).toEqual(firstMint);
+
+        user.mintToken(address(token), secondMint);
+
+        expect(token.balanceOf(user)).toEqual(uint256(firstMint) + uint256(secondMint));
+        expect(token.totalSupply()).toEqual(uint256(firstMint) + uint256(secondMint));
+    }
+
+    function testItCanBurnTokens(address user, uint128 firstBurn, uint128 secondBurn) external {
+        TestToken token = new TestToken();
+
+        user.mintToken(address(token), type(uint256).max);
+
+        uint256 totalSupply = token.totalSupply();
+        uint256 balance = token.balanceOf(user);
+
+        user.burnToken(address(token), firstBurn);
+
+        expect(token.balanceOf(user)).toEqual(balance - firstBurn);
+        expect(token.totalSupply()).toEqual(totalSupply - firstBurn);
+
+        user.burnToken(address(token), secondBurn);
+
+        expect(token.balanceOf(user)).toEqual(balance - firstBurn - secondBurn);
+        expect(token.totalSupply()).toEqual(totalSupply - firstBurn - secondBurn);
+    }
+}
+
+contract TestToken {
+    mapping(address => uint256) public balanceOf;
+    uint256 public totalSupply;
+
+    constructor() {}
 }
 
 contract StorageMock {

@@ -2,6 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
+import {stdStorage, StdStorage} from "forge-std/StdStorage.sol";
 
 library accountsSafe {
     /// @dev Reads the storage at the specified `slot` for the given `who` address and returns the content.
@@ -103,6 +104,16 @@ library accountsSafe {
 }
 
 library accounts {
+    using stdStorage for StdStorage;
+
+    function stdStore() internal pure returns (StdStorage storage s) {
+        bytes32 slot = keccak256("vulcan.accounts.stdStore");
+
+        assembly {
+            s.slot := slot
+        }
+    }
+
     function readStorage(address who, bytes32 slot) internal view returns (bytes32) {
         return accountsSafe.readStorage(who, slot);
     }
@@ -226,6 +237,67 @@ library accounts {
     function setBalance(address self, uint256 bal) internal returns (address) {
         vulcan.hevm.deal(self, bal);
         return self;
+    }
+
+    /// @dev Mints an amount of tokens to an address. This operation modifies the total supply of the token.
+    /// @dev self The address that will own the tokens.
+    /// @dev token The token to mint.
+    /// @dev amount The amount of tokens to mint.
+    /// @return The adress that owns the minted tokens.
+    function mintToken(address self, address token, uint256 amount) internal returns (address) {
+        (, bytes memory balData) = token.call(abi.encodeWithSelector(0x70a08231, self));
+
+        uint256 prevBal = abi.decode(balData, (uint256));
+
+        setTokenBalance(self, token, prevBal + amount);
+
+        (, bytes memory totSupData) = token.call(abi.encodeWithSelector(0x18160ddd));
+        uint256 totSup = abi.decode(totSupData, (uint256));
+
+        setTotalSupply(token, totSup + amount);
+
+        return self;
+    }
+
+    /// @dev Burns an amount of tokens from an address.This operation modifies the total supply of the token.
+    /// @dev self The address that owns the tokens.
+    /// @dev token The token to burn.
+    /// @dev amount The amount of tokens to burn.
+    /// @return The adress that owned the burned tokens.
+    function burnToken(address self, address token, uint256 amount) internal returns (address) {
+        (, bytes memory balData) = token.call(abi.encodeWithSelector(0x70a08231, self));
+
+        uint256 prevBal = abi.decode(balData, (uint256));
+
+        setTokenBalance(self, token, prevBal - amount);
+
+        (, bytes memory totSupData) = token.call(abi.encodeWithSelector(0x18160ddd));
+        uint256 totSup = abi.decode(totSupData, (uint256));
+
+        setTotalSupply(token, totSup - amount);
+
+        return self;
+    }
+
+    /// @dev Sets the token balance of an address.
+    /// @param self The address to set the balance of.
+    /// @param token The token that will be given to `self`.
+    /// @param bal The new token balance of `self`.
+    /// @return The address that was modified.
+    function setTokenBalance(address self, address token, uint256 bal) internal returns (address) {
+        stdStore().target(token).sig(0x70a08231).with_key(self).checked_write(bal);
+
+        return self;
+    }
+
+    /// @dev Sets the token total supply of a token.
+    /// @param token The token that will be modified.
+    /// @param totalSupply The new total supply of token.
+    /// @return The token address.
+    function setTotalSupply(address token, uint256 totalSupply) private returns (address) {
+        stdStore().target(token).sig(0x18160ddd).checked_write(totalSupply);
+
+        return token;
     }
 
     /// @dev Sets the code of an address.
