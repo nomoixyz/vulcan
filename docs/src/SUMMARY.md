@@ -13,6 +13,7 @@
     - [Console](./modules/console.md)
     - [Context](./modules/context.md)
     - [Env](./modules/env.md)
+    - [Events](./modules/events.md)
     - [Fs](./modules/fs.md)
     - [Watchers](./modules/watchers.md)
 
