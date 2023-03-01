@@ -1,23 +1,36 @@
 # Context
 
-This module includes functions to modify the test or script context.
-
-## Example usage
+Functionality to interact with the current runtime context:
+- Block data
+- Gas metering
+- Forge's `expectRevert`, `expectEmit` and `mockCall` (for an alternative, see
+  [`watchers`](./watchers.md))
+- Vm state snapshots
 
 ```solidity
-import {Test, expect, ctx} from "vulcan/test.sol";
+import { Test, ctx } from "vulcan/test.sol";
 
-contract ExampleTest is Test {
-    function testFooBar() external {
-        // We need to update the block timestamp and number
-        ctx
-            .setBlockTimestamp(1677680867)
-            .setBlockNumber(16734349);
+contract TestMyContract is Test {
+    function testMyContract() external {
+        // Update block state
+        ctx.setBlockTimestamp(123).setBlockNumber(456).setBlockDifficulty(789);
 
-        // Now we need to go one hour into the future and change the chain id
-        ctx
-            .setBlockTimestamp(block.timestamp + 3600) // 1677680867 + 3600
-            .setChainId(1337);
+        // Use snapshots
+        uint256 snapshotId = ctx.snapshot();
+        ctx.revertToSnapshot(snapshotId);
+
+        // Enable/disable gas metering
+        ctx.pauseGasMetering();
+        ctx.resumeGasMetering();
+
+        // Check if the current call is static
+        if (ctx.isStaticCall()) {
+            // do something
+        }
+
+        // Use Forge's `expectRevert`
+        ctx.expectRevert();
+        myContract.mayRevert();
     }
 }
 ```
