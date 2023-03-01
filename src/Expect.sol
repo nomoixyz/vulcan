@@ -5,6 +5,7 @@ import {console} from "./Console.sol";
 import "./Events.sol";
 import "./Any.sol";
 import "./Vulcan.sol";
+import "./Util.sol";
 
 struct _BoolExpectation {
     bool actual;
@@ -71,18 +72,17 @@ struct _StringExpectationNot {
 
 struct _CallExpectation {
     Call call;
+    _CallExpectationNot not;
 }
 
-// TODO: move somewhere else?
-// Adapted from forge-std
-function abs(int256 a) pure returns (uint256) {
-    if (a == type(int256).min) {
-        return uint256(type(int256).max) + 1;
-    }
-
-    return uint256(a > 0 ? a : -a);
+struct _CallExpectationNot {
+    Call call;
 }
 
+// This library provides a set of matchers to assert conditions over values.
+// Many of these functions are based on forge-std StdAssertions https://github.com/foundry-rs/forge-std/blob/c2236853aadb8e2d9909bbecdc490099519b70a4/src/StdAssertions.sol#L7
+// We tried to keep the same error messages and overall functionality, although some assertions are still missing.
+// TODO: add support for arrays
 library ExpectLib {
     using vulcan for *;
     using events for *;
@@ -229,15 +229,13 @@ library ExpectLib {
         }
     }
 
-    // TODO: optimize?
     function toContain(_StringExpectation memory self, string memory contained) internal {
         bytes memory actual = bytes(self.actual);
         bytes memory expected = bytes(contained);
-        bool found = false;
 
         if (actual.length >= expected.length) {
             for (uint256 i = 0; i < actual.length - expected.length + 1; i++) {
-                found = true;
+                bool found = true;
 
                 for (uint256 j = 0; j < expected.length; j++) {
                     if (actual[i + j] != expected[j]) {
@@ -247,17 +245,15 @@ library ExpectLib {
                 }
 
                 if (found) {
-                    break;
+                    return;
                 }
             }
         }
 
-        if (!found) {
-            console.log("Error: a does not contain b [string]");
-            console.log("  Value a", self.actual);
-            console.log("  Value b", contained);
-            vulcan.fail();
-        }
+        console.log("Error: a does not contain b [string]");
+        console.log("  Value a", self.actual);
+        console.log("  Value b", contained);
+        vulcan.fail();
     }
 
     function toContain(_StringExpectationNot memory self, string memory contained) internal {
@@ -269,20 +265,20 @@ library ExpectLib {
         }
 
         for (uint256 i = 0; i < actual.length - expected.length + 1; i++) {
-            bool found = true;
-
-            for (uint256 j = 0; j < expected.length; j++) {
+            uint256 j = 0;
+            for (; j < expected.length; j++) {
                 if (actual[i + j] != expected[j]) {
-                    found = false;
                     break;
                 }
             }
 
-            if (found) {
+            // Found
+            if (j == expected.length) {
                 console.log("Error: a contains b [string]");
                 console.log("  Value a", self.actual);
                 console.log("  Value b", contained);
                 vulcan.fail();
+                return;
             }
         }
     }
@@ -292,6 +288,15 @@ library ExpectLib {
             console.log("Error: a.length != b [string]");
             console.log("  Expected", expected);
             console.log("    Actual", bytes(self.actual).length);
+            vulcan.fail();
+        }
+    }
+
+    function toHaveLength(_StringExpectationNot memory self, uint256 expected) internal {
+        if (bytes(self.actual).length == expected) {
+            console.log("Error: a.length == b [string]");
+            console.log("  Value a", expected);
+            console.log("  Value b", bytes(self.actual).length);
             vulcan.fail();
         }
     }
@@ -317,7 +322,7 @@ library ExpectLib {
     }
 
     function toBeCloseTo(_UintExpectation memory self, uint256 expected, uint256 delta) internal {
-        uint256 diff = self.actual > expected ? self.actual - expected : expected - self.actual;
+        uint256 diff = util.delta(self.actual, expected);
         if (diff > delta) {
             console.log("Error: a ~= b not satisfied [uint]");
             console.log("  Expected", expected);
@@ -385,22 +390,7 @@ library ExpectLib {
     }
 
     function toBeCloseTo(_IntExpectation memory self, int256 expected, uint256 delta) internal {
-        // Adapted from forge-std stdMath
-
-        // TODO: test for int256 min
-
-        // absolute values
-        uint256 a = abs(self.actual);
-        uint256 b = abs(expected);
-
-        uint256 diff;
-
-        // same sign
-        if ((self.actual ^ expected) > -1) {
-            diff = a > b ? a - b : b - a;
-        } else {
-            diff = a + b;
-        }
+        uint256 diff = util.delta(self.actual, expected);
 
         if (diff > delta) {
             console.log("Error: a ~= b not satisfied [uint]");
@@ -462,9 +452,20 @@ library ExpectLib {
 
         bytes4 actualSelector = bytes4(self.call.returnData);
 
-        if (!self.call.success && actualSelector != expectedSelector) {
-            console.log("Error: call expected to revert with error [call]");
+        if (actualSelector != expectedSelector) {
+            console.log("Error: call expected to revert with selector [call]");
             console.log("  Expected error", expectedSelector);
+            console.log("    Actual error", actualSelector);
+
+            vulcan.fail();
+        }
+    }
+
+    function toHaveRevertedWith(_CallExpectationNot memory self, bytes4 expectedSelector) internal {
+        bytes4 actualSelector = bytes4(self.call.returnData);
+
+        if (!self.call.success && actualSelector == expectedSelector) {
+            console.log("Error: call expected to not revert with selector [call]");
             console.log("    Actual error", actualSelector);
 
             vulcan.fail();
@@ -477,6 +478,13 @@ library ExpectLib {
         self.toHaveRevertedWith(expectedError);
     }
 
+    function toHaveRevertedWith(_CallExpectationNot memory self, string memory error) internal {
+        bytes memory expectedError = abi.encodeWithSignature("Error(string)", error);
+
+        // This will use the `not` version of the function
+        self.toHaveRevertedWith(expectedError);
+    }
+
     function toHaveRevertedWith(_CallExpectation memory self, bytes memory expectedError) internal {
         self.toHaveReverted();
 
@@ -486,6 +494,18 @@ library ExpectLib {
         if (!self.call.success && actualHash != expectedHash) {
             console.log("Error: function expected to revert with error [call]");
             console.log("  Expected error", expectedError);
+            console.log("    Actual error", self.call.returnData);
+
+            vulcan.fail();
+        }
+    }
+
+    function toHaveRevertedWith(_CallExpectationNot memory self, bytes memory expectedError) internal {
+        bytes32 expectedHash = keccak256(expectedError);
+        bytes32 actualHash = keccak256(self.call.returnData);
+
+        if (!self.call.success && actualHash == expectedHash) {
+            console.log("Error: function expected to not revert with error [call]");
             console.log("    Actual error", self.call.returnData);
 
             vulcan.fail();
@@ -596,7 +616,6 @@ library ExpectLib {
         }
 
         // kind of ugly, improve this whole function
-        bool found = false;
         for (uint256 i = 0; i < self.call.logs.length; i++) {
             Log memory log = self.call.logs[i];
 
@@ -618,16 +637,14 @@ library ExpectLib {
             }
 
             if (topicsMatch) {
-                found = true;
-                break;
+                return;
             }
         }
 
-        if (!found) {
-            console.log("Error: event not emitted [call]");
-            console.log("  Event", bytes(eventSig).length > 0 ? eventSig : "anonymous");
-            vulcan.fail();
-        }
+        // If we reach here, the topics did not match
+        console.log("Error: event not emitted [call]");
+        console.log("  Event", bytes(eventSig).length > 0 ? eventSig : "anonymous");
+        vulcan.fail();
     }
 }
 
@@ -660,7 +677,7 @@ function expect(string memory actual) pure returns (_StringExpectation memory) {
 }
 
 function expect(Call memory call) pure returns (_CallExpectation memory) {
-    return _CallExpectation(call);
+    return _CallExpectation(call, _CallExpectationNot(call));
 }
 
 using ExpectLib for _BoolExpectation global;
@@ -678,3 +695,4 @@ using ExpectLib for _BytesExpectationNot global;
 using ExpectLib for _StringExpectation global;
 using ExpectLib for _StringExpectationNot global;
 using ExpectLib for _CallExpectation global;
+using ExpectLib for _CallExpectationNot global;

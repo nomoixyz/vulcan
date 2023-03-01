@@ -1,8 +1,8 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {any, Test, ctx, expect, events, console, vulcan} from "../src/test.sol";
+import "../src/Util.sol";
+import {any, Test, ctx, expect, events, console, vulcan, watchers, Watcher} from "../src/test.sol";
 import {Sender} from "./mocks/Sender.sol";
-import {watchers, Watcher} from "src/Watcher.sol";
 
 contract CallTest {
     error CustomError(uint256 i);
@@ -99,12 +99,12 @@ contract ExpectTest is Test {
     }
 
     function testUintToBeCloseToPass(uint256 a, uint256 b, uint256 delta) external {
-        ctx.assume((a < b ? b - a : a - b) <= delta);
+        ctx.assume(util.delta(a, b) <= delta);
         expect(a).toBeCloseTo(b, delta);
     }
 
     function testUintToBeCloseToFail(uint256 a, uint256 b, uint256 delta) external shouldFail {
-        ctx.assume((a < b ? b - a : a - b) > delta);
+        ctx.assume(util.delta(a, b) > delta);
         expect(a).toBeCloseTo(b, delta);
     }
 
@@ -149,12 +149,13 @@ contract ExpectTest is Test {
     }
 
     function testIntToBeCloseToPass(int256 a, int256 b, uint256 delta) external {
-        // TODO
+        ctx.assume(util.delta(a, b) <= delta);
+        expect(a).toBeCloseTo(b, delta);
     }
 
-    function testIntToBeCloseToFail(int256 a, uint256 delta) external shouldFail {
-        // TODO
-        vulcan.fail();
+    function testIntToBeCloseToFail(int256 a, int256 b, uint256 delta) external shouldFail {
+        ctx.assume(util.delta(a, b) > delta);
+        expect(a).toBeCloseTo(b, delta);
     }
 
     function testIntToBeLessThanPass(int256 a, int256 b) external {
