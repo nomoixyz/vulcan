@@ -1,17 +1,5 @@
 # Config
 
-Foundry project configuration stuff.
-
-```solidity
-import { Test, config } from "vulcan/test.sol";
-
-contract TestMyContract is Test {
-    function testMyContract() external {
-        // TODO
-    }
-}
-```
-
 ### rpcUrl
 
 *Obtains a specific RPC from the configuration by name.*

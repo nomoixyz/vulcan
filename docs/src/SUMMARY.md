@@ -9,6 +9,7 @@
 - [Using modules](./modules/README.md)
     - [Accounts](./modules/accounts.md)
     - [Commands](./modules/commands.md)
+    - [Config](./modules/config.md)
     - [Fs](./modules/fs.md)
     - [Watchers](./modules/watchers.md)
 

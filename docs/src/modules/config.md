@@ -3,67 +3,20 @@
 Foundry project configuration stuff.
 
 ```solidity
-import { Test, config } from "vulcan/test.sol";
+import { Test, config, Rpc } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
-        // TODO
+		// Obtain the RPC URL from one of the keys configured on `foundry.toml`
+		string memory rpcUrl = config.rpcUrl("mainnet");
+
+		// Obtain all the RPCs as [name, url][]
+        string[2][] memory rpcs = config.rpcUrls();
+
+        // Obtain all the RPCs as an array of `Rpc`s 
+        // Rpc { name, url }
+        Rpc[] memory rpcsAsStruct = config.rpcUrlStructs();
     }
 }
 ```
-
-### rpcUrl
-
-*Obtains a specific RPC from the configuration by name.*
-
-
-```solidity
-function rpcUrl(string memory name) internal view returns (string memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`name`|`string`|The name of the RPC to query.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`string`|The url of the RPC.|
-
-
-### rpcUrls
-
-*Obtains all the RPCs from the configuration.*
-
-
-```solidity
-function rpcUrls() internal view returns (string[2][] memory);
-```
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`string[2][]`|All the RPCs as `[name, url][]`.|
-
-
-### rpcUrlStructs
-
-*Obtains all the RPCs from the configuration.*
-
-
-```solidity
-struct Rpc {
-    string name;
-    string url;
-}
-
-function rpcUrlStructs() internal view returns (Rpc[] memory rpcs);
-```
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`rpcs`|`Rpc[]`|All the RPCs as `Rpc[]`.|
-
+[**Config API reference**](../reference/modules/config.md)
