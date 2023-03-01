@@ -8,6 +8,7 @@
 - [Scripts](./scripts/README.md)
 - [Using modules](./modules/README.md)
     - [Accounts](./modules/accounts.md)
+    - [Fs](./modules/fs.md)
     - [Watchers](./modules/watchers.md)
 
 # Reference
