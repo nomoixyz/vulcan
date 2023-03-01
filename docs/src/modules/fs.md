@@ -36,3 +36,4 @@ contract TestMyContract is Test {
     }
 }
 ```
+[**Fs API reference**](../reference/modules/fs.md)
