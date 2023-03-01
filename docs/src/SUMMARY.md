@@ -17,6 +17,7 @@
     - [Fs](./modules/fs.md)
     - [Forks](./modules/forks.md)
     - [Json](./modules/json.md)
+    - [Strings](./modules/strings.md)
     - [Watchers](./modules/watchers.md)
 
 # Reference
