@@ -12,7 +12,8 @@ contract TestMyContract is Test {
     function testMyContract() external {
         MyContract mc = new MyContract();
 
-		// Start watching the address of `mc`
+		// Start watching the `mc` contract.
+		// This will replace the `mc` contract code with a `proxy`
         address(mc).watch().captureReverts();
 
         mc.doSomething();
@@ -28,6 +29,10 @@ contract TestMyContract is Test {
             [address(1).topic(), any()], // Event topics (indexed arguments)
             abi.encode(123) // Event data
         );
+
+        // Stop watching the `mc` contract.
+        // The `mc` contract code returns to the original state.
+        address(mc).stopWatcher();
     }
 }
 ```
