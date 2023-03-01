@@ -1,19 +1,5 @@
 # Env
 
-Set and read environmental variables.
-
-```solidity
-import { Test, env } from "vulcan/test.sol";
-
-contract TestMyContract is Test {
-    function testMyContract() external {
-        env.set("MY_VAR", string("Hello World"));
-
-        string memory MY_VAR = env.getString("MY_VAR");
-    }
-}
-```
-
 ### set
 
 *sets the value of the  environment variable with name `name` to `value`.*

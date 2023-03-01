@@ -10,8 +10,9 @@
     - [Accounts](./modules/accounts.md)
     - [Commands](./modules/commands.md)
     - [Config](./modules/config.md)
-    - [Context](./modules/context.md)
     - [Console](./modules/console.md)
+    - [Context](./modules/context.md)
+    - [Env](./modules/env.md)
     - [Fs](./modules/fs.md)
     - [Watchers](./modules/watchers.md)
 
