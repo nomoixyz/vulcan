@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-// It's basically the same as forge-std console2 (https://github.com/foundry-rs/forge-std/blob/a2edd39db95df7e9dd3f9ef9edc8c55fefddb6df/src/console2.sol)
-// but using a custom type so it is extendable.
+// Adapted from forge-std console2 (https://github.com/foundry-rs/forge-std/blob/a2edd39db95df7e9dd3f9ef9edc8c55fefddb6df/src/console2.sol)
+// The difference is that it uses a custom type so it can be extended
 
 type _Console is bytes32;
 

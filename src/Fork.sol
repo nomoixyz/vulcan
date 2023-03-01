@@ -1,33 +1,37 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Vm as Hevm} from "forge-std/Vm.sol";
 import "./Vulcan.sol";
+
+import "./Config.sol";
 
 /// @dev Holds a fork's id.
 type Fork is uint256;
 
 library forks {
     /// @dev Create a new fork using the provided endpoint.
-    /// @param endpoint The endpoint to use for the fork.
+    /// @param nameOrEndpoint The name or endpoint to use for the fork.
     /// @return The new fork pointer.
-    function create(string memory endpoint) internal returns (Fork) {
+    function create(string memory nameOrEndpoint) internal returns (Fork) {
+        string memory endpoint = config.rpcUrl(nameOrEndpoint);
         return Fork.wrap(vulcan.hevm.createFork(endpoint));
     }
 
     /// @dev Create a new fork using the provided endpoint at a given block number.
-    /// @param endpoint The endpoint to use for the fork.
+    /// @param nameOrEndpoint The name or endpoint to use for the fork.
     /// @param blockNumber The block number to fork from.
     /// @return The new fork pointer.
-    function createAtBlock(string memory endpoint, uint256 blockNumber) internal returns (Fork) {
+    function createAtBlock(string memory nameOrEndpoint, uint256 blockNumber) internal returns (Fork) {
+        string memory endpoint = config.rpcUrl(nameOrEndpoint);
         return Fork.wrap(vulcan.hevm.createFork(endpoint, blockNumber));
     }
 
     /// @dev Create a new fork using the provided endpoint at a state right before the provided transaction hash.
-    /// @param endpoint The endpoint to use for the fork.
+    /// @param nameOrEndpoint The endpoint to use for the fork.
     /// @param txHash The transaction hash to fork from.
     /// @return The new fork pointer.
-    function createBeforeTx(string memory endpoint, bytes32 txHash) internal returns (Fork) {
+    function createBeforeTx(string memory nameOrEndpoint, bytes32 txHash) internal returns (Fork) {
+        string memory endpoint = config.rpcUrl(nameOrEndpoint);
         return Fork.wrap(vulcan.hevm.createFork(endpoint, txHash));
     }
 
