@@ -16,6 +16,7 @@
     - [Events](./modules/events.md)
     - [Fs](./modules/fs.md)
     - [Forks](./modules/forks.md)
+    - [Json](./modules/json.md)
     - [Watchers](./modules/watchers.md)
 
 # Reference
