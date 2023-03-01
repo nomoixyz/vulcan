@@ -1,26 +1,5 @@
 # Commands
 
-Execute external commands.
-
-```solidity
-import { Test, Command, commands } from "vulcan/test.sol";
-
-contract TestMyContract is Test {
-    using commands for *;
-
-    function testMyContract() external {
-        bytes memory res = commands.run(["echo", "Hello World"]);
-
-        // Or
-
-        Command memory cmd = commands.create("echo").arg("Hello World");
-        res = cmd.run();
-        res = cmd.run();
-        res = cmd.run();
-    }
-}
-```
-
 ### create
 
 *Creates a new `Command` struct using the provided `input` as the executable.*
