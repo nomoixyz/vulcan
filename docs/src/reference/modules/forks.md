@@ -1,17 +1,5 @@
 # Forks
 
-Forking functionality.
-
-```solidity
-import { Test, forks, Fork } from "vulcan/test.sol";
-
-contract TestMyContract is Test {
-    function testMyContract() external {
-        Fork fork = forks.create("mainnet"); // Alternatively an endpoint can be passed directly.
-    }
-}
-```
-
 ### create
 
 *Create a new fork using the provided endpoint.*

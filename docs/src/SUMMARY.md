@@ -15,6 +15,7 @@
     - [Env](./modules/env.md)
     - [Events](./modules/events.md)
     - [Fs](./modules/fs.md)
+    - [Forks](./modules/forks.md)
     - [Watchers](./modules/watchers.md)
 
 # Reference
