@@ -1,67 +1,5 @@
 # Fs
 
-### readFile
-
-*Reads the file on `path` and returns its content as a `string`.*
-
-
-```solidity
-function readFile(string memory path) internal view returns (string memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The path to the file.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`string`|The content of the file as `string`.|
-
-
-### readFileBinary
-
-*Reads the file on `path` and returns its content as a `bytes`.*
-
-
-```solidity
-function readFileBinary(string memory path) internal view returns (bytes memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The path to the file.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bytes`|The content of the file as `bytes`.|
-
-
-### projectRoot
-
-*Obtains the current project's root.*
-
-
-```solidity
-function projectRoot() internal view returns (string memory);
-```
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`string`|The current project's root.|
-
-
-### metadata
-
-*Obtains the metadata of the specified file or directory.*
-
-
 ```solidity
 struct FsMetadata {
     bool isDir;
@@ -72,213 +10,66 @@ struct FsMetadata {
     uint256 accessed;
     uint256 created;
 }
-
-function metadata(string memory fileOrDir) internal returns (FsMetadata memory data);
 ```
-**Parameters**
 
-|Name|Type|Description|
-|----|----|-----------|
-|`fileOrDir`|`string`|The path to the file or directory.|
+#### **`readFile(string path) → (string )`**
 
-**Returns**
+Reads the file on `path` and returns its content as a `string`.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`data`|`FsMetadata`|The metadata of the file or directory.|
+#### **`readFileBinary(string path) → (bytes )`**
 
+Reads the file on `path` and returns its content as a `bytes`.
 
-### readLine
+#### **`projectRoot() → (string )`**
 
-*Reads the next line of the file on `path`.*
+Obtains the current project's root.
 
+#### **`metadata(string fileOrDir) → (FsMetadata data)`**
 
-```solidity
-function readLine(string memory path) internal view returns (string memory);
-```
-**Parameters**
+Obtains the metadata of the specified file or directory.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The path to the file.|
+#### **`readLine(string path) → (string )`**
 
-**Returns**
+Reads the next line of the file on `path`.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`string`|The line that was read.|
+#### **`writeFile(string path, string data)`**
 
+Modifies the content of the file on `path` with `data`.
 
-### writeFile
+#### **`writeFileBinary(string path, bytes data)`**
 
-*Modifies the content of the file on `path` with `data`.*
+Modifies the content of the file on `path` with `data`.
 
+#### **`writeLine(string path, string data)`**
 
-```solidity
-function writeFile(string memory path, string memory data) internal;
-```
-**Parameters**
+Adds a new line to the file on `path`.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The path to the file.|
-|`data`|`string`|The new content of the file.|
+#### **`closeFile(string path)`**
 
+Resets the state of the file on `path`.
 
-### writeFileBinary
+#### **`removeFile(string path)`**
 
-*Modifies the content of the file on `path` with `data`.*
+Deletes the file on `path`.
 
+#### **`copyFile(string origin, string target)`**
 
-```solidity
-function writeFileBinary(string memory path, bytes memory data) internal;
-```
-**Parameters**
+Copies a file from `origin` to `target`.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The path to the file.|
-|`data`|`bytes`|The new content of the file.|
+#### **`moveFile(string origin, string target)`**
 
+Moves a file from `origin` to `target`.
 
-### writeLine
+#### **`fileExists(string path) → (bool)`**
 
-*Adds a new line to the file on `path`.*
+Checks if a file or directory exists.
 
+#### **`getCode(string path) → (bytes )`**
 
-```solidity
-function writeLine(string memory path, string memory data) internal;
-```
-**Parameters**
+Obtains the creation code from an artifact file located at `path`
 
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The path to the file.|
-|`data`|`string`|The content of the new line.|
+#### **`getDeployedCode(string path) → (bytes )`**
 
-
-### closeFile
-
-*Resets the state of the file on `path`.*
-
-
-```solidity
-function closeFile(string memory path) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The path to the file.|
-
-
-### removeFile
-
-*Deletes the file on `path`.*
-
-
-```solidity
-function removeFile(string memory path) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The path to the file.|
-
-
-### copyFile
-
-*Copies a file from `origin` to `target`.*
-
-
-```solidity
-function copyFile(string memory origin, string memory target) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`origin`|`string`|The file to copy.|
-|`target`|`string`|The destination of the copied data.|
-
-
-### moveFile
-
-*Moves a file from `origin` to `target`.*
-
-
-```solidity
-function moveFile(string memory origin, string memory target) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`origin`|`string`|The file to be moved.|
-|`target`|`string`|The destination of the data.|
-
-
-### fileExists
-
-*Checks if a file or directory exists.*
-
-
-```solidity
-function fileExists(string memory path) internal returns (bool);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The file or directory to check.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bool`|Whether the file on `path` exists or not.|
-
-
-### getCode
-
-*Obtains the creation code from an artifact file located at `path`*
-
-
-```solidity
-function getCode(string memory path) internal view returns (bytes memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The file or directory to check.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bytes`|The creation bytecode.|
-
-
-### getDeployedCode
-
-*Obtains the deployed code from an artifact file located at `path`*
-
-
-```solidity
-function getDeployedCode(string memory path) internal view returns (bytes memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`path`|`string`|The file or directory to check.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bytes`|The deployed bytecode.|
+Obtains the deployed code from an artifact file located at `path`
 
 

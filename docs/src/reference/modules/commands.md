@@ -1,358 +1,200 @@
 # Commands
 
-### create
+#### **`create(string input) → (Command)`**
 
-*Creates a new `Command` struct using the provided `input` as the executable.*
+Creates a new `Command` struct using the provided `input` as the executable.
 
+#### **`arg(Command self, string _arg) → (Command)`**
 
-```solidity
-function create(string memory input) internal pure returns (Command memory);
-```
-**Parameters**
 
-|Name|Type|Description|
-|----|----|-----------|
-|`input`|`string`|The name of the command.|
+#### **`args(Command self, string[] _args) → (Command)`**
 
-**Returns**
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`Command`|A new `Command` struct with the specified input.|
+#### **`args(Command self, string[1] _args) → (Command)`**
 
 
-### arg
+#### **`args(Command self, string[2] _args) → (Command)`**
 
 
-```solidity
-function arg(Command memory self, string memory _arg) internal pure returns (Command memory);
-```
+#### **`args(Command self, string[3] _args) → (Command)`**
 
-### args
 
+#### **`args(Command self, string[4] _args) → (Command)`**
 
-```solidity
-function args(Command memory self, string[] memory _args) internal pure returns (Command memory);
-```
 
-### args
+#### **`args(Command self, string[5] _args) → (Command)`**
 
 
-```solidity
-function args(Command memory self, string[1] memory _args) internal pure returns (Command memory);
-```
+#### **`args(Command self, string[6] _args) → (Command)`**
 
-### args
 
+#### **`args(Command self, string[7] _args) → (Command)`**
 
-```solidity
-function args(Command memory self, string[2] memory _args) internal pure returns (Command memory);
-```
 
-### args
+#### **`args(Command self, string[8] _args) → (Command)`**
 
 
-```solidity
-function args(Command memory self, string[3] memory _args) internal pure returns (Command memory);
-```
+#### **`args(Command self, string[9] _args) → (Command)`**
 
-### args
 
+#### **`args(Command self, string[10] _args) → (Command)`**
 
-```solidity
-function args(Command memory self, string[4] memory _args) internal pure returns (Command memory);
-```
 
-### args
+#### **`args(Command self, string[11] _args) → (Command)`**
 
 
-```solidity
-function args(Command memory self, string[5] memory _args) internal pure returns (Command memory);
-```
+#### **`args(Command self, string[12] _args) → (Command)`**
 
-### args
 
+#### **`args(Command self, string[13] _args) → (Command)`**
 
-```solidity
-function args(Command memory self, string[6] memory _args) internal pure returns (Command memory);
-```
 
-### args
+#### **`args(Command self, string[14] _args) → (Command)`**
 
 
-```solidity
-function args(Command memory self, string[7] memory _args) internal pure returns (Command memory);
-```
+#### **`args(Command self, string[15] _args) → (Command)`**
 
-### args
 
+#### **`args(Command self, string[16] _args) → (Command)`**
 
-```solidity
-function args(Command memory self, string[8] memory _args) internal pure returns (Command memory);
-```
 
-### args
+#### **`args(Command self, string[17] _args) → (Command)`**
 
 
-```solidity
-function args(Command memory self, string[9] memory _args) internal pure returns (Command memory);
-```
+#### **`args(Command self, string[18] _args) → (Command)`**
 
-### args
 
+#### **`args(Command self, string[19] _args) → (Command)`**
 
-```solidity
-function args(Command memory self, string[10] memory _args) internal pure returns (Command memory);
-```
 
-### args
+#### **`args(Command self, string[20] _args) → (Command)`**
 
 
-```solidity
-function args(Command memory self, string[11] memory _args) internal pure returns (Command memory);
-```
+#### **`run(Command self) → (bytes)`**
 
-### args
+Runs a command using the specified `Command` struct as parameters and returns the result.
 
+#### **`run(string[] inputs) → (bytes)`**
 
-```solidity
-function args(Command memory self, string[12] memory _args) internal pure returns (Command memory);
-```
+Runs a command with the specified `inputs` as parameters and returns the result.
 
-### args
+#### **`run(string[1] inputs) → (bytes)`**
 
 
-```solidity
-function args(Command memory self, string[13] memory _args) internal pure returns (Command memory);
-```
+#### **`run(string[2] inputs) → (bytes)`**
 
-### args
 
+#### **`run(string[3] inputs) → (bytes)`**
 
-```solidity
-function args(Command memory self, string[14] memory _args) internal pure returns (Command memory);
-```
 
-### args
+#### **`run(string[4] inputs) → (bytes)`**
 
 
-```solidity
-function args(Command memory self, string[15] memory _args) internal pure returns (Command memory);
-```
+#### **`run(string[5] inputs) → (bytes)`**
 
-### args
 
+#### **`run(string[6] inputs) → (bytes)`**
 
-```solidity
-function args(Command memory self, string[16] memory _args) internal pure returns (Command memory);
-```
 
-### args
+#### **`run(string[7] inputs) → (bytes)`**
 
 
-```solidity
-function args(Command memory self, string[17] memory _args) internal pure returns (Command memory);
-```
+#### **`run(string[8] inputs) → (bytes)`**
 
-### args
 
+#### **`run(string[9] inputs) → (bytes)`**
 
-```solidity
-function args(Command memory self, string[18] memory _args) internal pure returns (Command memory);
-```
 
-### args
+#### **`run(string[10] inputs) → (bytes)`**
 
 
-```solidity
-function args(Command memory self, string[19] memory _args) internal pure returns (Command memory);
-```
+#### **`run(string[11] inputs) → (bytes)`**
 
-### args
 
+#### **`run(string[12] inputs) → (bytes)`**
 
-```solidity
-function args(Command memory self, string[20] memory _args) internal pure returns (Command memory);
-```
 
-### run
+#### **`run(string[13] inputs) → (bytes)`**
 
-*Runs a command using the specified `Command` struct as parameters and returns the result.*
 
+#### **`run(string[14] inputs) → (bytes)`**
 
-```solidity
-function run(Command memory self) internal returns (bytes memory);
-```
-**Parameters**
 
-|Name|Type|Description|
-|----|----|-----------|
-|`self`|`Command`|The `Command` struct that holds the parameters of the command.|
+#### **`run(string[15] inputs) → (bytes)`**
 
-**Returns**
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bytes`|The result of the command as a bytes array.|
+#### **`run(string[16] inputs) → (bytes)`**
 
 
-### run
+#### **`run(string[17] inputs) → (bytes)`**
 
-*Runs a command with the specified `inputs` as parameters and returns the result.*
 
+#### **`run(string[18] inputs) → (bytes)`**
 
-```solidity
-function run(string[] memory inputs) internal returns (bytes memory);
-```
-**Parameters**
 
-|Name|Type|Description|
-|----|----|-----------|
-|`inputs`|`string[]`|An array of strings representing the parameters of the command.|
+#### **`run(string[19] inputs) → (bytes)`**
 
-**Returns**
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bytes`|The result of the command as a bytes array.|
+#### **`run(string[20] inputs) → (bytes)`**
 
 
-### run
+#### **`toDynamic(string[1] inputs) → (string[] _inputs)`**
 
 
-```solidity
-function run(string[1] memory inputs) internal returns (bytes memory);
-```
+#### **`toDynamic(string[2] inputs) → (string[] _inputs)`**
 
-### run
 
+#### **`toDynamic(string[3] inputs) → (string[] _inputs)`**
 
-```solidity
-function run(string[2] memory inputs) internal returns (bytes memory);
-```
 
-### run
+#### **`toDynamic(string[4] inputs) → (string[] _inputs)`**
 
 
-```solidity
-function run(string[3] memory inputs) internal returns (bytes memory);
-```
+#### **`toDynamic(string[5] inputs) → (string[] _inputs)`**
 
-### run
 
+#### **`toDynamic(string[6] inputs) → (string[] _inputs)`**
 
-```solidity
-function run(string[4] memory inputs) internal returns (bytes memory);
-```
 
-### run
+#### **`toDynamic(string[7] inputs) → (string[] _inputs)`**
 
 
-```solidity
-function run(string[5] memory inputs) internal returns (bytes memory);
-```
+#### **`toDynamic(string[8] inputs) → (string[] _inputs)`**
 
-### run
 
+#### **`toDynamic(string[9] inputs) → (string[] _inputs)`**
 
-```solidity
-function run(string[6] memory inputs) internal returns (bytes memory);
-```
 
-### run
+#### **`toDynamic(string[10] inputs) → (string[] _inputs)`**
 
 
-```solidity
-function run(string[7] memory inputs) internal returns (bytes memory);
-```
+#### **`toDynamic(string[11] inputs) → (string[] _inputs)`**
 
-### run
 
+#### **`toDynamic(string[12] inputs) → (string[] _inputs)`**
 
-```solidity
-function run(string[8] memory inputs) internal returns (bytes memory);
-```
 
-### run
+#### **`toDynamic(string[13] inputs) → (string[] _inputs)`**
 
 
-```solidity
-function run(string[9] memory inputs) internal returns (bytes memory);
-```
+#### **`toDynamic(string[14] inputs) → (string[] _inputs)`**
 
-### run
 
+#### **`toDynamic(string[15] inputs) → (string[] _inputs)`**
 
-```solidity
-function run(string[10] memory inputs) internal returns (bytes memory);
-```
 
-### run
+#### **`toDynamic(string[16] inputs) → (string[] _inputs)`**
 
 
-```solidity
-function run(string[11] memory inputs) internal returns (bytes memory);
-```
+#### **`toDynamic(string[17] inputs) → (string[] _inputs)`**
 
-### run
 
+#### **`toDynamic(string[18] inputs) → (string[] _inputs)`**
 
-```solidity
-function run(string[12] memory inputs) internal returns (bytes memory);
-```
 
-### run
+#### **`toDynamic(string[19] inputs) → (string[] _inputs)`**
 
 
-```solidity
-function run(string[13] memory inputs) internal returns (bytes memory);
-```
+#### **`toDynamic(string[20] inputs) → (string[] _inputs)`**
 
-### run
 
-
-```solidity
-function run(string[14] memory inputs) internal returns (bytes memory);
-```
-
-### run
-
-
-```solidity
-function run(string[15] memory inputs) internal returns (bytes memory);
-```
-
-### run
-
-
-```solidity
-function run(string[16] memory inputs) internal returns (bytes memory);
-```
-
-### run
-
-
-```solidity
-function run(string[17] memory inputs) internal returns (bytes memory);
-```
-
-### run
-
-
-```solidity
-function run(string[18] memory inputs) internal returns (bytes memory);
-```
-
-### run
-
-
-```solidity
-function run(string[19] memory inputs) internal returns (bytes memory);
-```
-
-### run
-
-
-```solidity
-function run(string[20] memory inputs) internal returns (bytes memory);
-```

@@ -1,8 +1,5 @@
 # Json
 
-# JsonObject
-
-
 ```solidity
 struct JsonObject {
     string id;
@@ -10,813 +7,147 @@ struct JsonObject {
 }
 ```
 
-### parseObject
+#### **`parseObject(string jsonStr, string key) → (bytes abiEncodedData)`**
 
-*Parses a json object string by key and returns an ABI encoded value.*
+Parses a json object string by key and returns an ABI encoded value.
 
+#### **`parseObject(string jsonStr) → (bytes abiEncodedData)`**
 
-```solidity
-function parseObject(string memory jsonStr, string memory key) internal pure returns (bytes memory abiEncodedData);
-```
-**Parameters**
+Parses a json object string and returns an ABI encoded tuple.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
+#### **`parseObject(JsonObject jsonObj, string key) → (bytes abiEncodedData)`**
 
-**Returns**
+Parses a json object struct by key and returns an ABI encoded value.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`abiEncodedData`|`bytes`|The ABI encoded tuple representing the value of the provided key.|
+#### **`parseObject(JsonObject jsonObj) → (bytes abiEncodedData)`**
 
+Parses a json object struct and returns an ABI encoded tuple.
 
-### parseObject
+#### **`parseUint(string jsonStr, string key) → (uint256)`**
 
-*Parses a json object string and returns an ABI encoded tuple.*
+Parses the value of the `key` contained on `jsonStr` as uint256.
 
+#### **`parseUintArray(string jsonStr, string key) → (uint256[] )`**
 
-```solidity
-function parseObject(string memory jsonStr) internal pure returns (bytes memory abiEncodedData);
-```
-**Parameters**
+Parses the value of the `key` contained on `jsonStr` as uint256[].
 
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
+#### **`parseInt(string jsonStr, string key) → (int256)`**
 
-**Returns**
+Parses the value of the `key` contained on `jsonStr` as int256.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`abiEncodedData`|`bytes`|The ABI encoded tuple representing the json object.|
+#### **`parseIntArray(string jsonStr, string key) → (int256[] )`**
 
+Parses the value of the `key` contained on `jsonStr` as int256[].
 
-### parseObject
+#### **`parseBool(string jsonStr, string key) → (bool)`**
 
-*Parses a json object struct by key and returns an ABI encoded value.*
+Parses the value of the `key` contained on `jsonStr` as bool.
 
+#### **`parseBoolArray(string jsonStr, string key) → (bool[] )`**
 
-```solidity
-function parseObject(JsonObject memory jsonObj, string memory key)
-    internal
-    pure
-    returns (bytes memory abiEncodedData);
-```
-**Parameters**
+Parses the value of the `key` contained on `jsonStr` as bool[].
 
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonObj`|`JsonObject`|The json object struct.|
-|`key`|`string`|The key from the `jsonObject` to parse.|
+#### **`parseAddress(string jsonStr, string key) → (address)`**
 
-**Returns**
+Parses the value of the `key` contained on `jsonStr` as address.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`abiEncodedData`|`bytes`|The ABI encoded tuple representing the value of the provided key.|
+#### **`parseAddressArray(string jsonStr, string key) → (address[] )`**
 
+Parses the value of the `key` contained on `jsonStr` as address.
 
-### parseObject
+#### **`parseString(string jsonStr, string key) → (string )`**
 
-*Parses a json object struct and returns an ABI encoded tuple.*
+Parses the value of the `key` contained on `jsonStr` as string.
 
+#### **`parseStringArray(string jsonStr, string key) → (string[] )`**
 
-```solidity
-function parseObject(JsonObject memory jsonObj) internal pure returns (bytes memory abiEncodedData);
-```
-**Parameters**
+Parses the value of the `key` contained on `jsonStr` as string[].
 
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonObj`|`JsonObject`|The json struct.|
+#### **`parseBytes(string jsonStr, string key) → (bytes )`**
 
-**Returns**
+Parses the value of the `key` contained on `jsonStr` as bytes.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`abiEncodedData`|`bytes`|The ABI encoded tuple representing the json object.|
+#### **`parseBytesArray(string jsonStr, string key) → (bytes[] )`**
 
+Parses the value of the `key` contained on `jsonStr` as bytes[].
 
-### parseUint
+#### **`parseBytes32(string jsonStr, string key) → (bytes32)`**
 
-*Parses the value of the `key` contained on `jsonStr` as uint256.*
+Parses the value of the `key` contained on `jsonStr` as bytes32.
 
+#### **`parseBytes32Array(string jsonStr, string key) → (bytes32[] )`**
 
-```solidity
-function parseUint(string memory jsonStr, string memory key) internal returns (uint256);
-```
-**Parameters**
+Parses the value of the `key` contained on `jsonStr` as bytes32[].
 
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
+#### **`create() → (JsonObject )`**
 
-**Returns**
+Creates a JsonObject struct with an identifier.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`uint256`|The uint256 value.|
+#### **`serialize(JsonObject obj, string key, bool value) → (JsonObject )`**
 
+Serializes and sets the key and value for the provided json object.
 
-### parseUintArray
+#### **`serialize(JsonObject obj, string key, uint256 value) → (JsonObject )`**
 
-*Parses the value of the `key` contained on `jsonStr` as uint256[].*
+Serializes and sets the key and value for the provided json object.
 
+#### **`serialize(JsonObject obj, string key, int256 value) → (JsonObject )`**
 
-```solidity
-function parseUintArray(string memory jsonStr, string memory key) internal returns (uint256[] memory);
-```
-**Parameters**
+Serializes and sets the key and value for the provided json object.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
+#### **`serialize(JsonObject obj, string key, address value) → (JsonObject )`**
 
-**Returns**
+Serializes and sets the key and value for the provided json object.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`uint256[]`|The uint256[] value.|
+#### **`serialize(JsonObject obj, string key, bytes32 value) → (JsonObject )`**
 
+Serializes and sets the key and value for the provided json object.
 
-### parseInt
+#### **`serialize(JsonObject obj, string key, string value) → (JsonObject )`**
 
-*Parses the value of the `key` contained on `jsonStr` as int256.*
+Serializes and sets the key and value for the provided json object.
 
+#### **`serialize(JsonObject obj, string key, bytes value) → (JsonObject )`**
 
-```solidity
-function parseInt(string memory jsonStr, string memory key) internal returns (int256);
-```
-**Parameters**
+Serializes and sets the key and value for the provided json object.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
+#### **`serialize(JsonObject obj, string key, bool[] values) → (JsonObject )`**
 
-**Returns**
+Serializes and sets the key and value for the provided json object.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`int256`|The int256 value.|
+#### **`serialize(JsonObject obj, string key, uint256[] values) → (JsonObject )`**
 
+Serializes and sets the key and value for the provided json object.
 
-### parseIntArray
+#### **`serialize(JsonObject obj, string key, int256[] values) → (JsonObject )`**
 
-*Parses the value of the `key` contained on `jsonStr` as int256[].*
+Serializes and sets the key and value for the provided json object.
 
+#### **`serialize(JsonObject obj, string key, address[] values) → (JsonObject )`**
 
-```solidity
-function parseIntArray(string memory jsonStr, string memory key) internal returns (int256[] memory);
-```
-**Parameters**
+Serializes and sets the key and value for the provided json object.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
+#### **`serialize(JsonObject obj, string key, bytes32[] values) → (JsonObject )`**
 
-**Returns**
+Serializes and sets the key and value for the provided json object.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`int256[]`|The int256[] value.|
+#### **`serialize(JsonObject obj, string key, string[] values) → (JsonObject )`**
 
+Serializes and sets the key and value for the provided json object.
 
-### parseBool
+#### **`serialize(JsonObject obj, string key, bytes[] values) → (JsonObject )`**
 
-*Parses the value of the `key` contained on `jsonStr` as bool.*
+Serializes and sets the key and value for the provided json object.
 
+#### **`serialize(JsonObject obj, string key, JsonObject value) → (JsonObject )`**
 
-```solidity
-function parseBool(string memory jsonStr, string memory key) internal returns (bool);
-```
-**Parameters**
+Serializes and sets the key and value for the provided json object.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
+#### **`write(JsonObject obj, string path)`**
 
-**Returns**
+Writes a JsonObject struct to a file.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bool`|The bool value.|
+#### **`write(JsonObject obj, string path, string key)`**
 
-
-### parseBoolArray
-
-*Parses the value of the `key` contained on `jsonStr` as bool[].*
-
-
-```solidity
-function parseBoolArray(string memory jsonStr, string memory key) internal returns (bool[] memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bool[]`|The bool[] value.|
-
-
-### parseAddress
-
-*Parses the value of the `key` contained on `jsonStr` as address.*
-
-
-```solidity
-function parseAddress(string memory jsonStr, string memory key) internal returns (address);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`address`|The address value.|
-
-
-### parseAddressArray
-
-*Parses the value of the `key` contained on `jsonStr` as address.*
-
-
-```solidity
-function parseAddressArray(string memory jsonStr, string memory key) internal returns (address[] memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`address[]`|The address value.|
-
-
-### parseString
-
-*Parses the value of the `key` contained on `jsonStr` as string.*
-
-
-```solidity
-function parseString(string memory jsonStr, string memory key) internal returns (string memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`string`|The string value.|
-
-
-### parseStringArray
-
-*Parses the value of the `key` contained on `jsonStr` as string[].*
-
-
-```solidity
-function parseStringArray(string memory jsonStr, string memory key) internal returns (string[] memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`string[]`|The string[] value.|
-
-
-### parseBytes
-
-*Parses the value of the `key` contained on `jsonStr` as bytes.*
-
-
-```solidity
-function parseBytes(string memory jsonStr, string memory key) internal returns (bytes memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bytes`|The bytes value.|
-
-
-### parseBytesArray
-
-*Parses the value of the `key` contained on `jsonStr` as bytes[].*
-
-
-```solidity
-function parseBytesArray(string memory jsonStr, string memory key) internal returns (bytes[] memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bytes[]`|The bytes[] value.|
-
-
-### parseBytes32
-
-*Parses the value of the `key` contained on `jsonStr` as bytes32.*
-
-
-```solidity
-function parseBytes32(string memory jsonStr, string memory key) internal returns (bytes32);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bytes32`|The bytes32 value.|
-
-
-### parseBytes32Array
-
-*Parses the value of the `key` contained on `jsonStr` as bytes32[].*
-
-
-```solidity
-function parseBytes32Array(string memory jsonStr, string memory key) internal returns (bytes32[] memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`jsonStr`|`string`|The json string.|
-|`key`|`string`|The key from the `jsonStr` to parse.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bytes32[]`|The bytes32[] value.|
-
-
-### create
-
-*Creates a JsonObject struct with an identifier.*
-
-
-```solidity
-function create() internal returns (JsonObject memory);
-```
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a boolean value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, bool value) internal returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`value`|`bool`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a uint256 value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, uint256 value) internal returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`value`|`uint256`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a int256 value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, int256 value) internal returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`value`|`int256`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a address value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, address value) internal returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`value`|`address`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a bytes32 value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, bytes32 value) internal returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`value`|`bytes32`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a string value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, string memory value)
-    internal
-    returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`value`|`string`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a bytes value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, bytes memory value)
-    internal
-    returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`value`|`bytes`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a bool[] value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, bool[] memory values)
-    internal
-    returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`values`|`bool[]`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a uint256[] value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, uint256[] memory values)
-    internal
-    returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`values`|`uint256[]`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a int256[] value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, int256[] memory values)
-    internal
-    returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`values`|`int256[]`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a address[] value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, address[] memory values)
-    internal
-    returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`values`|`address[]`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a bytes32[] value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, bytes32[] memory values)
-    internal
-    returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`values`|`bytes32[]`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a string[] value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, string[] memory values)
-    internal
-    returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`values`|`string[]`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a string[] value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, bytes[] memory values)
-    internal
-    returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`values`|`bytes[]`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### serialize
-
-*Serializes a key from a JsonObject struct with a JsonObject value.*
-
-
-```solidity
-function serialize(JsonObject memory obj, string memory valueKey, JsonObject memory value)
-    internal
-    returns (JsonObject memory);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object to modify.|
-|`valueKey`|`string`|The key that will hold the `value`.|
-|`value`|`JsonObject`|The value of `valueKey`.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`JsonObject`|The modified JsonObject struct.|
-
-
-### write
-
-*Writes a JsonObject struct to a file.*
-
-
-```solidity
-function write(JsonObject memory obj, string memory path) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object that will be stored as a file.|
-|`path`|`string`|The path where the file will be saved.|
-
-
-### write
-
-*Writes a JsonObject struct to an existing json file modifiyng only a specific key.*
-
-
-```solidity
-function write(JsonObject memory obj, string memory path, string memory valueKey) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`obj`|`JsonObject`|The json object that contains a value on `valueKey`.|
-|`path`|`string`|The path where the file will be saved.|
-|`valueKey`|`string`|The key from `obj` that will be overwritten on the file.|
-
+Writes a JsonObject struct to an existing json file modifying only a specific key.
 
