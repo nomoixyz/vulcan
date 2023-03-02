@@ -27,10 +27,10 @@ contract TestMyContract is Test {
         // Inject code into an address
         address(daiClone).setCode(address(dai).code);
 
+        // The storage of an address can be manipulated
+        address(daiClone).setStorage(bytes32(1), bytes32(10e18));
         // The storage of an address can be read
         bytes32 daiSlot1 = address(daiClone).readStorage(bytes32(1));
-        // and also manipulated
-        address(daiClone).setStorage(bytes32(1), bytes32(10e18));
     }
 }
 ```
