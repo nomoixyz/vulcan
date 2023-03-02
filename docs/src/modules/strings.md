@@ -17,7 +17,7 @@ contract TestMyContract is Test {
         expect(false.toString()).toEqual("false");
 
         // Obtain the string representation of an address
-        expect(address(1).toString()).toEqual(0x0000000000000000000000000000000000000001)
+        expect(address(1).toString()).toEqual("0x0000000000000000000000000000000000000001")
 
         // Parse a number string to a `uint256`
         expect("1".parseUint()).toEqual(1);
