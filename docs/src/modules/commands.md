@@ -11,10 +11,10 @@ contract TestMyContract is Test {
 
     function testMyContract() external {
         // run `echo Hello World`.
-		// There is no need to create a dynamic array for the arguments
+        // There is no need to create a dynamic array for the arguments
         bytes memory res = commands.run(["echo", "Hello World"]);
 
-		// A comand can be created to facilitate multiple executions
+        // A comand can be created to facilitate multiple executions
         Command memory cmd = commands.create("echo").arg("Hello World");
         res = cmd.run();
         res = cmd.run();

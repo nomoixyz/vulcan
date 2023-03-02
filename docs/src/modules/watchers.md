@@ -12,18 +12,18 @@ contract TestMyContract is Test {
     function testMyContract() external {
         MyContract mc = new MyContract();
 
-		// Start watching the `mc` contract.
-		// This will replace the `mc` contract code with a `proxy`
+        // Start watching the `mc` contract.
+        // This will replace the `mc` contract code with a `proxy`
         address(mc).watch().captureReverts();
 
         mc.doSomething();
         mc.doSomethingElse();
 
-		// Two calls were made to `mc`
+        // Two calls were made to `mc`
         expect(address(mc).calls.length).toEqual(2);
-		// First call reverted with a message
+        // First call reverted with a message
         expect(address(mc).calls[0]).toHaveRevertedWith("Something went wrong");
-		// Second call emitted an event
+        // Second call emitted an event
         expect(address(mc).calls[1]).toHaveEmitted(
             "SomeEvent(address,bytes32,uint256)",
             [address(1).topic(), any()], // Event topics (indexed arguments)

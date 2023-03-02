@@ -8,31 +8,31 @@ import { Test, fs } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
-		// Write a string to a file
+        // Write a string to a file
         fs.write("test.txt", "Hello World");
 
-		// Write bytes to a file
-		fs.writeBirnary("test.bin", abi.encodeWithSignature("test(uint256)", 1e18));
+        // Write bytes to a file
+        fs.writeBirnary("test.bin", abi.encodeWithSignature("test(uint256)", 1e18));
 
-		// Read a file as a string
+        // Read a file as a string
         string memory content = fs.read("test.txt");
 
-		// Read a file as bytes
-		bytes memory binContent = fs.readBinary("test.bin");
+        // Read a file as bytes
+        bytes memory binContent = fs.readBinary("test.bin");
 
-		// Delete files
-		fs.remove("delete.me");
+        // Delete files
+        fs.remove("delete.me");
 
-		// Copy files
-		fs.copy("file.original", "file.backup");
+        // Copy files
+        fs.copy("file.original", "file.backup");
 
-		// Move files
-		fs.move("hold.txt", "hodl.txt");
+        // Move files
+        fs.move("hold.txt", "hodl.txt");
 
-		// Check if a file or directory exists
-		if (fs.exists("some_file.txt")) {
-			fs.remove("some_file.txt");
-		}
+        // Check if a file or directory exists
+        if (fs.exists("some_file.txt")) {
+            fs.remove("some_file.txt");
+        }
     }
 }
 ```

@@ -7,10 +7,10 @@ import { Test, config, Rpc } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
-		// Obtain the RPC URL from one of the keys configured on `foundry.toml`
-		string memory rpcUrl = config.rpcUrl("mainnet");
+        // Obtain the RPC URL from one of the keys configured on `foundry.toml`
+        string memory rpcUrl = config.rpcUrl("mainnet");
 
-		// Obtain all the RPCs as [name, url][]
+        // Obtain all the RPCs as [name, url][]
         string[2][] memory rpcs = config.rpcUrls();
 
         // Obtain all the RPCs as an array of `Rpc`s 

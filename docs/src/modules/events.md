@@ -19,7 +19,7 @@ contract TestMyContract is Test {
         // Start recording logs. Same as `forge-std/Vm.sol:recordLogs`
         events.recordLogs();
 
-		// Gets the recorded logs. Same as `forge-std/Vm.sol:getRecordedLogs`
+        // Gets the recorded logs. Same as `forge-std/Vm.sol:getRecordedLogs`
         Log[] memory logs = events.getRecordedLogs();
     }
 }
