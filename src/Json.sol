@@ -160,7 +160,7 @@ library json {
         return vulcan.hevm.parseJsonBytes32Array(jsonStr, key);
     }
 
-    /// @dev Creates a JsonObject struct with an identifier.
+    /// @dev Creates a new JsonObject struct.
     /// @return The JsonObject struct.
     function create() internal returns (JsonObject memory) {
         bytes32 slot = keccak256("vulcan.json.id.counter");
@@ -172,198 +172,183 @@ library json {
         return JsonObject({id: id, serialized: ""});
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a boolean value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param value The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, bool value)
-        internal
-        returns (JsonObject memory)
-    {
-        obj.serialized = vulcan.hevm.serializeBool(obj.id, valueKey, value);
+    function serialize(JsonObject memory obj, string memory key, bool value) internal returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeBool(obj.id, key, value);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a uint256 value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param value The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, uint256 value)
-        internal
-        returns (JsonObject memory)
-    {
-        obj.serialized = vulcan.hevm.serializeUint(obj.id, valueKey, value);
+    function serialize(JsonObject memory obj, string memory key, uint256 value) internal returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeUint(obj.id, key, value);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a int256 value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param value The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, int256 value)
-        internal
-        returns (JsonObject memory)
-    {
-        obj.serialized = vulcan.hevm.serializeInt(obj.id, valueKey, value);
+    function serialize(JsonObject memory obj, string memory key, int256 value) internal returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeInt(obj.id, key, value);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a address value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param value The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, address value)
-        internal
-        returns (JsonObject memory)
-    {
-        obj.serialized = vulcan.hevm.serializeAddress(obj.id, valueKey, value);
+    function serialize(JsonObject memory obj, string memory key, address value) internal returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeAddress(obj.id, key, value);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a bytes32 value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param value The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, bytes32 value)
-        internal
-        returns (JsonObject memory)
-    {
-        obj.serialized = vulcan.hevm.serializeBytes32(obj.id, valueKey, value);
+    function serialize(JsonObject memory obj, string memory key, bytes32 value) internal returns (JsonObject memory) {
+        obj.serialized = vulcan.hevm.serializeBytes32(obj.id, key, value);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a string value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param value The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, string memory value)
+    function serialize(JsonObject memory obj, string memory key, string memory value)
         internal
         returns (JsonObject memory)
     {
-        obj.serialized = vulcan.hevm.serializeString(obj.id, valueKey, value);
+        obj.serialized = vulcan.hevm.serializeString(obj.id, key, value);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a bytes value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param value The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, bytes memory value)
+    function serialize(JsonObject memory obj, string memory key, bytes memory value)
         internal
         returns (JsonObject memory)
     {
-        obj.serialized = vulcan.hevm.serializeBytes(obj.id, valueKey, value);
+        obj.serialized = vulcan.hevm.serializeBytes(obj.id, key, value);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a bool[] value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param values The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, bool[] memory values)
+    function serialize(JsonObject memory obj, string memory key, bool[] memory values)
         internal
         returns (JsonObject memory)
     {
-        obj.serialized = vulcan.hevm.serializeBool(obj.id, valueKey, values);
+        obj.serialized = vulcan.hevm.serializeBool(obj.id, key, values);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a uint256[] value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param values The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, uint256[] memory values)
+    function serialize(JsonObject memory obj, string memory key, uint256[] memory values)
         internal
         returns (JsonObject memory)
     {
-        obj.serialized = vulcan.hevm.serializeUint(obj.id, valueKey, values);
+        obj.serialized = vulcan.hevm.serializeUint(obj.id, key, values);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a int256[] value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param values The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, int256[] memory values)
+    function serialize(JsonObject memory obj, string memory key, int256[] memory values)
         internal
         returns (JsonObject memory)
     {
-        obj.serialized = vulcan.hevm.serializeInt(obj.id, valueKey, values);
+        obj.serialized = vulcan.hevm.serializeInt(obj.id, key, values);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a address[] value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param values The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, address[] memory values)
+    function serialize(JsonObject memory obj, string memory key, address[] memory values)
         internal
         returns (JsonObject memory)
     {
-        obj.serialized = vulcan.hevm.serializeAddress(obj.id, valueKey, values);
+        obj.serialized = vulcan.hevm.serializeAddress(obj.id, key, values);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a bytes32[] value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param values The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, bytes32[] memory values)
+    function serialize(JsonObject memory obj, string memory key, bytes32[] memory values)
         internal
         returns (JsonObject memory)
     {
-        obj.serialized = vulcan.hevm.serializeBytes32(obj.id, valueKey, values);
+        obj.serialized = vulcan.hevm.serializeBytes32(obj.id, key, values);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a string[] value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param values The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, string[] memory values)
+    function serialize(JsonObject memory obj, string memory key, string[] memory values)
         internal
         returns (JsonObject memory)
     {
-        obj.serialized = vulcan.hevm.serializeString(obj.id, valueKey, values);
+        obj.serialized = vulcan.hevm.serializeString(obj.id, key, values);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a string[] value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param values The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, bytes[] memory values)
+    function serialize(JsonObject memory obj, string memory key, bytes[] memory values)
         internal
         returns (JsonObject memory)
     {
-        obj.serialized = vulcan.hevm.serializeBytes(obj.id, valueKey, values);
+        obj.serialized = vulcan.hevm.serializeBytes(obj.id, key, values);
         return obj;
     }
 
-    /// @dev Serializes a key from a JsonObject struct with a JsonObject value.
+    /// @dev Serializes and sets the key and value for the provided json object.
     /// @param obj The json object to modify.
-    /// @param valueKey The key that will hold the `value`.
-    /// @param value The value of `valueKey`.
+    /// @param key The key that will hold the `value`.
+    /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory valueKey, JsonObject memory value)
+    function serialize(JsonObject memory obj, string memory key, JsonObject memory value)
         internal
         returns (JsonObject memory)
     {
-        obj.serialized = vulcan.hevm.serializeString(obj.id, valueKey, value.serialized);
+        obj.serialized = vulcan.hevm.serializeString(obj.id, key, value.serialized);
         return obj;
     }
 
@@ -374,12 +359,12 @@ library json {
         vulcan.hevm.writeJson(obj.serialized, path);
     }
 
-    /// @dev Writes a JsonObject struct to an existing json file modifiyng only a specific key.
-    /// @param obj The json object that contains a value on `valueKey`.
-    /// @param valueKey The key from `obj` that will be overwritten on the file.
+    /// @dev Writes a JsonObject struct to an existing json file modifying only a specific key.
+    /// @param obj The json object that contains a value on `key`.
+    /// @param key The key from `obj` that will be overwritten on the file.
     /// @param path The path where the file will be saved.
-    function write(JsonObject memory obj, string memory path, string memory valueKey) internal {
-        vulcan.hevm.writeJson(obj.serialized, path, valueKey);
+    function write(JsonObject memory obj, string memory path, string memory key) internal {
+        vulcan.hevm.writeJson(obj.serialized, path, key);
     }
 }
 

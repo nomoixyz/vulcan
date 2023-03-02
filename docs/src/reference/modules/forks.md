@@ -1,331 +1,70 @@
 # Forks
 
-### create
+#### **`create(string nameOrEndpoint) → (Fork)`**
 
-*Create a new fork using the provided endpoint.*
+Create a new fork using the provided endpoint.
 
+#### **`createAtBlock(string nameOrEndpoint, uint256 blockNumber) → (Fork)`**
 
-```solidity
-function create(string memory endpoint) internal returns (Fork);
-```
-**Parameters**
+Create a new fork using the provided endpoint at a given block number.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`endpoint`|`string`|The endpoint to use for the fork.|
+#### **`createBeforeTx(string nameOrEndpoint, bytes32 txHash) → (Fork)`**
 
-**Returns**
+Create a new fork using the provided endpoint at a state right before the provided transaction hash.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`Fork`|The new fork pointer.|
+#### **`select(Fork self) → (Fork)`**
 
+Set the provided fork as the current active fork.
 
-### createAtBlock
+#### **`active() → (Fork)`**
 
-*Create a new fork using the provided endpoint at a given block number.*
+Get the current active fork.
 
+#### **`setBlockNumber(Fork self, uint256 blockNumber) → (Fork)`**
 
-```solidity
-function createAtBlock(string memory endpoint, uint256 blockNumber) internal returns (Fork);
-```
-**Parameters**
+Set the block number of the provided fork.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`endpoint`|`string`|The endpoint to use for the fork.|
-|`blockNumber`|`uint256`|The block number to fork from.|
+#### **`beforeTx(Fork self, bytes32 txHash) → (Fork)`**
 
-**Returns**
+Set the provided fork to the state right before the provided transaction hash.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`Fork`|The new fork pointer.|
+#### **`persistBetweenForks(address self) → (address)`**
 
+Make the state of the provided address persist between forks.
 
-### createBeforeTx
+#### **`persistBetweenForks(address who1, address who2)`**
 
-*Create a new fork using the provided endpoint at a state right before the provided transaction hash.*
+Make the state of the provided addresses persist between forks.
 
+#### **`persistBetweenForks(address who1, address who2, address who3)`**
 
-```solidity
-function createBeforeTx(string memory endpoint, bytes32 txHash) internal returns (Fork);
-```
-**Parameters**
+Make the state of the provided addresses persist between forks.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`endpoint`|`string`|The endpoint to use for the fork.|
-|`txHash`|`bytes32`|The transaction hash to fork from.|
+#### **`persistBetweenForks(address[] whos)`**
 
-**Returns**
+Make the state of the provided addresses persist between forks.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`Fork`|The new fork pointer.|
+#### **`stopPersist(address who) → (address)`**
 
+Revoke the persistent state of the provided address.
 
-### select
+#### **`stopPersist(address[] whos)`**
 
-*Set the provided fork as the current active fork.*
+Revoke the persistent state of the provided addresses.
 
+#### **`isPersistent(address who) → (bool)`**
 
-```solidity
-function select(Fork self) internal returns (Fork);
-```
-**Parameters**
+Check if the provided address is being persisted between forks.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`self`|`Fork`|The fork to set as active.|
+#### **`allowCheatcodes(address who) → (address)`**
 
-**Returns**
+Allow cheatcodes to be used by the provided address in forking mode.
 
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`Fork`|The fork that was set as active.|
+#### **`executeTx(bytes32 txHash)`**
 
+Executes an existing transaction in the current active fork.
 
-### active
+#### **`executeTx(Fork self, bytes32 txHash) → (Fork)`**
 
-*Get the current active fork.*
-
-
-```solidity
-function active() internal view returns (Fork);
-```
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`Fork`|The current active fork.|
-
-
-### setBlockNumber
-
-*Set the block number of the provided fork.*
-
-
-```solidity
-function setBlockNumber(Fork self, uint256 blockNumber) internal returns (Fork);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`self`|`Fork`|The fork to set the block number of.|
-|`blockNumber`|`uint256`|The block number to set.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`Fork`|The provided fork.|
-
-
-### beforeTx
-
-*Set the provided fork to the state right before the provided transaction hash.*
-
-
-```solidity
-function beforeTx(Fork self, bytes32 txHash) internal returns (Fork);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`self`|`Fork`|The fork to set the state of.|
-|`txHash`|`bytes32`|The transaction hash to fork from.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`Fork`|The provided fork.|
-
-
-### persistBetweenForks
-
-*Make the state of the provided address persist between forks.*
-
-
-```solidity
-function persistBetweenForks(address self) internal returns (address);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`self`|`address`|The address to make persistent.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`address`|The provided address.|
-
-
-### persistBetweenForks
-
-*Make the state of the provided addresses persist between forks.*
-
-
-```solidity
-function persistBetweenForks(address who1, address who2) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`who1`|`address`|The first address to make persistent.|
-|`who2`|`address`|The second address to make persistent.|
-
-
-### persistBetweenForks
-
-*Make the state of the provided addresses persist between forks.*
-
-
-```solidity
-function persistBetweenForks(address who1, address who2, address who3) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`who1`|`address`|The first address to make persistent.|
-|`who2`|`address`|The second address to make persistent.|
-|`who3`|`address`|The third address to make persistent.|
-
-
-### persistBetweenForks
-
-*Make the state of the provided addresses persist between forks.*
-
-
-```solidity
-function persistBetweenForks(address[] memory whos) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`whos`|`address[]`|Array of addresses to make persistent.|
-
-
-### stopPersist
-
-*Revoke the persistent state of the provided address.*
-
-
-```solidity
-function stopPersist(address who) internal returns (address);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`who`|`address`|The address to revoke the persistent state of.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`address`|The provided address.|
-
-
-### stopPersist
-
-*Revoke the persistent state of the provided addresses.*
-
-
-```solidity
-function stopPersist(address[] memory whos) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`whos`|`address[]`|array of addresses to revoke the persistent state of.|
-
-
-### isPersistent
-
-*Check if the provided address is being persisted between forks.*
-
-
-```solidity
-function isPersistent(address who) internal view returns (bool);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`who`|`address`|The address to check.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`bool`|True if the address is being persisted between forks, false otherwise.|
-
-
-### allowCheatcodes
-
-*Allow cheatcodes to be used by the provided address in forking mode.*
-
-
-```solidity
-function allowCheatcodes(address who) internal returns (address);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`who`|`address`|The address to allow cheatcodes for.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`address`|The provided address.|
-
-
-### executeTx
-
-*Executes an existing transaction in the current active fork.*
-
-
-```solidity
-function executeTx(bytes32 txHash) internal;
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`txHash`|`bytes32`|The hash of the transaction to execute.|
-
-
-### executeTx
-
-*Executes an existing transaction in the provided fork.*
-
-
-```solidity
-function executeTx(Fork self, bytes32 txHash) internal returns (Fork);
-```
-**Parameters**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`self`|`Fork`|The fork to execute the transaction in.|
-|`txHash`|`bytes32`|The hash of the transaction to execute.|
-
-**Returns**
-
-|Name|Type|Description|
-|----|----|-----------|
-|`<none>`|`Fork`|The provided fork.|
-
+Executes an existing transaction in the provided fork.
 
