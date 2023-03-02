@@ -21,7 +21,7 @@ contract TestMyContract is Test {
         res = cmd.run();
 
         // A base command can be created and then be executed with different arguments
-        Command memory ping commands.create("ping").args(["-c", "1"]);
+        Command memory ping = commands.create("ping").args(["-c", "1"]);
         res = ping.arg("etherscan.io").run();
         res = ping.arg("arbiscan.io").run();
     }
