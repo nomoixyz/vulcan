@@ -5,10 +5,12 @@ Monitor contract calls and emitted events.
 > **Important:**
 > Watchers work by replacing an address code with a proxy contract that records all calls and events.
 ```solidity
-import { Test, watchers, expect, any } from "vulcan/test.sol";
+import { Test, events, watchers, expect, any } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     using watchers for *;
+    using events for *;
+
     function testMyContract() external {
         MyContract mc = new MyContract();
 
