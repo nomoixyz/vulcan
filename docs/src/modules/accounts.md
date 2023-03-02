@@ -17,7 +17,8 @@ contract TestMyContract is Test {
 
         DAI dai = DAI(0x6B175474E89094C44Da98b954EedeAC495271d0F);
 
-        // Create an address from a string, mint tokens to the address and impersonate the next call
+        // Create an address from a string, mint tokens to the address and impersonate
+        // the next call
         address bob = accounts.create("Bob").mintToken(address(dai), 1337).impersonateOnce();
 
         // There is no need to `create` an address
