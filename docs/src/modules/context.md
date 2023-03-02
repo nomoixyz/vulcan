@@ -23,11 +23,6 @@ contract TestMyContract is Test {
         ctx.pauseGasMetering();
         ctx.resumeGasMetering();
 
-        // Check if the current call is static
-        if (ctx.isStaticCall()) {
-            // do something
-        }
-
         // Use Forge's `expectRevert`
         ctx.expectRevert();
         myContract.mayRevert();
