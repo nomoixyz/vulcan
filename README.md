@@ -16,7 +16,7 @@ Over time, Vulcan will grow to include more functionality and utilities, eventua
 ## Installation
 
 ```
-$ forge install nomoixyz/vulcan
+$ forge install nomoixyz/vulcan@alpha-1
 ```
 
 ## Usage
