@@ -12,7 +12,7 @@ contract TestMyContract is Test {
         fs.write("test.txt", "Hello World");
 
         // Write bytes to a file
-        fs.writeBirnary("test.bin", abi.encodeWithSignature("test(uint256)", 1e18));
+        fs.writeBinary("test.bin", abi.encodeWithSignature("test(uint256)", 1e18));
 
         // Read a file as a string
         string memory content = fs.read("test.txt");
