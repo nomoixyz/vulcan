@@ -22,11 +22,11 @@ contract TestMyContract is Test {
         mc.doSomethingElse();
 
         // Two calls were made to `mc`
-        expect(address(mc).calls.length).toEqual(2);
+        expect(address(mc).calls().length).toEqual(2);
         // First call reverted with a message
-        expect(address(mc).calls[0]).toHaveRevertedWith("Something went wrong");
+        expect(address(mc).getCall(0)).toHaveRevertedWith("Something went wrong");
         // Second call emitted an event
-        expect(address(mc).calls[1]).toHaveEmitted(
+        expect(address(mc).getCall(1)).toHaveEmitted(
             "SomeEvent(address,bytes32,uint256)",
             [address(1).topic(), any()], // Event topics (indexed arguments)
             abi.encode(123) // Event data

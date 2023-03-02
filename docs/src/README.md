@@ -40,7 +40,7 @@ contract TestSomething is Test {
 
         mc.doSomething();
 
-        expect(address(mc).calls[0]).toHaveRevertedWith("Something went wrong");
+        expect(address(mc).lastCall()).toHaveRevertedWith("Something went wrong");
     }
 }
 ```
