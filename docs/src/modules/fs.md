@@ -1,7 +1,7 @@
 # Fs
 
 Provides utilities to interact with the filesystem. In order to use this module the
-`fs_persmissions` setting must bet correctly set on `foundry.toml`.
+`fs_permissions` setting must be set correctly in `foundry.toml`.
 
 ```solidity
 import { Test, fs } from "vulcan/test.sol";
