@@ -14,8 +14,8 @@
     - [Context](./modules/context.md)
     - [Env](./modules/env.md)
     - [Events](./modules/events.md)
-    - [Fs](./modules/fs.md)
     - [Forks](./modules/forks.md)
+    - [Fs](./modules/fs.md)
     - [Json](./modules/json.md)
     - [Strings](./modules/strings.md)
     - [Watchers](./modules/watchers.md)
@@ -25,7 +25,7 @@
 - [Modules](./reference/modules/README.md)
     - [Accounts](./reference/modules/accounts.md)
     - [Commands](./reference/modules/commands.md)
-    <!-- - [Console](./reference/modules/console.md) -->
+    - [Config](./reference/modules/config.md)
     - [Context](./reference/modules/context.md)
     - [Env](./reference/modules/env.md)
     - [Events](./reference/modules/events.md)
