@@ -107,4 +107,22 @@ contract WatcherTest is Test {
         expect(t.calls()[1].success).toBeTrue();
         expect(t.calls()[1].returnData).toEqual(abi.encodePacked(i));
     }
+
+    function testItRestoresTheOriginalStateAfterStop() external {
+        WatcherTarget target = new WatcherTarget();
+        address t = address(target);
+
+        bytes32 originalCode = keccak256(t.code);
+
+        watchers.watch(t);
+
+        target.success(0);
+
+        expect(t.calls().length).toEqual(1);
+
+        t.stopWatcher();
+
+        expect(t.calls().length).toEqual(0);
+        expect(keccak256(t.code)).toEqual(originalCode);
+    }
 }

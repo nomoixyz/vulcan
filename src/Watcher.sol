@@ -195,7 +195,10 @@ contract Watcher {
     function stop() external {
         address target = watchers.targetAddress(address(this));
         accounts.setCode(target, implementation.code);
-        selfdestruct(payable(address(0)));
+
+        shouldCaptureReverts = false;
+        implementation = address(0);
+        delete _calls;
     }
 
     /// @dev Sets the address of the `implementation` contract.
