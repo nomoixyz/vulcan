@@ -195,7 +195,14 @@ contract Watcher {
     function stop() external {
         address target = watchers.targetAddress(address(this));
         accounts.setCode(target, implementation.code);
-        selfdestruct(payable(address(0)));
+
+        shouldCaptureReverts = false;
+        implementation = address(0);
+        // Sets the array length to 0. Invoking `storeCall` after `stop` will override the items on
+        // the array
+        delete _calls;
+
+        accounts.setCode(address(this), bytes(""));
     }
 
     /// @dev Sets the address of the `implementation` contract.
