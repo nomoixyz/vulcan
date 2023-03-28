@@ -198,6 +198,8 @@ contract Watcher {
 
         shouldCaptureReverts = false;
         implementation = address(0);
+        // Sets the array length to 0. Invoking `storeCall` after `stop` will override the items on
+        // the array
         delete _calls;
 
         accounts.setCode(address(this), bytes(""));
