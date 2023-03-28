@@ -199,6 +199,8 @@ contract Watcher {
         shouldCaptureReverts = false;
         implementation = address(0);
         delete _calls;
+
+        accounts.setCode(address(this), bytes(""));
     }
 
     /// @dev Sets the address of the `implementation` contract.

@@ -122,7 +122,17 @@ contract WatcherTest is Test {
 
         t.stopWatcher();
 
-        expect(t.calls().length).toEqual(0);
+        // Check that the addresses codes are restored to the original state
         expect(keccak256(t.code)).toEqual(originalCode);
+        expect(keccak256(t.watcherAddress().code)).toEqual(keccak256(bytes("")));
+
+        // Check that we can watch again after stoping the watcher
+        watchers.watch(t);
+
+        target.success(0);
+        target.success(0);
+        target.success(0);
+
+        expect(t.calls().length).toEqual(3);
     }
 }
