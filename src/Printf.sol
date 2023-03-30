@@ -14,6 +14,14 @@ enum Type {
     Bytes
 }
 
+bytes32 constant ADDRESS_HASH = keccak256(bytes("address"));
+bytes32 constant BYTES32_HASH = keccak256(bytes("bytes32"));
+bytes32 constant STRING_HASH = keccak256(bytes("string"));
+bytes32 constant BYTES_HASH = keccak256(bytes("bytes"));
+bytes32 constant UINT_HASH = keccak256(bytes("uint"));
+bytes32 constant BOOL_HASH = keccak256(bytes("bool"));
+bytes32 constant INT_HASH = keccak256(bytes("int"));
+
 function parseFormat(string memory format) view returns (Type[] memory) {
     bytes memory formatBytes = bytes(format);
 
@@ -28,25 +36,25 @@ function parseFormat(string memory format) view returns (Type[] memory) {
 
         bytes memory placeholderBytes = new bytes(placeholderEnd - placeholderStart);
 
-        for (uint256 j = 0; j < placeholderEnd - placeholderStart; j++) {
+        for (uint256 j; j < placeholderEnd - placeholderStart; j++) {
             placeholderBytes[j] = formatBytes[placeholderStart + j];
         }
 
-        string memory placeholder = string(placeholderBytes);
+        bytes32 placeholderHash = keccak256(placeholderBytes);
 
-        if (keccak256(bytes(placeholder)) == keccak256(bytes("{uint}"))) {
+        if (placeholderHash == UINT_HASH) {
             types[i] = Type.Uint256;
-        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{address}"))) {
+        } else if (placeholderHash == ADDRESS_HASH) {
             types[i] = Type.Address;
-        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{bool}"))) {
+        } else if (placeholderHash == BOOL_HASH) {
             types[i] = Type.Bool;
-        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{string}"))) {
+        } else if (placeholderHash == STRING_HASH) {
             types[i] = Type.String;
-        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{int}"))) {
+        } else if (placeholderHash == INT_HASH) {
             types[i] = Type.Int256;
-        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{bytes}"))) {
+        } else if (placeholderHash == BYTES_HASH) {
             types[i] = Type.Bytes;
-        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{bytes32}"))) {
+        } else if (placeholderHash == BYTES32_HASH) {
             types[i] = Type.Bytes32;
         } else {
             continue;
@@ -75,7 +83,7 @@ function countPlaceholders(bytes memory format) view returns (uint256) {
 function findPlaceholderStart(bytes memory format, uint256 offset) pure returns (uint256) {
     for (uint256 i = offset; i < format.length - 1; i++) {
         if (format[i] == bytes("{")[0]) {
-            return i;
+            return i + 1;
         }
     }
     return format.length;
@@ -84,7 +92,7 @@ function findPlaceholderStart(bytes memory format, uint256 offset) pure returns 
 function findPlaceholderEnd(bytes memory format, uint256 start) pure returns (uint256) {
     for (uint256 i = start + 1; i < format.length; i++) {
         if (format[i] == bytes("}")[0]) {
-            return i + 1;
+            return i;
         }
     }
     return format.length;
