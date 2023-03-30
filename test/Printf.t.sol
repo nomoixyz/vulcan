@@ -2,7 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, config, Rpc, console} from "../src/test.sol";
-import {abiDecode, Type} from "../src/Printf.sol";
+import {abiDecode, Type, parseFormat} from "../src/Printf.sol";
 
 contract PrintfTest is Test {
     function testThing() external {
@@ -18,10 +18,22 @@ contract PrintfTest is Test {
         types[8] = Type.Bool;
         types[9] = Type.Bool;
 
-        string[] memory result = abiDecode(types, abi.encode(1, abi.encodePacked(uint8(123)), address(3), "hello", 4, address(5), "world", -6, true, false));
+        string[] memory result = abiDecode(
+            types,
+            abi.encode(1, abi.encodePacked(uint8(123)), address(3), "hello", 4, address(5), "world", -6, true, false)
+        );
 
         for (uint256 i = 0; i < result.length; i++) {
             console.log(result[i]);
         }
+    }
+
+    function testFormatParser() external {
+        string memory format = "{address} {string}";
+
+        Type[] memory result = parseFormat(format);
+
+        expect(uint256(result[0])).toEqual(uint256(Type.Address));
+        expect(uint256(result[1])).toEqual(uint256(Type.String));
     }
 }
