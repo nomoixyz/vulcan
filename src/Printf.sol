@@ -12,6 +12,64 @@ enum Type {
     Bytes
 }
 
+function parseFormat(string memory format) view returns (Type[] memory) {
+    bytes memory formatBytes = bytes(format);
+    Type[] memory types = new Type[](countPlaceholders(formatBytes));
+    uint256 currentIndex = 0;
+    for (uint256 i = 0; i < types.length; i++) {
+        uint256 placeholderStart = findPlaceholderStart(formatBytes, currentIndex);
+        uint256 placeholderEnd = findPlaceholderEnd(formatBytes, placeholderStart);
+        bytes memory placeholderBytes = new bytes(placeholderEnd - placeholderStart);
+        for (uint256 j = 0; j < placeholderEnd - placeholderStart; j++) {
+            placeholderBytes[j] = formatBytes[placeholderStart + j];
+        }
+        string memory placeholder = string(placeholderBytes);
+        if (keccak256(bytes(placeholder)) == keccak256(bytes("{uint}"))) {
+            types[i] = Type.Uint256;
+        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{address}"))) {
+            types[i] = Type.Address;
+        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{string}"))) {
+            types[i] = Type.String;
+        } else {
+            revert("Invalid format string");
+        }
+        currentIndex = placeholderEnd;
+    }
+    return types;
+}
+
+function countPlaceholders(bytes memory format) view returns (uint256) {
+    uint256 count = 0;
+    uint256 currentIndex = 0;
+    while (true) {
+        uint256 placeholderStart = findPlaceholderStart(format, currentIndex);
+        if (placeholderStart == format.length) {
+            break; // No more placeholders found
+        }
+        count++;
+        currentIndex = findPlaceholderEnd(format, placeholderStart);
+    }
+    return count;
+}
+
+function findPlaceholderStart(bytes memory format, uint256 offset) pure returns (uint256) {
+    for (uint256 i = offset; i < format.length - 1; i++) {
+        if (format[i] == bytes("{")[0]) {
+            return i;
+        }
+    }
+    return format.length;
+}
+
+function findPlaceholderEnd(bytes memory format, uint256 start) pure returns (uint256) {
+    for (uint256 i = start + 1; i < format.length; i++) {
+        if (format[i] == bytes("}")[0]) {
+            return i + 1;
+        }
+    }
+    return format.length;
+}
+
 function readWord(bytes memory data, uint256 offset) pure returns (bytes32) {
     bytes32 result;
 
@@ -22,28 +80,30 @@ function readWord(bytes memory data, uint256 offset) pure returns (bytes32) {
     return result;
 }
 
-function slice(bytes memory data, uint start, uint len) pure returns (bytes memory) {
-        require(start + len <= data.length, "Slice out of bounds");
+function slice(bytes memory data, uint256 start, uint256 len) pure returns (bytes memory) {
+    require(start + len <= data.length, "Slice out of bounds");
 
-        bytes memory result = new bytes(len);
-        for (uint i = 0; i < len; i++) {
-            result[i] = data[start + i];
-        }
-        return result;
+    bytes memory result = new bytes(len);
+    for (uint256 i = 0; i < len; i++) {
+        result[i] = data[start + i];
+    }
+    return result;
 }
 
 function abiDecode(Type[] memory types, bytes memory data) view returns (string[] memory) {
     string[] memory result = new string[](types.length);
-    for (uint i = 0; i < types.length; i++) {
+    for (uint256 i = 0; i < types.length; i++) {
         uint256 offset = i * 32;
         string memory value;
-        if (types[i] == Type.Uint256) { // uint256
+        if (types[i] == Type.Uint256) {
+            // uint256
             value = strings.toString(uint256(readWord(data, offset)));
-        } else if (types[i] == Type.Address) { // uint256
+        } else if (types[i] == Type.Address) {
+            // uint256
             value = strings.toString(address(uint160(uint256(readWord(data, offset)))));
         } else if (types[i] == Type.String) {
-            offset = uint(readWord(data, offset));
-            uint256 len = uint(readWord(data, offset));
+            offset = uint256(readWord(data, offset));
+            uint256 len = uint256(readWord(data, offset));
             value = string(slice(data, offset + 32, len));
         } else {
             revert("Unsupported type");
