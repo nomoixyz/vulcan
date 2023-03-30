@@ -10,12 +10,7 @@ contract LoggerTest is Test {
     function testItCanCreateALogger() external {
         string memory format = "{} {} {} {} {} {} {}";
 
-        Logger memory l = logger
-            .printf(format)
-            .with(true)
-            .with(uint256(1))
-            .with(address(1))
-            .with(bytes32(uint256(1)))
+        Logger memory l = logger.printf(format).with(true).with(uint256(1)).with(address(1)).with(bytes32(uint256(1)))
             .with(int256(-1));
 
         expect(l.format).toEqual(format);
