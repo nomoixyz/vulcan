@@ -16,27 +16,45 @@ enum Type {
 
 function parseFormat(string memory format) view returns (Type[] memory) {
     bytes memory formatBytes = bytes(format);
+
     Type[] memory types = new Type[](countPlaceholders(formatBytes));
+
     uint256 currentIndex = 0;
-    for (uint256 i = 0; i < types.length; i++) {
+
+    for (uint256 i; i < types.length; i++) {
         uint256 placeholderStart = findPlaceholderStart(formatBytes, currentIndex);
+
         uint256 placeholderEnd = findPlaceholderEnd(formatBytes, placeholderStart);
+
         bytes memory placeholderBytes = new bytes(placeholderEnd - placeholderStart);
+
         for (uint256 j = 0; j < placeholderEnd - placeholderStart; j++) {
             placeholderBytes[j] = formatBytes[placeholderStart + j];
         }
+
         string memory placeholder = string(placeholderBytes);
+
         if (keccak256(bytes(placeholder)) == keccak256(bytes("{uint}"))) {
             types[i] = Type.Uint256;
         } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{address}"))) {
             types[i] = Type.Address;
+        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{bool}"))) {
+            types[i] = Type.Bool;
         } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{string}"))) {
             types[i] = Type.String;
+        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{int}"))) {
+            types[i] = Type.Int256;
+        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{bytes}"))) {
+            types[i] = Type.Bytes;
+        } else if (keccak256(bytes(placeholder)) == keccak256(bytes("{bytes32}"))) {
+            types[i] = Type.Bytes32;
         } else {
-            revert("Invalid format string");
+            continue;
         }
+
         currentIndex = placeholderEnd;
     }
+
     return types;
 }
 
