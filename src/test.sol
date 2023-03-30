@@ -15,6 +15,7 @@ import {json, JsonObject} from "./Json.sol";
 import {strings} from "./Strings.sol";
 import {watchers, Watcher} from "./Watcher.sol";
 import {config, Rpc} from "./Config.sol";
+import {logger} from "./Logger.sol";
 import "./Console.sol";
 
 // @dev Main entry point to Vulcan tests
