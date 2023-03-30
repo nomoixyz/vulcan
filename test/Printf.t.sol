@@ -2,38 +2,37 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, config, Rpc, console} from "../src/test.sol";
-import {abiDecode, Type, parseFormat, Placeholder} from "../src/Printf.sol";
+import {abiDecode, Type, parseTemplate, Placeholder, _format, format} from "../src/Printf.sol";
 
 contract PrintfTest is Test {
-    function testThing() external {
-        Type[] memory types = new Type[](10);
-        types[0] = Type.Uint256;
-        types[1] = Type.Bytes;
-        types[2] = Type.Address;
-        types[3] = Type.String;
-        types[4] = Type.Uint256;
-        types[5] = Type.Address;
-        types[6] = Type.String;
-        types[7] = Type.Int256;
-        types[8] = Type.Bool;
-        types[9] = Type.Bool;
+    function testFormatParser() external {
+        string memory template = "{address} {string}";
 
-        string[] memory result = abiDecode(
-            types,
-            abi.encode(1, abi.encodePacked(uint8(123)), address(3), "hello", 4, address(5), "world", -6, true, false)
-        );
+        Placeholder[] memory result = parseTemplate(template);
 
-        for (uint256 i = 0; i < result.length; i++) {
-            console.log(result[i]);
-        }
+        expect(uint256(result[0].t)).toEqual(uint256(Type.Address));
+        expect(uint256(result[1].t)).toEqual(uint256(Type.String));
     }
 
-    function testFormatParser() external {
-        string memory format = "{address} {string}";
+    function testInternalFormat() external {
+        string memory template = "{address} hello {string} world {bool}";
+        Placeholder[] memory placeholders = new Placeholder[](3);
+        placeholders[0] = Placeholder(0, 9, Type.Address); // 9
+        placeholders[1] = Placeholder(16, 24, Type.String); // 8
+        placeholders[2] = Placeholder(31, 37, Type.Bool); // 6
+        string[] memory decoded = new string[](3);
+        decoded[0] = "test";
+        decoded[1] = "test";
+        decoded[2] = "test";
+        string memory result = _format(template, decoded, placeholders);
+        expect(result).toEqual("test hello test world test");
+    }
 
-        Placeholder[] memory result = parseFormat(format);
+    function testFormat() external {
+        string memory template = "{address} hello {string} world {bool}";
+        string memory result = format(template, abi.encode(address(123), "foo", true));
 
-        expect(uint256(result[0].kind)).toEqual(uint256(Type.Address));
-        expect(uint256(result[1].kind)).toEqual(uint256(Type.String));
+        
+        expect(result).toEqual("0x000000000000000000000000000000000000007B hello foo world true");
     }
 }
