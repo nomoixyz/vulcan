@@ -28,6 +28,8 @@ function abiDecode(Type[] memory types, bytes memory data) pure returns (string[
         string memory value;
         if (types[i] == Type.Uint256) { // uint256
             value = strings.toString(uint256(readWord(data, offset)));
+        } else if (types[i] == Type.Address) { // uint256
+            value = strings.toString(address(uint160(uint256(readWord(data, offset)))));
         } else {
             revert("Unsupported type");
         }
