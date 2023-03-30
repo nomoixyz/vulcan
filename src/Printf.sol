@@ -14,6 +14,12 @@ enum Type {
     Bytes
 }
 
+struct Placeholder {
+    uint256 start;
+    uint256 end;
+    Type kind;
+}
+
 bytes32 constant ADDRESS_HASH = keccak256(bytes("address"));
 bytes32 constant BYTES32_HASH = keccak256(bytes("bytes32"));
 bytes32 constant STRING_HASH = keccak256(bytes("string"));
@@ -22,40 +28,44 @@ bytes32 constant UINT_HASH = keccak256(bytes("uint"));
 bytes32 constant BOOL_HASH = keccak256(bytes("bool"));
 bytes32 constant INT_HASH = keccak256(bytes("int"));
 
-function parseFormat(string memory format) view returns (Type[] memory) {
+function parseFormat(string memory format) view returns (Placeholder[] memory) {
     bytes memory formatBytes = bytes(format);
 
-    Type[] memory types = new Type[](countPlaceholders(formatBytes));
+    Placeholder[] memory placeholders = new Placeholder[](countPlaceholders(formatBytes));
+
+    if (placeholders.length == 0) {
+        return placeholders;
+    }
 
     uint256 currentIndex = 0;
 
-    for (uint256 i; i < types.length; i++) {
+    for (uint256 i; i < placeholders.length; i++) {
         uint256 placeholderStart = findPlaceholderStart(formatBytes, currentIndex);
 
         uint256 placeholderEnd = findPlaceholderEnd(formatBytes, placeholderStart);
 
-        bytes memory placeholderBytes = new bytes(placeholderEnd - placeholderStart);
+        bytes memory placeholderBytes = new bytes(placeholderEnd - placeholderStart - 2);
 
-        for (uint256 j; j < placeholderEnd - placeholderStart; j++) {
-            placeholderBytes[j] = formatBytes[placeholderStart + j];
+        for (uint256 j; j < placeholderBytes.length; j++) {
+            placeholderBytes[j] = formatBytes[placeholderStart + j + 1];
         }
 
         bytes32 placeholderHash = keccak256(placeholderBytes);
 
         if (placeholderHash == UINT_HASH) {
-            types[i] = Type.Uint256;
+            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Uint256);
         } else if (placeholderHash == ADDRESS_HASH) {
-            types[i] = Type.Address;
+            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Address);
         } else if (placeholderHash == BOOL_HASH) {
-            types[i] = Type.Bool;
+            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Bool);
         } else if (placeholderHash == STRING_HASH) {
-            types[i] = Type.String;
+            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.String);
         } else if (placeholderHash == INT_HASH) {
-            types[i] = Type.Int256;
+            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Int256);
         } else if (placeholderHash == BYTES_HASH) {
-            types[i] = Type.Bytes;
+            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Bytes);
         } else if (placeholderHash == BYTES32_HASH) {
-            types[i] = Type.Bytes32;
+            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Bytes32);
         } else {
             continue;
         }
@@ -63,7 +73,7 @@ function parseFormat(string memory format) view returns (Type[] memory) {
         currentIndex = placeholderEnd;
     }
 
-    return types;
+    return placeholders;
 }
 
 function countPlaceholders(bytes memory format) view returns (uint256) {
@@ -83,7 +93,7 @@ function countPlaceholders(bytes memory format) view returns (uint256) {
 function findPlaceholderStart(bytes memory format, uint256 offset) pure returns (uint256) {
     for (uint256 i = offset; i < format.length - 1; i++) {
         if (format[i] == bytes("{")[0]) {
-            return i + 1;
+            return i;
         }
     }
     return format.length;
@@ -92,7 +102,7 @@ function findPlaceholderStart(bytes memory format, uint256 offset) pure returns 
 function findPlaceholderEnd(bytes memory format, uint256 start) pure returns (uint256) {
     for (uint256 i = start + 1; i < format.length; i++) {
         if (format[i] == bytes("}")[0]) {
-            return i;
+            return i + 1;
         }
     }
     return format.length;
