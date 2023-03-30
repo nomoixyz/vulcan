@@ -33,6 +33,10 @@ function parseFormat(string memory format) view returns (Placeholder[] memory) {
 
     Placeholder[] memory placeholders = new Placeholder[](countPlaceholders(formatBytes));
 
+    if (placeholders.length == 0) {
+        return placeholders;
+    }
+
     uint256 currentIndex = 0;
 
     for (uint256 i; i < placeholders.length; i++) {
@@ -40,10 +44,10 @@ function parseFormat(string memory format) view returns (Placeholder[] memory) {
 
         uint256 placeholderEnd = findPlaceholderEnd(formatBytes, placeholderStart);
 
-        bytes memory placeholderBytes = new bytes(placeholderEnd - placeholderStart);
+        bytes memory placeholderBytes = new bytes(placeholderEnd - placeholderStart - 2);
 
-        for (uint256 j; j < placeholderEnd - placeholderStart; j++) {
-            placeholderBytes[j] = formatBytes[placeholderStart + j];
+        for (uint256 j = 1; j < placeholderEnd - placeholderStart - 1; j++) {
+            placeholderBytes[j - 1] = formatBytes[placeholderStart + j];
         }
 
         bytes32 placeholderHash = keccak256(placeholderBytes);
@@ -89,7 +93,7 @@ function countPlaceholders(bytes memory format) view returns (uint256) {
 function findPlaceholderStart(bytes memory format, uint256 offset) pure returns (uint256) {
     for (uint256 i = offset; i < format.length - 1; i++) {
         if (format[i] == bytes("{")[0]) {
-            return i + 1;
+            return i;
         }
     }
     return format.length;
@@ -98,7 +102,7 @@ function findPlaceholderStart(bytes memory format, uint256 offset) pure returns 
 function findPlaceholderEnd(bytes memory format, uint256 start) pure returns (uint256) {
     for (uint256 i = start + 1; i < format.length; i++) {
         if (format[i] == bytes("}")[0]) {
-            return i;
+            return i + 1;
         }
     }
     return format.length;
