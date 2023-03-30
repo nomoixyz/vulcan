@@ -48,17 +48,17 @@ library logger {
     function log(Logger memory self) public view {
         bytes memory result;
 
-        uint argIndex = 0;
-        uint offset = 0;
+        uint256 argIndex = 0;
+        uint256 offset = 0;
 
         while (offset < bytes(self.format).length) {
-            uint placeholderStart = _findPlaceholderStart(bytes(self.format), offset);
+            uint256 placeholderStart = _findPlaceholderStart(bytes(self.format), offset);
 
             if (placeholderStart == bytes(self.format).length) {
                 break; // No more placeholders found
             }
 
-            uint placeholderEnd = _findPlaceholderEnd(bytes(self.format), placeholderStart);
+            uint256 placeholderEnd = _findPlaceholderEnd(bytes(self.format), placeholderStart);
 
             require(argIndex < self.values.length, "Not enough replacement arguments");
 
@@ -75,17 +75,17 @@ library logger {
         console.logString(string(result));
     }
 
-    function _findPlaceholderStart(bytes memory format, uint offset) private pure returns (uint) {
-        for (uint i = offset; i < format.length - 1; i++) {
-            if (format[i] == bytes("{}")[0] && format[i+1] == bytes("{}")[1]) {
+    function _findPlaceholderStart(bytes memory format, uint256 offset) private pure returns (uint256) {
+        for (uint256 i = offset; i < format.length - 1; i++) {
+            if (format[i] == bytes("{}")[0] && format[i + 1] == bytes("{}")[1]) {
                 return i;
             }
         }
         return format.length;
     }
 
-    function _findPlaceholderEnd(bytes memory format, uint start) private pure returns (uint) {
-        for (uint i = start + 2; i < format.length; i++) {
+    function _findPlaceholderEnd(bytes memory format, uint256 start) private pure returns (uint256) {
+        for (uint256 i = start + 2; i < format.length; i++) {
             if (format[i] != bytes("{}")[1]) {
                 return i;
             }
@@ -97,9 +97,13 @@ library logger {
         return abi.encodePacked(a, b);
     }
 
-    function _concatenate(bytes memory a, bytes memory b, uint start, uint end) private pure returns (bytes memory) {
+    function _concatenate(bytes memory a, bytes memory b, uint256 start, uint256 end)
+        private
+        pure
+        returns (bytes memory)
+    {
         bytes memory subset = new bytes(end - start);
-        for (uint i = 0; i < end - start; i++) {
+        for (uint256 i = 0; i < end - start; i++) {
             subset[i] = b[i + start];
         }
         return _concatenate(a, subset);
