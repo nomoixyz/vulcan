@@ -46,8 +46,8 @@ function parseFormat(string memory format) view returns (Placeholder[] memory) {
 
         bytes memory placeholderBytes = new bytes(placeholderEnd - placeholderStart - 2);
 
-        for (uint256 j = 1; j < placeholderEnd - placeholderStart - 1; j++) {
-            placeholderBytes[j - 1] = formatBytes[placeholderStart + j];
+        for (uint256 j; j < placeholderBytes.length; j++) {
+            placeholderBytes[j] = formatBytes[placeholderStart + j + 1];
         }
 
         bytes32 placeholderHash = keccak256(placeholderBytes);
