@@ -194,7 +194,17 @@ function display(uint256 value, bytes memory mod) pure returns (string memory) {
 
         // Get decimal part and remove trailing zeroes
         string memory decimal = strings.toString(value % 10 ** decimals);
+
+        if (bytes(decimal).length < uint256(decimals)) {
+            uint256 diff = uint256(decimals) - bytes(decimal).length;
+
+            for (uint256 i; i < diff; ++i) {
+                decimal = string.concat("0", decimal);
+            }
+        }
+
         uint256 trailing = 0;
+
         for (uint256 i = bytes(decimal).length - 1; i > 0; i--) {
             if (bytes(decimal)[i] == "0") {
                 trailing++;
