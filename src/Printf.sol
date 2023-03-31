@@ -29,7 +29,7 @@ bytes32 constant UINT_HASH = keccak256(bytes("uint"));
 bytes32 constant BOOL_HASH = keccak256(bytes("bool"));
 bytes32 constant INT_HASH = keccak256(bytes("int"));
 
-function parseTemplate(string memory template) view returns (Placeholder[] memory) {
+function parseTemplate(string memory template) pure returns (Placeholder[] memory) {
     bytes memory templateBytes = bytes(template);
 
     Placeholder[] memory placeholders = new Placeholder[](countPlaceholders(templateBytes));
@@ -91,7 +91,7 @@ function findModifierStart(bytes memory template, uint256 start, uint256 end) pu
 }
 
 
-function findPlaceholder(bytes memory template, uint256 start) view returns (Placeholder memory) {
+function findPlaceholder(bytes memory template, uint256 start) pure returns (Placeholder memory) {
         uint256 placeholderStart = findPlaceholderStart(template, start);
 
         uint256 placeholderEnd = findPlaceholderEnd(template, placeholderStart);
@@ -192,39 +192,31 @@ function display(uint256 value, bytes memory mod) pure returns (string memory) {
         uint8 decimals = uint8(strings.parseUint(string(readSlice(mod, 1, mod.length - 1))));
         string memory integer = strings.toString(value / 10 ** decimals);
 
-        // Get decimal part and remove trailing zeroes
-        string memory decimal = strings.toString(value % 10 ** decimals);
+        // Get decimal part and pad with zeroes
+        string memory remainder = strings.toString(value % 10 ** decimals);
 
-        if (bytes(decimal).length < uint256(decimals)) {
-            uint256 diff = uint256(decimals) - bytes(decimal).length;
-
-            for (uint256 i; i < diff; ++i) {
-                decimal = string.concat("0", decimal);
-            }
+        while (bytes(remainder).length < decimals) {
+            remainder = string.concat("0", remainder);
         }
 
-        uint256 trailing = 0;
-
-        for (uint256 i = bytes(decimal).length - 1; i > 0; i--) {
-            if (bytes(decimal)[i] == "0") {
-                trailing++;
-            } else {
-                break;
-            }
+        // Get expected remainder length without trailing zeroes
+        uint256 len = decimals;
+        while (len > 1 && bytes(remainder)[len - 1] == "0") {
+            len--;
         }
 
         // Set new length to remove trailing zeroes
         assembly {
-            mstore(decimal, sub(mload(decimal), trailing))
+            mstore(remainder, len)
         }
 
-        return string.concat(integer, ".", decimal);
+        return string.concat(integer, ".", remainder);
     } else {
         revert("Unsupported modifier");
     }
 }
 
-function format(string memory template, bytes memory args) view returns (string memory) {
+function format(string memory template, bytes memory args) pure returns (string memory) {
     Placeholder[] memory placeholders = parseTemplate(template);
     string[] memory decoded = decodeArgs(placeholders, args);
     return _format(template, decoded, placeholders);

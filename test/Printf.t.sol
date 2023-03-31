@@ -39,5 +39,9 @@ contract PrintfTest is Test {
         expect(format("{uint:d18}", abi.encode(1e17))).toEqual("0.1");
         expect(format("{uint:d17}", abi.encode(1e17))).toEqual("1.0");
         expect(format("{uint:d19}", abi.encode(1e17))).toEqual("0.01");
+        expect(format("{uint:d2}", abi.encode(123))).toEqual("1.23");
+        expect(format("{uint:d2}", abi.encode(103))).toEqual("1.03");
+        expect(format("{uint:d2}", abi.encode(1003))).toEqual("10.03");
+        expect(format("{uint:d2}", abi.encode(1000))).toEqual("10.0");
     }
 }
