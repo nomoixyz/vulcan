@@ -32,7 +32,15 @@ contract PrintfTest is Test {
         string memory template = "{address} hello {string} world {bool}";
         string memory result = format(template, abi.encode(address(123), "foo", true));
 
-        
         expect(result).toEqual("0x000000000000000000000000000000000000007B hello foo world true");
+    }
+
+    function testFormatDecimals() external {
+        string memory res = format(
+            "{uint:decimals=18}",
+            abi.encode(1e17)
+        );
+
+        expect(res).toEqual("0.1");
     }
 }

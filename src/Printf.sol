@@ -92,7 +92,7 @@ function countPlaceholders(bytes memory template) pure returns (uint256) {
 
 function findPlaceholderStart(bytes memory template, uint256 offset) pure returns (uint256) {
     for (uint256 i = offset; i < template.length - 1; i++) {
-        if (template[i] == bytes("{")[0]) {
+        if (template[i] == "{") {
             return i;
         }
     }
@@ -101,7 +101,7 @@ function findPlaceholderStart(bytes memory template, uint256 offset) pure return
 
 function findPlaceholderEnd(bytes memory template, uint256 start) pure returns (uint256) {
     for (uint256 i = start + 1; i < template.length; i++) {
-        if (template[i] == bytes("}")[0]) {
+        if (template[i] == "}") {
             return i + 1;
         }
     }
@@ -167,7 +167,7 @@ function format(string memory template, bytes memory args) returns (string memor
     return _format(template, decoded, placeholders);
 }
 
-function _format(string memory template, string[] memory decoded, Placeholder[] memory placeholders) returns (string memory) {
+function _format(string memory template, string[] memory decoded, Placeholder[] memory placeholders) pure returns (string memory) {
     uint256 resultLength = bytes(template).length;
 
     for (uint256 i = 0; i < decoded.length; i++) {
