@@ -2,7 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, config, Rpc, console} from "../src/test.sol";
-import {abiDecode, Type, parseTemplate, Placeholder, _format, format} from "../src/Printf.sol";
+import {Type, parseTemplate, Placeholder, _format, format} from "../src/Printf.sol";
 
 contract PrintfTest is Test {
     function testFormatParser() external {
@@ -17,9 +17,9 @@ contract PrintfTest is Test {
     function testInternalFormat() external {
         string memory template = "{address} hello {string} world {bool}";
         Placeholder[] memory placeholders = new Placeholder[](3);
-        placeholders[0] = Placeholder(0, 9, Type.Address); // 9
-        placeholders[1] = Placeholder(16, 24, Type.String); // 8
-        placeholders[2] = Placeholder(31, 37, Type.Bool); // 6
+        placeholders[0] = Placeholder(0, 9, Type.Address, ""); // 9
+        placeholders[1] = Placeholder(16, 24, Type.String, ""); // 8
+        placeholders[2] = Placeholder(31, 37, Type.Bool, ""); // 6
         string[] memory decoded = new string[](3);
         decoded[0] = "test";
         decoded[1] = "test";
@@ -36,11 +36,8 @@ contract PrintfTest is Test {
     }
 
     function testFormatDecimals() external {
-        string memory res = format(
-            "{uint:decimals=18}",
-            abi.encode(1e17)
-        );
-
-        expect(res).toEqual("0.1");
+        expect(format("{uint:d18}", abi.encode(1e17))).toEqual("0.1");
+        expect(format("{uint:d17}", abi.encode(1e17))).toEqual("1.0");
+        expect(format("{uint:d19}", abi.encode(1e17))).toEqual("0.01");
     }
 }

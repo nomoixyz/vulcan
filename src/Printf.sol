@@ -18,6 +18,7 @@ struct Placeholder {
     uint256 start;
     uint256 end;
     Type t;
+    bytes mod;
 }
 
 bytes32 constant ADDRESS_HASH = keccak256(bytes("address"));
@@ -28,7 +29,7 @@ bytes32 constant UINT_HASH = keccak256(bytes("uint"));
 bytes32 constant BOOL_HASH = keccak256(bytes("bool"));
 bytes32 constant INT_HASH = keccak256(bytes("int"));
 
-function parseTemplate(string memory template) pure returns (Placeholder[] memory) {
+function parseTemplate(string memory template) view returns (Placeholder[] memory) {
     bytes memory templateBytes = bytes(template);
 
     Placeholder[] memory placeholders = new Placeholder[](countPlaceholders(templateBytes));
@@ -40,37 +41,8 @@ function parseTemplate(string memory template) pure returns (Placeholder[] memor
     uint256 currentIndex = 0;
 
     for (uint256 i; i < placeholders.length; i++) {
-        uint256 placeholderStart = findPlaceholderStart(templateBytes, currentIndex);
-
-        uint256 placeholderEnd = findPlaceholderEnd(templateBytes, placeholderStart);
-
-        bytes memory placeholderBytes = new bytes(placeholderEnd - placeholderStart - 2);
-
-        for (uint256 j; j < placeholderBytes.length; j++) {
-            placeholderBytes[j] = templateBytes[placeholderStart + j + 1];
-        }
-
-        bytes32 placeholderHash = keccak256(placeholderBytes);
-
-        if (placeholderHash == UINT_HASH) {
-            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Uint256);
-        } else if (placeholderHash == ADDRESS_HASH) {
-            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Address);
-        } else if (placeholderHash == BOOL_HASH) {
-            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Bool);
-        } else if (placeholderHash == STRING_HASH) {
-            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.String);
-        } else if (placeholderHash == INT_HASH) {
-            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Int256);
-        } else if (placeholderHash == BYTES_HASH) {
-            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Bytes);
-        } else if (placeholderHash == BYTES32_HASH) {
-            placeholders[i] = Placeholder(placeholderStart, placeholderEnd, Type.Bytes32);
-        } else {
-            continue;
-        }
-
-        currentIndex = placeholderEnd;
+        placeholders[i] = findPlaceholder(templateBytes, currentIndex);
+        currentIndex = placeholders[i].end;
     }
 
     return placeholders;
@@ -108,6 +80,50 @@ function findPlaceholderEnd(bytes memory template, uint256 start) pure returns (
     return template.length;
 }
 
+function findModifierStart(bytes memory template, uint256 start, uint256 end) pure returns (uint256) {
+    for (uint256 i = start + 1; i < end - 1; i++) {
+        if (template[i] == ":") {
+            return i + 1;
+        }
+    }
+
+    return end;
+}
+
+
+function findPlaceholder(bytes memory template, uint256 start) view returns (Placeholder memory) {
+        uint256 placeholderStart = findPlaceholderStart(template, start);
+
+        uint256 placeholderEnd = findPlaceholderEnd(template, placeholderStart);
+
+        uint256 modifierStart = findModifierStart(template, placeholderStart, placeholderEnd);
+
+        bytes32 typeHash = keccak256(readSlice(template, placeholderStart + 1, modifierStart - placeholderStart - 2));
+
+        Type t;
+        if (typeHash == UINT_HASH) {
+            t = Type.Uint256;
+        } else if (typeHash == ADDRESS_HASH) {
+            t = Type.Address;
+        } else if (typeHash == BOOL_HASH) {
+            t = Type.Bool;
+        } else if (typeHash == STRING_HASH) {
+            t = Type.String;
+        } else if (typeHash == INT_HASH) {
+            t = Type.Int256;
+        } else if (typeHash == BYTES_HASH) {
+            t = Type.Bytes;
+        } else if (typeHash == BYTES32_HASH) {
+            t = Type.Bytes32;
+        } else {
+            revert("Unsupported placeholder type");
+        }
+
+
+        bytes memory mod = modifierStart == placeholderEnd ? new bytes(0) : readSlice(template, modifierStart, placeholderEnd - modifierStart - 1);
+        return Placeholder(placeholderStart, placeholderEnd, t, mod);
+}
+
 function readWord(bytes memory data, uint256 offset) pure returns (bytes32) {
     bytes32 result;
 
@@ -119,16 +135,23 @@ function readWord(bytes memory data, uint256 offset) pure returns (bytes32) {
 }
 
 function readSlice(bytes memory data, uint256 start, uint256 len) pure returns (bytes memory) {
+    if (len == 0) {
+        return new bytes(0);
+    }
+
     require(start + len <= data.length, "Slice out of bounds");
 
     bytes memory result = new bytes(len);
-    assembly {
-        result := add(data, start)
+
+    for (uint256 i = 0; i < len; i++) {
+        result[i] = data[start + i];
     }
+
     return result;
 }
 
-function abiDecode(Placeholder[] memory placeholders, bytes memory data) pure returns (string[] memory) {
+// @dev Performs abi decoding of the given data using the given placeholders.
+function decodeArgs(Placeholder[] memory placeholders, bytes memory data) pure returns (string[] memory) {
     string[] memory result = new string[](placeholders.length);
     for (uint256 i = 0; i < placeholders.length; i++) {
         Placeholder memory p = placeholders[i];
@@ -137,7 +160,7 @@ function abiDecode(Placeholder[] memory placeholders, bytes memory data) pure re
         if (p.t == Type.Bool) {
             value = strings.toString(uint256(readWord(data, offset)) == 1);
         } else if (p.t == Type.Uint256) {
-            value = strings.toString(uint256(readWord(data, offset)));
+            value = display(uint256(readWord(data, offset)), p.mod);
         } else if (p.t == Type.Int256) {
             value = strings.toString(int256(uint256(readWord(data, offset))));
         } else if (p.t == Type.Address) {
@@ -161,9 +184,39 @@ function abiDecode(Placeholder[] memory placeholders, bytes memory data) pure re
     return result;
 }
 
-function format(string memory template, bytes memory args) returns (string memory) {
+// Note: create other display functions for different types if necessary
+function display(uint256 value, bytes memory mod) pure returns (string memory) {
+    if (mod.length == 0) {
+        return strings.toString(value);
+    } else if (mod[0] == "d" && mod.length <= 4) { // Max decimals is 256
+        uint8 decimals = uint8(strings.parseUint(string(readSlice(mod, 1, mod.length - 1))));
+        string memory integer = strings.toString(value / 10 ** decimals);
+
+        // Get decimal part and remove trailing zeroes
+        string memory decimal = strings.toString(value % 10 ** decimals);
+        uint256 trailing = 0;
+        for (uint256 i = bytes(decimal).length - 1; i > 0; i--) {
+            if (bytes(decimal)[i] == "0") {
+                trailing++;
+            } else {
+                break;
+            }
+        }
+
+        // Set new length to remove trailing zeroes
+        assembly {
+            mstore(decimal, sub(mload(decimal), trailing))
+        }
+
+        return string.concat(integer, ".", decimal);
+    } else {
+        revert("Unsupported modifier");
+    }
+}
+
+function format(string memory template, bytes memory args) view returns (string memory) {
     Placeholder[] memory placeholders = parseTemplate(template);
-    string[] memory decoded = abiDecode(placeholders, args);
+    string[] memory decoded = decodeArgs(placeholders, args);
     return _format(template, decoded, placeholders);
 }
 
