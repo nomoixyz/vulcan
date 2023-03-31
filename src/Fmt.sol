@@ -90,38 +90,38 @@ function findModifierStart(bytes memory template, uint256 start, uint256 end) pu
     return end;
 }
 
-
 function findPlaceholder(bytes memory template, uint256 start) pure returns (Placeholder memory) {
-        uint256 placeholderStart = findPlaceholderStart(template, start);
+    uint256 placeholderStart = findPlaceholderStart(template, start);
 
-        uint256 placeholderEnd = findPlaceholderEnd(template, placeholderStart);
+    uint256 placeholderEnd = findPlaceholderEnd(template, placeholderStart);
 
-        uint256 modifierStart = findModifierStart(template, placeholderStart, placeholderEnd);
+    uint256 modifierStart = findModifierStart(template, placeholderStart, placeholderEnd);
 
-        bytes32 typeHash = keccak256(readSlice(template, placeholderStart + 1, modifierStart - placeholderStart - 2));
+    bytes32 typeHash = keccak256(readSlice(template, placeholderStart + 1, modifierStart - placeholderStart - 2));
 
-        Type t;
-        if (typeHash == UINT_HASH) {
-            t = Type.Uint256;
-        } else if (typeHash == ADDRESS_HASH) {
-            t = Type.Address;
-        } else if (typeHash == BOOL_HASH) {
-            t = Type.Bool;
-        } else if (typeHash == STRING_HASH) {
-            t = Type.String;
-        } else if (typeHash == INT_HASH) {
-            t = Type.Int256;
-        } else if (typeHash == BYTES_HASH) {
-            t = Type.Bytes;
-        } else if (typeHash == BYTES32_HASH) {
-            t = Type.Bytes32;
-        } else {
-            revert("Unsupported placeholder type");
-        }
+    Type t;
+    if (typeHash == UINT_HASH) {
+        t = Type.Uint256;
+    } else if (typeHash == ADDRESS_HASH) {
+        t = Type.Address;
+    } else if (typeHash == BOOL_HASH) {
+        t = Type.Bool;
+    } else if (typeHash == STRING_HASH) {
+        t = Type.String;
+    } else if (typeHash == INT_HASH) {
+        t = Type.Int256;
+    } else if (typeHash == BYTES_HASH) {
+        t = Type.Bytes;
+    } else if (typeHash == BYTES32_HASH) {
+        t = Type.Bytes32;
+    } else {
+        revert("Unsupported placeholder type");
+    }
 
-
-        bytes memory mod = modifierStart == placeholderEnd ? new bytes(0) : readSlice(template, modifierStart, placeholderEnd - modifierStart - 1);
-        return Placeholder(placeholderStart, placeholderEnd, t, mod);
+    bytes memory mod = modifierStart == placeholderEnd
+        ? new bytes(0)
+        : readSlice(template, modifierStart, placeholderEnd - modifierStart - 1);
+    return Placeholder(placeholderStart, placeholderEnd, t, mod);
 }
 
 function readWord(bytes memory data, uint256 offset) pure returns (bytes32) {
@@ -188,7 +188,8 @@ function decodeArgs(Placeholder[] memory placeholders, bytes memory data) pure r
 function display(uint256 value, bytes memory mod) pure returns (string memory) {
     if (mod.length == 0) {
         return strings.toString(value);
-    } else if (mod[0] == "d" && mod.length <= 4) { // Max decimals is 256
+    } else if (mod[0] == "d" && mod.length <= 4) {
+        // Max decimals is 256
         uint8 decimals = uint8(strings.parseUint(string(readSlice(mod, 1, mod.length - 1))));
         string memory integer = strings.toString(value / 10 ** decimals);
 
@@ -222,7 +223,10 @@ function format(string memory template, bytes memory args) pure returns (string 
     return _format(template, decoded, placeholders);
 }
 
-function _format(string memory template, string[] memory decoded, Placeholder[] memory placeholders) pure returns (string memory) {
+function _format(string memory template, string[] memory decoded, Placeholder[] memory placeholders)
+    pure
+    returns (string memory)
+{
     uint256 resultLength = bytes(template).length;
 
     for (uint256 i = 0; i < decoded.length; i++) {

@@ -2,8 +2,13 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
+import {format as fmtFormat} from "./Fmt.sol";
 
 library strings {
+    function format(string memory template, bytes memory args) public pure returns (string memory) {
+        return fmtFormat(template, args);
+    }
+
     /// @dev Transforms an address to a string.
     /// @param value The address to parse.
     /// @return The string representation of `value`.
