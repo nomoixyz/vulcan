@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
+import {console2 as console} from "forge-std/console2.sol";
 import "./Vulcan.sol";
 import "./Events.sol";
 import "./Accounts.sol";
 import "./Context.sol";
-import "./Console.sol";
 
 struct Call {
     bytes callData;
