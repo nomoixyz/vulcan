@@ -7,3 +7,7 @@ import {fmt} from "./Fmt.sol";
 function println(string memory template, bytes memory args) view {
     console2.log(fmt.format(template, args));
 }
+
+function println(string memory arg) view {
+    console2.log(arg);
+}
