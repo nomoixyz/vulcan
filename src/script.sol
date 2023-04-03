@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {console2 as console} from "forge-std/console2.sol";
+import {console} from "./Console.sol";
 import {vulcan} from "./Vulcan.sol";
 import {accountsSafe as accounts, accounts as accountsUnsafe} from "./Accounts.sol";
 import {commands} from "./Command.sol";
