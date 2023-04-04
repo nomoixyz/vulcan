@@ -4,7 +4,7 @@ pragma solidity >=0.8.13 <0.9.0;
 import {vulcan, Log} from "./_modules/Vulcan.sol";
 import {any} from "./_modules/Any.sol";
 import {accounts} from "./_modules/Accounts.sol";
-import {commands, Command} from "./_modules/Command.sol";
+import {commands, Command} from "./_modules/Commands.sol";
 import {ctx} from "./_modules/Context.sol";
 import {env} from "./_modules/Env.sol";
 import {events} from "./_modules/Events.sol";
