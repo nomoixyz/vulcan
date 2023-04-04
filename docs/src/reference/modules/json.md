@@ -83,63 +83,63 @@ Parses the value of the `key` contained on `jsonStr` as bytes32[].
 
 Creates a JsonObject struct with an identifier.
 
-#### **`serialize(JsonObject obj, string key, bool value) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, bool value) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, uint256 value) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, uint256 value) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, int256 value) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, int256 value) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, address value) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, address value) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, bytes32 value) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, bytes32 value) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, string value) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, string value) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, bytes value) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, bytes value) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, bool[] values) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, bool[] values) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, uint256[] values) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, uint256[] values) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, int256[] values) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, int256[] values) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, address[] values) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, address[] values) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, bytes32[] values) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, bytes32[] values) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, string[] values) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, string[] values) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, bytes[] values) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, bytes[] values) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
-#### **`serialize(JsonObject obj, string key, JsonObject value) → (JsonObject )`**
+#### **`set(JsonObject obj, string key, JsonObject value) → (JsonObject )`**
 
 Serializes and sets the key and value for the provided json object.
 
