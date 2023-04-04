@@ -11,6 +11,7 @@ import {events} from "./Events.sol";
 import {expect} from "./Expect.sol";
 import {forks, Fork} from "./Fork.sol";
 import {fs, FsMetadata} from "./Fs.sol";
+import {huff, Huffc} from "./Huff.sol";
 import {json, JsonObject} from "./Json.sol";
 import {strings} from "./Strings.sol";
 import {watchers, Watcher} from "./Watcher.sol";

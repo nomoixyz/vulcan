@@ -1,0 +1,39 @@
+#define constant SLOT = FREE_STORAGE_POINTER()
+
+#define macro SET() = takes (0) returns (0) {
+	0x04			// [value_offset]
+	calldataload		// [value]
+	[SLOT]			// [slot, value]
+	sstore			// []
+}
+
+#define macro GET() = takes (0) returns (0) {
+	[SLOT]			// [slot]
+	sload			// [value]
+	0x00			// [offset, value]
+	mload			// []
+	0x20			// [size]
+	0x00			// [offset, size]
+	return			// []
+}
+
+#define macro MAIN() = takes (0) returns (0) {
+	0x00			// [offset]
+	calldataload		// [value]
+	0xe0			// [shift, value]
+	shr			// [selector]
+	dup1			// [selector, selector]
+	0x60fe47b1		// [setselector, selector, selector]
+	eq			// [issetselector, selector]
+	set			// [jumpdest, issetselector selector]
+	jumpi			// [selector]
+	0x6d4ce63c		// [getselector, selector]
+	eq			// [isgetselector]
+	get			// [jumpdest, isgetselector]
+	jumpi			// []
+
+	set:
+		SET()
+	get:
+		GET()
+}
