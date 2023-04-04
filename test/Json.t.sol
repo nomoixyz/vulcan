@@ -152,6 +152,8 @@ contract JsonTest is Test {
         JsonObject memory b = json.create();
         a.serialize("foo", abi.encodePacked(uint256(1)));
         b.serialize("bar", a);
-        expect(b.serialized).toEqual('{"bar":{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}}');
+        expect(b.serialized).toEqual(
+            '{"bar":{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}}'
+        );
     }
 }
