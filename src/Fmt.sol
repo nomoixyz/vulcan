@@ -23,12 +23,18 @@ struct Placeholder {
 
 library fmt {
     bytes32 constant ADDRESS_HASH = keccak256(bytes("address"));
+    bytes32 constant ABBREVIATED_ADDRESS_HASH = keccak256(bytes("a"));
     bytes32 constant BYTES32_HASH = keccak256(bytes("bytes32"));
+    bytes32 constant ABBREVIATED_BYTES32_HASH = keccak256(bytes("b32"));
     bytes32 constant STRING_HASH = keccak256(bytes("string"));
+    bytes32 constant ABBREVIATED_STRING_HASH = keccak256(bytes("s"));
     bytes32 constant BYTES_HASH = keccak256(bytes("bytes"));
+    bytes32 constant ABBREVIATED_BYTES_HASH = keccak256(bytes("b"));
     bytes32 constant UINT_HASH = keccak256(bytes("uint"));
-    bytes32 constant BOOL_HASH = keccak256(bytes("bool"));
+    bytes32 constant ABBREVIATED_UINT_HASH = keccak256(bytes("u"));
     bytes32 constant INT_HASH = keccak256(bytes("int"));
+    bytes32 constant ABBREVIATED_INT_HASH = keccak256(bytes("i"));
+    bytes32 constant BOOL_HASH = keccak256(bytes("bool"));
 
     function format(string memory template, bytes memory args) internal pure returns (string memory) {
         Placeholder[] memory placeholders = _parseTemplate(template);
@@ -107,19 +113,19 @@ library fmt {
         bytes32 typeHash = keccak256(_readSlice(template, placeholderStart + 1, modifierStart - placeholderStart - 2));
 
         Type t;
-        if (typeHash == UINT_HASH) {
+        if (typeHash == UINT_HASH || typeHash == ABBREVIATED_UINT_HASH) {
             t = Type.Uint256;
-        } else if (typeHash == ADDRESS_HASH) {
+        } else if (typeHash == ADDRESS_HASH || typeHash == ABBREVIATED_ADDRESS_HASH) {
             t = Type.Address;
         } else if (typeHash == BOOL_HASH) {
             t = Type.Bool;
-        } else if (typeHash == STRING_HASH) {
+        } else if (typeHash == STRING_HASH || typeHash == ABBREVIATED_STRING_HASH) {
             t = Type.String;
-        } else if (typeHash == INT_HASH) {
+        } else if (typeHash == INT_HASH || typeHash == ABBREVIATED_INT_HASH) {
             t = Type.Int256;
-        } else if (typeHash == BYTES_HASH) {
+        } else if (typeHash == BYTES_HASH || typeHash == ABBREVIATED_BYTES_HASH) {
             t = Type.Bytes;
-        } else if (typeHash == BYTES32_HASH) {
+        } else if (typeHash == BYTES32_HASH || typeHash == ABBREVIATED_BYTES32_HASH) {
             t = Type.Bytes32;
         } else {
             revert("Unsupported placeholder type");
