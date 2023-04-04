@@ -15,6 +15,13 @@ contract TestMyContract is Test {
 
         // Obtain the serialized Json string
         expect(obj.serialized).toEqual('{"foo":true}');
+
+        // Nested Objects
+        JsonObject memory nested = json.create();
+
+        nested.serialize("bar", obj);
+
+        expect(nested.serialized).toEqual('{"bar":{"foo":true}}');
     }
 }
 ```
