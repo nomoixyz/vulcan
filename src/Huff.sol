@@ -47,7 +47,7 @@ library huff {
         if (self.constantOverrides.length > 0) {
             string memory overrides = "";
             for (uint256 i; i < self.constantOverrides.length; i++) {
-                overrides = string.concat(overrides, (i == 0 ? '' : ' '), self.constantOverrides[i]);
+                overrides = string.concat(overrides, (i == 0 ? "" : " "), self.constantOverrides[i]);
             }
             command = command.args(["-c", overrides]);
         }
@@ -77,7 +77,11 @@ library huff {
         return self;
     }
 
-    function setConstructorName(Huffc memory self, string memory constructorName) internal pure returns (Huffc memory) {
+    function setConstructorName(Huffc memory self, string memory constructorName)
+        internal
+        pure
+        returns (Huffc memory)
+    {
         self.constructorName = constructorName;
         return self;
     }
@@ -87,7 +91,11 @@ library huff {
         return self;
     }
 
-    function addConstantOverride(Huffc memory self, string memory const, bytes32 value) internal pure returns (Huffc memory) {
+    function addConstantOverride(Huffc memory self, string memory const, bytes32 value)
+        internal
+        pure
+        returns (Huffc memory)
+    {
         string[] memory overrides = new string[](self.constantOverrides.length + 1);
         for (uint256 i; i < self.constantOverrides.length; i++) {
             overrides[i] = self.constantOverrides[i];

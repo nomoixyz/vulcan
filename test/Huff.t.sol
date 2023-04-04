@@ -12,16 +12,11 @@ contract HuffTest is Test {
     using huff for *;
 
     function testToCommandAllSet() external {
-        Command memory command = huff.create()
-            .setCompilerPath("diffhuff")
-            .setFilePath("./filePath.huff")
-            .setOutputPath("./outputPath.json")
-            .setMainName("ALT_MAIN")
-            .setConstructorName("ALT_CONSTRUCTOR")
-            .setOnlyRuntime(true)
-            .addConstantOverride("SLOT", SLOT)
-            .addConstantOverride("OTHER_SLOT", OTHER_SLOT)
-            .toCommand();
+        Command memory command = huff.create().setCompilerPath("diffhuff").setFilePath("./filePath.huff").setOutputPath(
+            "./outputPath.json"
+        ).setMainName("ALT_MAIN").setConstructorName("ALT_CONSTRUCTOR").setOnlyRuntime(true).addConstantOverride(
+            "SLOT", SLOT
+        ).addConstantOverride("OTHER_SLOT", OTHER_SLOT).toCommand();
 
         expect(command.inputs.length).toEqual(12);
         expect(command.inputs[0]).toEqual("diffhuff");
@@ -39,10 +34,8 @@ contract HuffTest is Test {
     }
 
     function testToCommandConstantOverrideSingle() external {
-        Command memory command = huff.create()
-            .setFilePath("./filePath.huff")
-            .addConstantOverride("SLOT", SLOT)
-            .toCommand();
+        Command memory command =
+            huff.create().setFilePath("./filePath.huff").addConstantOverride("SLOT", SLOT).toCommand();
 
         expect(command.inputs.length).toEqual(5);
         expect(command.inputs[0]).toEqual("huffc");
