@@ -146,4 +146,12 @@ contract JsonTest is Test {
         obj.serialize("foo", abi.encodePacked(uint256(1)));
         expect(obj.serialized).toEqual('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}');
     }
+
+    function testSerializeObject() external {
+        JsonObject memory a = json.create();
+        JsonObject memory b = json.create();
+        a.serialize("foo", abi.encodePacked(uint256(1)));
+        b.serialize("bar", a);
+        expect(b.serialized).toEqual('{"bar":{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}}');
+    }
 }
