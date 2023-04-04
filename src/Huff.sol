@@ -14,9 +14,10 @@ struct Huffc {
     string[] constantOverrides;
 }
 
+using huff for Huffc global;
+
 library huff {
     using strings for bytes32;
-    using huff for Huffc;
 
     function create() internal pure returns (Huffc memory) {
         return Huffc({
