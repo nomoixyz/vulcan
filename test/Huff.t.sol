@@ -9,8 +9,6 @@ string constant SLOTS_AS_STRING =
     "SLOT=0x0000000000000000000000000000000000000000000000000000000000000001 OTHER_SLOT=0x0000000000000000000000000000000000000000000000000000000000000002";
 
 contract HuffTest is Test {
-    using huff for *;
-
     function testToCommandAllSet() external {
         Command memory command = huff.create().setCompilerPath("diffhuff").setFilePath("./filePath.huff").setOutputPath(
             "./outputPath.json"
