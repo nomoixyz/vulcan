@@ -227,10 +227,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function set(JsonObject memory obj, string memory key, string memory value)
-        internal
-        returns (JsonObject memory)
-    {
+    function set(JsonObject memory obj, string memory key, string memory value) internal returns (JsonObject memory) {
         obj.serialized = vulcan.hevm.serializeString(obj.id, key, value);
         return obj;
     }
@@ -240,10 +237,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function set(JsonObject memory obj, string memory key, bytes memory value)
-        internal
-        returns (JsonObject memory)
-    {
+    function set(JsonObject memory obj, string memory key, bytes memory value) internal returns (JsonObject memory) {
         obj.serialized = vulcan.hevm.serializeBytes(obj.id, key, value);
         return obj;
     }
@@ -253,10 +247,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function set(JsonObject memory obj, string memory key, bool[] memory values)
-        internal
-        returns (JsonObject memory)
-    {
+    function set(JsonObject memory obj, string memory key, bool[] memory values) internal returns (JsonObject memory) {
         obj.serialized = vulcan.hevm.serializeBool(obj.id, key, values);
         return obj;
     }
