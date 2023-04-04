@@ -10,18 +10,18 @@ contract TestMyContract is Test {
         // Create a JsonObject struct
         JsonObject memory obj = json.create();
 
-        // Serialize the property `foo` with a value of `true`
-        obj.serialize("foo", true);
+        // Set the property `foo` with a value of `true`
+        obj.set("foo", true);
 
-        // Obtain the serialized Json string
-        expect(obj.serialized).toEqual('{"foo":true}');
+        // Obtain the set Json string
+        expect(obj.set).toEqual('{"foo":true}');
 
         // Nested Objects
         JsonObject memory nested = json.create();
 
-        nested.serialize("bar", obj);
+        nested.set("bar", obj);
 
-        expect(nested.serialized).toEqual('{"bar":{"foo":true}}');
+        expect(nested.set).toEqual('{"bar":{"foo":true}}');
     }
 }
 ```
