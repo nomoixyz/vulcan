@@ -1,8 +1,8 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import "../src/Util.sol";
-import {any, Test, ctx, expect, events, console, vulcan, watchers, Watcher} from "../src/test.sol";
-import {Sender} from "./mocks/Sender.sol";
+import "../../src/_modules/Util.sol";
+import {any, Test, ctx, expect, events, console, vulcan, watchers, Watcher} from "../../src/test.sol";
+import {Sender} from "../mocks/Sender.sol";
 
 contract CallTest {
     error CustomError(uint256 i);

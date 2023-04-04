@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, events, Log} from "../src/test.sol";
+import {Test, expect, events, Log} from "../../src/test.sol";
 
 contract EventsTest is Test {
     using events for *;

@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, console, json, JsonObject, vulcan} from "../src/test.sol";
+import {Test, expect, console, json, JsonObject, vulcan} from "../../src/test.sol";
 
 contract JsonTest is Test {
     using vulcan for *;

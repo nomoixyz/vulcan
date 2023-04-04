@@ -1,7 +1,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, forks, Fork, console} from "../src/test.sol";
-import {Sender} from "./mocks/Sender.sol";
+import {Test, expect, commands, forks, Fork, console} from "../../src/test.sol";
+import {Sender} from "../mocks/Sender.sol";
 
 contract ForkTest is Test {
     string private constant ENDPOINT = "http://localhost:8545";

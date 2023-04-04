@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, Command} from "../src/test.sol";
+import {Test, expect, commands, Command} from "../../src/test.sol";
 
 contract CommandTest is Test {
     using commands for *;

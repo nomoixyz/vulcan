@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, ctx} from "../src/test.sol";
+import {Test, expect, commands, ctx} from "../../src/test.sol";
 
 contract ContextTest is Test {
     function testItCanSetTheBlockTimestamp(uint256 blockTimestamp) external {

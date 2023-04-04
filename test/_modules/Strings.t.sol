@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, strings, console} from "../src/test.sol";
+import {Test, expect, strings, console} from "../../src/test.sol";
 
 contract StringsTest is Test {
     using strings for *;
