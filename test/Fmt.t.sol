@@ -19,6 +19,15 @@ contract PrintfTest is Test {
         expect(result).toEqual("0x000000000000000000000000000000000000007B hello foo world 1");
     }
 
+    function testNoTemplate() external {
+        string memory template = "hello world";
+        string memory result = fmt.format(template, abi.encode());
+        expect(result).toEqual("hello world");
+
+        string memory result2 = fmt.format(template, abi.encode(address(123), "foo", true));
+        expect(result2).toEqual("hello world");
+    }
+
     function testFormatDecimals() external {
         expect(fmt.format("{uint:d18}", abi.encode(1e17))).toEqual("0.1");
         expect(fmt.format("{uint:d17}", abi.encode(1e17))).toEqual("1.0");

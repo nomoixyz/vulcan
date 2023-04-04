@@ -13,6 +13,10 @@ import {fs} from "./Fs.sol";
 import {json} from "./Json.sol";
 import {strings} from "./Strings.sol";
 import {watchers as watchersUnsafe} from "./Watcher.sol";
+import {config, Rpc} from "./Config.sol";
+import {fmt} from "./Fmt.sol";
+import {format} from "./Format.sol";
+import {println} from "./Println.sol";
 
 contract Script {
     bool public IS_SCRIPT = true;

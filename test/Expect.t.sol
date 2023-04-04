@@ -64,22 +64,6 @@ contract ExpectTest is Test {
     using vulcan for *;
     using watchers for *;
 
-    modifier shouldFail() {
-        bool pre = vulcan.failed();
-        _;
-        bool post = vulcan.failed();
-
-        if (pre) {
-            return;
-        }
-
-        if (!post) {
-            revert("Didn't fail");
-        }
-
-        vulcan.clearFailure();
-    }
-
     function testUintToEqualPass(uint256 a) external {
         expect(a).toEqual(a);
     }

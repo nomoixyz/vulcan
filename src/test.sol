@@ -16,6 +16,9 @@ import {json, JsonObject} from "./Json.sol";
 import {strings} from "./Strings.sol";
 import {watchers, Watcher} from "./Watcher.sol";
 import {config, Rpc} from "./Config.sol";
+import {fmt} from "./Fmt.sol";
+import {format} from "./Format.sol";
+import {println} from "./Println.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test {
@@ -27,5 +30,21 @@ contract Test {
 
     function failed() public view returns (bool) {
         return vulcan.failed();
+    }
+
+    modifier shouldFail() {
+        bool pre = vulcan.failed();
+        _;
+        bool post = vulcan.failed();
+
+        if (pre) {
+            return;
+        }
+
+        if (!post) {
+            revert("Didn't fail");
+        }
+
+        vulcan.clearFailure();
     }
 }
