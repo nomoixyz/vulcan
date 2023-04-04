@@ -7,8 +7,6 @@ to work.
 import { Test, huff } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
-    using huff for *;
-
     function testMyContractSimple() external {
         // create the `Huffc` structure, mutate the configuration, and compile.
         //
