@@ -9,16 +9,6 @@ contract JsonTest is Test {
         string foo;
     }
 
-    // function testCreate() external {
-    //     JsonObject memory obj = json.create('{"foo":"bar"}');
-    //     expect(obj.serialized).toEqual('{"foo":"bar"}');
-
-    //     obj.serialize("hello", string("world"));
-    //     // TODO: should parseString receive the actual struct?
-    //     expect(json.parseString(obj.serialized, ".foo")).toEqual("bar");
-    //     expect(json.parseString(obj.serialized, ".hello")).toEqual("world");
-    // }
-
     function testParseObject() external {
         string memory jsonStr = '{"foo":"bar"}';
         Foo memory obj = abi.decode(json.parseObject(jsonStr), (Foo));
@@ -26,7 +16,7 @@ contract JsonTest is Test {
     }
 
     function testParseObjectStruct() external {
-        JsonObject memory jsonObject = json.create().serialize("foo", string("bar"));
+        JsonObject memory jsonObject = json.create().set("foo", string("bar"));
         Foo memory obj = abi.decode(json.parseObject(jsonObject), (Foo));
         expect(obj.foo).toEqual("bar");
     }
@@ -107,51 +97,51 @@ contract JsonTest is Test {
 
     function testSerializeBool() external {
         JsonObject memory obj = json.create();
-        obj.serialize("foo", true);
+        obj.set("foo", true);
         expect(obj.serialized).toEqual('{"foo":true}');
     }
 
     function testSerializeUint() external {
         JsonObject memory obj = json.create();
-        obj.serialize("foo", uint256(123));
+        obj.set("foo", uint256(123));
         expect(obj.serialized).toEqual('{"foo":123}');
     }
 
     function testSerializeInt() external {
         JsonObject memory obj = json.create();
-        obj.serialize("foo", int256(-123));
+        obj.set("foo", int256(-123));
         expect(obj.serialized).toEqual('{"foo":-123}');
     }
 
     function testSerializeAddress() external {
         JsonObject memory obj = json.create();
-        obj.serialize("foo", address(1));
+        obj.set("foo", address(1));
         expect(obj.serialized).toEqual('{"foo":"0x0000000000000000000000000000000000000001"}');
     }
 
     function testSerializeBytes32() external {
         JsonObject memory obj = json.create();
-        obj.serialize("foo", bytes32(uint256(1)));
+        obj.set("foo", bytes32(uint256(1)));
         expect(obj.serialized).toEqual('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}');
     }
 
     function testSerializeString() external {
         JsonObject memory obj = json.create();
-        obj.serialize("foo", string("bar"));
+        obj.set("foo", string("bar"));
         expect(obj.serialized).toEqual('{"foo":"bar"}');
     }
 
     function testSerializeBytes() external {
         JsonObject memory obj = json.create();
-        obj.serialize("foo", abi.encodePacked(uint256(1)));
+        obj.set("foo", abi.encodePacked(uint256(1)));
         expect(obj.serialized).toEqual('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}');
     }
 
     function testSerializeObject() external {
         JsonObject memory a = json.create();
         JsonObject memory b = json.create();
-        a.serialize("foo", abi.encodePacked(uint256(1)));
-        b.serialize("bar", a);
+        a.set("foo", abi.encodePacked(uint256(1)));
+        b.set("bar", a);
         expect(b.serialized).toEqual(
             '{"bar":{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}}'
         );

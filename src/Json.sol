@@ -177,7 +177,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, bool value) internal returns (JsonObject memory) {
+    function set(JsonObject memory obj, string memory key, bool value) internal returns (JsonObject memory) {
         obj.serialized = vulcan.hevm.serializeBool(obj.id, key, value);
         return obj;
     }
@@ -187,7 +187,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, uint256 value) internal returns (JsonObject memory) {
+    function set(JsonObject memory obj, string memory key, uint256 value) internal returns (JsonObject memory) {
         obj.serialized = vulcan.hevm.serializeUint(obj.id, key, value);
         return obj;
     }
@@ -197,7 +197,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, int256 value) internal returns (JsonObject memory) {
+    function set(JsonObject memory obj, string memory key, int256 value) internal returns (JsonObject memory) {
         obj.serialized = vulcan.hevm.serializeInt(obj.id, key, value);
         return obj;
     }
@@ -207,7 +207,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, address value) internal returns (JsonObject memory) {
+    function set(JsonObject memory obj, string memory key, address value) internal returns (JsonObject memory) {
         obj.serialized = vulcan.hevm.serializeAddress(obj.id, key, value);
         return obj;
     }
@@ -217,7 +217,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, bytes32 value) internal returns (JsonObject memory) {
+    function set(JsonObject memory obj, string memory key, bytes32 value) internal returns (JsonObject memory) {
         obj.serialized = vulcan.hevm.serializeBytes32(obj.id, key, value);
         return obj;
     }
@@ -227,7 +227,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, string memory value)
+    function set(JsonObject memory obj, string memory key, string memory value)
         internal
         returns (JsonObject memory)
     {
@@ -240,7 +240,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, bytes memory value)
+    function set(JsonObject memory obj, string memory key, bytes memory value)
         internal
         returns (JsonObject memory)
     {
@@ -253,7 +253,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, bool[] memory values)
+    function set(JsonObject memory obj, string memory key, bool[] memory values)
         internal
         returns (JsonObject memory)
     {
@@ -266,7 +266,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, uint256[] memory values)
+    function set(JsonObject memory obj, string memory key, uint256[] memory values)
         internal
         returns (JsonObject memory)
     {
@@ -279,7 +279,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, int256[] memory values)
+    function set(JsonObject memory obj, string memory key, int256[] memory values)
         internal
         returns (JsonObject memory)
     {
@@ -292,7 +292,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, address[] memory values)
+    function set(JsonObject memory obj, string memory key, address[] memory values)
         internal
         returns (JsonObject memory)
     {
@@ -305,7 +305,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, bytes32[] memory values)
+    function set(JsonObject memory obj, string memory key, bytes32[] memory values)
         internal
         returns (JsonObject memory)
     {
@@ -318,7 +318,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, string[] memory values)
+    function set(JsonObject memory obj, string memory key, string[] memory values)
         internal
         returns (JsonObject memory)
     {
@@ -331,7 +331,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param values The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, bytes[] memory values)
+    function set(JsonObject memory obj, string memory key, bytes[] memory values)
         internal
         returns (JsonObject memory)
     {
@@ -344,7 +344,7 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return The modified JsonObject struct.
-    function serialize(JsonObject memory obj, string memory key, JsonObject memory value)
+    function set(JsonObject memory obj, string memory key, JsonObject memory value)
         internal
         returns (JsonObject memory)
     {
