@@ -17,8 +17,8 @@ import {strings} from "./Strings.sol";
 import {watchers, Watcher} from "./Watcher.sol";
 import {config, Rpc} from "./Config.sol";
 import {fmt} from "./Fmt.sol";
-import {format} from "./Format.sol";
-import {println} from "./Println.sol";
+import {format} from "./format.sol";
+import {println} from "./println.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test {
