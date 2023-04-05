@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
+import {console} from "./Console.sol";
 import {vulcan, Log} from "./Vulcan.sol";
 import {any} from "./Any.sol";
 import {accounts} from "./Accounts.sol";
@@ -16,7 +17,9 @@ import {json, JsonObject} from "./Json.sol";
 import {strings} from "./Strings.sol";
 import {watchers, Watcher} from "./Watcher.sol";
 import {config, Rpc} from "./Config.sol";
-import "./Console.sol";
+import {fmt} from "./Fmt.sol";
+import {format} from "./format.sol";
+import {println} from "./println.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test {
@@ -28,5 +31,21 @@ contract Test {
 
     function failed() public view returns (bool) {
         return vulcan.failed();
+    }
+
+    modifier shouldFail() {
+        bool pre = vulcan.failed();
+        _;
+        bool post = vulcan.failed();
+
+        if (pre) {
+            return;
+        }
+
+        if (!post) {
+            revert("Didn't fail");
+        }
+
+        vulcan.clearFailure();
     }
 }
