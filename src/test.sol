@@ -1,22 +1,25 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {vulcan, Log} from "./Vulcan.sol";
-import {any} from "./Any.sol";
-import {accounts} from "./Accounts.sol";
-import {commands, Command} from "./Command.sol";
-import {ctx} from "./Context.sol";
-import {env} from "./Env.sol";
-import {events} from "./Events.sol";
-import {expect} from "./Expect.sol";
-import {forks, Fork} from "./Fork.sol";
-import {fs, FsMetadata} from "./Fs.sol";
-import {huff, Huffc} from "./Huff.sol";
-import {json, JsonObject} from "./Json.sol";
-import {strings} from "./Strings.sol";
-import {watchers, Watcher} from "./Watcher.sol";
-import {config, Rpc} from "./Config.sol";
-import "./Console.sol";
+import {console} from "./_modules/Console.sol";
+import {vulcan, Log} from "./_modules/Vulcan.sol";
+import {any} from "./_modules/Any.sol";
+import {accounts} from "./_modules/Accounts.sol";
+import {commands, Command} from "./_modules/Commands.sol";
+import {ctx} from "./_modules/Context.sol";
+import {env} from "./_modules/Env.sol";
+import {events} from "./_modules/Events.sol";
+import {expect} from "./_modules/Expect.sol";
+import {forks, Fork} from "./_modules/Fork.sol";
+import {fs, FsMetadata} from "./_modules/Fs.sol";
+import {huff, Huffc} from "./_modules/Huff.sol";
+import {json, JsonObject} from "./_modules/Json.sol";
+import {strings} from "./_modules/Strings.sol";
+import {watchers, Watcher} from "./_modules/Watcher.sol";
+import {config, Rpc} from "./_modules/Config.sol";
+import {fmt} from "./_modules/Fmt.sol";
+import {format} from "./_utils/format.sol";
+import {println} from "./_utils/println.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test {
@@ -28,5 +31,21 @@ contract Test {
 
     function failed() public view returns (bool) {
         return vulcan.failed();
+    }
+
+    modifier shouldFail() {
+        bool pre = vulcan.failed();
+        _;
+        bool post = vulcan.failed();
+
+        if (pre) {
+            return;
+        }
+
+        if (!post) {
+            revert("Didn't fail");
+        }
+
+        vulcan.clearFailure();
     }
 }

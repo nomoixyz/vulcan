@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {console} from "./Console.sol";
+import "./Console.sol";
 import "./Events.sol";
 import "./Any.sol";
 import "./Vulcan.sol";
-import "./Util.sol";
+import "./Strings.sol";
+import {delta} from "../_utils/delta.sol";
 
 struct _BoolExpectation {
     bool actual;
@@ -156,8 +157,8 @@ library ExpectLib {
     function toEqual(_Bytes32Expectation memory self, bytes32 expected) internal {
         if (self.actual != expected) {
             console.log("Error: a == b not satisfied [bytes32]");
-            console.log("  Expected", expected);
-            console.log("    Actual", self.actual);
+            console.log("  Expected", strings.toString(expected));
+            console.log("    Actual", strings.toString(self.actual));
             vulcan.fail();
         }
     }
@@ -165,8 +166,8 @@ library ExpectLib {
     function toEqual(_Bytes32ExpectationNot memory self, bytes32 expected) internal {
         if (self.actual == expected) {
             console.log("Error: a != b not satisfied [bytes32]");
-            console.log("  Value a", expected);
-            console.log("  Value b", self.actual);
+            console.log("  Value a", strings.toString(expected));
+            console.log("  Value b", strings.toString(self.actual));
             vulcan.fail();
         }
     }
@@ -174,8 +175,8 @@ library ExpectLib {
     function toBeTheHashOf(_Bytes32Expectation memory self, bytes memory data) internal {
         if (self.actual != keccak256(data)) {
             console.log("Error: a is not the hash of b [bytes32]");
-            console.log("  Expected", keccak256(data));
-            console.log("    Actual", self.actual);
+            console.log("  Expected", strings.toString(data));
+            console.log("    Actual", strings.toString(self.actual));
             vulcan.fail();
         }
     }
@@ -183,8 +184,8 @@ library ExpectLib {
     function toBeTheHashOf(_Bytes32ExpectationNot memory self, bytes memory data) internal {
         if (self.actual == keccak256(data)) {
             console.log("Error: a is the hash of b [bytes32]");
-            console.log("  Value a", keccak256(data));
-            console.log("  Value b", self.actual);
+            console.log("  Value a", strings.toString(data));
+            console.log("  Value b", strings.toString(self.actual));
             vulcan.fail();
         }
     }
@@ -194,8 +195,8 @@ library ExpectLib {
     function toEqual(_BytesExpectation memory self, bytes memory expected) internal {
         if (keccak256(self.actual) != keccak256(expected)) {
             console.log("Error: a == b not satisfied [bytes]");
-            console.log("  Expected", expected);
-            console.log("    Actual", self.actual);
+            console.log("  Expected", strings.toString(expected));
+            console.log("    Actual", strings.toString(self.actual));
             vulcan.fail();
         }
     }
@@ -203,8 +204,8 @@ library ExpectLib {
     function toEqual(_BytesExpectationNot memory self, bytes memory expected) internal {
         if (keccak256(self.actual) == keccak256(expected)) {
             console.log("Error: a != b not satisfied [bytes]");
-            console.log("  Value", expected);
-            console.log("  Value", self.actual);
+            console.log("  Value", strings.toString(expected));
+            console.log("  Value", strings.toString(self.actual));
             vulcan.fail();
         }
     }
@@ -321,13 +322,13 @@ library ExpectLib {
         }
     }
 
-    function toBeCloseTo(_UintExpectation memory self, uint256 expected, uint256 delta) internal {
-        uint256 diff = util.delta(self.actual, expected);
-        if (diff > delta) {
+    function toBeCloseTo(_UintExpectation memory self, uint256 expected, uint256 d) internal {
+        uint256 diff = delta(self.actual, expected);
+        if (diff > d) {
             console.log("Error: a ~= b not satisfied [uint]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            console.log(" Max Delta", delta);
+            console.log(" Max Delta", d);
             console.log("     Delta", diff);
             vulcan.fail();
         }
@@ -389,14 +390,14 @@ library ExpectLib {
         }
     }
 
-    function toBeCloseTo(_IntExpectation memory self, int256 expected, uint256 delta) internal {
-        uint256 diff = util.delta(self.actual, expected);
+    function toBeCloseTo(_IntExpectation memory self, int256 expected, uint256 d) internal {
+        uint256 diff = delta(self.actual, expected);
 
-        if (diff > delta) {
+        if (diff > d) {
             console.log("Error: a ~= b not satisfied [uint]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            console.log(" Max Delta", delta);
+            console.log(" Max Delta", d);
             console.log("     Delta", diff);
             vulcan.fail();
         }
@@ -454,8 +455,8 @@ library ExpectLib {
 
         if (actualSelector != expectedSelector) {
             console.log("Error: call expected to revert with selector [call]");
-            console.log("  Expected error", expectedSelector);
-            console.log("    Actual error", actualSelector);
+            console.log("  Expected error", strings.toString(bytes32(expectedSelector)));
+            console.log("    Actual error", strings.toString(bytes32(actualSelector)));
 
             vulcan.fail();
         }
@@ -466,7 +467,7 @@ library ExpectLib {
 
         if (!self.call.success && actualSelector == expectedSelector) {
             console.log("Error: call expected to not revert with selector [call]");
-            console.log("    Actual error", actualSelector);
+            console.log("    Actual error", strings.toString(bytes32(actualSelector)));
 
             vulcan.fail();
         }
@@ -493,8 +494,8 @@ library ExpectLib {
 
         if (!self.call.success && actualHash != expectedHash) {
             console.log("Error: function expected to revert with error [call]");
-            console.log("  Expected error", expectedError);
-            console.log("    Actual error", self.call.returnData);
+            console.log("  Expected error", strings.toString(expectedError));
+            console.log("    Actual error", strings.toString(self.call.returnData));
 
             vulcan.fail();
         }
@@ -506,7 +507,7 @@ library ExpectLib {
 
         if (!self.call.success && actualHash == expectedHash) {
             console.log("Error: function expected to not revert with error [call]");
-            console.log("    Actual error", self.call.returnData);
+            console.log("    Actual error", strings.toString(self.call.returnData));
 
             vulcan.fail();
         }

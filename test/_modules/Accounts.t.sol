@@ -1,7 +1,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, accounts, console} from "../src/test.sol";
-import {Sender} from "./mocks/Sender.sol";
+import {Test, expect, commands, accounts, console} from "../../src/test.sol";
+import {Sender} from "../mocks/Sender.sol";
 
 contract AccountsTest is Test {
     using accounts for *;
