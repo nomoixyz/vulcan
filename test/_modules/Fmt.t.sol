@@ -1,10 +1,10 @@
 //// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, config, Rpc, console} from "../src/test.sol";
-import {Type, Placeholder, fmt} from "../src/_modules/Fmt.sol";
+import {Test, expect, config, Rpc, console} from "../../src/test.sol";
+import {Type, Placeholder, fmt} from "../../src/_modules/Fmt.sol";
 
-contract PrintfTest is Test {
+contract FmtTest is Test {
     function testFormat() external {
         string memory template = "{address} hello {string} world {bool}";
         string memory result = fmt.format(template, abi.encode(address(123), "foo", true));
