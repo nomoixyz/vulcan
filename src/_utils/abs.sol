@@ -9,4 +9,3 @@ function abs(int256 a) pure returns (uint256) {
 
     return uint256(a > 0 ? a : -a);
 }
-

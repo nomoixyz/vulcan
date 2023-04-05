@@ -19,4 +19,3 @@ function delta(int256 a, int256 b) pure returns (uint256) {
         return absA + absB;
     }
 }
-
