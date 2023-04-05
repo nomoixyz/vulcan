@@ -5,34 +5,6 @@ import {Test, expect, events, Log} from "../../src/test.sol";
 contract EventsTest is Test {
     using events for *;
 
-    function testItCanConvertFixedToDynamicArrays(bytes32 t0, bytes32 t1, bytes32 t2, bytes32 t3) external {
-        bytes32[1] memory topics1 = [t0];
-        bytes32[2] memory topics2 = [t0, t1];
-        bytes32[3] memory topics3 = [t0, t1, t2];
-        bytes32[4] memory topics4 = [t0, t1, t2, t3];
-
-        bytes32[] memory dynamic1 = topics1.toDynamic();
-        bytes32[] memory dynamic2 = topics2.toDynamic();
-        bytes32[] memory dynamic3 = topics3.toDynamic();
-        bytes32[] memory dynamic4 = topics4.toDynamic();
-
-        for (uint256 i; i < topics1.length; ++i) {
-            expect(topics1[i]).toEqual(dynamic1[i]);
-        }
-
-        for (uint256 i; i < topics2.length; ++i) {
-            expect(topics2[i]).toEqual(dynamic2[i]);
-        }
-
-        for (uint256 i; i < topics3.length; ++i) {
-            expect(topics3[i]).toEqual(dynamic3[i]);
-        }
-
-        for (uint256 i; i < topics4.length; ++i) {
-            expect(topics4[i]).toEqual(dynamic4[i]);
-        }
-    }
-
     function testItCanConvertUintToTopic(uint256 value) external {
         expect(value.topic()).toEqual(bytes32(value));
     }

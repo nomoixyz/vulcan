@@ -5,43 +5,6 @@ import {Vm as Hevm} from "forge-std/Vm.sol";
 import "./Vulcan.sol";
 
 library events {
-    /// @dev Transform a fixed array of `bytes32` to a dynamic array of `bytes32`.
-    /// @param topics The fixed array to transform.
-    /// @return _topics The dynamic array.
-    function toDynamic(bytes32[1] memory topics) internal pure returns (bytes32[] memory _topics) {
-        _topics = new bytes32[](1);
-        _topics[0] = topics[0];
-    }
-
-    /// @dev Transform a fixed array of `bytes32` to a dynamic array of `bytes32`.
-    /// @param topics The fixed array to transform.
-    /// @return _topics The dynamic array.
-    function toDynamic(bytes32[2] memory topics) internal pure returns (bytes32[] memory _topics) {
-        _topics = new bytes32[](2);
-        _topics[0] = topics[0];
-        _topics[1] = topics[1];
-    }
-
-    /// @dev Transform a fixed array of `bytes32` to a dynamic array of `bytes32`.
-    /// @param topics The fixed array to transform.
-    /// @return _topics The dynamic array.
-    function toDynamic(bytes32[3] memory topics) internal pure returns (bytes32[] memory _topics) {
-        _topics = new bytes32[](3);
-        _topics[0] = topics[0];
-        _topics[1] = topics[1];
-        _topics[2] = topics[2];
-    }
-
-    /// @dev Transform a fixed array of `bytes32` to a dynamic array of `bytes32`.
-    /// @param topics The fixed array to transform.
-    /// @return _topics The dynamic array.
-    function toDynamic(bytes32[4] memory topics) internal pure returns (bytes32[] memory _topics) {
-        _topics = new bytes32[](4);
-        _topics[0] = topics[0];
-        _topics[1] = topics[1];
-        _topics[2] = topics[2];
-        _topics[3] = topics[3];
-    }
 
     /// @dev Obtains the topic representation of an `uint256` parameter.
     /// @param _param The `uint256` value.
@@ -89,7 +52,6 @@ library events {
     /// @param _param The `int256` value.
     /// @return The representation of `_param` as an event topic.
     function topic(int256 _param) internal pure returns (bytes32) {
-        // TODO: is this correct?
         return bytes32(uint256(_param));
     }
 
