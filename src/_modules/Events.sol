@@ -5,7 +5,6 @@ import {Vm as Hevm} from "forge-std/Vm.sol";
 import "./Vulcan.sol";
 
 library events {
-
     /// @dev Obtains the topic representation of an `uint256` parameter.
     /// @param _param The `uint256` value.
     /// @return The representation of `_param` as an event topic.
