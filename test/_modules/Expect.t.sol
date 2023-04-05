@@ -1,8 +1,8 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import "../../src/_modules/Util.sol";
 import {any, Test, ctx, expect, events, console, vulcan, watchers, Watcher} from "../../src/test.sol";
 import {Sender} from "../mocks/Sender.sol";
+import "../../src/_utils/delta.sol";
 
 contract CallTest {
     error CustomError(uint256 i);
@@ -82,14 +82,14 @@ contract ExpectTest is Test {
         expect(a).not.toEqual(a);
     }
 
-    function testUintToBeCloseToPass(uint256 a, uint256 b, uint256 delta) external {
-        ctx.assume(util.delta(a, b) <= delta);
-        expect(a).toBeCloseTo(b, delta);
+    function testUintToBeCloseToPass(uint256 a, uint256 b, uint256 d) external {
+        ctx.assume(delta(a, b) <= d);
+        expect(a).toBeCloseTo(b, d);
     }
 
-    function testUintToBeCloseToFail(uint256 a, uint256 b, uint256 delta) external shouldFail {
-        ctx.assume(util.delta(a, b) > delta);
-        expect(a).toBeCloseTo(b, delta);
+    function testUintToBeCloseToFail(uint256 a, uint256 b, uint256 d) external shouldFail {
+        ctx.assume(delta(a, b) > d);
+        expect(a).toBeCloseTo(b, d);
     }
 
     function testUintToBeLessThanPass(uint256 a, uint256 b) external {
@@ -132,14 +132,14 @@ contract ExpectTest is Test {
         expect(a).not.toEqual(a);
     }
 
-    function testIntToBeCloseToPass(int256 a, int256 b, uint256 delta) external {
-        ctx.assume(util.delta(a, b) <= delta);
-        expect(a).toBeCloseTo(b, delta);
+    function testIntToBeCloseToPass(int256 a, int256 b, uint256 d) external {
+        ctx.assume(delta(a, b) <= d);
+        expect(a).toBeCloseTo(b, d);
     }
 
-    function testIntToBeCloseToFail(int256 a, int256 b, uint256 delta) external shouldFail {
-        ctx.assume(util.delta(a, b) > delta);
-        expect(a).toBeCloseTo(b, delta);
+    function testIntToBeCloseToFail(int256 a, int256 b, uint256 d) external shouldFail {
+        ctx.assume(delta(a, b) > d);
+        expect(a).toBeCloseTo(b, d);
     }
 
     function testIntToBeLessThanPass(int256 a, int256 b) external {

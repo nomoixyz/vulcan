@@ -15,8 +15,8 @@ import {strings} from "./_modules/Strings.sol";
 import {watchers as watchersUnsafe} from "./_modules/Watcher.sol";
 import {config, Rpc} from "./_modules/Config.sol";
 import {fmt} from "./_modules/Fmt.sol";
-import {format} from "./format.sol";
-import {println} from "./println.sol";
+import {format} from "./_utils/format.sol";
+import {println} from "./_utils/println.sol";
 
 contract Script {
     bool public IS_SCRIPT = true;

@@ -5,8 +5,8 @@ import "./Console.sol";
 import "./Events.sol";
 import "./Any.sol";
 import "./Vulcan.sol";
-import "./Util.sol";
 import "./Strings.sol";
+import {delta} from "../_utils/delta.sol";
 
 struct _BoolExpectation {
     bool actual;
@@ -322,13 +322,13 @@ library ExpectLib {
         }
     }
 
-    function toBeCloseTo(_UintExpectation memory self, uint256 expected, uint256 delta) internal {
-        uint256 diff = util.delta(self.actual, expected);
-        if (diff > delta) {
+    function toBeCloseTo(_UintExpectation memory self, uint256 expected, uint256 d) internal {
+        uint256 diff = delta(self.actual, expected);
+        if (diff > d) {
             console.log("Error: a ~= b not satisfied [uint]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            console.log(" Max Delta", delta);
+            console.log(" Max Delta", d);
             console.log("     Delta", diff);
             vulcan.fail();
         }
@@ -390,14 +390,14 @@ library ExpectLib {
         }
     }
 
-    function toBeCloseTo(_IntExpectation memory self, int256 expected, uint256 delta) internal {
-        uint256 diff = util.delta(self.actual, expected);
+    function toBeCloseTo(_IntExpectation memory self, int256 expected, uint256 d) internal {
+        uint256 diff = delta(self.actual, expected);
 
-        if (diff > delta) {
+        if (diff > d) {
             console.log("Error: a ~= b not satisfied [uint]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
-            console.log(" Max Delta", delta);
+            console.log(" Max Delta", d);
             console.log("     Delta", diff);
             vulcan.fail();
         }
