@@ -100,6 +100,14 @@ contract ContextTest is Test {
 
         target.value{value: uint256(1337)}();
     }
+
+    function testItCanReportGas() external {
+        ctx.startGasReport("test");
+        for (uint256 i = 0; i < 5; i++) {
+            new MockTarget();
+        }
+        ctx.endGasReport();
+    }
 }
 
 contract MockTarget {

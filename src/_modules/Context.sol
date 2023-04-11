@@ -3,6 +3,8 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
 import "./Accounts.sol";
+import "./Strings.sol";
+import "../_utils/println.sol";
 
 type Context is bytes32;
 
@@ -69,6 +71,30 @@ library ctxSafe {
     function resumeGasMetering() internal {
         vulcan.hevm.resumeGasMetering();
     }
+
+    function startGasReport(string memory name) internal {
+        if (bytes(name).length > 32) {
+            revert("ctx.startGasReport: Gas report length can't have more than 32 characters");
+        }
+
+        bytes32 b32Name = bytes32(bytes(name));
+        bytes32 slot = keccak256(bytes("vulcan.ctx.gasReport.name"));
+        accounts.setStorage(address(vulcan.hevm), slot, b32Name);
+        bytes32 valueSlot = keccak256(abi.encodePacked("vulcan.ctx.gasReport", b32Name));
+        accounts.setStorage(address(vulcan.hevm), valueSlot, bytes32(gasleft()));
+    }
+
+    function endGasReport() internal view {
+        uint256 gas = gasleft();
+        bytes32 slot = keccak256(bytes("vulcan.ctx.gasReport.name"));
+        bytes32 b32Name = accounts.readStorage(address(vulcan.hevm), slot);
+        bytes32 valueSlot = keccak256(abi.encodePacked("vulcan.ctx.gasReport", b32Name));
+        uint256 prevGas = uint256(accounts.readStorage(address(vulcan.hevm), valueSlot));
+        if (gas > prevGas) {
+            revert("ctx.endGasReport: Gas used can't have a negative value");
+        }
+        println(string.concat("gas(", string(abi.encodePacked(b32Name)), "):", strings.toString(prevGas - gas)));
+    }
 }
 
 library ctx {
@@ -118,6 +144,14 @@ library ctx {
 
     function resumeGasMetering() internal {
         ctxSafe.resumeGasMetering();
+    }
+
+    function startGasReport(string memory name) internal {
+        ctxSafe.startGasReport(name);
+    }
+
+    function endGasReport() internal view {
+        ctxSafe.endGasReport();
     }
 
     /// @dev Checks whether the current call is a static call or not.
