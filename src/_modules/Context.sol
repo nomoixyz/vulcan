@@ -74,7 +74,7 @@ library ctxSafe {
 
     function startGasReport(string memory name) internal {
         if (bytes(name).length > 32) {
-            revert("ctx.startGasReport: Gas report length can't have more than 32 characters");
+            revert("ctx.startGasReport: Gas report name can't have more than 32 characters");
         }
 
         bytes32 b32Name = bytes32(bytes(name));
