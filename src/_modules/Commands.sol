@@ -229,7 +229,6 @@ library commands {
         return inputs.toDynamic().run();
     }
 
-
     // TODO: We probably want to move this to a different module at some point
     function toDynamic(string[1] memory inputs) internal pure returns (string[] memory _inputs) {
         _inputs = new string[](1);
