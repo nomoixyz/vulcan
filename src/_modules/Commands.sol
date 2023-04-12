@@ -119,6 +119,22 @@ library commands {
         return self.args(_args.toDynamic());
     }
 
+    function toString(Command memory self) internal pure returns (string memory) {
+        string memory output;
+
+        uint256 length = self.inputs.length;
+
+        for (uint256 i; i < length; ++i) {
+            output = string.concat(output, self.inputs[i]);
+
+            if (i < length - 1) {
+                output = string.concat(output, " ");
+            }
+        }
+
+        return output;
+    }
+
     /// @dev Runs a command using the specified `Command` struct as parameters and returns the result.
     /// @param self The `Command` struct that holds the parameters of the command.
     /// @return The result of the command as a bytes array.
@@ -212,6 +228,7 @@ library commands {
     function run(string[20] memory inputs) internal returns (bytes memory) {
         return inputs.toDynamic().run();
     }
+
 
     // TODO: We probably want to move this to a different module at some point
     function toDynamic(string[1] memory inputs) internal pure returns (string[] memory _inputs) {
