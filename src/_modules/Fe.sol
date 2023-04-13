@@ -7,6 +7,7 @@ import "./Strings.sol";
 struct Fe {
     string compilerPath;
     string filePath;
+    string emitOptions;
     string outputDir;
     bool overwrite;
 }
@@ -15,7 +16,7 @@ library fe {
     using strings for bytes32;
 
     function create() internal pure returns (Fe memory) {
-        return Fe({compilerPath: "fe", filePath: "", outputDir: "", overwrite: false});
+        return Fe({compilerPath: "fe", filePath: "", emitOptions: "", outputDir: "", overwrite: false});
     }
 
     function build(Fe memory self) internal returns (bytes memory) {
@@ -32,6 +33,7 @@ library fe {
         command = command.arg("build");
 
         if (bytes(self.outputDir).length > 0) command = command.args(["-o", self.outputDir]);
+        if (bytes(self.emitOptions).length > 0) command = command.args(["-e", self.emitOptions]);
         if (self.overwrite) command = command.arg("--overwrite");
 
         command = command.arg(self.filePath);
@@ -46,6 +48,11 @@ library fe {
 
     function setFilePath(Fe memory self, string memory filePath) internal pure returns (Fe memory) {
         self.filePath = filePath;
+        return self;
+    }
+
+    function setEmitOptions(Fe memory self, string memory emitOptions) internal pure returns (Fe memory) {
+        self.emitOptions = emitOptions;
         return self;
     }
 
