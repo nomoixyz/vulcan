@@ -28,6 +28,11 @@ jobs:
         with:
           version: nightly
 
+      - name: Install Fe
+        run: |
+          curl -o /usr/local/bin/fe -s
+          chmod +x /usr/local/bin/fe
+
       - name: Run Forge build
         run: |
           forge --version
