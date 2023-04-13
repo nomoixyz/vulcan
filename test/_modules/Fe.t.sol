@@ -4,8 +4,9 @@ import {Test, expect, commands, Command, fe, Fe, fs} from "../../src/test.sol";
 
 contract FeTest is Test {
     function testToCommandAllSet() external {
-        Command memory command =
-            fe.create().setCompilerPath("difffe").setFilePath("./filePath.fe").setEmitOptions("abi").setOutputDir("./feoutput").toCommand();
+        Command memory command = fe.create().setCompilerPath("difffe").setFilePath("./filePath.fe").setEmitOptions(
+            "abi"
+        ).setOutputDir("./feoutput").toCommand();
 
         expect(command.inputs.length).toEqual(7);
         expect(command.inputs[0]).toEqual("difffe");
@@ -27,10 +28,10 @@ contract FeTest is Test {
     }
 
     function testCompile() external {
-        fe.create().setFilePath("./test/mocks/guest_book.fe").setOutputDir("./test/fixtures/fe/output")
-            .setOverwrite(true).build();
+        fe.create().setFilePath("./test/mocks/guest_book.fe").setOutputDir("./test/fixtures/fe/output").setOverwrite(
+            true
+        ).build();
 
-        
         string memory result = fs.readFile("./test/fixtures/fe/output/GuestBook/GuestBook.bin");
 
         expect(bytes(result).length).toBeGreaterThan(0);
