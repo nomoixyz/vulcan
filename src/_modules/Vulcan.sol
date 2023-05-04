@@ -2,7 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Vm as Hevm} from "forge-std/Vm.sol";
-import {watchers, Call, Watcher} from "./Watcher.sol";
+import {watchers, Call, Watcher} from "./Watchers.sol";
 import {ctx} from "./Context.sol";
 
 /// @dev Struct that represent an EVM log

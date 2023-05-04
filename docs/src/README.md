@@ -19,7 +19,7 @@ Our goal is to provide:
 - Better naming for VM functionality (no more `prank`, `roll`, `warp`, ...)
 - A testing framework with better readability and a familiar syntax
 - Improved ergonomics
-- ...
+- [Huff language](https://huff.sh/) support out of the box
 
 Vulcan test example:
 
@@ -72,7 +72,6 @@ contract TestSomething is Test {
 
 ## Planned Features
 
-- [Huff language](https://huff.sh/) support out of the box
 - Mocking framework
 - Deployment management framework
 

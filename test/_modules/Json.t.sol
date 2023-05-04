@@ -95,49 +95,49 @@ contract JsonTest is Test {
         expect(arr[0]).toEqual(bytes32(uint256(1)));
     }
 
-    function testSerializeBool() external {
+    function testSetBool() external {
         JsonObject memory obj = json.create();
         obj.set("foo", true);
         expect(obj.serialized).toEqual('{"foo":true}');
     }
 
-    function testSerializeUint() external {
+    function testSetUint() external {
         JsonObject memory obj = json.create();
         obj.set("foo", uint256(123));
         expect(obj.serialized).toEqual('{"foo":123}');
     }
 
-    function testSerializeInt() external {
+    function testSetInt() external {
         JsonObject memory obj = json.create();
         obj.set("foo", int256(-123));
         expect(obj.serialized).toEqual('{"foo":-123}');
     }
 
-    function testSerializeAddress() external {
+    function testSetAddress() external {
         JsonObject memory obj = json.create();
         obj.set("foo", address(1));
         expect(obj.serialized).toEqual('{"foo":"0x0000000000000000000000000000000000000001"}');
     }
 
-    function testSerializeBytes32() external {
+    function testSetBytes32() external {
         JsonObject memory obj = json.create();
         obj.set("foo", bytes32(uint256(1)));
         expect(obj.serialized).toEqual('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}');
     }
 
-    function testSerializeString() external {
+    function testSetString() external {
         JsonObject memory obj = json.create();
         obj.set("foo", string("bar"));
         expect(obj.serialized).toEqual('{"foo":"bar"}');
     }
 
-    function testSerializeBytes() external {
+    function testSetBytes() external {
         JsonObject memory obj = json.create();
         obj.set("foo", abi.encodePacked(uint256(1)));
         expect(obj.serialized).toEqual('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}');
     }
 
-    function testSerializeObject() external {
+    function testSetObject() external {
         JsonObject memory a = json.create();
         JsonObject memory b = json.create();
         a.set("foo", abi.encodePacked(uint256(1)));
