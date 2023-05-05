@@ -7,19 +7,19 @@ struct JsonObject {
 }
 ```
 
-#### **`getObject(string jsonStr, string key) → (bytes abiEncodedData)`**
+#### **`get(string jsonStr, string key) → (bytes abiEncodedData)`**
 
 Parses a json object string by key and returns an ABI encoded value.
 
-#### **`getObject(string jsonStr) → (bytes abiEncodedData)`**
+#### **`get(string jsonStr) → (bytes abiEncodedData)`**
 
 Parses a json object string and returns an ABI encoded tuple.
 
-#### **`getObject(JsonObject jsonObj, string key) → (bytes abiEncodedData)`**
+#### **`get(JsonObject jsonObj, string key) → (bytes abiEncodedData)`**
 
 Parses a json object struct by key and returns an ABI encoded value.
 
-#### **`getObject(JsonObject jsonObj) → (bytes abiEncodedData)`**
+#### **`get(JsonObject jsonObj) → (bytes abiEncodedData)`**
 
 Parses a json object struct and returns an ABI encoded tuple.
 
