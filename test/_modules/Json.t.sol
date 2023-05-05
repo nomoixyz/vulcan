@@ -82,9 +82,8 @@ contract JsonTest is Test {
     }
 
     function testGetBytes32() external {
-        expect(
-            json.getBytes32('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}', ".foo")
-        ).toEqual(bytes32(uint256(1)));
+        expect(json.getBytes32('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}', ".foo"))
+            .toEqual(bytes32(uint256(1)));
     }
 
     function testGetBytes32Array() external {
