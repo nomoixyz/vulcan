@@ -7,75 +7,75 @@ struct JsonObject {
 }
 ```
 
-#### **`parseObject(string jsonStr, string key) → (bytes abiEncodedData)`**
+#### **`getObject(string jsonStr, string key) → (bytes abiEncodedData)`**
 
 Parses a json object string by key and returns an ABI encoded value.
 
-#### **`parseObject(string jsonStr) → (bytes abiEncodedData)`**
+#### **`getObject(string jsonStr) → (bytes abiEncodedData)`**
 
 Parses a json object string and returns an ABI encoded tuple.
 
-#### **`parseObject(JsonObject jsonObj, string key) → (bytes abiEncodedData)`**
+#### **`getObject(JsonObject jsonObj, string key) → (bytes abiEncodedData)`**
 
 Parses a json object struct by key and returns an ABI encoded value.
 
-#### **`parseObject(JsonObject jsonObj) → (bytes abiEncodedData)`**
+#### **`getObject(JsonObject jsonObj) → (bytes abiEncodedData)`**
 
 Parses a json object struct and returns an ABI encoded tuple.
 
-#### **`parseUint(string jsonStr, string key) → (uint256)`**
+#### **`getUint(string jsonStr, string key) → (uint256)`**
 
 Parses the value of the `key` contained on `jsonStr` as uint256.
 
-#### **`parseUintArray(string jsonStr, string key) → (uint256[] )`**
+#### **`getUintArray(string jsonStr, string key) → (uint256[] )`**
 
 Parses the value of the `key` contained on `jsonStr` as uint256[].
 
-#### **`parseInt(string jsonStr, string key) → (int256)`**
+#### **`getInt(string jsonStr, string key) → (int256)`**
 
 Parses the value of the `key` contained on `jsonStr` as int256.
 
-#### **`parseIntArray(string jsonStr, string key) → (int256[] )`**
+#### **`getIntArray(string jsonStr, string key) → (int256[] )`**
 
 Parses the value of the `key` contained on `jsonStr` as int256[].
 
-#### **`parseBool(string jsonStr, string key) → (bool)`**
+#### **`getBool(string jsonStr, string key) → (bool)`**
 
 Parses the value of the `key` contained on `jsonStr` as bool.
 
-#### **`parseBoolArray(string jsonStr, string key) → (bool[] )`**
+#### **`getBoolArray(string jsonStr, string key) → (bool[] )`**
 
 Parses the value of the `key` contained on `jsonStr` as bool[].
 
-#### **`parseAddress(string jsonStr, string key) → (address)`**
+#### **`getAddress(string jsonStr, string key) → (address)`**
 
 Parses the value of the `key` contained on `jsonStr` as address.
 
-#### **`parseAddressArray(string jsonStr, string key) → (address[] )`**
+#### **`getAddressArray(string jsonStr, string key) → (address[] )`**
 
 Parses the value of the `key` contained on `jsonStr` as address.
 
-#### **`parseString(string jsonStr, string key) → (string )`**
+#### **`getString(string jsonStr, string key) → (string )`**
 
 Parses the value of the `key` contained on `jsonStr` as string.
 
-#### **`parseStringArray(string jsonStr, string key) → (string[] )`**
+#### **`getStringArray(string jsonStr, string key) → (string[] )`**
 
 Parses the value of the `key` contained on `jsonStr` as string[].
 
-#### **`parseBytes(string jsonStr, string key) → (bytes )`**
+#### **`getBytes(string jsonStr, string key) → (bytes )`**
 
 Parses the value of the `key` contained on `jsonStr` as bytes.
 
-#### **`parseBytesArray(string jsonStr, string key) → (bytes[] )`**
+#### **`getBytesArray(string jsonStr, string key) → (bytes[] )`**
 
 Parses the value of the `key` contained on `jsonStr` as bytes[].
 
-#### **`parseBytes32(string jsonStr, string key) → (bytes32)`**
+#### **`getBytes32(string jsonStr, string key) → (bytes32)`**
 
 Parses the value of the `key` contained on `jsonStr` as bytes32.
 
-#### **`parseBytes32Array(string jsonStr, string key) → (bytes32[] )`**
+#### **`getBytes32Array(string jsonStr, string key) → (bytes32[] )`**
 
 Parses the value of the `key` contained on `jsonStr` as bytes32[].
 

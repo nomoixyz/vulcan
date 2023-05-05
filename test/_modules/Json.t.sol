@@ -11,84 +11,84 @@ contract JsonTest is Test {
 
     function testParseObject() external {
         string memory jsonStr = '{"foo":"bar"}';
-        Foo memory obj = abi.decode(json.parseObject(jsonStr), (Foo));
+        Foo memory obj = abi.decode(json.getObject(jsonStr), (Foo));
         expect(obj.foo).toEqual("bar");
     }
 
     function testParseObjectStruct() external {
         JsonObject memory jsonObject = json.create().set("foo", string("bar"));
-        Foo memory obj = abi.decode(json.parseObject(jsonObject), (Foo));
+        Foo memory obj = abi.decode(json.getObject(jsonObject), (Foo));
         expect(obj.foo).toEqual("bar");
     }
 
     function testParseUint() external {
-        expect(json.parseUint('{"foo":123}', ".foo")).toEqual(123);
+        expect(json.getUint('{"foo":123}', ".foo")).toEqual(123);
     }
 
     function testParseUintArray() external {
-        uint256[] memory arr = json.parseUintArray('{"foo":[123]}', ".foo");
+        uint256[] memory arr = json.getUintArray('{"foo":[123]}', ".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(123);
     }
 
     function testParseInt() external {
-        expect(json.parseInt('{"foo":-123}', ".foo")).toEqual(-123);
+        expect(json.getInt('{"foo":-123}', ".foo")).toEqual(-123);
     }
 
     function testParseIntArray() external {
-        int256[] memory arr = json.parseIntArray('{"foo":[-123]}', ".foo");
+        int256[] memory arr = json.getIntArray('{"foo":[-123]}', ".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(-123);
     }
 
     function testParseBool() external {
-        expect(json.parseBool('{"foo":true}', ".foo")).toEqual(true);
+        expect(json.getBool('{"foo":true}', ".foo")).toEqual(true);
     }
 
     function testParseBoolArray() external {
-        bool[] memory arr = json.parseBoolArray('{"foo":[true]}', ".foo");
+        bool[] memory arr = json.getBoolArray('{"foo":[true]}', ".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(true);
     }
 
     function testParseAddress() external {
-        expect(json.parseAddress('{"foo":"0x0000000000000000000000000000000000000001"}', ".foo")).toEqual(address(1));
+        expect(json.getAddress('{"foo":"0x0000000000000000000000000000000000000001"}', ".foo")).toEqual(address(1));
     }
 
     function testParseAddressArray() external {
-        address[] memory arr = json.parseAddressArray('{"foo":["0x0000000000000000000000000000000000000001"]}', ".foo");
+        address[] memory arr = json.getAddressArray('{"foo":["0x0000000000000000000000000000000000000001"]}', ".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(address(1));
     }
 
     function testParseString() external {
-        expect(json.parseString('{"foo":"bar"}', ".foo")).toEqual("bar");
+        expect(json.getString('{"foo":"bar"}', ".foo")).toEqual("bar");
     }
 
     function testParseStringArray() external {
-        string[] memory arr = json.parseStringArray('{"foo":["bar"]}', ".foo");
+        string[] memory arr = json.getStringArray('{"foo":["bar"]}', ".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual("bar");
     }
 
     function testParseBytes() external {
-        expect(json.parseBytes('{"foo":"0x1234"}', ".foo")).toEqual(hex"1234");
+        expect(json.getBytes('{"foo":"0x1234"}', ".foo")).toEqual(hex"1234");
     }
 
     function testParseBytesArray() external {
-        bytes[] memory arr = json.parseBytesArray('{"foo":["0x1234"]}', ".foo");
+        bytes[] memory arr = json.getBytesArray('{"foo":["0x1234"]}', ".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(hex"1234");
     }
 
     function testParseBytes32() external {
         expect(
-            json.parseBytes32('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}', ".foo")
+            json.getBytes32('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}', ".foo")
         ).toEqual(bytes32(uint256(1)));
     }
 
     function testParseBytes32Array() external {
-        bytes32[] memory arr = json.parseBytes32Array(
+        bytes32[] memory arr = json.getBytes32Array(
             '{"foo":["0x0000000000000000000000000000000000000000000000000000000000000001"]}', ".foo"
         );
         expect(arr.length).toEqual(1);
