@@ -9,15 +9,15 @@ contract JsonTest is Test {
         string foo;
     }
 
-    function testGet() external {
+    function testParse() external {
         string memory jsonStr = '{"foo":"bar"}';
-        Foo memory obj = abi.decode(json.get(jsonStr), (Foo));
+        Foo memory obj = abi.decode(json.parse(jsonStr), (Foo));
         expect(obj.foo).toEqual("bar");
     }
 
-    function testGetStruct() external {
+    function testParseStruct() external {
         JsonObject memory jsonObject = json.create().set("foo", string("bar"));
-        Foo memory obj = abi.decode(json.get(jsonObject), (Foo));
+        Foo memory obj = abi.decode(json.parse(jsonObject), (Foo));
         expect(obj.foo).toEqual("bar");
     }
 

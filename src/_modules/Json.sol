@@ -14,14 +14,14 @@ library json {
     /// @param jsonStr The json string.
     /// @param key The key from the `jsonStr` to parse.
     /// @return abiEncodedData The ABI encoded tuple representing the value of the provided key.
-    function get(string memory jsonStr, string memory key) internal pure returns (bytes memory abiEncodedData) {
+    function getObject(string memory jsonStr, string memory key) internal pure returns (bytes memory abiEncodedData) {
         return vulcan.hevm.parseJson(jsonStr, key);
     }
 
     /// @dev Parses a json object string and returns an ABI encoded tuple.
     /// @param jsonStr The json string.
     /// @return abiEncodedData The ABI encoded tuple representing the json object.
-    function get(string memory jsonStr) internal pure returns (bytes memory abiEncodedData) {
+    function parse(string memory jsonStr) internal pure returns (bytes memory abiEncodedData) {
         return vulcan.hevm.parseJson(jsonStr);
     }
 
@@ -29,14 +29,18 @@ library json {
     /// @param jsonObj The json object struct.
     /// @param key The key from the `jsonObject` to parse.
     /// @return abiEncodedData The ABI encoded tuple representing the value of the provided key.
-    function get(JsonObject memory jsonObj, string memory key) internal pure returns (bytes memory abiEncodedData) {
+    function getObject(JsonObject memory jsonObj, string memory key)
+        internal
+        pure
+        returns (bytes memory abiEncodedData)
+    {
         return vulcan.hevm.parseJson(jsonObj.serialized, key);
     }
 
     /// @dev Parses a json object struct and returns an ABI encoded tuple.
     /// @param jsonObj The json struct.
     /// @return abiEncodedData The ABI encoded tuple representing the json object.
-    function get(JsonObject memory jsonObj) internal pure returns (bytes memory abiEncodedData) {
+    function parse(JsonObject memory jsonObj) internal pure returns (bytes memory abiEncodedData) {
         return vulcan.hevm.parseJson(jsonObj.serialized);
     }
 
