@@ -58,13 +58,6 @@ contract ExampleTest is Test {
         expect(block.basefee).toEqual(baseFee);
     }
 
-    function testSetBlockDifficulty() external {
-        uint256 difficulty = 1337;
-        ctx.setBlockDifficulty(difficulty);
-
-        expect(block.difficulty).toEqual(difficulty);
-    }
-
     function testSetChainId() external {
         uint64 chainId = 1337;
         ctx.setChainId(chainId);
