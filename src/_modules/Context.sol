@@ -165,19 +165,6 @@ library ctx {
         return setBlockBaseFee(Context.wrap(0), baseFee);
     }
 
-    /// @dev sets the `block.difficulty` to `difficulty`
-    /// @param difficulty the new block difficulty
-    function setBlockDifficulty(Context self, uint256 difficulty) internal returns (Context) {
-        vulcan.hevm.difficulty(difficulty);
-        return self;
-    }
-
-    /// @dev sets the `block.difficulty` to `difficulty`
-    /// @param difficulty the new block difficulty
-    function setBlockDifficulty(uint256 difficulty) internal returns (Context) {
-        return setBlockDifficulty(Context.wrap(0), difficulty);
-    }
-
     /// @dev sets the `block.chainid` to `chainId`
     /// @param chainId the new block chain id
     function setChainId(Context self, uint64 chainId) internal returns (Context) {
