@@ -119,6 +119,9 @@ library commands {
         return self.args(_toDynamic(_args));
     }
 
+    /// @dev Transforms a command to its string representation.
+    /// @param self The command struct that will be transformed to a string.
+    /// @return The string representation of the command.
     function toString(Command memory self) internal pure returns (string memory) {
         string memory output;
 
