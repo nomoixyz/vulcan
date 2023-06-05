@@ -228,7 +228,7 @@ library accounts {
 
     /// @notice Resets the values of `msg.sender` and `tx.origin` to the original values.
     function stopImpersonate() internal {
-        vulcan.hevm.stopPrank();
+        try vulcan.hevm.stopPrank() {} catch (bytes memory) {}
     }
 
     /// @dev Sets the balance of an address and returns the address that was modified.

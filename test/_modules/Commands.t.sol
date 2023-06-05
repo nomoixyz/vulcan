@@ -2,7 +2,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, commands, Command} from "../../src/test.sol";
 
-contract CommandTest is Test {
+contract CommandsTest is Test {
     using commands for *;
 
     function testItCanRunCommands() external {
