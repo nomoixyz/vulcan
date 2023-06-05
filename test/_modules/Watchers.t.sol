@@ -3,7 +3,17 @@ pragma solidity >=0.8.13 <0.9.0;
 import {Test, console, expect, watchers} from "../../src/test.sol";
 
 contract WatcherTarget {
+    struct SomeStruct {
+        string foo;
+    }
+
+    event SomeEvent(SomeStruct indexed s);
+
     uint256 public i;
+
+    function emitEvent() external {
+        emit SomeEvent(SomeStruct("bar"));
+    }
 
     function success(uint256 val) external returns (uint256) {
         i = val;
@@ -18,7 +28,7 @@ contract WatcherTarget {
     }
 }
 
-contract WatcherTest is Test {
+contract WatchersTest is Test {
     using watchers for *;
 
     function testItCanWatchAnAddress() external {
@@ -134,5 +144,18 @@ contract WatcherTest is Test {
         target.success(0);
 
         expect(t.calls().length).toEqual(3);
+    }
+
+    event SomeEvent(WatcherTarget.SomeStruct indexed s);
+
+    function testEmittedWithSelector() external {
+        WatcherTarget target = new WatcherTarget();
+
+        watchers.watch(address(target));
+
+        target.emitEvent();
+
+        bytes32[2] memory topics = [SomeEvent.selector, keccak256(abi.encode(WatcherTarget.SomeStruct("bar")))];
+        expect(address(target).lastCall()).toHaveEmitted(topics);
     }
 }

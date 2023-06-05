@@ -57,14 +57,6 @@ sets the `block.basefee` to `baseFee`
 
 sets the `block.basefee` to `baseFee`
 
-#### **`setBlockDifficulty(Context self, uint256 difficulty) → (Context)`**
-
-sets the `block.difficulty` to `difficulty`
-
-#### **`setBlockDifficulty(uint256 difficulty) → (Context)`**
-
-sets the `block.difficulty` to `difficulty`
-
 #### **`setChainId(Context self, uint64 chainId) → (Context)`**
 
 sets the `block.chainid` to `chainId`

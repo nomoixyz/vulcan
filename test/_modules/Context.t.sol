@@ -21,12 +21,6 @@ contract ContextTest is Test {
         expect(block.basefee).toEqual(baseFee);
     }
 
-    function testItCanSetTheBlockDifficulty(uint256 difficulty) external {
-        ctx.setBlockDifficulty(difficulty);
-
-        expect(block.difficulty).toEqual(difficulty);
-    }
-
     function testItCanSetTheChainId(uint64 chainId) external {
         ctx.setChainId(chainId);
 

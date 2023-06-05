@@ -13,7 +13,7 @@ import { Test, ctx } from "vulcan/test.sol";
 contract TestMyContract is Test {
     function testMyContract() external {
         // Update block state
-        ctx.setBlockTimestamp(123).setBlockNumber(456).setBlockDifficulty(789);
+        ctx.setBlockTimestamp(123).setBlockNumber(456);
 
         // Use snapshots
         uint256 snapshotId = ctx.snapshot();
