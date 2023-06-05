@@ -28,7 +28,7 @@ contract AccountsTest is Test {
     }
 
     function testItCanSetTheCode() external {
-        address addr = address(1);
+        address addr = address(1337);
 
         Sender sender = new Sender();
 
