@@ -10,9 +10,6 @@ Initially, Vulcan will provide functionality similar to what is already included
 
 Over time, Vulcan will grow to include more functionality and utilities, eventually becoming a feature-rich development framework.
 
-> **Warning**
-> This library should be treated as highly experimental, its API WILL change, and there might be bugs in it. Don't use in production yet.
-
 ## Why Vulcan?
 
 Our goal is to provide:
