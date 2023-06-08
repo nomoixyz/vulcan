@@ -18,4 +18,10 @@ contract CommandsTest is Test {
 
         expect(string(output)).toEqual(inputs[1]);
     }
+
+    function testCommandToString() external {
+        Command memory ping = commands.create("ping").args(["-c", "1", "nomoi.xyz"]);
+
+        expect(ping.toString()).toEqual("ping -c 1 nomoi.xyz");
+    }
 }

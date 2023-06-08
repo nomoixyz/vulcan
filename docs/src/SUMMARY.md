@@ -14,11 +14,13 @@
     - [Context](./modules/context.md)
     - [Env](./modules/env.md)
     - [Events](./modules/events.md)
+    - [Format](./modules/fmt.md)
     - [Forks](./modules/forks.md)
     - [Fs](./modules/fs.md)
     - [Huff](./modules/huff.md)
     - [Json](./modules/json.md)
     - [Strings](./modules/strings.md)
+    - [Utils](./modules/utils.md)
     - [Watchers](./modules/watchers.md)
 
 # Reference
@@ -30,6 +32,7 @@
     - [Context](./reference/modules/context.md)
     - [Env](./reference/modules/env.md)
     - [Events](./reference/modules/events.md)
+    - [Format](./reference/modules/fmt.md)
     - [Forks](./reference/modules/forks.md)
     - [Fs](./reference/modules/fs.md)
     - [Huff](./reference/modules/huff.md)

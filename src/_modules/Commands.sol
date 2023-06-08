@@ -119,6 +119,25 @@ library commands {
         return self.args(_toDynamic(_args));
     }
 
+    /// @dev Transforms a command to its string representation.
+    /// @param self The command struct that will be transformed to a string.
+    /// @return The string representation of the command.
+    function toString(Command memory self) internal pure returns (string memory) {
+        string memory output;
+
+        uint256 length = self.inputs.length;
+
+        for (uint256 i; i < length; ++i) {
+            output = string.concat(output, self.inputs[i]);
+
+            if (i < length - 1) {
+                output = string.concat(output, " ");
+            }
+        }
+
+        return output;
+    }
+
     /// @dev Runs a command using the specified `Command` struct as parameters and returns the result.
     /// @param self The `Command` struct that holds the parameters of the command.
     /// @return The result of the command as a bytes array.
