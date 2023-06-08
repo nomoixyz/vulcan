@@ -4,47 +4,44 @@ pragma solidity ^0.8.17;
 import "./Vulcan.sol";
 import "./Accounts.sol";
 
-struct GasMeasurement {
-    uint256 start;
-    uint256 end;
-}
-
 library gas {
-    bytes32 constant GAS_MEASUREMENTS_SLOT = keccak256("vulcan.gas.measurements");
+    bytes32 constant GAS_MEASUREMENTS_MAGIC = keccak256("vulcan.gas.measurements.magic");
 
-    function measurements() internal pure returns (mapping(string => GasMeasurement) storage m) {
-        bytes32 slot = GAS_MEASUREMENTS_SLOT;
-
-        assembly {
-            m.slot := slot
-        }
+    function record(string memory name) internal {
+        bytes32 startSlot = keccak256(abi.encode(GAS_MEASUREMENTS_MAGIC, name, "start"));
+        accounts.setStorage(address(vulcan.hevm), startSlot, bytes32(gasleft()));
     }
 
-    function measurement(string memory name) internal view returns (GasMeasurement memory) {
-        return measurements()[name];
-    }
-
-    function measure(string memory name) internal {
-        measurements()[name] = GasMeasurement(gasleft(), uint256(0));
-    }
-
-    function endMeasure(string memory name) internal returns (uint256) {
+    function stopRecord(string memory name) internal returns (uint256) {
         uint256 endGas = gasleft();
 
-        uint256 startGas = measurement(name).start;
+        bytes32 startSlot = keccak256(abi.encode(GAS_MEASUREMENTS_MAGIC, name, "start"));
+        uint256 startGas = uint256(accounts.readStorage(address(vulcan.hevm), startSlot));
 
         if (endGas > startGas) {
-            revert("gas.endMeasure: Gas used can't have a negative value");
+            revert("gas.stopRecord: Gas used can't have a negative value");
         }
 
-        measurements()[name].end = endGas;
+        bytes32 endSlot = keccak256(abi.encode(GAS_MEASUREMENTS_MAGIC, name, "end"));
+        accounts.setStorage(address(vulcan.hevm), endSlot, bytes32(endGas));
 
         return startGas - endGas;
     }
 
-    function value(GasMeasurement memory gasMeasurement) internal pure returns (uint256) {
-        return gasMeasurement.start - gasMeasurement.end;
+    function getRecord(string memory name) internal view returns (uint256, uint256) {
+        bytes32 startSlot = keccak256(abi.encode(GAS_MEASUREMENTS_MAGIC, name, "start"));
+        uint256 startGas = uint256(accounts.readStorage(address(vulcan.hevm), startSlot));
+
+        bytes32 endSlot = keccak256(abi.encode(GAS_MEASUREMENTS_MAGIC, name, "end"));
+        uint256 endGas = uint256(accounts.readStorage(address(vulcan.hevm), endSlot));
+
+        return (startGas, endGas);
+    }
+
+    function used(string memory name) internal view returns (uint256) {
+        (uint256 startGas, uint256 endGas) = getRecord(name);
+
+        return startGas - endGas;
     }
 }
 
-using gas for GasMeasurement global;
