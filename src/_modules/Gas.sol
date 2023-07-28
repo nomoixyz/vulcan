@@ -44,4 +44,3 @@ library gas {
         return startGas - endGas;
     }
 }
-
