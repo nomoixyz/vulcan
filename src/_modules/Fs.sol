@@ -38,7 +38,7 @@ library fs {
     /// @dev Obtains the metadata of the specified file or directory.
     /// @param fileOrDir The path to the file or directory.
     /// @return data The metadata of the file or directory.
-    function metadata(string memory fileOrDir) internal returns (FsMetadata memory data) {
+    function metadata(string memory fileOrDir) internal view returns (FsMetadata memory data) {
         Hevm.FsMetadata memory md = vulcan.hevm.fsMetadata(fileOrDir);
         assembly {
             data := md
@@ -103,7 +103,7 @@ library fs {
     /// @dev Checks if a file or directory exists.
     /// @param path The file or directory to check.
     /// @return Whether the file on `path` exists or not.
-    function fileExists(string memory path) internal returns (bool) {
+    function fileExists(string memory path) internal view returns (bool) {
         try vulcan.hevm.fsMetadata(path) {
             return true;
         } catch Error(string memory) {

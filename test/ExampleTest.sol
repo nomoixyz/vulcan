@@ -21,7 +21,7 @@ contract ExampleTest is Test {
         expect(false).toEqual(false);
     }
 
-    function testConsoleLog() external view {
+    function testConsoleLog() external pure {
         console.log("hello world");
     }
 
