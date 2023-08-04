@@ -13,6 +13,7 @@ import {expect} from "./_modules/Expect.sol";
 import {forks, Fork} from "./_modules/Forks.sol";
 import {fs, FsMetadata} from "./_modules/Fs.sol";
 import {huff, Huffc} from "./_modules/Huff.sol";
+import {InvariantsBase, invariants} from "./_modules/Invariants.sol";
 import {json, JsonObject} from "./_modules/Json.sol";
 import {strings} from "./_modules/Strings.sol";
 import {watchers, Watcher} from "./_modules/Watchers.sol";
@@ -22,7 +23,7 @@ import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
 
 // @dev Main entry point to Vulcan tests
-contract Test {
+contract Test is InvariantsBase {
     bool public IS_TEST = true;
 
     constructor() {
