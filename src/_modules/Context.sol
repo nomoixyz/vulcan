@@ -165,6 +165,13 @@ library ctx {
         return setBlockBaseFee(Context.wrap(0), baseFee);
     }
 
+    /// @dev Sets block.prevrandao.
+    /// @param newPrevrandao The new `block.prevrandao`.
+    function setBlockPrevrandao(Context self, bytes32 newPrevrandao) internal returns (Context) {
+        vulcan.hevm.prevrandao(newPrevrandao);
+        return self;
+    }
+
     /// @dev sets the `block.chainid` to `chainId`
     /// @param chainId the new block chain id
     function setChainId(Context self, uint64 chainId) internal returns (Context) {
@@ -192,6 +199,13 @@ library ctx {
     /// @return The same context to allow function chaining.
     function setBlockCoinbase(address who) internal returns (Context) {
         return setBlockCoinbase(Context.wrap(0), who);
+    }
+
+    /// @dev Sets the transaction gas price.
+    /// @param newGasPrice The new transaction gas price.
+    function setGasPrice(Context self, uint256 newGasPrice) internal returns (Context) {
+        vulcan.hevm.txGasPrice(newGasPrice);
+        return self;
     }
 
     /// @dev Function used to check whether the next call reverts or not.
@@ -269,6 +283,23 @@ library ctx {
         vulcan.hevm.expectCall(callee, msgValue, data);
     }
 
+
+    function expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data) internal {
+        vulcan.hevm.expectCallMinGas(callee, msgValue, minGas, data);
+    }
+
+    function expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data, uint64 count) external {
+        vulcan.hevm.expectCallMinGas(callee, msgValue, minGas, data, count);
+    }
+
+    function expectSafeMemory(uint64 min, uint64 max) external {
+        vulcan.hevm.expectSafeMemory(min, max);
+    }
+
+    function expectSafeMemoryCall(uint64 min, uint64 max) external {
+        vulcan.hevm.expectSafeMemoryCall(min, max);
+    }
+
     /// @dev Takes a snapshot of the current state of the vm and returns an identifier.
     /// @return The snapshot identifier.
     function snapshot(Context) internal returns (uint256) {
@@ -293,6 +324,21 @@ library ctx {
     /// @return true if the vm was reverted to the selected snapshot.
     function revertToSnapshot(uint256 snapshotId) internal returns (bool) {
         return revertToSnapshot(Context.wrap(0), snapshotId);
+    }
+
+    /// @dev Creates a breakpoint to jump to in the debugger.
+    /// @param name The name of the breakpoint.
+    function addBreakpoint(Context self, string memory name) internal returns (Context) {
+        vulcan.hevm.breakpoint(name);
+        return self;
+    }
+
+    /// @dev Creates a breakpoint to jump to in the debugger.
+    /// @param name The name of the breakpoint.
+    /// @param condition The condition that needs to be fulfilled in order to add the breakpoint.
+    function addConditionalBreakpoint(Context self, string memory name, bool condition) internal returns (Context) {
+        vulcan.hevm.breakpoint(name, condition);
+        return self;
     }
 }
 

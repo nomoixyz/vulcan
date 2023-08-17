@@ -186,6 +186,15 @@ library accounts {
         return self;
     }
 
+    /// @dev Sets the nonce of the given `self` address to the arbitrary provided value `n`.
+    /// @param self The address to set the nonce for.
+    /// @param n The value to set the nonce to.
+    /// @return The updated address with the modified nonce.
+    function setArbitraryNonce(address self, uint64 n) internal returns (address) {
+        vulcan.hevm.setNonceUnsafe(self, n);
+        return self;
+    }
+
     /// @dev Sets the `msg.sender` of the next call to `self`.
     /// @param self The address to impersonate.
     /// @return The address that was impersonated.
