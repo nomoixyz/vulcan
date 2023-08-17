@@ -283,12 +283,13 @@ library ctx {
         vulcan.hevm.expectCall(callee, msgValue, data);
     }
 
-
     function expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data) internal {
         vulcan.hevm.expectCallMinGas(callee, msgValue, minGas, data);
     }
 
-    function expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data, uint64 count) external {
+    function expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data, uint64 count)
+        external
+    {
         vulcan.hevm.expectCallMinGas(callee, msgValue, minGas, data, count);
     }
 
