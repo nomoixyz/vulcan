@@ -172,6 +172,12 @@ library ctx {
         return self;
     }
 
+    /// @dev Sets block.prevrandao.
+    /// @param newPrevrandao The new `block.prevrandao`.
+    function setBlockPrevrandao(bytes32 newPrevrandao) internal returns (Context) {
+        return setBlockPrevrandao(Context.wrap(0), newPrevrandao);
+    }
+
     /// @dev sets the `block.chainid` to `chainId`
     /// @param chainId the new block chain id
     function setChainId(Context self, uint64 chainId) internal returns (Context) {
