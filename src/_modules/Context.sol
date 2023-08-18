@@ -283,20 +283,39 @@ library ctx {
         vulcan.hevm.expectCall(callee, msgValue, data);
     }
 
+    /// @dev Expect a call to an address with the specified msg.value and calldata, and a minimum amount of gas.
+    /// @param callee The address that is expected to be called.
+    /// @param msgValue The `msg.value` that is expected to be sent.
+    /// @param minGas The expected minimum amount of gas for the call.
+    /// @param data The call data that is expected to be used.
     function expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data) internal {
         vulcan.hevm.expectCallMinGas(callee, msgValue, minGas, data);
     }
 
+    /// @dev Expect a call to an address with the specified msg.value and calldata, and a minimum amount of gas.
+    /// @param callee The address that is expected to be called.
+    /// @param msgValue The `msg.value` that is expected to be sent.
+    /// @param minGas The expected minimum amount of gas for the call.
+    /// @param data The call data that is expected to be used.
+    /// @param count The number of calls that are expected.
     function expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data, uint64 count)
         external
     {
         vulcan.hevm.expectCallMinGas(callee, msgValue, minGas, data, count);
     }
 
+    /// @dev Allows to  write on memory only between [0x00, 0x60) and [min, max) in the current
+    /// subcontext.
+    /// @param min The lower limit of the allowed memory slot.
+    /// @param max The upper limit of the allowed memory slot.
     function expectSafeMemory(uint64 min, uint64 max) external {
         vulcan.hevm.expectSafeMemory(min, max);
     }
 
+    /// @dev Allows to  write on memory only between [0x00, 0x60) and [min, max) in the next
+    // subcontext.
+    /// @param min The lower limit of the allowed memory slot.
+    /// @param max The upper limit of the allowed memory slot.
     function expectSafeMemoryCall(uint64 min, uint64 max) external {
         vulcan.hevm.expectSafeMemoryCall(min, max);
     }
