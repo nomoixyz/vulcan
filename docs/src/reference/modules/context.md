@@ -57,6 +57,14 @@ sets the `block.basefee` to `baseFee`
 
 sets the `block.basefee` to `baseFee`
 
+#### **`setBlockPrevrandao(Context self, bytes32 newPrevrandao) → (Context)`**
+
+sets the `block.prevrandao` to `newPrevrandao`
+
+#### **`setBlockPrevrandao(bytes32 newPrevrandao) → (Context)`**
+
+sets the `block.prevrandao` to `newPrevrandao`
+
 #### **`setChainId(Context self, uint64 chainId) → (Context)`**
 
 sets the `block.chainid` to `chainId`
@@ -72,6 +80,14 @@ Sets the block coinbase to `who`.
 #### **`setBlockCoinbase(address who) → (Context)`**
 
 Sets the block coinbase to `who`.
+
+#### **`setGasPrice(Context self, address newGasPrice) → (Context)`**
+
+Sets the gas price to `newGasPrice`.
+
+#### **`setGasPrice(address newGasPrice) → (Context)`**
+
+Sets the gas price to `newGasPrice`.
 
 #### **`expectRevert(bytes revertData)`**
 
@@ -113,6 +129,22 @@ Used to check if a call to `callee` with `data` was made.
 
 Used to check if a call to `callee` with `data` and `msgValue` was made.
 
+#### **`expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data)`**
+
+Expect a call from `callee` with the specified `msgValue` and `data`, and a minimum amount of gas `minGas`.
+
+#### **`expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data, uint64 count)`**
+
+Expect a number of calls `count` from `callee` with the specified `msgValue` and `data`, and a minimum amount of gas `minGas`.
+
+#### **`expectSafeMemory(uint64 min, uint64 max)`**
+
+Allows to  write on memory only between [0x00, 0x60) and [`min`, `max`) in the current subcontext
+
+#### **`expectsafememorycall(uint64 min, uint64 max)`**
+
+Allows to  write on memory only between [0x00, 0x60) and [`min`, `max`) in the next subcontext
+
 #### **`snapshot(Context) → (uint256)`**
 
 Takes a snapshot of the current state of the vm and returns an identifier.
@@ -128,4 +160,20 @@ Reverts the state of the vm to the snapshot with id `snapshotId`.
 #### **`revertToSnapshot(uint256 snapshotId) → (bool)`**
 
 Reverts the state of the vm to the snapshot with id `snapshotId`.
+
+#### **`addBreakpoint(Context self, string memory name)`**
+
+Creates a breakpoint to jump to in the debugger with `name`.
+
+#### **`addBreakpoint(string memory name)`**
+
+Creates a breakpoint to jump to in the debugger with `name`.
+
+#### **`addConditionalBreakpoint(Context self, string memory name, bool condition)`**
+
+Creates a conditional breakpoint to jump to in the debugger with name `name` and condition `condition`.
+
+#### **`addConditionalBreakpoint(string memory name, bool condition)`**
+
+Creates a conditional breakpoint to jump to in the debugger with name `name` and condition `condition`.
 
