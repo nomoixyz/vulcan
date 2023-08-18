@@ -304,7 +304,7 @@ library ctx {
         vulcan.hevm.expectCallMinGas(callee, msgValue, minGas, data);
     }
 
-    /// @dev Expect a call to an address with the specified msg.value and calldata, and a minimum amount of gas.
+    /// @dev Expect a number call to an address with the specified msg.value and calldata, and a minimum amount of gas.
     /// @param callee The address that is expected to be called.
     /// @param msgValue The `msg.value` that is expected to be sent.
     /// @param minGas The expected minimum amount of gas for the call.
@@ -316,7 +316,7 @@ library ctx {
         vulcan.hevm.expectCallMinGas(callee, msgValue, minGas, data, count);
     }
 
-    /// @dev Allows to  write on memory only between [0x00, 0x60) and [min, max) in the current
+    /// @dev Allows to  write on memory only between [0x00, 0x60) and [min, max) in the current.
     /// subcontext.
     /// @param min The lower limit of the allowed memory slot.
     /// @param max The upper limit of the allowed memory slot.
@@ -328,7 +328,7 @@ library ctx {
     // subcontext.
     /// @param min The lower limit of the allowed memory slot.
     /// @param max The upper limit of the allowed memory slot.
-    function expectSafeMemoryCall(uint64 min, uint64 max) external {
+    function expectsafememorycall(uint64 min, uint64 max) external {
         vulcan.hevm.expectSafeMemoryCall(min, max);
     }
 
@@ -367,10 +367,23 @@ library ctx {
 
     /// @dev Creates a breakpoint to jump to in the debugger.
     /// @param name The name of the breakpoint.
+    function addBreakpoint(string memory name) internal returns (Context) {
+        return addBreakpoint(Context.wrap(0), name);
+    }
+
+    /// @dev Creates a breakpoint to jump to in the debugger.
+    /// @param name The name of the breakpoint.
     /// @param condition The condition that needs to be fulfilled in order to add the breakpoint.
     function addConditionalBreakpoint(Context self, string memory name, bool condition) internal returns (Context) {
         vulcan.hevm.breakpoint(name, condition);
         return self;
+    }
+
+    /// @dev Creates a breakpoint to jump to in the debugger.
+    /// @param name The name of the breakpoint.
+    /// @param condition The condition that needs to be fulfilled in order to add the breakpoint.
+    function addConditionalBreakpoint(string memory name, bool condition) internal returns (Context) {
+        return addConditionalBreakpoint(Context.wrap(0), name, condition);
     }
 }
 
