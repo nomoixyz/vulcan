@@ -214,6 +214,12 @@ library ctx {
         return self;
     }
 
+    /// @dev Sets the transaction gas price.
+    /// @param newGasPrice The new transaction gas price.
+    function setGasPrice(uint256 newGasPrice) internal returns (Context) {
+        return setGasPrice(Context.wrap(0), newGasPrice);
+    }
+
     /// @dev Function used to check whether the next call reverts or not.
     /// @param revertData The function call data that that is expected to fail.
     function expectRevert(bytes memory revertData) internal {
