@@ -199,6 +199,19 @@ library ctx {
         return setBlockBaseFee(Context.wrap(0), baseFee);
     }
 
+    /// @dev Sets block.prevrandao.
+    /// @param newPrevrandao The new `block.prevrandao`.
+    function setBlockPrevrandao(Context self, bytes32 newPrevrandao) internal returns (Context) {
+        vulcan.hevm.prevrandao(newPrevrandao);
+        return self;
+    }
+
+    /// @dev Sets block.prevrandao.
+    /// @param newPrevrandao The new `block.prevrandao`.
+    function setBlockPrevrandao(bytes32 newPrevrandao) internal returns (Context) {
+        return setBlockPrevrandao(Context.wrap(0), newPrevrandao);
+    }
+
     /// @dev sets the `block.chainid` to `chainId`
     /// @param chainId the new block chain id
     function setChainId(Context self, uint64 chainId) internal returns (Context) {
@@ -226,6 +239,19 @@ library ctx {
     /// @return The same context to allow function chaining.
     function setBlockCoinbase(address who) internal returns (Context) {
         return setBlockCoinbase(Context.wrap(0), who);
+    }
+
+    /// @dev Sets the transaction gas price.
+    /// @param newGasPrice The new transaction gas price.
+    function setGasPrice(Context self, uint256 newGasPrice) internal returns (Context) {
+        vulcan.hevm.txGasPrice(newGasPrice);
+        return self;
+    }
+
+    /// @dev Sets the transaction gas price.
+    /// @param newGasPrice The new transaction gas price.
+    function setGasPrice(uint256 newGasPrice) internal returns (Context) {
+        return setGasPrice(Context.wrap(0), newGasPrice);
     }
 
     /// @dev Function used to check whether the next call reverts or not.
@@ -303,6 +329,43 @@ library ctx {
         vulcan.hevm.expectCall(callee, msgValue, data);
     }
 
+    /// @dev Expect a call to an address with the specified msg.value and calldata, and a minimum amount of gas.
+    /// @param callee The address that is expected to be called.
+    /// @param msgValue The `msg.value` that is expected to be sent.
+    /// @param minGas The expected minimum amount of gas for the call.
+    /// @param data The call data that is expected to be used.
+    function expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data) internal {
+        vulcan.hevm.expectCallMinGas(callee, msgValue, minGas, data);
+    }
+
+    /// @dev Expect a number call to an address with the specified msg.value and calldata, and a minimum amount of gas.
+    /// @param callee The address that is expected to be called.
+    /// @param msgValue The `msg.value` that is expected to be sent.
+    /// @param minGas The expected minimum amount of gas for the call.
+    /// @param data The call data that is expected to be used.
+    /// @param count The number of calls that are expected.
+    function expectCallMinGas(address callee, uint256 msgValue, uint64 minGas, bytes calldata data, uint64 count)
+        external
+    {
+        vulcan.hevm.expectCallMinGas(callee, msgValue, minGas, data, count);
+    }
+
+    /// @dev Allows to  write on memory only between [0x00, 0x60) and [min, max) in the current.
+    /// subcontext.
+    /// @param min The lower limit of the allowed memory slot.
+    /// @param max The upper limit of the allowed memory slot.
+    function expectSafeMemory(uint64 min, uint64 max) external {
+        vulcan.hevm.expectSafeMemory(min, max);
+    }
+
+    /// @dev Allows to  write on memory only between [0x00, 0x60) and [min, max) in the next
+    // subcontext.
+    /// @param min The lower limit of the allowed memory slot.
+    /// @param max The upper limit of the allowed memory slot.
+    function expectsafememorycall(uint64 min, uint64 max) external {
+        vulcan.hevm.expectSafeMemoryCall(min, max);
+    }
+
     /// @dev Takes a snapshot of the current state of the vm and returns an identifier.
     /// @return The snapshot identifier.
     function snapshot(Context) internal returns (uint256) {
@@ -327,6 +390,34 @@ library ctx {
     /// @return true if the vm was reverted to the selected snapshot.
     function revertToSnapshot(uint256 snapshotId) internal returns (bool) {
         return revertToSnapshot(Context.wrap(0), snapshotId);
+    }
+
+    /// @dev Creates a breakpoint to jump to in the debugger.
+    /// @param name The name of the breakpoint.
+    function addBreakpoint(Context self, string memory name) internal returns (Context) {
+        vulcan.hevm.breakpoint(name);
+        return self;
+    }
+
+    /// @dev Creates a breakpoint to jump to in the debugger.
+    /// @param name The name of the breakpoint.
+    function addBreakpoint(string memory name) internal returns (Context) {
+        return addBreakpoint(Context.wrap(0), name);
+    }
+
+    /// @dev Creates a breakpoint to jump to in the debugger.
+    /// @param name The name of the breakpoint.
+    /// @param condition The condition that needs to be fulfilled in order to add the breakpoint.
+    function addConditionalBreakpoint(Context self, string memory name, bool condition) internal returns (Context) {
+        vulcan.hevm.breakpoint(name, condition);
+        return self;
+    }
+
+    /// @dev Creates a breakpoint to jump to in the debugger.
+    /// @param name The name of the breakpoint.
+    /// @param condition The condition that needs to be fulfilled in order to add the breakpoint.
+    function addConditionalBreakpoint(string memory name, bool condition) internal returns (Context) {
+        return addConditionalBreakpoint(Context.wrap(0), name, condition);
     }
 }
 
