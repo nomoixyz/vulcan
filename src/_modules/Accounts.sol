@@ -177,12 +177,22 @@ library accounts {
         return self;
     }
 
-    /// @dev Sets the nonce of the given `self` address to the provided value `n`.
+    /// @dev Sets the nonce of the given `self` address to the provided value `n`. It will revert if
+    // the new nonce is lower than the current address nonce.
     /// @param self The address to set the nonce for.
     /// @param n The value to set the nonce to.
     /// @return The updated address with the modified nonce.
     function setNonce(address self, uint64 n) internal returns (address) {
         vulcan.hevm.setNonce(self, n);
+        return self;
+    }
+
+    /// @dev Sets the nonce of the given `self` address to the arbitrary provided value `n`.
+    /// @param self The address to set the nonce for.
+    /// @param n The value to set the nonce to.
+    /// @return The updated address with the modified nonce.
+    function setNonceUnsafe(address self, uint64 n) internal returns (address) {
+        vulcan.hevm.setNonceUnsafe(self, n);
         return self;
     }
 
