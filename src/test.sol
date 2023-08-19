@@ -12,6 +12,7 @@ import {events} from "./_modules/Events.sol";
 import {expect} from "./_modules/Expect.sol";
 import {forks, Fork} from "./_modules/Forks.sol";
 import {fs, FsMetadata} from "./_modules/Fs.sol";
+import {gas} from "./_modules/Gas.sol";
 import {huff, Huffc} from "./_modules/Huff.sol";
 import {json, JsonObject} from "./_modules/Json.sol";
 import {strings} from "./_modules/Strings.sol";
