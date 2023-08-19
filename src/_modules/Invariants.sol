@@ -41,16 +41,13 @@ abstract contract InvariantsBase {
 }
 
 library invariants {
-
     struct State {
         address[] excludedContracts;
         address[] excludedSenders;
         address[] targetedContracts;
         address[] targetedSenders;
-
         string[] excludedArtifacts;
         string[] targetedArtifacts;
-
         FuzzSelector[] targetedArtifactSelectors;
         FuzzSelector[] targetedSelectors;
     }
