@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, accounts, console} from "../../src/test.sol";
+import {Test, expect, commands, accounts, console, ctx} from "../../src/test.sol";
 import {Sender} from "../mocks/Sender.sol";
 
 contract AccountsTest is Test {
@@ -201,6 +201,32 @@ contract AccountsTest is Test {
 
         expect(token.balanceOf(user)).toEqual(balance - firstBurn - secondBurn);
         expect(token.totalSupply()).toEqual(totalSupply - firstBurn - secondBurn);
+    }
+
+    function testGetDeploymentAddressWithCurrentNonce(address user, uint64 nonce) external {
+        ctx.assume(nonce < type(uint64).max);
+
+        address deploymentAddress = user.setNonce(uint64(nonce)).getDeploymentAddress();
+
+        user.impersonateOnce();
+
+        address deployedAddress = address(new TestToken());
+
+        expect(deployedAddress).toEqual(deploymentAddress);
+    }
+
+    function testGetDeploymentAddress(address user, uint64 nonce) external {
+        ctx.assume(nonce < type(uint64).max);
+
+        address deploymentAddress = user.getDeploymentAddress(nonce);
+
+        user.setNonce(nonce);
+
+        user.impersonateOnce();
+
+        address deployedAddress = address(new TestToken());
+
+        expect(deployedAddress).toEqual(deploymentAddress);
     }
 }
 
