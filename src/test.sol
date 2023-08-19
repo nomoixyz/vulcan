@@ -21,6 +21,7 @@ import {config, Rpc} from "./_modules/Config.sol";
 import {fmt} from "./_modules/Fmt.sol";
 import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
+import {bound} from "./_utils/bound.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test is InvariantsBase {
@@ -44,7 +45,7 @@ contract Test is InvariantsBase {
         }
 
         if (!post) {
-            revert("Didn't fail");
+            revert("Vulcan shouldFail: Didn't fail");
         }
 
         vulcan.clearFailure();

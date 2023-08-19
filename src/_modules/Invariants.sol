@@ -1,4 +1,3 @@
-
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
@@ -63,8 +62,35 @@ library invariants {
         }
     }
 
-    function exclude(address newExcludedContract) internal {
+    function excludeContract(address newExcludedContract) internal {
         getState().excludedContracts.push(newExcludedContract);
     }
 
+    function excludeSender(address newExcludedSender) internal {
+        getState().excludedSenders.push(newExcludedSender);
+    }
+
+    function excludeArtifact(string memory newExcludedArtifact) internal {
+        getState().excludedArtifacts.push(newExcludedArtifact);
+    }
+
+    function targetArtifact(string memory newTargetedArtifact) internal {
+        getState().targetedArtifacts.push(newTargetedArtifact);
+    }
+
+    function targetArtifactSelector(FuzzSelector memory newTargetedArtifactSelector) internal {
+        getState().targetedArtifactSelectors.push(newTargetedArtifactSelector);
+    }
+
+    function targetContract(address newTargetedContract) internal {
+        getState().targetedContracts.push(newTargetedContract);
+    }
+
+    function targetSelector(FuzzSelector memory newTargetedSelector) internal {
+        getState().targetedSelectors.push(newTargetedSelector);
+    }
+
+    function targetSender(address newTargetedSender) internal {
+        getState().targetedSenders.push(newTargetedSender);
+    }
 }
