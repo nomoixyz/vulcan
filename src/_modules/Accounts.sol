@@ -204,10 +204,15 @@ library accounts {
         return accountsSafe.create(name, lbl);
     }
 
+    /// @dev Calculates the deployment address of `who` with nonce `nonce`.
+    /// @param who The deployer address.
+    /// @param nonce The deployer nonce.
     function getDeploymentAddress(address who, uint64 nonce) internal pure returns (address) {
         return accountsSafe.getDeploymentAddress(who, nonce);
     }
 
+    /// @dev Calculates the deployment address of `who` with the current nonce.
+    /// @param who The deployer address.
     function getDeploymentAddress(address who) internal view returns (address) {
         return accountsSafe.getDeploymentAddress(who);
     }

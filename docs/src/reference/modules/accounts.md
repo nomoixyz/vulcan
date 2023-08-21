@@ -48,6 +48,14 @@ Creates an address using the hash of the specified `name` as the private key and
 
 Creates an address using the hash of the specified `name` as the private key and adds a label to the address.
 
+#### **`getDeploymentAddress(address who, uint64 nonce) → (address)`**
+
+Calculates the deployment address of `who` with nonce `nonce`.
+
+#### **`getDeploymentAddress(address who) → (address)`**
+
+Calculates the deployment address of `who` with the current nonce.
+
 #### **`setStorage(address self, bytes32 slot, bytes32 value) → (address)`**
 
 Sets the specified `slot` in the storage of the given `self` address to the provided `value`.
