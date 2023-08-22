@@ -17,6 +17,7 @@ import {config, Rpc} from "./_modules/Config.sol";
 import {fmt} from "./_modules/Fmt.sol";
 import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
+import {huff, Huffc} from "./_modules/Huff.sol";
 
 contract Script {
     bool public IS_SCRIPT = true;
