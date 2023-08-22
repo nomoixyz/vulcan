@@ -21,12 +21,6 @@ contract ContextTest is Test {
         expect(block.basefee).toEqual(baseFee);
     }
 
-    function testItCanSetTheBlockDifficulty(uint256 difficulty) external {
-        ctx.setBlockDifficulty(difficulty);
-
-        expect(block.difficulty).toEqual(difficulty);
-    }
-
     function testItCanSetTheChainId(uint64 chainId) external {
         ctx.setChainId(chainId);
 
@@ -99,6 +93,14 @@ contract ContextTest is Test {
         ctx.expectCall(address(target), uint256(1337), abi.encodeWithSelector(MockTarget.value.selector));
 
         target.value{value: uint256(1337)}();
+    }
+
+    function testItCanReportGas() external {
+        ctx.startGasReport("test");
+        for (uint256 i = 0; i < 5; i++) {
+            new MockTarget();
+        }
+        ctx.endGasReport();
     }
 }
 

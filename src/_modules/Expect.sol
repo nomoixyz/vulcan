@@ -525,19 +525,19 @@ library ExpectLib {
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[1] memory topics) internal {
-        self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
+        self.toHaveEmitted("", _toDynamic(topics), new bytes(0));
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[2] memory topics) internal {
-        self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
+        self.toHaveEmitted("", _toDynamic(topics), new bytes(0));
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[3] memory topics) internal {
-        self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
+        self.toHaveEmitted("", _toDynamic(topics), new bytes(0));
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[4] memory topics) internal {
-        self.toHaveEmitted("", topics.toDynamic(), new bytes(0));
+        self.toHaveEmitted("", _toDynamic(topics), new bytes(0));
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes memory data) internal {
@@ -545,31 +545,31 @@ library ExpectLib {
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[1] memory topics) internal {
-        self.toHaveEmitted(eventSig, topics.toDynamic(), new bytes(0));
+        self.toHaveEmitted(eventSig, _toDynamic(topics), new bytes(0));
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[2] memory topics) internal {
-        self.toHaveEmitted(eventSig, topics.toDynamic(), new bytes(0));
+        self.toHaveEmitted(eventSig, _toDynamic(topics), new bytes(0));
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[3] memory topics) internal {
-        self.toHaveEmitted(eventSig, topics.toDynamic(), new bytes(0));
+        self.toHaveEmitted(eventSig, _toDynamic(topics), new bytes(0));
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[1] memory topics, bytes memory data) internal {
-        self.toHaveEmitted("", topics.toDynamic(), data);
+        self.toHaveEmitted("", _toDynamic(topics), data);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[2] memory topics, bytes memory data) internal {
-        self.toHaveEmitted("", topics.toDynamic(), data);
+        self.toHaveEmitted("", _toDynamic(topics), data);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[3] memory topics, bytes memory data) internal {
-        self.toHaveEmitted("", topics.toDynamic(), data);
+        self.toHaveEmitted("", _toDynamic(topics), data);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[4] memory topics, bytes memory data) internal {
-        self.toHaveEmitted("", topics.toDynamic(), data);
+        self.toHaveEmitted("", _toDynamic(topics), data);
     }
 
     function toHaveEmitted(
@@ -578,7 +578,7 @@ library ExpectLib {
         bytes32[1] memory topics,
         bytes memory data
     ) internal {
-        self.toHaveEmitted(eventSig, topics.toDynamic(), data);
+        self.toHaveEmitted(eventSig, _toDynamic(topics), data);
     }
 
     function toHaveEmitted(
@@ -587,7 +587,7 @@ library ExpectLib {
         bytes32[2] memory topics,
         bytes memory data
     ) internal {
-        self.toHaveEmitted(eventSig, topics.toDynamic(), data);
+        self.toHaveEmitted(eventSig, _toDynamic(topics), data);
     }
 
     function toHaveEmitted(
@@ -596,7 +596,7 @@ library ExpectLib {
         bytes32[3] memory topics,
         bytes memory data
     ) internal {
-        self.toHaveEmitted(eventSig, topics.toDynamic(), data);
+        self.toHaveEmitted(eventSig, _toDynamic(topics), data);
     }
 
     function toHaveEmitted(
@@ -646,6 +646,44 @@ library ExpectLib {
         console.log("Error: event not emitted [call]");
         console.log("  Event", bytes(eventSig).length > 0 ? eventSig : "anonymous");
         vulcan.fail();
+    }
+
+    /// @dev Transform a fixed array of `bytes32` to a dynamic array of `bytes32`.
+    /// @param topics The fixed array to transform.
+    /// @return _topics The dynamic array.
+    function _toDynamic(bytes32[1] memory topics) private pure returns (bytes32[] memory _topics) {
+        _topics = new bytes32[](1);
+        _topics[0] = topics[0];
+    }
+
+    /// @dev Transform a fixed array of `bytes32` to a dynamic array of `bytes32`.
+    /// @param topics The fixed array to transform.
+    /// @return _topics The dynamic array.
+    function _toDynamic(bytes32[2] memory topics) private pure returns (bytes32[] memory _topics) {
+        _topics = new bytes32[](2);
+        _topics[0] = topics[0];
+        _topics[1] = topics[1];
+    }
+
+    /// @dev Transform a fixed array of `bytes32` to a dynamic array of `bytes32`.
+    /// @param topics The fixed array to transform.
+    /// @return _topics The dynamic array.
+    function _toDynamic(bytes32[3] memory topics) private pure returns (bytes32[] memory _topics) {
+        _topics = new bytes32[](3);
+        _topics[0] = topics[0];
+        _topics[1] = topics[1];
+        _topics[2] = topics[2];
+    }
+
+    /// @dev Transform a fixed array of `bytes32` to a dynamic array of `bytes32`.
+    /// @param topics The fixed array to transform.
+    /// @return _topics The dynamic array.
+    function _toDynamic(bytes32[4] memory topics) private pure returns (bytes32[] memory _topics) {
+        _topics = new bytes32[](4);
+        _topics[0] = topics[0];
+        _topics[1] = topics[1];
+        _topics[2] = topics[2];
+        _topics[3] = topics[3];
     }
 }
 

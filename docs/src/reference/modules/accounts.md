@@ -54,7 +54,12 @@ Sets the specified `slot` in the storage of the given `self` address to the prov
 
 #### **`setNonce(address self, uint64 n) → (address)`**
 
-Sets the nonce of the given `self` address to the provided value `n`.
+Sets the nonce of the given `self` address to the provided value `n`. It will revert if the new
+nonce is lower than the current address nonce.
+
+#### **`setNonceUnsafe(address self, uint64 n) → (address)`**
+
+Sets the nonce of the given `self` address to the provided arbitrary value `n`.
 
 #### **`impersonateOnce(address self) → (address)`**
 

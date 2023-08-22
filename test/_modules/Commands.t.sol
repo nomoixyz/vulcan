@@ -2,7 +2,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, commands, Command} from "../../src/test.sol";
 
-contract CommandTest is Test {
+contract CommandsTest is Test {
     using commands for *;
 
     function testItCanRunCommands() external {
@@ -17,5 +17,11 @@ contract CommandTest is Test {
         bytes memory output = commands.run(inputs);
 
         expect(string(output)).toEqual(inputs[1]);
+    }
+
+    function testCommandToString() external {
+        Command memory ping = commands.create("ping").args(["-c", "1", "nomoi.xyz"]);
+
+        expect(ping.toString()).toEqual("ping -c 1 nomoi.xyz");
     }
 }

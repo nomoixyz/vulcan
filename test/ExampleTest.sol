@@ -21,7 +21,7 @@ contract ExampleTest is Test {
         expect(false).toEqual(false);
     }
 
-    function testConsoleLog() external view {
+    function testConsoleLog() external pure {
         console.log("hello world");
     }
 
@@ -56,13 +56,6 @@ contract ExampleTest is Test {
         ctx.setBlockBaseFee(baseFee);
 
         expect(block.basefee).toEqual(baseFee);
-    }
-
-    function testSetBlockDifficulty() external {
-        uint256 difficulty = 1337;
-        ctx.setBlockDifficulty(difficulty);
-
-        expect(block.difficulty).toEqual(difficulty);
     }
 
     function testSetChainId() external {

@@ -27,6 +27,10 @@ contract TestMyContract is Test {
 
         // Parse an address string to an `address`
         expect("0x13DFD56424777BAC80070a98Cf83DD82246c2bC0".parseAddress()).toEqual(0x13DFD56424777BAC80070a98Cf83DD82246c2bC0);
+
+        // Format - see the Format module for more details
+        uint256 amount = 1e17;
+        expect("Token amount: {u:d18}".format(abi.encode(amount))).toEqual("Token amount: 0.1");
     }
 }
 ```

@@ -10,13 +10,10 @@ Initially, Vulcan will provide functionality similar to what is already included
 
 Over time, Vulcan will grow to include more functionality and utilities, eventually becoming a feature-rich development framework.
 
-> **Warning**
-> This library should be treated as highly experimental, its API WILL change, and there might be bugs in it. Don't use in production yet.
-
 ## Installation
 
 ```
-$ forge install nomoixyz/vulcan@alpha-1
+$ forge install nomoixyz/vulcan@v0.1.0
 ```
 
 ## Usage
@@ -29,7 +26,7 @@ Our goal is to provide:
 - Better naming for VM functionality (no more `prank`, `roll`, `warp`, ...)
 - A testing framework with better readability and a familiar syntax
 - Improved ergonomics
-- ...
+- [Huff language](https://huff.sh/) support out of the box
 
 Vulcan test example:
 
@@ -82,7 +79,6 @@ contract TestSomething is Test {
 
 ## Planned Features
 
-- [Huff language](https://huff.sh/) support out of the box
 - Mocking framework
 - Deployment management framework
 
