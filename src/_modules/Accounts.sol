@@ -102,6 +102,43 @@ library accountsSafe {
 
         return label(addr, lbl);
     }
+
+    /// @dev Calculates the deployment address of `who` with nonce `nonce`.
+    /// @param who The deployer address.
+    /// @param nonce The deployer nonce.
+    function getDeploymentAddress(address who, uint64 nonce) internal pure returns (address) {
+        bytes memory data;
+
+        if (nonce == 0x00) {
+            data = abi.encodePacked(bytes1(0xd6), bytes1(0x94), who, bytes1(0x80));
+        } else if (nonce <= 0x7f) {
+            data = abi.encodePacked(bytes1(0xd6), bytes1(0x94), who, uint8(nonce));
+        } else if (nonce <= 0xff) {
+            data = abi.encodePacked(bytes1(0xd7), bytes1(0x94), who, bytes1(0x81), uint8(nonce));
+        } else if (nonce <= 0xffff) {
+            data = abi.encodePacked(bytes1(0xd8), bytes1(0x94), who, bytes1(0x82), uint16(nonce));
+        } else if (nonce <= 0xffffff) {
+            data = abi.encodePacked(bytes1(0xd9), bytes1(0x94), who, bytes1(0x83), uint24(nonce));
+        } else if (nonce <= 0xffffffff) {
+            data = abi.encodePacked(bytes1(0xda), bytes1(0x94), who, bytes1(0x84), uint32(nonce));
+        } else if (nonce <= 0xffffffffff) {
+            data = abi.encodePacked(bytes1(0xdb), bytes1(0x94), who, bytes1(0x85), uint40(nonce));
+        } else if (nonce <= 0xffffffffffff) {
+            data = abi.encodePacked(bytes1(0xdc), bytes1(0x94), who, bytes1(0x86), uint48(nonce));
+        } else if (nonce <= 0xffffffffffffff) {
+            data = abi.encodePacked(bytes1(0xdd), bytes1(0x94), who, bytes1(0x87), uint56(nonce));
+        } else if (nonce <= 0xffffffffffffffff) {
+            data = abi.encodePacked(bytes1(0xde), bytes1(0x94), who, bytes1(0x88), uint64(nonce));
+        }
+
+        return address(uint160(uint256(keccak256(data))));
+    }
+
+    /// @dev Calculates the deployment address of `who` with the current nonce.
+    /// @param who The deployer address.
+    function getDeploymentAddress(address who) internal view returns (address) {
+        return getDeploymentAddress(who, getNonce(who));
+    }
 }
 
 library accounts {
@@ -167,6 +204,19 @@ library accounts {
         return accountsSafe.create(name, lbl);
     }
 
+    /// @dev Calculates the deployment address of `who` with nonce `nonce`.
+    /// @param who The deployer address.
+    /// @param nonce The deployer nonce.
+    function getDeploymentAddress(address who, uint64 nonce) internal pure returns (address) {
+        return accountsSafe.getDeploymentAddress(who, nonce);
+    }
+
+    /// @dev Calculates the deployment address of `who` with the current nonce.
+    /// @param who The deployer address.
+    function getDeploymentAddress(address who) internal view returns (address) {
+        return accountsSafe.getDeploymentAddress(who);
+    }
+
     /// @dev Sets the specified `slot` in the storage of the given `self` address to the provided `value`.
     /// @param self The address to modify the storage of.
     /// @param slot The storage slot to set.
@@ -177,12 +227,22 @@ library accounts {
         return self;
     }
 
-    /// @dev Sets the nonce of the given `self` address to the provided value `n`.
+    /// @dev Sets the nonce of the given `self` address to the provided value `n`. It will revert if
+    // the new nonce is lower than the current address nonce.
     /// @param self The address to set the nonce for.
     /// @param n The value to set the nonce to.
     /// @return The updated address with the modified nonce.
     function setNonce(address self, uint64 n) internal returns (address) {
         vulcan.hevm.setNonce(self, n);
+        return self;
+    }
+
+    /// @dev Sets the nonce of the given `self` address to the arbitrary provided value `n`.
+    /// @param self The address to set the nonce for.
+    /// @param n The value to set the nonce to.
+    /// @return The updated address with the modified nonce.
+    function setNonceUnsafe(address self, uint64 n) internal returns (address) {
+        vulcan.hevm.setNonceUnsafe(self, n);
         return self;
     }
 
