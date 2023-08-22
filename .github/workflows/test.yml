@@ -30,7 +30,7 @@ jobs:
 
       - name: Install Fe
         run: |
-          curl -L https://github.com/ethereum/fe/releases/download/v0.22.0/fe_amd64 -o /usr/local/bin/fe -s
+          curl -L https://github.com/ethereum/fe/releases/download/v0.24.0/fe_amd64 -o /usr/local/bin/fe -s
           chmod +x /usr/local/bin/fe
 
       - name: Run Forge build
