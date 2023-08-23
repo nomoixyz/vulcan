@@ -86,6 +86,20 @@ library accountsSafe {
         return who;
     }
 
+    /// @dev Creates an address without label.
+    function create() internal returns (address) {
+        uint256 count = _getAddressesCount();
+        address addr = derive(uint256(keccak256(abi.encode(count++))));
+
+        bytes32 slot = keccak256("vulcan.accounts.addressesCount");
+
+        assembly {
+            sstore(slot, count)
+        }
+
+        return addr;
+    }
+
     /// @dev Creates an address using the hash of the specified `name` as the private key and adds a label to the address.
     /// @param name The name to use as the basis for the address.
     /// @return The newly created address.
@@ -138,6 +152,28 @@ library accountsSafe {
     /// @param who The deployer address.
     function getDeploymentAddress(address who) internal view returns (address) {
         return getDeploymentAddress(who, getNonce(who));
+    }
+
+    /// @dev Generates an array of addresses with a specific length.
+    /// @param length The amount of addresses to generate.
+    function generateAddresses(uint256 length) internal returns (address[] memory) {
+        require(length > 0, "accounts: invalid length for addresses array");
+
+        address[] memory addresses = new address[](length);
+
+        for (uint256 i; i < length; i++) {
+            addresses[i] = create();
+        }
+
+        return addresses;
+    }
+
+    function _getAddressesCount() internal view returns (uint256 count) {
+        bytes32 slot = keccak256("vulcan.accounts.addressesCount");
+
+        assembly {
+            count := sload(slot)
+        }
     }
 }
 
@@ -194,6 +230,10 @@ library accounts {
 
     function label(address who, string memory lbl) internal returns (address) {
         return accountsSafe.label(who, lbl);
+    }
+
+    function create() internal returns (address) {
+        return accountsSafe.create();
     }
 
     function create(string memory name) internal returns (address) {
@@ -368,5 +408,11 @@ library accounts {
     function setCode(address self, bytes memory code) internal returns (address) {
         vulcan.hevm.etch(self, code);
         return self;
+    }
+
+    /// @dev Generates an array of addresses with a specific length.
+    /// @param length The amount of addresses to generate.
+    function generateAddresses(uint256 length) internal returns (address[] memory) {
+        return accountsSafe.generateAddresses(length);
     }
 }
