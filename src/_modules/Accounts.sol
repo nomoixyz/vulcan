@@ -156,7 +156,7 @@ library accountsSafe {
 
     /// @dev Generates an array of addresses with a specific length.
     /// @param length The amount of addresses to generate.
-    function generateAddresses(uint256 length) internal returns (address[] memory) {
+    function createMany(uint256 length) internal returns (address[] memory) {
         require(length > 0, "accounts: invalid length for addresses array");
 
         address[] memory addresses = new address[](length);
@@ -412,7 +412,7 @@ library accounts {
 
     /// @dev Generates an array of addresses with a specific length.
     /// @param length The amount of addresses to generate.
-    function generateAddresses(uint256 length) internal returns (address[] memory) {
-        return accountsSafe.generateAddresses(length);
+    function createMany(uint256 length) internal returns (address[] memory) {
+        return accountsSafe.createMany(length);
     }
 }

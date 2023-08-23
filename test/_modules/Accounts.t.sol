@@ -239,7 +239,7 @@ contract AccountsTest is Test {
     function testCreateAddressesArray() external {
         uint256 length = 20;
 
-        address[] memory addresses = accounts.generateAddresses(length);
+        address[] memory addresses = accounts.createMany(length);
 
         expect(addresses.length).toEqual(length);
 
