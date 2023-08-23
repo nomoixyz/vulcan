@@ -13,7 +13,7 @@ library commands {
     using commands for *;
 
     /// @dev Creates a new 'Command' struct with empty arguments.
-    /// @return A new empty 'Command' struct.
+    /// @return cmd A new empty 'Command' struct.
     function create() internal pure returns (Command memory cmd) {
         return cmd;
     }
