@@ -12,6 +12,12 @@ struct Command {
 library commands {
     using commands for *;
 
+    /// @dev Creates a new 'Command' struct with empty arguments.
+    /// @return cmd A new empty 'Command' struct.
+    function create() internal pure returns (Command memory cmd) {
+        return cmd;
+    }
+
     /// @dev Creates a new `Command` struct using the provided `input` as the executable.
     /// @param input The name of the command.
     /// @return A new `Command` struct with the specified input.
