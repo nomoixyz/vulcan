@@ -15,6 +15,7 @@ import {strings} from "./_modules/Strings.sol";
 import {watchers as watchersUnsafe} from "./_modules/Watchers.sol";
 import {config, Rpc} from "./_modules/Config.sol";
 import {fmt} from "./_modules/Fmt.sol";
+import {bound} from "./_utils/bound.sol";
 import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
 import {huff, Huffc} from "./_modules/Huff.sol";

@@ -36,6 +36,7 @@
     - [Forks](./reference/modules/forks.md)
     - [Fs](./reference/modules/fs.md)
     - [Huff](./reference/modules/huff.md)
+    - [Invariants](./reference/modules/invariants.md)
     - [Json](./reference/modules/json.md)
     - [Strings](./reference/modules/strings.md)
     - [Watchers](./reference/modules/watchers.md)

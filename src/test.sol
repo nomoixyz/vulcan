@@ -14,6 +14,7 @@ import {forks, Fork} from "./_modules/Forks.sol";
 import {fs, FsMetadata} from "./_modules/Fs.sol";
 import {gas} from "./_modules/Gas.sol";
 import {huff, Huffc} from "./_modules/Huff.sol";
+import {InvariantsBase, invariants} from "./_modules/Invariants.sol";
 import {json, JsonObject} from "./_modules/Json.sol";
 import {strings} from "./_modules/Strings.sol";
 import {watchers, Watcher} from "./_modules/Watchers.sol";
@@ -22,9 +23,10 @@ import {fmt} from "./_modules/Fmt.sol";
 import {fe, Fe} from "./_modules/Fe.sol";
 import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
+import {bound} from "./_utils/bound.sol";
 
 // @dev Main entry point to Vulcan tests
-contract Test {
+contract Test is InvariantsBase {
     bool public IS_TEST = true;
 
     constructor() {
@@ -45,7 +47,7 @@ contract Test {
         }
 
         if (!post) {
-            revert("Didn't fail");
+            revert("Vulcan shouldFail: Didn't fail");
         }
 
         vulcan.clearFailure();
