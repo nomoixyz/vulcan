@@ -14,15 +14,16 @@ contract TestMyContract is Test {
         obj.set("foo", true);
 
         // Obtain the set Json string
-        expect(obj.set).toEqual('{"foo":true}');
+        expect(obj.serialized).toEqual('{"foo":true}');
 
         // Nested Objects
         JsonObject memory nested = json.create();
 
         nested.set("bar", obj);
 
-        expect(nested.set).toEqual('{"bar":{"foo":true}}');
+        expect(nested.serialized).toEqual('{"bar":{"foo":true}}');
     }
 }
 ```
+
 [**Json API reference**](../reference/modules/json.md)
