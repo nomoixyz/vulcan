@@ -19,6 +19,7 @@ import {strings} from "./_modules/Strings.sol";
 import {watchers, Watcher} from "./_modules/Watchers.sol";
 import {config, Rpc} from "./_modules/Config.sol";
 import {fmt} from "./_modules/Fmt.sol";
+import {fe, Fe} from "./_modules/Fe.sol";
 import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
 

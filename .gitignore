@@ -11,3 +11,6 @@ out/
 .env
 
 .DS_Store
+
+# Test stuff
+test/fixtures/fe
