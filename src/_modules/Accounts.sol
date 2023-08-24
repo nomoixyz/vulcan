@@ -86,6 +86,20 @@ library accountsSafe {
         return who;
     }
 
+    /// @dev Creates an address without label.
+    function create() internal returns (address) {
+        uint256 count = _getAddressesCount();
+        address addr = derive(uint256(keccak256(abi.encode(count++))));
+
+        bytes32 slot = keccak256("vulcan.accounts.addressesCount");
+
+        assembly {
+            sstore(slot, count)
+        }
+
+        return addr;
+    }
+
     /// @dev Creates an address using the hash of the specified `name` as the private key and adds a label to the address.
     /// @param name The name to use as the basis for the address.
     /// @return The newly created address.
@@ -101,6 +115,65 @@ library accountsSafe {
         address addr = derive(uint256(keccak256(abi.encodePacked(name))));
 
         return label(addr, lbl);
+    }
+
+    /// @dev Calculates the deployment address of `who` with nonce `nonce`.
+    /// @param who The deployer address.
+    /// @param nonce The deployer nonce.
+    function getDeploymentAddress(address who, uint64 nonce) internal pure returns (address) {
+        bytes memory data;
+
+        if (nonce == 0x00) {
+            data = abi.encodePacked(bytes1(0xd6), bytes1(0x94), who, bytes1(0x80));
+        } else if (nonce <= 0x7f) {
+            data = abi.encodePacked(bytes1(0xd6), bytes1(0x94), who, uint8(nonce));
+        } else if (nonce <= 0xff) {
+            data = abi.encodePacked(bytes1(0xd7), bytes1(0x94), who, bytes1(0x81), uint8(nonce));
+        } else if (nonce <= 0xffff) {
+            data = abi.encodePacked(bytes1(0xd8), bytes1(0x94), who, bytes1(0x82), uint16(nonce));
+        } else if (nonce <= 0xffffff) {
+            data = abi.encodePacked(bytes1(0xd9), bytes1(0x94), who, bytes1(0x83), uint24(nonce));
+        } else if (nonce <= 0xffffffff) {
+            data = abi.encodePacked(bytes1(0xda), bytes1(0x94), who, bytes1(0x84), uint32(nonce));
+        } else if (nonce <= 0xffffffffff) {
+            data = abi.encodePacked(bytes1(0xdb), bytes1(0x94), who, bytes1(0x85), uint40(nonce));
+        } else if (nonce <= 0xffffffffffff) {
+            data = abi.encodePacked(bytes1(0xdc), bytes1(0x94), who, bytes1(0x86), uint48(nonce));
+        } else if (nonce <= 0xffffffffffffff) {
+            data = abi.encodePacked(bytes1(0xdd), bytes1(0x94), who, bytes1(0x87), uint56(nonce));
+        } else if (nonce <= 0xffffffffffffffff) {
+            data = abi.encodePacked(bytes1(0xde), bytes1(0x94), who, bytes1(0x88), uint64(nonce));
+        }
+
+        return address(uint160(uint256(keccak256(data))));
+    }
+
+    /// @dev Calculates the deployment address of `who` with the current nonce.
+    /// @param who The deployer address.
+    function getDeploymentAddress(address who) internal view returns (address) {
+        return getDeploymentAddress(who, getNonce(who));
+    }
+
+    /// @dev Generates an array of addresses with a specific length.
+    /// @param length The amount of addresses to generate.
+    function createMany(uint256 length) internal returns (address[] memory) {
+        require(length > 0, "accounts: invalid length for addresses array");
+
+        address[] memory addresses = new address[](length);
+
+        for (uint256 i; i < length; i++) {
+            addresses[i] = create();
+        }
+
+        return addresses;
+    }
+
+    function _getAddressesCount() internal view returns (uint256 count) {
+        bytes32 slot = keccak256("vulcan.accounts.addressesCount");
+
+        assembly {
+            count := sload(slot)
+        }
     }
 }
 
@@ -159,12 +232,29 @@ library accounts {
         return accountsSafe.label(who, lbl);
     }
 
+    function create() internal returns (address) {
+        return accountsSafe.create();
+    }
+
     function create(string memory name) internal returns (address) {
         return accountsSafe.create(name);
     }
 
     function create(string memory name, string memory lbl) internal returns (address) {
         return accountsSafe.create(name, lbl);
+    }
+
+    /// @dev Calculates the deployment address of `who` with nonce `nonce`.
+    /// @param who The deployer address.
+    /// @param nonce The deployer nonce.
+    function getDeploymentAddress(address who, uint64 nonce) internal pure returns (address) {
+        return accountsSafe.getDeploymentAddress(who, nonce);
+    }
+
+    /// @dev Calculates the deployment address of `who` with the current nonce.
+    /// @param who The deployer address.
+    function getDeploymentAddress(address who) internal view returns (address) {
+        return accountsSafe.getDeploymentAddress(who);
     }
 
     /// @dev Sets the specified `slot` in the storage of the given `self` address to the provided `value`.
@@ -318,5 +408,11 @@ library accounts {
     function setCode(address self, bytes memory code) internal returns (address) {
         vulcan.hevm.etch(self, code);
         return self;
+    }
+
+    /// @dev Generates an array of addresses with a specific length.
+    /// @param length The amount of addresses to generate.
+    function createMany(uint256 length) internal returns (address[] memory) {
+        return accountsSafe.createMany(length);
     }
 }
