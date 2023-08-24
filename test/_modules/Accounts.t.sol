@@ -228,6 +228,25 @@ contract AccountsTest is Test {
 
         expect(deployedAddress).toEqual(deploymentAddress);
     }
+
+    function testCreateAddresWithoutName() external {
+        address first = accounts.create();
+        address second = accounts.create();
+
+        expect(first).not.toEqual(second);
+    }
+
+    function testCreateAddressesArray() external {
+        uint256 length = 20;
+
+        address[] memory addresses = accounts.createMany(length);
+
+        expect(addresses.length).toEqual(length);
+
+        for (uint256 i; i < length; i++) {
+            expect(addresses[i]).toEqual(accounts.derive(uint256(keccak256(abi.encode(i)))));
+        }
+    }
 }
 
 contract TestToken {
