@@ -39,14 +39,14 @@ contract TestSomething is Test {
     using watchers for *;
 
     function testSomething() external {
-		// Format strings with rust-like syntax
+        // Format strings with rust-like syntax
         println("Hello {s}", abi.encode("world!")); // Hello world!
         println("Balance: {u:d18}", abi.encode(1e17)); // Balance: 0.1
 
         // Create an address from a string, set the ETH balance and impersonate calls
         address alice = accounts.create("Alice").setBalance(123).impersonate();
 
-		// Expect style assertions!
+        // Expect style assertions!
         expect(true).toBeTrue();
         expect("Hello world!").toContain("Hello");
 
