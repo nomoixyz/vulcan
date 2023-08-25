@@ -1,5 +1,9 @@
 # Commands
 
+#### **`create() → (Command)`**
+
+Creates a new empty `Command` struct.
+
 #### **`create(string input) → (Command)`**
 
 Creates a new `Command` struct using the provided `input` as the executable.

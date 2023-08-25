@@ -8,7 +8,9 @@ The `expect` function allows you to assert that a value meets a certain conditio
 import { Test, expect } from "vulcan/test.sol";
 
 function testSomething() external {
-    expect(1).toEqual(1);
+    uint256 a = 1;
+    uint256 b = 1;
+    expect(a).toEqual(b);
 }
 ```
 
@@ -20,7 +22,7 @@ The `.not` property inverts the result of the assertion.
 
 ```solidity
 function testSomething() external {
-    expect(1).not.toEqual(2);
+    expect("hello").not.toEqual("world");
 }
 ```
 
@@ -59,6 +61,8 @@ function testSomething() external {
 ### `toHaveSucceeded()`
 
 ### `toHaveEmitted(topics)`
+
 ### `toHaveEmitted(topics, data)`
+
 ### `toHaveEmitted(signature, topics, data)`
 

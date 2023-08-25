@@ -5,6 +5,12 @@ import {Test, expect, commands, Command} from "../../src/test.sol";
 contract CommandsTest is Test {
     using commands for *;
 
+    function testCanCreateEmptyCommand() external {
+        Command memory cmd = commands.create().arg("echo");
+
+        expect(cmd.toString()).toEqual("echo");
+    }
+
     function testItCanRunCommands() external {
         string[2] memory inputs = ["echo", "'Hello, World!'"];
         Command memory cmd = commands.create(inputs[0]).arg(inputs[1]);

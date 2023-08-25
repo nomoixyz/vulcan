@@ -23,6 +23,7 @@ See the [Vulcan Book](https://nomoixyz.github.io/vulcan/) for detailed usage inf
 ## Why Vulcan?
 
 Our goal is to provide:
+ 
 - Better naming for VM functionality (no more `prank`, `roll`, `warp`, ...)
 - A testing framework with better readability and a familiar syntax
 - Improved ergonomics
@@ -31,24 +32,34 @@ Our goal is to provide:
 Vulcan test example:
 
 ```solidity
-import { Test, expect, accounts, any, commands, Command,  watchers } from "vulcan/test.sol";
+import { Test, expect, accounts, any, commands, Command,  watchers, println } from "vulcan/test.sol";
 
 contract TestSomething is Test {
     using accounts for *;
     using watchers for *;
 
     function testSomething() external {
+        // Format strings with rust-like syntax
+        println("Hello {s}", abi.encode("world!")); // Hello world!
+        println("Balance: {u:d18}", abi.encode(1e17)); // Balance: 0.1
+
         // Create an address from a string, set the ETH balance and impersonate calls
         address alice = accounts.create("Alice").setBalance(123).impersonate();
 
+        // Expect style assertions!
+        expect(true).toBeTrue();
+        expect("Hello world!").toContain("Hello");
+
+        // Nice external command API!
+        Command memory ping = commands.create("ping").args(["-c", "1"]);
+        res = ping.arg("etherscan.io").run();
+        res = ping.arg("arbiscan.io").run();
+
+        // Monitor calls and events!
         MyContract mc = new MyContract();
-
-        // This will watch all contract calls and record their execution
-        address(mc).watch().captureReverts();
-
+        address(mc).watch().captureReverts(); // Watch calls and record their execution
         mc.doSomething();
 
-        // Check that `doSomething()` reverted
         expect(address(mc).lastCall()).toHaveRevertedWith("Something went wrong");
 
         mc.doSomethingElse();
@@ -59,18 +70,6 @@ contract TestSomething is Test {
             [address(1).topic(), any()], // Event topics
             abi.encode(123) // Event data
         );
-
-        // Expect style assertions!
-        expect(true).toBeTrue();
-        expect(true).toEqual(true);
-        expect(123).toBeGreaterThanOrEqual(123);
-        expect(123).not.toEqual(321);
-        expect("Hello world!").toContain("Hello");
-
-        // Nice external command API!
-        Command memory ping = commands.create("ping").args(["-c", "1"]);
-        res = ping.arg("etherscan.io").run();
-        res = ping.arg("arbiscan.io").run();
 
         // And much more!
     }
