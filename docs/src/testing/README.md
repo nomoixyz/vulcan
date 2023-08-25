@@ -7,9 +7,11 @@ import { Test, expect } from "vulcan/test.sol";
 
 contract ExampleTest is Test {
     function testSomething() external {
-        expect(1).toBeLessThan(2);
-        expect(1).not.toEqual(2);
-        expect(1).toEqual(1);
+        uint256 value = 1;
+        expect(value).toEqual(1);
+        expect(value).not.toEqual(2);
+        expect(value).toBeLessThan(2);
+        expect("Hello World!).toContain("World");
     }
 }
 ```
