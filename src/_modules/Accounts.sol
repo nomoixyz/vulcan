@@ -88,16 +88,8 @@ library accountsSafe {
 
     /// @dev Creates an address without label.
     function create() internal returns (address) {
-        uint256 count = _getAddressesCount();
-        address addr = derive(uint256(keccak256(abi.encode(count++))));
-
-        bytes32 slot = keccak256("vulcan.accounts.addressesCount");
-
-        assembly {
-            sstore(slot, count)
-        }
-
-        return addr;
+        uint256 id = _incrementId();
+        return derive(uint256(keccak256(abi.encode(id))));
     }
 
     /// @dev Creates an address using the hash of the specified `name` as the private key and adds a label to the address.
@@ -168,11 +160,12 @@ library accountsSafe {
         return addresses;
     }
 
-    function _getAddressesCount() internal view returns (uint256 count) {
-        bytes32 slot = keccak256("vulcan.accounts.addressesCount");
+    function _incrementId() private returns (uint256 count) {
+        bytes32 slot = keccak256("vulcan.accounts.id.counter");
 
         assembly {
             count := sload(slot)
+            sstore(slot, add(count, 1))
         }
     }
 }
