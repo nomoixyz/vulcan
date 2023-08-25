@@ -47,7 +47,11 @@ interface HevmSafe {
         uint256 created;
     }
 
-    struct FfiResult { int32 exitCode; bytes stdout; bytes stderr; }
+    struct FfiResult {
+        int32 exitCode;
+        bytes stdout;
+        bytes stderr;
+    }
 
     // Loads a storage slot from an address
     function load(address target, bytes32 slot) external view returns (bytes32 data);
@@ -516,4 +520,3 @@ interface Hevm is HevmSafe {
 
     function tryFfi(string[] calldata commandInput) external returns (FfiResult memory result);
 }
-
