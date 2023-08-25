@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Vm as Hevm} from "forge-std/Vm.sol";
+import {Hevm} from "../Hevm.sol";
 import "./Vulcan.sol";
 
 struct FsMetadata {

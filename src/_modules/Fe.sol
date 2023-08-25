@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
+import {Hevm} from "../Hevm.sol";
 import "./Commands.sol";
 import "./Strings.sol";
 
@@ -22,10 +23,10 @@ library fe {
 
     /// @dev Builds a binary file from a `.fe` file.
     /// @param self The `Fe` struct to build.
-    function build(Fe memory self) internal returns (bytes memory) {
-        bytes memory output = self.toCommand().run();
+    function build(Fe memory self) internal returns (Hevm.FfiResult memory) {
+        Hevm.FfiResult memory result = self.toCommand().run();
         // TODO: add error handling
-        return output;
+        return result;
     }
 
     /// @dev Transforms a `Fe` struct to a `Command` struct.

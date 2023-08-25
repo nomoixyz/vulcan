@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {vulcan} from "./Vulcan.sol";
+import {vulcan, Hevm} from "./Vulcan.sol";
 
 /// @dev Struct used to hold command parameters. Useful for creating commands that can be run
 /// multiple times
@@ -147,94 +147,94 @@ library commands {
     /// @dev Runs a command using the specified `Command` struct as parameters and returns the result.
     /// @param self The `Command` struct that holds the parameters of the command.
     /// @return The result of the command as a bytes array.
-    function run(Command memory self) internal returns (bytes memory) {
+    function run(Command memory self) internal returns (Hevm.FfiResult memory) {
         return self.inputs.run();
     }
 
     /// @dev Runs a command with the specified `inputs` as parameters and returns the result.
     /// @param inputs An array of strings representing the parameters of the command.
     /// @return The result of the command as a bytes array.
-    function run(string[] memory inputs) internal returns (bytes memory) {
-        return vulcan.hevm.ffi(inputs);
+    function run(string[] memory inputs) internal returns (Hevm.FfiResult memory) {
+        return vulcan.hevm.tryFfi(inputs);
     }
 
-    function run(string[1] memory inputs) internal returns (bytes memory) {
+    function run(string[1] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[2] memory inputs) internal returns (bytes memory) {
+    function run(string[2] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[3] memory inputs) internal returns (bytes memory) {
+    function run(string[3] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[4] memory inputs) internal returns (bytes memory) {
+    function run(string[4] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[5] memory inputs) internal returns (bytes memory) {
+    function run(string[5] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[6] memory inputs) internal returns (bytes memory) {
+    function run(string[6] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[7] memory inputs) internal returns (bytes memory) {
+    function run(string[7] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[8] memory inputs) internal returns (bytes memory) {
+    function run(string[8] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[9] memory inputs) internal returns (bytes memory) {
+    function run(string[9] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[10] memory inputs) internal returns (bytes memory) {
+    function run(string[10] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[11] memory inputs) internal returns (bytes memory) {
+    function run(string[11] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[12] memory inputs) internal returns (bytes memory) {
+    function run(string[12] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[13] memory inputs) internal returns (bytes memory) {
+    function run(string[13] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[14] memory inputs) internal returns (bytes memory) {
+    function run(string[14] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[15] memory inputs) internal returns (bytes memory) {
+    function run(string[15] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[16] memory inputs) internal returns (bytes memory) {
+    function run(string[16] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[17] memory inputs) internal returns (bytes memory) {
+    function run(string[17] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[18] memory inputs) internal returns (bytes memory) {
+    function run(string[18] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[19] memory inputs) internal returns (bytes memory) {
+    function run(string[19] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[20] memory inputs) internal returns (bytes memory) {
+    function run(string[20] memory inputs) internal returns (Hevm.FfiResult memory) {
         return _toDynamic(inputs).run();
     }
 

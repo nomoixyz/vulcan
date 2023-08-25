@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
+import {Hevm} from "../Hevm.sol";
 import "./Commands.sol";
 import "./Strings.sol";
 
@@ -31,8 +32,8 @@ library huff {
         });
     }
 
-    function compile(Huffc memory self) internal returns (bytes memory) {
-        bytes memory output = self.toCommand().run();
+    function compile(Huffc memory self) internal returns (Hevm.FfiResult memory) {
+        Hevm.FfiResult memory output = self.toCommand().run();
         // TODO: add error handling
         return output;
     }
