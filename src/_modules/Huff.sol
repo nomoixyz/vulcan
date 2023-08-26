@@ -32,10 +32,8 @@ library huff {
         });
     }
 
-    function compile(Huffc memory self) internal returns (Hevm.FfiResult memory) {
-        Hevm.FfiResult memory output = self.toCommand().run();
-        // TODO: add error handling
-        return output;
+    function compile(Huffc memory self) internal returns (CommandResult memory) {
+        return self.toCommand().run();
     }
 
     function toCommand(Huffc memory self) internal pure returns (Command memory) {

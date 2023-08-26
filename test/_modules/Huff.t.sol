@@ -1,7 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Hevm} from "../../src/Hevm.sol";
-import {Test, expect, Command, console, huff, Huffc} from "../../src/test.sol";
+import {Test, expect, Command, CommandResult, console, huff, Huffc} from "../../src/test.sol";
 
 bytes32 constant SLOT = 0x0000000000000000000000000000000000000000000000000000000000000001;
 bytes32 constant OTHER_SLOT = 0x0000000000000000000000000000000000000000000000000000000000000002;
@@ -54,7 +53,7 @@ contract HuffTest is Test {
     }
 
     function testCompile() external {
-        Hevm.FfiResult memory initcode = huff.create().setFilePath("./test/mocks/Getter.huff").compile();
+        CommandResult memory initcode = huff.create().setFilePath("./test/mocks/Getter.huff").compile();
         expect(initcode.stdout.length).toBeGreaterThan(0);
     }
 }

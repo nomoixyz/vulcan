@@ -1,7 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Hevm} from "../../src/Hevm.sol";
-import {Test, expect, commands, forks, Fork, console} from "../../src/test.sol";
+import {Test, expect, commands, forks, Fork, console, CommandResult} from "../../src/test.sol";
 import {Sender} from "../mocks/Sender.sol";
 
 contract ForksTest is Test {
@@ -10,7 +9,7 @@ contract ForksTest is Test {
     modifier skipIfEndpointFails() {
         string memory data = '{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":67}';
 
-        Hevm.FfiResult memory res = commands.create("curl").args(
+        CommandResult memory res = commands.create("curl").args(
             ["--silent", "-H", "Content-Type: application/json", "-X", "POST", "--data", data, ENDPOINT]
         ).run();
 

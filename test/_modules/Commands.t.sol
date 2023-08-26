@@ -1,7 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, Command} from "../../src/test.sol";
-import {Hevm} from "../../src/Hevm.sol";
+import {Test, expect, commands, Command, CommandResult} from "../../src/test.sol";
 
 contract CommandsTest is Test {
     using commands for *;
@@ -21,7 +20,7 @@ contract CommandsTest is Test {
 
     function testItCanRunCommandsDirectly() external {
         string[2] memory inputs = ["echo", "'Hello, World!'"];
-        Hevm.FfiResult memory result = commands.run(inputs);
+        CommandResult memory result = commands.run(inputs);
 
         expect(string(result.stdout)).toEqual(inputs[1]);
     }
