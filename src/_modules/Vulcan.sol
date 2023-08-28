@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Hevm} from "../Hevm.sol";
+import {Vm as Hevm} from "forge-std/Vm.sol";
 import {watchers, Call, Watcher} from "./Watchers.sol";
 import {ctx} from "./Context.sol";
 
