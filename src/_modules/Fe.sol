@@ -22,10 +22,8 @@ library fe {
 
     /// @dev Builds a binary file from a `.fe` file.
     /// @param self The `Fe` struct to build.
-    function build(Fe memory self) internal returns (bytes memory) {
-        bytes memory output = self.toCommand().run();
-        // TODO: add error handling
-        return output;
+    function build(Fe memory self) internal returns (CommandResult memory) {
+        return self.toCommand().run();
     }
 
     /// @dev Transforms a `Fe` struct to a `Command` struct.

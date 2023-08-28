@@ -5,7 +5,7 @@ import {console} from "./_modules/Console.sol";
 import {vulcan, Log} from "./_modules/Vulcan.sol";
 import {any} from "./_modules/Any.sol";
 import {accounts} from "./_modules/Accounts.sol";
-import {commands, Command} from "./_modules/Commands.sol";
+import {commands, Command, CommandResult} from "./_modules/Commands.sol";
 import {ctx} from "./_modules/Context.sol";
 import {env} from "./_modules/Env.sol";
 import {events} from "./_modules/Events.sol";

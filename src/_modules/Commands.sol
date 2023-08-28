@@ -9,6 +9,25 @@ struct Command {
     string[] inputs;
 }
 
+struct CommandResult {
+    int32 exitCode;
+    bytes stdout;
+    bytes stderr;
+    Command command;
+}
+
+struct FfiResult {
+    int32 exitCode;
+    bytes stdout;
+    bytes stderr;
+}
+
+/// @dev Hackish way of getting access to the new `tryFfi` cheat code until it gets realeased on a
+/// new `forge-std` version.
+interface TryFfi {
+    function tryFfi(string[] memory args) external returns (FfiResult memory);
+}
+
 library commands {
     using commands for *;
 
@@ -147,95 +166,135 @@ library commands {
     /// @dev Runs a command using the specified `Command` struct as parameters and returns the result.
     /// @param self The `Command` struct that holds the parameters of the command.
     /// @return The result of the command as a bytes array.
-    function run(Command memory self) internal returns (bytes memory) {
+    function run(Command memory self) internal returns (CommandResult memory) {
         return self.inputs.run();
     }
 
     /// @dev Runs a command with the specified `inputs` as parameters and returns the result.
     /// @param inputs An array of strings representing the parameters of the command.
-    /// @return The result of the command as a bytes array.
-    function run(string[] memory inputs) internal returns (bytes memory) {
-        return vulcan.hevm.ffi(inputs);
+    /// @return result The result of the command as a bytes array.
+    function run(string[] memory inputs) internal returns (CommandResult memory result) {
+        FfiResult memory ffiResult = TryFfi(address(vulcan.hevm)).tryFfi(inputs);
+
+        result.exitCode = ffiResult.exitCode;
+        result.stdout = ffiResult.stdout;
+        result.stderr = ffiResult.stderr;
+        result.command = Command(inputs);
     }
 
-    function run(string[1] memory inputs) internal returns (bytes memory) {
+    function run(string[1] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[2] memory inputs) internal returns (bytes memory) {
+    function run(string[2] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[3] memory inputs) internal returns (bytes memory) {
+    function run(string[3] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[4] memory inputs) internal returns (bytes memory) {
+    function run(string[4] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[5] memory inputs) internal returns (bytes memory) {
+    function run(string[5] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[6] memory inputs) internal returns (bytes memory) {
+    function run(string[6] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[7] memory inputs) internal returns (bytes memory) {
+    function run(string[7] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[8] memory inputs) internal returns (bytes memory) {
+    function run(string[8] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[9] memory inputs) internal returns (bytes memory) {
+    function run(string[9] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[10] memory inputs) internal returns (bytes memory) {
+    function run(string[10] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[11] memory inputs) internal returns (bytes memory) {
+    function run(string[11] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[12] memory inputs) internal returns (bytes memory) {
+    function run(string[12] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[13] memory inputs) internal returns (bytes memory) {
+    function run(string[13] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[14] memory inputs) internal returns (bytes memory) {
+    function run(string[14] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[15] memory inputs) internal returns (bytes memory) {
+    function run(string[15] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[16] memory inputs) internal returns (bytes memory) {
+    function run(string[16] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[17] memory inputs) internal returns (bytes memory) {
+    function run(string[17] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[18] memory inputs) internal returns (bytes memory) {
+    function run(string[18] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[19] memory inputs) internal returns (bytes memory) {
+    function run(string[19] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[20] memory inputs) internal returns (bytes memory) {
+    function run(string[20] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
+    }
+
+    /// @dev Checks if a `CommandResult` returned an `ok` exit code.
+    function isOk(CommandResult memory self) internal pure returns (bool) {
+        return self.exitCode == 0;
+    }
+
+    /// @dev Checks if a `CommandResult` struct is an error.
+    function isError(CommandResult memory self) internal pure returns (bool) {
+        return !self.isOk();
+    }
+
+    /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
+    function unwrap(CommandResult memory self) internal pure returns (bytes memory) {
+        string memory error;
+
+        if (self.isError()) {
+            error = string.concat("Failed to run command ", self.command.toString());
+
+            if (self.stderr.length > 0) {
+                error = string.concat(error, ": ", string(self.stderr));
+            }
+        }
+
+        return expect(self, error);
+    }
+
+    /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
+    /// @param customError The error message that will be used when reverting.
+    function expect(CommandResult memory self, string memory customError) internal pure returns (bytes memory) {
+        if (self.isError()) {
+            revert(customError);
+        }
+
+        return self.stdout;
     }
 
     function _toDynamic(string[1] memory inputs) private pure returns (string[] memory _inputs) {
@@ -378,3 +437,4 @@ library commands {
 }
 
 using commands for Command global;
+using commands for CommandResult global;
