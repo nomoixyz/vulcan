@@ -4,7 +4,7 @@ Execute external commands. The `ffi` setting must be enabled on `foundry.toml` f
 work.
 
 ```solidity
-import { Test, Command, commands } from "vulcan/test.sol";
+import { Test, Command, commands, CommandResult } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     using commands for *;
@@ -12,7 +12,18 @@ contract TestMyContract is Test {
     function testMyContract() external {
         // run `echo Hello World`.
         // There is no need to create a dynamic array for the arguments
-        bytes memory res = commands.run(["echo", "Hello World"]);
+        CommandResult memory res = commands.run(["echo", "Hello World"]);
+
+        if (res.isOk()) {
+            // do something
+        }
+
+        if (res.isError()) {
+            // do something else
+        }
+
+        // This will return the output from `stdout` or revert if the command failed.
+        bytes memory output = res.unwrap();
 
         // A comand can be created to facilitate multiple executions
         Command memory cmd = commands.create("echo").arg("Hello World");
