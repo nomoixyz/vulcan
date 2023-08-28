@@ -66,7 +66,16 @@ contract CommandsTest is Test {
     function testUnwrapReverts() external {
         CommandResult memory result = commands.run(["forge", "--hlkfshjfhjas"]);
 
-        ctx.expectRevert();
+        bytes memory expectedError = bytes(
+            string.concat(
+                "Failed to run command forge --hlkfshjfhjas: ",
+                "error: unexpected argument '--hlkfshjfhjas' found\n\n",
+                "Usage: forge <COMMAND>\n\n"
+                "For more information, try '--help'.\n"
+            )
+        );
+
+        ctx.expectRevert(expectedError);
 
         result.unwrap();
     }
