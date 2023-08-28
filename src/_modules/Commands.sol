@@ -289,11 +289,7 @@ library commands {
 
     /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
     /// @param customError The error message that will be used when reverting.
-    function expect(CommandResult memory self, string memory customError)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function expect(CommandResult memory self, string memory customError) internal pure returns (bytes memory) {
         if (self.isError()) {
             revert(customError);
         }
