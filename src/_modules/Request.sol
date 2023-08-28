@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import {Command, commands} from "./Commands.sol";
+import {Command, CommandResult, commands} from "./Commands.sol";
 import {JsonObject, json as jsonModule} from "./Json.sol";
 
 struct RequestClient {
@@ -9,7 +9,7 @@ struct RequestClient {
 }
 
 struct RequestResult {
-    bool success;
+    uint256 statusCode;
     bytes result;
     string error;
 }
@@ -19,19 +19,28 @@ library request {
 
     function create() internal pure returns (RequestClient memory) {
         // Hide progress but return result or error
-        return RequestClient({_cmd: commands.create("curl").args(["-S", "-s", "--fail-with-body"])});
+        return RequestClient({
+            _cmd: commands.create("bash").arg("-c").arg(
+                string.concat(
+                    'response=$(curl -s -w "\\n%{http_code}" "$@");',
+                    'body=$(echo "$response" | head -n -1);',
+                    'code=$(echo "$response" | tail -n 1);',
+                    'cast abi-encode "response(uint256,string)" "$code" "$body";'
+                )
+                )
+        });
     }
 
-    function send(RequestClient memory self) internal returns (bytes memory) {
-        return self._cmd.run();
+    function send(RequestClient memory self) internal returns (RequestResult memory) {
+        CommandResult 
+    }
+
+    function get(string memory url) internal returns (RequestResult memory) {
+        return create().get(url).send();
     }
 
     function get(RequestClient memory self, string memory url) internal pure returns (RequestClient memory) {
         return RequestClient(self._cmd.arg(url));
-    }
-
-    function get(string memory url) internal returns (bytes memory) {
-        return create().get(url).send();
     }
 
     function del(RequestClient memory self, string memory url) internal pure returns (RequestClient memory) {
