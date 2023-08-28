@@ -262,6 +262,28 @@ library commands {
         return _toDynamic(inputs).run();
     }
 
+    function isOk(CommandResult memory self) internal pure returns (bool) {
+        return self.exitCode == 0;
+    }
+
+    function isError(CommandResult memory self) internal pure returns (bool) {
+        return !self.isOk();
+    }
+
+    function unwrap(CommandResult memory self) internal pure returns (bytes memory) {
+        if (self.isError()) {
+            string memory error = string.concat("Failed to run command ", self.command.toString());
+
+            if (self.stderr.length > 0) {
+                error = string.concat(error, string.concat(":\n\n", string(self.stderr)));
+            }
+
+            revert(error);
+        }
+
+        return self.stdout;
+    }
+
     function _toDynamic(string[1] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](1);
         _inputs[0] = inputs[0];
@@ -402,3 +424,4 @@ library commands {
 }
 
 using commands for Command global;
+using commands for CommandResult global;

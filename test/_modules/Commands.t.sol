@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, Command, CommandResult} from "../../src/test.sol";
+import {Test, expect, commands, Command, CommandResult, ctx} from "../../src/test.sol";
 
 contract CommandsTest is Test {
     using commands for *;
@@ -29,5 +29,37 @@ contract CommandsTest is Test {
         Command memory ping = commands.create("ping").args(["-c", "1", "nomoi.xyz"]);
 
         expect(ping.toString()).toEqual("ping -c 1 nomoi.xyz");
+    }
+
+    function testIsOk() external {
+        CommandResult memory result = commands.run(["echo", "'Hello World'"]);
+
+        expect(result.isOk()).toBeTrue();
+    }
+
+    function testIsNotOk() external {
+        CommandResult memory result = commands.run(["forge", "--hlkfshjfhjas"]);
+
+        expect(result.isOk()).toBeFalse();
+    }
+
+    function testIsError() external {
+        CommandResult memory result = commands.run(["forge", "--hlkfshjfhjas"]);
+
+        expect(result.isError()).toBeTrue();
+    }
+
+    function testIsNotError() external {
+        CommandResult memory result = commands.run(["echo", "'Hello World'"]);
+
+        expect(result.isError()).toBeFalse();
+    }
+
+    function testUnwrapsReverts() external {
+        CommandResult memory result = commands.run(["forge", "--hlkfshjfhjas"]);
+
+        ctx.expectRevert();
+
+        result.unwrap();
     }
 }
