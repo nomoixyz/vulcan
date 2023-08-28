@@ -70,8 +70,7 @@ contract CommandsTest is Test {
             string.concat(
                 "Failed to run command forge --hlkfshjfhjas: ",
                 "error: unexpected argument '--hlkfshjfhjas' found\n\n",
-                "Usage: forge <COMMAND>\n\n"
-                "For more information, try '--help'.\n"
+                "Usage: forge <COMMAND>\n\n" "For more information, try '--help'.\n"
             )
         );
 
