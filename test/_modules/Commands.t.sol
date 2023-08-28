@@ -55,11 +55,19 @@ contract CommandsTest is Test {
         expect(result.isError()).toBeFalse();
     }
 
-    function testUnwrapsReverts() external {
+    function testGetOuputOrRevert() external {
+        CommandResult memory result = commands.run(["echo", "'Hello World'"]);
+
+        bytes memory output = result.getOutputOrRevert();
+
+        expect(string(output)).toEqual("'Hello World'");
+    }
+
+    function testGetOutputOrRevertReverts() external {
         CommandResult memory result = commands.run(["forge", "--hlkfshjfhjas"]);
 
         ctx.expectRevert();
 
-        result.unwrap();
+        result.getOutputOrRevert();
     }
 }

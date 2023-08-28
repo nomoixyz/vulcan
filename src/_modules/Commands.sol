@@ -270,18 +270,30 @@ library commands {
         return !self.isOk();
     }
 
-    function unwrap(CommandResult memory self) internal pure returns (bytes memory) {
+    function getOutputOrRevert(CommandResult memory self, string memory customError)
+        internal
+        pure
+        returns (bytes memory)
+    {
         if (self.isError()) {
-            string memory error = string.concat("Failed to run command ", self.command.toString());
-
-            if (self.stderr.length > 0) {
-                error = string.concat(error, string.concat(":\n\n", string(self.stderr)));
-            }
-
-            revert(error);
+            revert(customError);
         }
 
         return self.stdout;
+    }
+
+    function getOutputOrRevert(CommandResult memory self) internal pure returns (bytes memory) {
+        string memory error;
+
+        if (self.isError()) {
+            error = string.concat("Failed to run command ", self.command.toString());
+
+            if (self.stderr.length > 0) {
+                error = string.concat(error, string.concat(": ", string(self.stderr)));
+            }
+        }
+
+        return getOutputOrRevert(self, error);
     }
 
     function _toDynamic(string[1] memory inputs) private pure returns (string[] memory _inputs) {
