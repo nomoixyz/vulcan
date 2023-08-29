@@ -68,7 +68,7 @@ contract CommandsTest is Test {
 
         bytes memory expectedError = bytes(
             string.concat(
-                "Failed to run command forge --hlkfshjfhjas: ",
+                "Failed to run command forge --hlkfshjfhjas:\n\n",
                 "error: unexpected argument '--hlkfshjfhjas' found\n\n",
                 "Usage: forge <COMMAND>\n\n" "For more information, try '--help'.\n"
             )
