@@ -10,7 +10,7 @@ import {
     vulcan,
     request,
     RequestClient,
-    RequestResult,
+    Response,
     commands
 } from "../../src/test.sol";
 
@@ -20,8 +20,14 @@ contract RequestTest is Test {
     function testRequestGet() external {
         RequestClient memory client = request.create().get("https://httpbin.org/get");
 
-        RequestResult memory result = client.send();
-        println(string(result.body));
-        expect(result.statusCode).toEqual(200);
+        Response memory res = client.send();
+        // println(string(result.body));
+        expect(res.status).toEqual(200);
+    }
+
+    function testRequestJsonDecode() external {
+        // bytes memory data = request.get("https://httpbin.org/ip").unwrap();
+
+        // println(json.getString(string(data), ".origin"));
     }
 }

@@ -20,7 +20,7 @@ import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
 import {huff, Huffc} from "./_modules/Huff.sol";
 import {fe, Fe} from "./_modules/Fe.sol";
-import {request, RequestClient, RequestResult} from "./_modules/Request.sol";
+import {request, RequestClient, Response} from "./_modules/Request.sol";
 
 contract Script {
     bool public IS_SCRIPT = true;

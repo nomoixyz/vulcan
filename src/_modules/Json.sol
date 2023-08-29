@@ -9,6 +9,10 @@ struct JsonObject {
     string serialized;
 }
 
+struct ImmutableJson {
+    string serialized;
+}
+
 library json {
     /// @dev Parses a json object string by key and returns an ABI encoded value.
     /// @param jsonStr The json string.
