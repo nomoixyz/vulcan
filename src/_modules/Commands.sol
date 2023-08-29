@@ -280,7 +280,7 @@ library commands {
             error = string.concat("Failed to run command ", self.command.toString());
 
             if (self.stderr.length > 0) {
-                error = string.concat(error, ": ", string(self.stderr));
+                error = string.concat(error, ":\n\n", string(self.stderr));
             }
         }
 
