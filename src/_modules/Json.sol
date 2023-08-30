@@ -44,8 +44,8 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The uint256 value.
-    function getUint(JsonObject memory obj, string memory key) internal pure returns (uint256) {
-        return IPureJsonCheatcodes(address(vulcan.hevm)).parseJsonUint(obj.serialized, key);
+    function getUint(JsonObject memory obj, string memory key) internal returns (uint256) {
+        return vulcan.hevm.parseJsonUint(obj.serialized, key);
     }
 
     /// @dev Parses the value of the `key` contained on `jsonStr` as uint256[].
@@ -421,22 +421,3 @@ library json {
 }
 
 using json for JsonObject global;
-
-interface IPureJsonCheatcodes {
-    function parseJson(string calldata json, string calldata key) external pure returns (bytes memory abiEncodedData);
-    function parseJson(string calldata json) external pure returns (bytes memory abiEncodedData);
-    function parseJsonUint(string calldata, string calldata) external pure returns (uint256);
-    function parseJsonUintArray(string calldata, string calldata) external pure returns (uint256[] memory);
-    function parseJsonInt(string calldata, string calldata) external pure returns (int256);
-    function parseJsonIntArray(string calldata, string calldata) external pure returns (int256[] memory);
-    function parseJsonBool(string calldata, string calldata) external pure returns (bool);
-    function parseJsonBoolArray(string calldata, string calldata) external pure returns (bool[] memory);
-    function parseJsonAddress(string calldata, string calldata) external pure returns (address);
-    function parseJsonAddressArray(string calldata, string calldata) external pure returns (address[] memory);
-    function parseJsonString(string calldata, string calldata) external pure returns (string memory);
-    function parseJsonStringArray(string calldata, string calldata) external pure returns (string[] memory);
-    function parseJsonBytes(string calldata, string calldata) external pure returns (bytes memory);
-    function parseJsonBytesArray(string calldata, string calldata) external pure returns (bytes[] memory);
-    function parseJsonBytes32(string calldata, string calldata) external pure returns (bytes32);
-    function parseJsonBytes32Array(string calldata, string calldata) external pure returns (bytes32[] memory);
-}

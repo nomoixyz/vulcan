@@ -17,25 +17,19 @@ struct Response {
     string url;
     uint256 status;
     bytes body;
-    RequestClient _client;
-}
-
-library RequestError {
-    bytes32 constant COMMAND_FAILED = keccak256("COMMAND_FAILED");
-    bytes32 constant NOT_FOUND = keccak256("NOT_FOUND");
-
-    function notFound(Response memory res) public pure returns (ResponseResult memory _res) {
-        _res._error = Error({message: string.concat("Not found: ", res.url), id: NOT_FOUND});
-    }
-
-    function commandFailed() public pure returns (ResponseResult memory res) {
-        res._error = Error({message: "Command failed", id: COMMAND_FAILED});
-    }
 }
 
 struct ResponseResult {
     Response value;
     Error _error;
+}
+
+library RequestError {
+    bytes32 constant COMMAND_FAILED = keccak256("COMMAND_FAILED");
+
+    function commandFailed() public pure returns (ResponseResult memory res) {
+        res._error = Error({message: "Command failed", id: COMMAND_FAILED});
+    }
 }
 
 library ResponseResultLib {
@@ -65,29 +59,25 @@ library ResponseResultLib {
     }
 }
 
-using ResponseResultLib for ResponseResult global;
-
 library request {
     using request for *;
 
     function create() internal pure returns (RequestClient memory) {
         return RequestClient({
-            /*
-             * Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
-             *
-             * response=$(curl -s -w "\\n%{http_code}" "$@");
-             * body=$(sed "$ d" <<< "$response"  | tr -d "\\n");
-             * code=$(tail -n 1 <<< "$response");
-             * cast abi-encode "response(uint256,string)" "$code" "$body";
-             */
             url: "",
+            // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
             _cmd: commands.create("bash").arg("-c").arg(
-                'response=$(curl -s -w "\\n%{http_code}" "$@");body=$(sed "$ d" <<< "$response"  | tr -d "\\n");code=$(tail -n 1 <<< "$response");cast abi-encode "response(uint256,string)" "$code" "$body";'
+                string.concat(
+                    'response=$(curl -s -w "\\n%{http_code}" "$@");',
+                    'body=$(sed "$ d" <<< "$response"  | tr -d "\\n");',
+                    'code=$(tail -n 1 <<< "$response");',
+                    'cast abi-encode "response(uint256,string)" "$code" "$body";'
+                )
                 ).arg("vulcan") // Add vulcan as parameter $0, so errors are reported as coming from vulcan
         });
     }
 
-    function send(RequestClient memory self) internal returns (ResponseResult memory) {
+    function send(RequestClient memory self) internal returns (ResponseResult memory res) {
         CommandResult memory result = self._cmd.run();
 
         if (result.isError()) {
@@ -96,10 +86,7 @@ library request {
 
         (uint256 status, bytes memory body) = abi.decode(result.stdout, (uint256, bytes));
 
-        return ResponseResult({
-            value: Response({url: self.url, status: status, body: body, _client: self}),
-            _error: Error({message: "", id: bytes32(0)})
-        });
+        res.value = Response({url: self.url, status: status, body: body});
     }
 
     function get(string memory url) internal returns (ResponseResult memory) {
@@ -126,8 +113,20 @@ library request {
         return RequestClient(url, self._cmd.args(["-X", "PUT", url]));
     }
 
-    function data(RequestClient memory self, string memory _data) internal pure returns (RequestClient memory) {
-        return RequestClient(self.url, self._cmd.args(["-d", _data]));
+    function body(RequestClient memory self, string memory _body) internal pure returns (RequestClient memory) {
+        return RequestClient(self.url, self._cmd.args(["-d", _body]));
+    }
+
+    function basicAuth(RequestClient memory self, string memory username, string memory password)
+        internal
+        pure
+        returns (RequestClient memory)
+    {
+        return RequestClient(self.url, self._cmd.args(["-u", string.concat(username, ":", password)]));
+    }
+
+    function bearerAuth(RequestClient memory self, string memory token) internal pure returns (RequestClient memory) {
+        return RequestClient(self.url, self._cmd.args(["-H", string.concat("Authorization: Bearer ", token)]));
     }
 
     function header(RequestClient memory self, string memory _header) internal pure returns (RequestClient memory) {
@@ -139,18 +138,18 @@ library request {
     }
 
     function json(RequestClient memory self, string memory serialized) internal pure returns (RequestClient memory) {
-        return self.header("Content-Type: application/json").data(serialized);
+        return self.header("Content-Type: application/json").body(serialized);
     }
 }
 
 library response {
-    function json(Response memory self) internal pure returns (JsonResult memory) {
-        JsonObject memory obj = jsonModule.create(string(self.body));
-        return JsonResult({value: obj, _error: Error({message: "", id: bytes32(0)})});
+    // TODO: validate response and return error if there are issues
+    function json(Response memory self) internal pure returns (JsonResult memory res) {
+        res.value = jsonModule.create(string(self.body));
     }
 
-    function text(Response memory self) internal pure returns (StringResult memory) {
-        return StringResult({value: string(self.body), _error: Error({message: "", id: bytes32(0)})});
+    function text(Response memory self) internal pure returns (StringResult memory res) {
+        res.value = string(self.body);
     }
 
     // function asBytes(Response memory self) internal pure returns (BytesResult memory) {
@@ -160,4 +159,5 @@ library response {
 
 using response for Response global;
 using request for RequestClient global;
-using request for Response global;
+
+using ResponseResultLib for ResponseResult global;

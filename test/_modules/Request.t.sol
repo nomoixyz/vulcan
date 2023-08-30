@@ -17,18 +17,31 @@ import {
 contract RequestTest is Test {
     using vulcan for *;
 
+    function testRequestFail() external {
+        Response memory res = request.get("https://httpbin.org/404").unwrap();
+        expect(res.status).toEqual(404);
+    }
+
     function testRequestGet() external {
         RequestClient memory client = request.create().get("https://httpbin.org/get");
 
         Response memory res = client.send().unwrap();
-        // println(string(result.body));
+        expect(res.status).toEqual(200);
+    }
+
+    function testRequestPost() external {
+        RequestClient memory client = request.create();
+
+        Response memory res = client.post("https://httpbin.org/post").json('{ "foo": "bar" }').send().unwrap();
+        // { ... "json": { "foo": "bar" } ... }
+        expect(res.json().unwrap().getString(".json.foo")).toEqual("bar");
         expect(res.status).toEqual(200);
     }
 
     function testRequestJsonDecode() external {
         JsonObject memory obj = request.get("https://httpbin.org/ip").unwrap().json().unwrap();
 
-        println(obj.getString(".origin"));
+        expect(bytes(obj.getString(".origin")).length).toBeGreaterThan(0);
     }
 
     struct HttpBinIpResponse {
@@ -40,6 +53,6 @@ contract RequestTest is Test {
 
         HttpBinIpResponse memory res = abi.decode(obj.parse(), (HttpBinIpResponse));
 
-        println(res.origin);
+        expect(bytes(res.origin).length).toBeGreaterThan(0);
     }
 }
