@@ -17,7 +17,7 @@ library fe {
 
     /// @dev Creates a new `Fe` struct with default values.
     function create() internal pure returns (Fe memory) {
-        return Fe({compilerPath: "fe", filePath: "", outputDir: "./out/fe", overwrite: false});
+        return Fe({compilerPath: "fe", filePath: "", outputDir: "", overwrite: false});
     }
 
     /// @dev Builds a binary file from a `.fe` file.
@@ -33,7 +33,11 @@ library fe {
 
         command = command.arg("build").args(["-e", "bytecode"]);
 
-        if (bytes(self.outputDir).length > 0) command = command.args(["-o", self.outputDir]);
+        if (bytes(self.outputDir).length == 0) {
+            self.outputDir = "./out/__TMP/fe_builds";
+        }
+
+        command = command.args(["-o", self.outputDir]);
         if (self.overwrite) command = command.arg("--overwrite");
 
         command = command.arg(self.filePath);
@@ -73,6 +77,8 @@ library fe {
         return self;
     }
 
+    /// @dev Obtains the bytecode of a compiled contract with `contractName`.
+    /// @param contractName The name of the contract from which to retrive the bytecode.
     function getBytecode(Fe memory self, string memory contractName) internal view returns (bytes memory) {
         string memory path = string.concat(self.outputDir, "/", contractName, "/", contractName, ".bin");
 
