@@ -3,11 +3,11 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Commands.sol";
 import "./Strings.sol";
+import "./Fs.sol";
 
 struct Fe {
     string compilerPath;
     string filePath;
-    string emitOptions;
     string outputDir;
     bool overwrite;
 }
@@ -17,7 +17,7 @@ library fe {
 
     /// @dev Creates a new `Fe` struct with default values.
     function create() internal pure returns (Fe memory) {
-        return Fe({compilerPath: "fe", filePath: "", emitOptions: "", outputDir: "", overwrite: false});
+        return Fe({compilerPath: "fe", filePath: "", outputDir: "./out/fe", overwrite: false});
     }
 
     /// @dev Builds a binary file from a `.fe` file.
@@ -30,13 +30,10 @@ library fe {
     /// @param self The `Fe` struct to transform.
     function toCommand(Fe memory self) internal pure returns (Command memory) {
         Command memory command = commands.create(self.compilerPath);
-        require(bytes(self.filePath).length > 0, "fe.toCommand: self.filePath not set");
 
-        // MUST be last
-        command = command.arg("build");
+        command = command.arg("build").args(["-e", "bytecode"]);
 
         if (bytes(self.outputDir).length > 0) command = command.args(["-o", self.outputDir]);
-        if (bytes(self.emitOptions).length > 0) command = command.args(["-e", self.emitOptions]);
         if (self.overwrite) command = command.arg("--overwrite");
 
         command = command.arg(self.filePath);
@@ -60,14 +57,6 @@ library fe {
         return self;
     }
 
-    /// @dev Sets the `fe` build command emit options.
-    /// @param self The `Fe` struct to modify.
-    /// @param emitOptions The build command emit options.
-    function setEmitOptions(Fe memory self, string memory emitOptions) internal pure returns (Fe memory) {
-        self.emitOptions = emitOptions;
-        return self;
-    }
-
     /// @dev Sets the `fe` build command output directory.
     /// @param self The `Fe` struct to modify.
     /// @param outputDir The directory where the binary file will be saved.
@@ -82,6 +71,16 @@ library fe {
     function setOverwrite(Fe memory self, bool overwrite) internal pure returns (Fe memory) {
         self.overwrite = overwrite;
         return self;
+    }
+
+    function getBytecode(Fe memory self, string memory contractName) internal view returns (bytes memory) {
+        string memory path = string.concat(self.outputDir, "/", contractName, "/", contractName, ".bin");
+
+        if (!fs.fileExists(path)) {
+            revert("Contract not found");
+        }
+
+        return fs.readFileBinary(path);
     }
 }
 
