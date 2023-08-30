@@ -12,7 +12,7 @@ struct JsonResult {
 library JsonResultLib {
     /// @dev Checks if a `JsonResult` is not an error.
     function isOk(JsonResult memory self) internal pure returns (bool) {
-        return self._error.id != bytes32(0);
+        return self._error.id == bytes32(0);
     }
 
     /// @dev Checks if a `JsonResult` struct is an error.

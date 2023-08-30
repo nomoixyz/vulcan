@@ -26,8 +26,20 @@ contract RequestTest is Test {
     }
 
     function testRequestJsonDecode() external {
-        // bytes memory data = request.get("https://httpbin.org/ip").unwrap();
+        JsonObject memory obj = request.get("https://httpbin.org/ip").json().unwrap();
 
-        // println(json.getString(string(data), ".origin"));
+        println(obj.getString(".origin"));
+    }
+
+    struct HttpBinIpResponse {
+        string origin;
+    }
+
+    function testRequestJsonParse() external {
+        JsonObject memory obj = request.get("https://httpbin.org/ip").json().unwrap();
+
+        HttpBinIpResponse memory res = abi.decode(obj.parse(), (HttpBinIpResponse));
+
+        println(res.origin);
     }
 }

@@ -99,8 +99,7 @@ library request {
 
 library response {
     function json(Response memory self) internal pure returns (JsonResult memory) {
-        // JsonObject memory obj = jsonModule.create().set(".", string(self.body));
-        JsonObject memory obj;
+        JsonObject memory obj = jsonModule.create(string(self.body));
         return JsonResult({value: obj, _error: Error({message: "", id: bytes32(0)})});
     }
 
@@ -113,5 +112,6 @@ library response {
     // }
 }
 
+using response for Response global;
 using request for RequestClient global;
 using request for Response global;

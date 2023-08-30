@@ -11,7 +11,7 @@ struct StringResult {
 library StringResultLib {
     /// @dev Checks if a `StringResult` is not an error.
     function isOk(StringResult memory self) internal pure returns (bool) {
-        return self._error.id != bytes32(0);
+        return self._error.id == bytes32(0);
     }
 
     /// @dev Checks if a `StringResult` struct is an error.
