@@ -23,9 +23,9 @@ contract RequestTest is Test {
     }
 
     function testRequestGet() external {
-        RequestClient memory client = request.create().get("https://httpbin.org/get");
+        RequestClient memory client = request.create();
 
-        Response memory res = client.send().unwrap();
+        Response memory res = client.get("https://httpbin.org/get").send().unwrap();
         expect(res.status).toEqual(200);
     }
 
