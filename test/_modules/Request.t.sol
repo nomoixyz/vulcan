@@ -20,13 +20,13 @@ contract RequestTest is Test {
     function testRequestGet() external {
         RequestClient memory client = request.create().get("https://httpbin.org/get");
 
-        Response memory res = client.send();
+        Response memory res = client.send().unwrap();
         // println(string(result.body));
         expect(res.status).toEqual(200);
     }
 
     function testRequestJsonDecode() external {
-        JsonObject memory obj = request.get("https://httpbin.org/ip").json().unwrap();
+        JsonObject memory obj = request.get("https://httpbin.org/ip").unwrap().json().unwrap();
 
         println(obj.getString(".origin"));
     }
@@ -36,7 +36,7 @@ contract RequestTest is Test {
     }
 
     function testRequestJsonParse() external {
-        JsonObject memory obj = request.get("https://httpbin.org/ip").json().unwrap();
+        JsonObject memory obj = request.get("https://httpbin.org/ip").unwrap().json().unwrap();
 
         HttpBinIpResponse memory res = abi.decode(obj.parse(), (HttpBinIpResponse));
 

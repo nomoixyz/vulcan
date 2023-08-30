@@ -21,12 +21,51 @@ struct Response {
 }
 
 library RequestError {
+    bytes32 constant COMMAND_FAILED = keccak256("COMMAND_FAILED");
     bytes32 constant NOT_FOUND = keccak256("NOT_FOUND");
 
-    function notFound(Response memory res) public pure returns (Error memory) {
-        return Error({message: string.concat("Not found: ", res.url), id: NOT_FOUND});
+    function notFound(Response memory res) public pure returns (ResponseResult memory _res) {
+        _res._error = Error({message: string.concat("Not found: ", res.url), id: NOT_FOUND});
+    }
+
+    function commandFailed() public pure returns (ResponseResult memory res) {
+        res._error = Error({message: "Command failed", id: COMMAND_FAILED});
     }
 }
+
+struct ResponseResult {
+    Response value;
+    Error _error;
+}
+
+library ResponseResultLib {
+    /// @dev Checks if a `StringResult` is not an error.
+    function isOk(ResponseResult memory self) internal pure returns (bool) {
+        return self._error.id == bytes32(0);
+    }
+
+    /// @dev Checks if a `StringResult` struct is an error.
+    function isError(ResponseResult memory self) internal pure returns (bool) {
+        return !self.isOk();
+    }
+
+    /// @dev Returns the output of a `StringResult` or reverts if the result was an error.
+    function unwrap(ResponseResult memory self) internal pure returns (Response memory) {
+        return expect(self, self._error.message);
+    }
+
+    /// @dev Returns the output of a `StringResult` or reverts if the result was an error.
+    /// @param error The error message that will be used when reverting.
+    function expect(ResponseResult memory self, string memory error) internal pure returns (Response memory) {
+        if (self.isError()) {
+            revert(error);
+        }
+
+        return self.value;
+    }
+}
+
+using ResponseResultLib for ResponseResult global;
 
 library request {
     using request for *;
@@ -48,15 +87,22 @@ library request {
         });
     }
 
-    function send(RequestClient memory self) internal returns (Response memory) {
+    function send(RequestClient memory self) internal returns (ResponseResult memory) {
         CommandResult memory result = self._cmd.run();
+
+        if (result.isError()) {
+            return RequestError.commandFailed();
+        }
 
         (uint256 status, bytes memory body) = abi.decode(result.stdout, (uint256, bytes));
 
-        return Response({url: self.url, status: status, body: body, _client: self});
+        return ResponseResult({
+            value: Response({url: self.url, status: status, body: body, _client: self}),
+            _error: Error({message: "", id: bytes32(0)})
+        });
     }
 
-    function get(string memory url) internal returns (Response memory) {
+    function get(string memory url) internal returns (ResponseResult memory) {
         return create().get(url).send();
     }
 
