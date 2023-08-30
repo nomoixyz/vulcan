@@ -38,7 +38,7 @@ contract FeTest is Test {
             true
         ).build();
 
-        string memory result = fs.readFile("./test/fixtures/fe/output/GuestBook/GuestBook.bin");
+        string memory result = fs.readFile("./test/fixtures/fe/output/A/A.bin");
 
         expect(bytes(result).length).toBeGreaterThan(0);
     }
