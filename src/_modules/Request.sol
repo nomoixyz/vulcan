@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {println} from "../_utils/println.sol";
 import {Command, CommandResult, commands} from "./Commands.sol";
 import {JsonObject, json as jsonModule} from "./Json.sol";
 
@@ -146,26 +145,23 @@ library request {
 
     function toCommand(Request memory self) internal pure returns (Command memory) {
         // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
-        Command memory cmd = commands.create("bash").arg("-c").arg(
-            string.concat(
-                'response=$(curl -s -w "\\n%{http_code}" "$@");',
-                'body=$(sed "$ d" <<< "$response"  | tr -d "\\n");',
-                'code=$(tail -n 1 <<< "$response");',
-                'cast abi-encode "response(uint256,string)" "$code" "$body";'
-            )
-        ).arg("vulcan"); // Add vulcan as parameter $0, so errors are reported as coming from vulcan
-
-        cmd = cmd.args(["-X", toString(self.method), self.url]);
+        string memory script =
+            string.concat('response=$(curl -s -w "\\n%{http_code}" ', self.url, " -X ", toString(self.method));
 
         for (uint256 i = 0; i < self.headers.length; i++) {
-            cmd = cmd.args(["-H", string.concat(self.headers[i].key, ": ", self.headers[i].value)]);
+            script = string.concat(script, " -H ", '"', self.headers[i].key, ": ", self.headers[i].value, '"');
         }
 
         if (self.body.length > 0) {
-            cmd = cmd.args(["-d", string(self.body)]);
+            script = string.concat(script, " -d ", "'", string(self.body), "'");
         }
 
-        return cmd;
+        script = string.concat(
+            script,
+            ');body=$(sed "$ d" <<< "$response" | tr -d "\\n");code=$(tail -n 1 <<< "$response");cast abi-encode "response(uint256,string)" "$code" "$body";'
+        );
+
+        return commands.create("bash").arg("-c").arg(script);
     }
 
     function toString(Method method) internal pure returns (string memory) {
@@ -208,6 +204,8 @@ library requestBuilder {
 
         Request memory req = reqResult.value;
 
+        (string(req.toCommand().toString()));
+
         CommandResult memory result = req.toCommand().run();
 
         if (result.isError()) {
@@ -235,7 +233,8 @@ library requestBuilder {
         pure
         returns (RequestBuilder memory)
     {
-        return self;
+        // "Authorization: Basic $(base64 <<<"joeuser:secretpass")"
+        return self.header("Authorization", string.concat('Basic $(echo -n "', username, ":", password, '" | base64)'));
     }
 
     function bearerAuth(RequestBuilder memory self, string memory token)
@@ -290,6 +289,7 @@ library response {
 using response for Response global;
 using response for Request global;
 using request for RequestClient global;
+using request for Request global;
 using requestBuilder for RequestBuilder global;
 
 using RequestResultLib for RequestResult global;

@@ -21,7 +21,7 @@ import {watchers, Watcher} from "./_modules/Watchers.sol";
 import {config, Rpc} from "./_modules/Config.sol";
 import {fmt} from "./_modules/Fmt.sol";
 import {fe, Fe} from "./_modules/Fe.sol";
-import {request, RequestClient, Response, ResponseResult} from "./_modules/Request.sol";
+import {request, RequestClient, RequestResult, Response, ResponseResult} from "./_modules/Request.sol";
 import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
 import {bound} from "./_utils/bound.sol";

@@ -9,13 +9,28 @@ import {
     JsonObject,
     vulcan,
     request,
+    RequestResult,
     RequestClient,
     Response,
+    ResponseResult,
     commands
 } from "../../src/test.sol";
 
 contract RequestTest is Test {
     using vulcan for *;
+
+    function testBasicAuth() external {
+        RequestClient memory client = request.create();
+
+        Response memory res =
+            client.get("https://httpbin.org/basic-auth/user/passwd").basicAuth("user", "passwd").send().unwrap();
+
+        expect(res.status).toEqual(200);
+
+        JsonObject memory obj = res.json().unwrap();
+
+        expect(obj.getString(".authenticated")).toEqual("true");
+    }
 
     function testRequestFail() external {
         Response memory res = request.get("https://httpbin.org/404").unwrap();
@@ -31,7 +46,6 @@ contract RequestTest is Test {
 
     function testRequestPost() external {
         RequestClient memory client = request.create();
-
         Response memory res = client.post("https://httpbin.org/post").json('{ "foo": "bar" }').send().unwrap();
         // { ... "json": { "foo": "bar" } ... }
         expect(res.json().unwrap().getString(".json.foo")).toEqual("bar");
