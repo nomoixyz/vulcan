@@ -128,7 +128,7 @@ library fmt {
         } else if (typeHash == BYTES32_HASH || typeHash == ABBREVIATED_BYTES32_HASH) {
             t = Type.Bytes32;
         } else {
-            revert("Unsupported placeholder type");
+            revert(_formatError("_findPlaceholder(bytes,uint256)", "Unsupported placeholder type"));
         }
 
         bytes memory mod = modifierStart == placeholderEnd
@@ -189,7 +189,7 @@ library fmt {
                 uint256 len = uint256(_readWord(data, offset));
                 value = string(_readSlice(data, offset + 32, len));
             } else {
-                revert("Unsupported type");
+                revert(_formatError("_decodeArgs(Placeholder[],bytes)", "Unsupported type"));
             }
             result[i] = value;
         }
@@ -226,7 +226,7 @@ library fmt {
 
             return string.concat(integer, ".", remainder);
         } else {
-            revert("Unsupported modifier");
+            revert(_formatError("_display(uint256,bytes)", "Unsupported modifier"));
         }
     }
 

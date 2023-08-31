@@ -127,7 +127,7 @@ library watchers {
         return _watcher;
     }
 
-    function _formatError(string memory func, string memory message) private pure returns (string memory){
+    function _formatError(string memory func, string memory message) private pure returns (string memory) {
         return formatError("watchers", func, message);
     }
 }
@@ -284,5 +284,4 @@ contract WatcherProxy {
 
         return returnData;
     }
-
 }
