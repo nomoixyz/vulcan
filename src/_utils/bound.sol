@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
+import {formatError} from "./formatError.sol";
+
 // Extracted from forge-std stdUtils: https://github.com/foundry-rs/forge-std/blob/7b4876e8de2a232a54159035f173e35421000c19/src/StdUtils.sol
 // The main difference is that we use file-level functions instead of an abstract contract.
 
@@ -8,7 +10,7 @@ uint256 constant UINT256_MAX = type(uint256).max;
 uint256 constant INT256_MIN_ABS = uint256(type(int256).max) + 1;
 
 function bound(uint256 x, uint256 min, uint256 max) pure returns (uint256 result) {
-    require(min <= max, "Vulcan bound(uint256,uint256,uint256): Max is less than min.");
+    require(min <= max, formatError("_utils", "bound(uint256,uint256,uint256)",  "Max is less than min."));
     // If x is between min and max, return x directly. This is to ensure that dictionary values
     // do not get shifted if the min is nonzero. More info: https://github.com/foundry-rs/forge-std/issues/188
     if (x >= min && x <= max) return x;
@@ -35,7 +37,7 @@ function bound(uint256 x, uint256 min, uint256 max) pure returns (uint256 result
 }
 
 function bound(int256 x, int256 min, int256 max) pure returns (int256 result) {
-    require(min <= max, "Vulcan bound(int256,int256,int256): Max is less than min.");
+    require(min <= max, formatError("_utils", "bound(int256,int256,int256)",  "Max is less than min."));
 
     // Shifting all int256 values to uint256 to use _bound function. The range of two types are:
     // int256 : -(2**255) ~ (2**255 - 1)

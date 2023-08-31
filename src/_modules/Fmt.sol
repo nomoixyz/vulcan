@@ -2,6 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "./Strings.sol";
+import {formatError} from "../_utils/formatError.sol";
 
 enum Type {
     Bool,
@@ -151,7 +152,7 @@ library fmt {
             return new bytes(0);
         }
 
-        require(start + len <= data.length, "Slice out of bounds");
+        require(start + len <= data.length, _formatError("_readSlice(bytes,uint256,uint256)", "Slice out of bounds"));
 
         bytes memory result = new bytes(len);
 
@@ -265,5 +266,9 @@ library fmt {
         }
 
         return string(result);
+    }
+
+    function _formatError(string memory func, string memory message) private pure returns (string memory) {
+        return formatError("fmt", func, message);
     }
 }

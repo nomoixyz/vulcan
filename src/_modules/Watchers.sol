@@ -5,6 +5,7 @@ import "./Vulcan.sol";
 import "./Events.sol";
 import "./Accounts.sol";
 import "./Context.sol";
+import {formatError} from "../_utils/formatError.sol";
 
 struct Call {
     bytes callData;
@@ -38,7 +39,7 @@ library watchers {
     /// @return The Watcher implementation.
     function watcher(address target) internal view returns (Watcher) {
         address _watcher = watcherAddress(target);
-        require(_watcher.code.length != 0, "Address doesn't have a watcher");
+        require(_watcher.code.length != 0, _formatError("watcher(address)", "Address doesn't have a watcher"));
 
         return Watcher(_watcher);
     }
@@ -48,7 +49,7 @@ library watchers {
     /// @return The Watcher implementation.
     function watch(address target) internal returns (Watcher) {
         address _watcher = watcherAddress(target);
-        require(_watcher.code.length == 0, "Address already has a watcher");
+        require(_watcher.code.length == 0, _formatError("watch(address)", "Address already has a watcher"));
 
         accounts.setCode(_watcher, type(Watcher).runtimeCode);
 
@@ -124,6 +125,10 @@ library watchers {
         Watcher _watcher = watcher(target);
         _watcher.disableCaptureReverts();
         return _watcher;
+    }
+
+    function _formatError(string memory func, string memory message) private pure returns (string memory){
+        return formatError("watchers", func, message);
     }
 }
 
@@ -279,4 +284,5 @@ contract WatcherProxy {
 
         return returnData;
     }
+
 }
