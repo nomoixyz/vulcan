@@ -1,20 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
+import {Test, expect, println, json, JsonObject, vulcan, commands} from "../../src/test.sol";
+
 import {
-    Test,
-    expect,
-    println,
-    json,
-    JsonObject,
-    vulcan,
     request,
     RequestResult,
     RequestClient,
     Response,
-    ResponseResult,
-    commands
-} from "../../src/test.sol";
+    ResponseResult
+} from "../../src/_modules/experimental/Request.sol";
 
 contract RequestTest is Test {
     using vulcan for *;

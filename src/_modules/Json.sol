@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Error, JsonResult} from "../_result/Result.sol";
+import {Error} from "./Result.sol";
 import "./Accounts.sol";
 import "./Vulcan.sol";
 
@@ -10,11 +10,43 @@ struct JsonObject {
     string serialized;
 }
 
+struct JsonResult {
+    JsonObject value;
+    Error _error;
+}
+
 library JsonError {
     bytes32 constant IMMUTABLE_JSON = keccak256("IMMUTABLE_JSON");
 
     function immutableJson() internal pure returns (JsonResult memory res) {
         res._error = Error({message: "Json object is immutable", id: IMMUTABLE_JSON});
+    }
+}
+
+library JsonResultLib {
+    /// @dev Checks if a `JsonResult` is not an error.
+    function isOk(JsonResult memory self) internal pure returns (bool) {
+        return self._error.id == bytes32(0);
+    }
+
+    /// @dev Checks if a `JsonResult` struct is an error.
+    function isError(JsonResult memory self) internal pure returns (bool) {
+        return !self.isOk();
+    }
+
+    /// @dev Returns the output of a `JsonResult` or reverts if the result was an error.
+    function unwrap(JsonResult memory self) internal pure returns (JsonObject memory) {
+        return expect(self, self._error.message);
+    }
+
+    /// @dev Returns the output of a `JsonResult` or reverts if the result was an error.
+    /// @param error The error message that will be used when reverting.
+    function expect(JsonResult memory self, string memory error) internal pure returns (JsonObject memory) {
+        if (self.isError()) {
+            revert(error);
+        }
+
+        return self.value;
     }
 }
 
@@ -421,3 +453,4 @@ library json {
 }
 
 using json for JsonObject global;
+using JsonResultLib for JsonResult global;

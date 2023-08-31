@@ -1,10 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {Command, CommandResult, commands} from "./Commands.sol";
-import {JsonObject, json as jsonModule} from "./Json.sol";
+import {Command, CommandResult, commands} from "../Commands.sol";
+import {JsonObject, json as jsonModule, JsonResult} from "../Json.sol";
 
-import {Error, JsonResult, StringResult, BytesResult} from "../_result/Result.sol";
+import {Error, StringResult} from "../Result.sol";
+
+enum Method {
+    GET,
+    POST,
+    PUT,
+    PATCH,
+    DELETE
+}
 
 struct Header {
     string key;
@@ -19,14 +27,6 @@ struct RequestClient {
 struct RequestBuilder {
     RequestClient client;
     RequestResult request;
-}
-
-enum Method {
-    GET,
-    POST,
-    PUT,
-    PATCH,
-    DELETE
 }
 
 struct Request {
@@ -51,6 +51,17 @@ struct Response {
 struct ResponseResult {
     Response value;
     Error _error;
+}
+
+library request {
+    using request for *;
+
+    // Return an empty client
+    function create() internal pure returns (RequestClient memory) {}
+
+    function get(string memory url) internal returns (ResponseResult memory) {
+        return create().get(url).send();
+    }
 }
 
 library RequestError {
@@ -87,7 +98,9 @@ library RequestResultLib {
 }
 
 library ResponseResultLib {
+    using ResponseResultLib for ResponseResult;
     /// @dev Checks if a `ResponseResult` is not an error.
+
     function isOk(ResponseResult memory self) internal pure returns (bool) {
         return self._error.id == bytes32(0);
     }
@@ -113,76 +126,29 @@ library ResponseResultLib {
     }
 }
 
-library request {
-    using request for *;
-
-    // Return an empty client
-    function create() internal pure returns (RequestClient memory) {}
-
-    function get(string memory url) internal returns (ResponseResult memory) {
-        return create().get(url).send();
-    }
-
+library RequestClientLib {
     function get(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
-        return requestBuilder.create(self, Method.GET, url);
+        return RequestBuilderLib.create(self, Method.GET, url);
     }
 
     function del(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
-        return requestBuilder.create(self, Method.DELETE, url);
+        return RequestBuilderLib.create(self, Method.DELETE, url);
     }
 
     function patch(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
-        return requestBuilder.create(self, Method.PATCH, url);
+        return RequestBuilderLib.create(self, Method.PATCH, url);
     }
 
     function post(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
-        return requestBuilder.create(self, Method.POST, url);
+        return RequestBuilderLib.create(self, Method.POST, url);
     }
 
     function put(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
-        return requestBuilder.create(self, Method.PUT, url);
-    }
-
-    function toCommand(Request memory self) internal pure returns (Command memory) {
-        // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
-        string memory script =
-            string.concat('response=$(curl -s -w "\\n%{http_code}" ', self.url, " -X ", toString(self.method));
-
-        for (uint256 i = 0; i < self.headers.length; i++) {
-            script = string.concat(script, " -H ", '"', self.headers[i].key, ": ", self.headers[i].value, '"');
-        }
-
-        if (self.body.length > 0) {
-            script = string.concat(script, " -d ", "'", string(self.body), "'");
-        }
-
-        script = string.concat(
-            script,
-            ');body=$(sed "$ d" <<< "$response" | tr -d "\\n");code=$(tail -n 1 <<< "$response");cast abi-encode "response(uint256,string)" "$code" "$body";'
-        );
-
-        return commands.create("bash").arg("-c").arg(script);
-    }
-
-    function toString(Method method) internal pure returns (string memory) {
-        if (method == Method.GET) {
-            return "GET";
-        } else if (method == Method.POST) {
-            return "POST";
-        } else if (method == Method.PUT) {
-            return "PUT";
-        } else if (method == Method.PATCH) {
-            return "PATCH";
-        } else if (method == Method.DELETE) {
-            return "DELETE";
-        }
-
-        // Should never happen
-        revert("Invalid method");
+        return RequestBuilderLib.create(self, Method.PUT, url);
     }
 }
 
-library requestBuilder {
+library RequestBuilderLib {
     using request for *;
 
     function create(RequestClient memory client, Method method, string memory url)
@@ -271,7 +237,47 @@ library requestBuilder {
     }
 }
 
-library response {
+library RequestLib {
+    function toCommand(Request memory self) internal pure returns (Command memory) {
+        // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
+        string memory script =
+            string.concat('response=$(curl -s -w "\\n%{http_code}" ', self.url, " -X ", toString(self.method));
+
+        for (uint256 i = 0; i < self.headers.length; i++) {
+            script = string.concat(script, " -H ", '"', self.headers[i].key, ": ", self.headers[i].value, '"');
+        }
+
+        if (self.body.length > 0) {
+            script = string.concat(script, " -d ", "'", string(self.body), "'");
+        }
+
+        script = string.concat(
+            script,
+            ');body=$(sed "$ d" <<< "$response" | tr -d "\\n");code=$(tail -n 1 <<< "$response");cast abi-encode "response(uint256,string)" "$code" "$body";'
+        );
+
+        return commands.create("bash").arg("-c").arg(script);
+    }
+
+    function toString(Method method) internal pure returns (string memory) {
+        if (method == Method.GET) {
+            return "GET";
+        } else if (method == Method.POST) {
+            return "POST";
+        } else if (method == Method.PUT) {
+            return "PUT";
+        } else if (method == Method.PATCH) {
+            return "PATCH";
+        } else if (method == Method.DELETE) {
+            return "DELETE";
+        }
+
+        // Should never happen
+        revert("Invalid method");
+    }
+}
+
+library ResponseLib {
     // TODO: validate response and return error if there are issues
     function json(Response memory self) internal pure returns (JsonResult memory res) {
         res.value = jsonModule.create(string(self.body));
@@ -286,11 +292,9 @@ library response {
     // }
 }
 
-using response for Response global;
-using response for Request global;
-using request for RequestClient global;
-using request for Request global;
-using requestBuilder for RequestBuilder global;
-
+using RequestClientLib for RequestClient global;
+using RequestLib for Request global;
+using ResponseLib for Response global;
+using RequestBuilderLib for RequestBuilder global;
 using RequestResultLib for RequestResult global;
 using ResponseResultLib for ResponseResult global;
