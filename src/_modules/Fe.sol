@@ -4,6 +4,7 @@ pragma solidity >=0.8.13 <0.9.0;
 import "./Commands.sol";
 import "./Strings.sol";
 import "./Fs.sol";
+import {formatError} from "../_utils/formatError.sol";
 
 struct Fe {
     string compilerPath;
@@ -83,10 +84,14 @@ library fe {
         string memory path = string.concat(self.outputDir, "/", contractName, "/", contractName, ".bin");
 
         if (!fs.fileExists(path)) {
-            revert("Contract not found");
+            revert(_formatError("getBytecode(Fe,string))", "Contract not found"));
         }
 
         return fs.readFileBinary(path);
+    }
+
+    function _formatError(string memory func, string memory message) private pure returns (string memory) {
+        return formatError("fe", func, message);
     }
 }
 
