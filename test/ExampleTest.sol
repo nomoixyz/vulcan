@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, accounts, ctx, console, vulcan, accounts} from "../src/test.sol";
+import {Test, expect, accounts, ctx, vulcan, accounts, println} from "../src/test.sol";
 import {Sender} from "./mocks/Sender.sol";
 
 contract ExampleTest is Test {
@@ -21,8 +21,8 @@ contract ExampleTest is Test {
         expect(false).toEqual(false);
     }
 
-    function testConsoleLog() external pure {
-        console.log("hello world");
+    function testConsoleLog() external view {
+        println("hello world");
     }
 
     function testGetNonce() external {
