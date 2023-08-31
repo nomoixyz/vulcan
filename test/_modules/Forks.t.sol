@@ -1,7 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, forks, Fork, CommandResult} from "../../src/test.sol";
-import {rawConsoleLog} from "../../src/_utils/rawConsole.sol";
+import {Test, expect, commands, forks, Fork, CommandResult, println} from "../../src/test.sol";
 import {Sender} from "../mocks/Sender.sol";
 
 contract ForksTest is Test {
@@ -15,7 +14,7 @@ contract ForksTest is Test {
         ).run();
 
         if (res.stdout.length == 0) {
-            rawConsoleLog("Skipping test because forking endpoint is not available");
+            println("Skipping test because forking endpoint is not available");
             return;
         }
 
