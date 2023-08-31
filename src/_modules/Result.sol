@@ -2,77 +2,96 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 struct Error {
-    string message;
     bytes32 id;
+    string message;
 }
 
-struct BytesResult {
-    bytes value;
-    Error _error;
+enum ResultType {
+    Error,
+    Ok
+}
+
+struct Result {
+    ResultType _type;
+    bytes _data;
 }
 
 struct StringResult {
-    string value;
-    Error _error;
+    Result _inner;
 }
 
-library BytesResultLib {
-    /// @dev Checks if a `BytesResult` is not an error.
-    function isOk(BytesResult memory self) internal pure returns (bool) {
-        return self._error.id == bytes32(0);
+library LibResult {
+    function isError(Result memory self) internal pure returns (bool) {
+        return self._type == ResultType.Error;
     }
 
-    /// @dev Checks if a `BytesResult` struct is an error.
-    function isError(BytesResult memory self) internal pure returns (bool) {
-        return !self.isOk();
+    function isOk(Result memory self) internal pure returns (bool) {
+        return self._type == ResultType.Ok;
     }
 
-    function isError(BytesResult memory self, bytes32 id) internal pure returns (bool) {
-        return self._error.id == id;
+    function toError(Result memory self) internal pure returns (Error memory) {
+        return abi.decode(self._data, (Error));
     }
 
-    /// @dev Returns the output of a `BytesResult` or reverts if the result was an error.
-    function unwrap(BytesResult memory self) internal pure returns (bytes memory) {
-        return expect(self, self._error.message);
+    function toValue(Result memory self) internal pure returns (bytes memory) {
+        return self._data;
     }
 
-    /// @dev Returns the output of a `BytesResult` or reverts if the result was an error.
-    /// @param error The error message that will be used when reverting.
-    function expect(BytesResult memory self, string memory error) internal pure returns (bytes memory) {
+    function unwrap(Result memory self) internal pure returns (bytes memory) {
         if (self.isError()) {
-            revert(error);
+            revert(self.toError().message);
         }
 
-        return self.value;
+        return self._data;
+    }
+
+    function expect(Result memory self, string memory err) internal pure returns (bytes memory) {
+        if (self.isError()) {
+            revert(err);
+        }
+
+        return self._data;
+    }
+
+    function toResult(Error memory error) internal pure returns (Result memory) {
+        return Result({_type: ResultType.Error, _data: abi.encode(error)});
     }
 }
 
-library StringResultLib {
-    /// @dev Checks if a `StringResult` is not an error.
+library LibStringResult {
     function isOk(StringResult memory self) internal pure returns (bool) {
-        return self._error.id == bytes32(0);
+        return self._inner.isOk();
     }
 
-    /// @dev Checks if a `StringResult` struct is an error.
     function isError(StringResult memory self) internal pure returns (bool) {
-        return !self.isOk();
+        return self._inner.isError();
     }
 
-    /// @dev Returns the output of a `StringResult` or reverts if the result was an error.
     function unwrap(StringResult memory self) internal pure returns (string memory) {
-        return expect(self, self._error.message);
+        return string(self._inner.unwrap());
     }
 
-    /// @dev Returns the output of a `StringResult` or reverts if the result was an error.
-    /// @param error The error message that will be used when reverting.
-    function expect(StringResult memory self, string memory error) internal pure returns (string memory) {
-        if (self.isError()) {
-            revert(error);
-        }
+    function expect(StringResult memory self, string memory err) internal pure returns (string memory) {
+        return string(self._inner.expect(err));
+    }
 
-        return self.value;
+    function toError(StringResult memory self) internal pure returns (Error memory) {
+        return self._inner.toError();
+    }
+
+    function toValue(StringResult memory self) internal pure returns (string memory) {
+        return string(self._inner.toValue());
     }
 }
 
-using StringResultLib for StringResult global;
-using BytesResultLib for BytesResult global;
+function Ok(bytes memory value) pure returns (Result memory) {
+    return Result({_type: ResultType.Ok, _data: value});
+}
+
+function Ok(string memory value) pure returns (StringResult memory) {
+    return StringResult(Ok(bytes(value)));
+}
+
+using LibStringResult for StringResult global;
+using LibResult for Result global;
+using LibResult for Error global;

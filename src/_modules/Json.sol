@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Error} from "./Result.sol";
+import {Error, Result, LibResult, Ok} from "./Result.sol";
 import "./Accounts.sol";
 import "./Vulcan.sol";
 
@@ -11,43 +11,41 @@ struct JsonObject {
 }
 
 struct JsonResult {
-    JsonObject value;
-    Error _error;
+    Result _inner;
 }
 
 library JsonError {
     bytes32 constant IMMUTABLE_JSON = keccak256("IMMUTABLE_JSON");
 
     function immutableJson() internal pure returns (JsonResult memory res) {
-        res._error = Error({message: "Json object is immutable", id: IMMUTABLE_JSON});
+        return JsonResult(Error(IMMUTABLE_JSON, "Json object is immutable").toResult());
     }
 }
 
-library JsonResultLib {
-    /// @dev Checks if a `JsonResult` is not an error.
+library LibJsonResult {
     function isOk(JsonResult memory self) internal pure returns (bool) {
-        return self._error.id == bytes32(0);
+        return self._inner.isOk();
     }
 
-    /// @dev Checks if a `JsonResult` struct is an error.
     function isError(JsonResult memory self) internal pure returns (bool) {
-        return !self.isOk();
+        return self._inner.isError();
     }
 
-    /// @dev Returns the output of a `JsonResult` or reverts if the result was an error.
     function unwrap(JsonResult memory self) internal pure returns (JsonObject memory) {
-        return expect(self, self._error.message);
+        return abi.decode(self._inner.unwrap(), (JsonObject));
     }
 
-    /// @dev Returns the output of a `JsonResult` or reverts if the result was an error.
-    /// @param error The error message that will be used when reverting.
-    function expect(JsonResult memory self, string memory error) internal pure returns (JsonObject memory) {
-        if (self.isError()) {
-            revert(error);
-        }
-
-        return self.value;
+    function expect(JsonResult memory self, string memory err) internal pure returns (JsonObject memory) {
+        return abi.decode(self._inner.expect(err), (JsonObject));
     }
+
+    function toError(JsonResult memory self) internal pure returns (Error memory) {
+        return self._inner.toError();
+    }
+}
+
+function Ok(JsonObject memory value) pure returns (JsonResult memory) {
+    return JsonResult(Ok(abi.encode(value)));
 }
 
 library json {
@@ -208,7 +206,7 @@ library json {
         }
 
         obj.serialized = vulcan.hevm.serializeBool(obj.id, key, value);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -221,7 +219,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeUint(obj.id, key, value);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -234,7 +232,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeInt(obj.id, key, value);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -247,7 +245,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeAddress(obj.id, key, value);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -260,7 +258,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeBytes32(obj.id, key, value);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -276,7 +274,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeString(obj.id, key, value);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -292,7 +290,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeBytes(obj.id, key, value);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -308,7 +306,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeBool(obj.id, key, values);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -324,7 +322,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeUint(obj.id, key, values);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -340,7 +338,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeInt(obj.id, key, values);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -356,7 +354,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeAddress(obj.id, key, values);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -372,7 +370,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeBytes32(obj.id, key, values);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -388,7 +386,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeString(obj.id, key, values);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -404,7 +402,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeBytes(obj.id, key, values);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -420,7 +418,7 @@ library json {
             return JsonError.immutableJson();
         }
         obj.serialized = vulcan.hevm.serializeString(obj.id, key, value.serialized);
-        res.value = obj;
+        return Ok(obj);
     }
 
     /// @dev Writes a JsonObject struct to a file.
@@ -453,4 +451,4 @@ library json {
 }
 
 using json for JsonObject global;
-using JsonResultLib for JsonResult global;
+using LibJsonResult for JsonResult global;
