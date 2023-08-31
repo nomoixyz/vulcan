@@ -5,6 +5,7 @@ import {stdStorage, StdStorage} from "forge-std/StdStorage.sol";
 
 import {strings} from "./Strings.sol";
 import "./Vulcan.sol";
+import {formatError} from "../_utils/formatError.sol";
 
 library accountsSafe {
     /// @dev Reads the storage at the specified `slot` for the given `who` address and returns the content.
@@ -150,7 +151,7 @@ library accountsSafe {
     /// @dev Generates an array of addresses with a specific length.
     /// @param length The amount of addresses to generate.
     function createMany(uint256 length) internal returns (address[] memory) {
-        require(length > 0, "accounts: invalid length for addresses array");
+        require(length > 0, _formatError("createMany(uint256)", "Invalid length for addresses array"));
 
         address[] memory addresses = new address[](length);
 
@@ -184,6 +185,10 @@ library accountsSafe {
             count := sload(slot)
             sstore(slot, add(count, 1))
         }
+    }
+
+    function _formatError(string memory func, string memory message) private pure returns (string memory) {
+        return formatError("accounts", func, message);
     }
 }
 

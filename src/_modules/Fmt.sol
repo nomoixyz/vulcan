@@ -2,6 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "./Strings.sol";
+import {formatError} from "../_utils/formatError.sol";
 
 enum Type {
     Bool,
@@ -127,7 +128,7 @@ library fmt {
         } else if (typeHash == BYTES32_HASH || typeHash == ABBREVIATED_BYTES32_HASH) {
             t = Type.Bytes32;
         } else {
-            revert("Unsupported placeholder type");
+            revert(_formatError("_findPlaceholder(bytes,uint256)", "Unsupported placeholder type"));
         }
 
         bytes memory mod = modifierStart == placeholderEnd
@@ -151,7 +152,7 @@ library fmt {
             return new bytes(0);
         }
 
-        require(start + len <= data.length, "Slice out of bounds");
+        require(start + len <= data.length, _formatError("_readSlice(bytes,uint256,uint256)", "Slice out of bounds"));
 
         bytes memory result = new bytes(len);
 
@@ -188,7 +189,7 @@ library fmt {
                 uint256 len = uint256(_readWord(data, offset));
                 value = string(_readSlice(data, offset + 32, len));
             } else {
-                revert("Unsupported type");
+                revert(_formatError("_decodeArgs(Placeholder[],bytes)", "Unsupported type"));
             }
             result[i] = value;
         }
@@ -225,7 +226,7 @@ library fmt {
 
             return string.concat(integer, ".", remainder);
         } else {
-            revert("Unsupported modifier");
+            revert(_formatError("_display(uint256,bytes)", "Unsupported modifier"));
         }
     }
 
@@ -265,5 +266,9 @@ library fmt {
         }
 
         return string(result);
+    }
+
+    function _formatError(string memory func, string memory message) private pure returns (string memory) {
+        return formatError("fmt", func, message);
     }
 }
