@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
+import {VmSafe} from "forge-std/Vm.sol";
 import {vulcan} from "./Vulcan.sol";
 
 /// @dev Struct used to hold command parameters. Useful for creating commands that can be run
@@ -14,18 +15,6 @@ struct CommandResult {
     bytes stdout;
     bytes stderr;
     Command command;
-}
-
-struct FfiResult {
-    int32 exitCode;
-    bytes stdout;
-    bytes stderr;
-}
-
-/// @dev Hackish way of getting access to the new `tryFfi` cheat code until it gets realeased on a
-/// new `forge-std` version.
-interface TryFfi {
-    function tryFfi(string[] memory args) external returns (FfiResult memory);
 }
 
 library commands {
@@ -174,9 +163,9 @@ library commands {
     /// @param inputs An array of strings representing the parameters of the command.
     /// @return result The result of the command as a bytes array.
     function run(string[] memory inputs) internal returns (CommandResult memory result) {
-        FfiResult memory ffiResult = TryFfi(address(vulcan.hevm)).tryFfi(inputs);
+        VmSafe.FfiResult memory ffiResult = vulcan.hevm.tryFfi(inputs);
 
-        result.exitCode = ffiResult.exitCode;
+        result.exitCode = ffiResult.exit_code;
         result.stdout = ffiResult.stdout;
         result.stderr = ffiResult.stderr;
         result.command = Command(inputs);
