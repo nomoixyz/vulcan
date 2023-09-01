@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - main
+      - develop
 
 permissions:
   contents: write
@@ -17,3 +17,4 @@ jobs:
         with:
           release-type: simple
           bump-minor-pre-major: true
+          default-branch: develop
