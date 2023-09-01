@@ -1,0 +1,17 @@
+{
+  "name": "vulcan",
+  "version": "1.0.0",
+  "description": "<h1 align=center>     Vulcan </h1>",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Nomoi",
+  "license": "MIT",
+  "devDependencies": {
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
+    "husky": "^8.0.3"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  }
+}
