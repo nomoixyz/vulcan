@@ -23,7 +23,7 @@ See the [Vulcan Book](https://nomoixyz.github.io/vulcan/) for detailed usage inf
 ## Why Vulcan?
 
 Our goal is to provide:
- 
+
 - Better naming for VM functionality (no more `prank`, `roll`, `warp`, ...)
 - A testing framework with better readability and a familiar syntax
 - Improved ergonomics
@@ -84,3 +84,10 @@ contract TestSomething is Test {
 ## Contributing
 
 At this stage we are looking for all kinds of feedback, as the general direction of the project is not fully defined yet. If you have any ideas to improve naming, ergonomics, or anything else, please open an issue or a PR.
+
+## Acknowledgments
+
+Some of the ideas and code in Vulcan are directly inspired by or adapted from the following projects:
+
+- [forge-std](https://github.com/foundry-rs/forge-std/)
+- [memester-xyz/surl](https://github.com/memester-xyz/surl)
