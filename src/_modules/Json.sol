@@ -159,7 +159,12 @@ library json {
     /// @dev Creates a new JsonObject struct.
     /// @return The JsonObject struct.
     function create() internal returns (JsonObject memory) {
-        string memory id = string(abi.encodePacked(address(this), _incrementId()));
+        bytes32 slot = keccak256("vulcan.json.id.counter");
+        uint256 next = uint256(accounts.readStorage(address(this), slot)) + 1;
+        accounts.setStorage(address(this), slot, bytes32(next));
+
+        string memory id = string(abi.encodePacked(address(this), next));
+
         return JsonObject({id: id, serialized: ""});
     }
 
@@ -347,15 +352,6 @@ library json {
     /// @param path The path where the file will be saved.
     function write(JsonObject memory obj, string memory path, string memory key) internal {
         vulcan.hevm.writeJson(obj.serialized, path, key);
-    }
-
-    function _incrementId() private returns (uint256 count) {
-        bytes32 slot = keccak256("vulcan.json.id.counter");
-
-        assembly {
-            count := sload(slot)
-            sstore(slot, add(count, 1))
-        }
     }
 }
 

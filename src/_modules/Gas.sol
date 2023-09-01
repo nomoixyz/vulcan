@@ -3,7 +3,6 @@ pragma solidity ^0.8.17;
 
 import "./Vulcan.sol";
 import "./Accounts.sol";
-import {formatError} from "../_utils/formatError.sol";
 
 library gas {
     bytes32 constant GAS_MEASUREMENTS_MAGIC = keccak256("vulcan.gas.measurements.magic");
@@ -20,7 +19,7 @@ library gas {
         uint256 startGas = uint256(accounts.readStorage(address(vulcan.hevm), startSlot));
 
         if (endGas > startGas) {
-            revert(_formatError("stopRecord", "Gas used can't have a negative value"));
+            revert("gas.stopRecord: Gas used can't have a negative value");
         }
 
         bytes32 endSlot = keccak256(abi.encode(GAS_MEASUREMENTS_MAGIC, name, "end"));
@@ -43,9 +42,5 @@ library gas {
         (uint256 startGas, uint256 endGas) = getRecord(name);
 
         return startGas - endGas;
-    }
-
-    function _formatError(string memory func, string memory message) private pure returns (string memory) {
-        return formatError("gas", func, message);
     }
 }

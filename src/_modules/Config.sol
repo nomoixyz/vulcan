@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {vulcan, Hevm} from "./Vulcan.sol";
+import {Vm as Hevm} from "forge-std/Vm.sol";
+import {vulcan} from "./Vulcan.sol";
 
 /// @dev Struct that represents an RPC endpoint
 struct Rpc {
