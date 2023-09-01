@@ -24,6 +24,7 @@ import {fe, Fe} from "./_modules/Fe.sol";
 import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
 import {bound} from "./_utils/bound.sol";
+import {formatError} from "./_utils/formatError.sol";
 import {Ok} from "./_modules/Result.sol";
 
 // @dev Main entry point to Vulcan tests
@@ -48,7 +49,7 @@ contract Test is InvariantsBase {
         }
 
         if (!post) {
-            revert("Vulcan shouldFail: Didn't fail");
+            revert(formatError("test", "shouldFail()", "Test expected to fail"));
         }
 
         vulcan.clearFailure();

@@ -14,3 +14,6 @@ out/
 
 # Test stuff
 test/fixtures/fe
+
+# Node stuff
+node_modules

@@ -8,13 +8,15 @@ import { Test, fe } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testCompile() external {
-        fe.create().setFilePath("./test/mocks/guest_book.fe").setOutputDir("./test/fixtures/fe/output").setOverwrite(
-            true
-        ).build();
+        fe
+            .create()
+            .setFilePath("./test/mocks/guest_book.fe")
+            .setOutputDir("./test/fixtures/fe/output")
+            .setOverwrite(true)
+            .build()
+            .unwrap();
 
-        string memory result = fs.readFile("./test/fixtures/fe/output/GuestBook/GuestBook.bin");
-
-        expect(bytes(result).length).toBeGreaterThan(0);
+        bytes memory bytecode = fe.getBytecode("GuestBook");
     }
 
 }

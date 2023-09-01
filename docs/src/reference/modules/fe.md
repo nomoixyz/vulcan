@@ -8,7 +8,6 @@ Creates a new `Fe` struct with the following defaults.
 Fe({
     compilerPath: "fe",
     filePath: "",
-    emitOptions: "",
     outputDir: "",
     overwrite: false
 });
@@ -37,11 +36,10 @@ Overwrites the file path.
 
 Overwrites the default artifacts directory.
 
-#### **`setEmitOptions(Fe memory self, string memory emitOptions) → (Fe)`**
-
-Overwrites the default emit options. `abi,bytecode` is the default value. Use `fe build --help` to
-get all the other possible values.
-
 #### **`setOverwrite(Fe memory self, bool overwrite) → (Fe)`**
 
 Sets the build command overwrite flag. If `true` the contents of `outputDir` will be overwritten.
+
+#### **`getBytecode(Fe memory self, string contractName) → (bytes)`**
+
+Returns the bytecode from a compiled `Fe` contract.

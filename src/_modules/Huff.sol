@@ -3,6 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Commands.sol";
 import "./Strings.sol";
+import {formatError} from "../_utils/formatError.sol";
 
 struct Huffc {
     string compilerPath;
@@ -37,7 +38,7 @@ library huff {
 
     function toCommand(Huffc memory self) internal pure returns (Command memory) {
         Command memory command = commands.create(self.compilerPath);
-        require(bytes(self.filePath).length > 0, "self.filePath not set");
+        require(bytes(self.filePath).length > 0, _formatError("toCommand(Huffc)", "self.filePath not set"));
 
         if (bytes(self.outputPath).length > 0) command = command.args(["-ao", self.outputPath]);
         if (bytes(self.mainName).length > 0) command = command.args(["-m", self.mainName]);
@@ -102,5 +103,9 @@ library huff {
         overrides[overrides.length - 1] = string.concat(const, "=", value.toString());
         self.constantOverrides = overrides;
         return self;
+    }
+
+    function _formatError(string memory func, string memory message) private pure returns (string memory) {
+        return formatError("huff", func, message);
     }
 }
