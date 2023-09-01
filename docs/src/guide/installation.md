@@ -2,5 +2,5 @@
 
 In an existing Foundry project, use `forge install`:
 ```
-$ forge install nomoixyz/vulcan@0.2.0
+$ forge install nomoixyz/vulcan@0.3.0
 ```
