@@ -2,9 +2,9 @@
 pragma solidity ^0.8.13;
 
 import {Command, CommandResult, commands} from "../Commands.sol";
-import {JsonObject, json as jsonModule, JsonResult} from "../Json.sol";
+import {JsonObject, json as jsonModule, JsonResult, Ok} from "../Json.sol";
 
-import {Error, StringResult} from "../Result.sol";
+import {Result, Error, StringResult, Ok} from "../Result.sol";
 
 enum Method {
     GET,
@@ -37,8 +37,7 @@ struct Request {
 }
 
 struct RequestResult {
-    Request value;
-    Error _error;
+    Result _inner;
 }
 
 // TODO: headers, etc
@@ -49,8 +48,7 @@ struct Response {
 }
 
 struct ResponseResult {
-    Response value;
-    Error _error;
+    Result _inner;
 }
 
 library request {
@@ -67,88 +65,86 @@ library request {
 library RequestError {
     bytes32 constant COMMAND_FAILED = keccak256("COMMAND_FAILED");
 
-    function commandFailed() public pure returns (ResponseResult memory res) {
-        res._error = Error({message: "Command failed", id: COMMAND_FAILED});
+    function commandFailed() public pure returns (ResponseResult memory) {
+        return ResponseResult(Error(COMMAND_FAILED, "Command failed").toResult());
     }
 }
 
-library RequestResultLib {
+library LibRequestResult {
     function isOk(RequestResult memory self) internal pure returns (bool) {
-        return self._error.id == bytes32(0);
+        return self._inner.isOk();
     }
 
     function isError(RequestResult memory self) internal pure returns (bool) {
-        return !self.isOk();
+        return self._inner.isError();
     }
 
-    /// @dev Returns the output of a `RequestResult` or reverts if the result was an error.
     function unwrap(RequestResult memory self) internal pure returns (Request memory) {
-        return expect(self, self._error.message);
+        return abi.decode(self._inner.unwrap(), (Request));
     }
 
-    /// @dev Returns the output of a `RequestResult` or reverts if the result was an error.
-    /// @param error The error message that will be used when reverting.
-    function expect(RequestResult memory self, string memory error) internal pure returns (Request memory) {
-        if (self.isError()) {
-            revert(error);
-        }
+    function expect(RequestResult memory self, string memory err) internal pure returns (Request memory) {
+        return abi.decode(self._inner.expect(err), (Request));
+    }
 
-        return self.value;
+    function toError(RequestResult memory self) internal pure returns (Error memory) {
+        return self._inner.toError();
+    }
+
+    function toValue(RequestResult memory self) internal pure returns (Request memory) {
+        return abi.decode(self._inner.toValue(), (Request));
     }
 }
 
-library ResponseResultLib {
-    using ResponseResultLib for ResponseResult;
-    /// @dev Checks if a `ResponseResult` is not an error.
-
+library LibResponseResult {
     function isOk(ResponseResult memory self) internal pure returns (bool) {
-        return self._error.id == bytes32(0);
+        return self._inner.isOk();
     }
 
-    /// @dev Checks if a `ResponseResult` struct is an error.
     function isError(ResponseResult memory self) internal pure returns (bool) {
-        return !self.isOk();
+        return self._inner.isError();
     }
 
-    /// @dev Returns the value of a `ResponseResult` or reverts if the result was an error.
     function unwrap(ResponseResult memory self) internal pure returns (Response memory) {
-        return expect(self, self._error.message);
+        return abi.decode(self._inner.unwrap(), (Response));
     }
 
-    /// @dev Returns the value of a `ResponseResult` or reverts if the result was an error.
-    /// @param error The error message that will be used when reverting.
-    function expect(ResponseResult memory self, string memory error) internal pure returns (Response memory) {
-        if (self.isError()) {
-            revert(error);
-        }
+    function expect(ResponseResult memory self, string memory err) internal pure returns (Response memory) {
+        return abi.decode(self._inner.expect(err), (Response));
+    }
 
-        return self.value;
+    function toError(ResponseResult memory self) internal pure returns (Error memory) {
+        return self._inner.toError();
+    }
+
+    function toValue(ResponseResult memory self) internal pure returns (Response memory) {
+        return abi.decode(self._inner.toValue(), (Response));
     }
 }
 
-library RequestClientLib {
+library LibRequestClient {
     function get(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
-        return RequestBuilderLib.create(self, Method.GET, url);
+        return LibRequestBuilder.create(self, Method.GET, url);
     }
 
     function del(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
-        return RequestBuilderLib.create(self, Method.DELETE, url);
+        return LibRequestBuilder.create(self, Method.DELETE, url);
     }
 
     function patch(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
-        return RequestBuilderLib.create(self, Method.PATCH, url);
+        return LibRequestBuilder.create(self, Method.PATCH, url);
     }
 
     function post(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
-        return RequestBuilderLib.create(self, Method.POST, url);
+        return LibRequestBuilder.create(self, Method.POST, url);
     }
 
     function put(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
-        return RequestBuilderLib.create(self, Method.PUT, url);
+        return LibRequestBuilder.create(self, Method.PUT, url);
     }
 }
 
-library RequestBuilderLib {
+library LibRequestBuilder {
     using request for *;
 
     function create(RequestClient memory client, Method method, string memory url)
@@ -157,18 +153,17 @@ library RequestBuilderLib {
         returns (RequestBuilder memory builder)
     {
         builder.client = client;
-        builder.request.value = Request({method: method, url: url, headers: new Header[](0), body: new bytes(0)});
+        builder.request = Ok(Request({method: method, url: url, headers: new Header[](0), body: new bytes(0)}));
     }
 
-    function send(RequestBuilder memory self) internal returns (ResponseResult memory res) {
+    function send(RequestBuilder memory self) internal returns (ResponseResult memory) {
         RequestResult memory reqResult = self.build();
 
         if (reqResult.isError()) {
-            res._error = reqResult._error;
-            return res;
+            return ResponseResult(reqResult.toError().toResult());
         }
 
-        Request memory req = reqResult.value;
+        Request memory req = reqResult.toValue();
 
         (string(req.toCommand().toString()));
 
@@ -180,7 +175,7 @@ library RequestBuilderLib {
 
         (uint256 status, bytes memory _body) = abi.decode(result.stdout, (uint256, bytes));
 
-        res.value = Response({url: req.url, status: status, body: _body});
+        return Ok(Response({url: req.url, status: status, body: _body}));
     }
 
     function build(RequestBuilder memory self) internal pure returns (RequestResult memory) {
@@ -189,7 +184,9 @@ library RequestBuilderLib {
 
     function body(RequestBuilder memory self, string memory _body) internal pure returns (RequestBuilder memory) {
         if (self.request.isOk()) {
-            self.request.value.body = bytes(_body);
+            Request memory req = self.request.toValue();
+            req.body = bytes(_body);
+            self.request = Ok(req);
         }
         return self;
     }
@@ -217,12 +214,14 @@ library RequestBuilderLib {
         returns (RequestBuilder memory)
     {
         if (self.request.isOk()) {
-            uint256 len = self.request.value.headers.length;
-            self.request.value.headers = new Header[](len + 1);
+            Request memory req = self.request.toValue();
+            uint256 len = req.headers.length;
+            req.headers = new Header[](len + 1);
             for (uint256 i = 0; i < len; i++) {
-                self.request.value.headers[i] = self.request.value.headers[i];
+                req.headers[i] = req.headers[i];
             }
-            self.request.value.headers[len] = Header({key: key, value: value});
+            req.headers[len] = Header({key: key, value: value});
+            self.request = Ok(req);
         }
         return self;
     }
@@ -237,7 +236,7 @@ library RequestBuilderLib {
     }
 }
 
-library RequestLib {
+library LibRequest {
     function toCommand(Request memory self) internal pure returns (Command memory) {
         // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
         string memory script =
@@ -277,14 +276,14 @@ library RequestLib {
     }
 }
 
-library ResponseLib {
+library LibResponse {
     // TODO: validate response and return error if there are issues
-    function json(Response memory self) internal pure returns (JsonResult memory res) {
-        res.value = jsonModule.create(string(self.body));
+    function json(Response memory self) internal pure returns (JsonResult memory) {
+        return Ok(jsonModule.create(string(self.body)));
     }
 
-    function text(Response memory self) internal pure returns (StringResult memory res) {
-        res.value = string(self.body);
+    function text(Response memory self) internal pure returns (StringResult memory) {
+        return Ok(string(self.body));
     }
 
     // function asBytes(Response memory self) internal pure returns (BytesResult memory) {
@@ -292,9 +291,17 @@ library ResponseLib {
     // }
 }
 
-using RequestClientLib for RequestClient global;
-using RequestLib for Request global;
-using ResponseLib for Response global;
-using RequestBuilderLib for RequestBuilder global;
-using RequestResultLib for RequestResult global;
-using ResponseResultLib for ResponseResult global;
+function Ok(Request memory value) pure returns (RequestResult memory) {
+    return RequestResult(Ok(abi.encode(value)));
+}
+
+function Ok(Response memory value) pure returns (ResponseResult memory) {
+    return ResponseResult(Ok(abi.encode(value)));
+}
+
+using LibRequestClient for RequestClient global;
+using LibRequest for Request global;
+using LibResponse for Response global;
+using LibRequestBuilder for RequestBuilder global;
+using LibRequestResult for RequestResult global;
+using LibResponseResult for ResponseResult global;
