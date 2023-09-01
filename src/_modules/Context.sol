@@ -5,6 +5,7 @@ import "./Vulcan.sol";
 import "./Accounts.sol";
 import "./Strings.sol";
 import "../_utils/println.sol";
+import {formatError} from "../_utils/formatError.sol";
 
 type Context is bytes32;
 
@@ -74,7 +75,7 @@ library ctxSafe {
 
     function startGasReport(string memory name) internal {
         if (bytes(name).length > 32) {
-            revert("ctx.startGasReport: Gas report name can't have more than 32 characters");
+            revert(_formatError("startGasReport", "Gas report name can't have more than 32 characters"));
         }
 
         bytes32 b32Name = bytes32(bytes(name));
@@ -91,9 +92,13 @@ library ctxSafe {
         bytes32 valueSlot = keccak256(abi.encodePacked("vulcan.ctx.gasReport", b32Name));
         uint256 prevGas = uint256(accounts.readStorage(address(vulcan.hevm), valueSlot));
         if (gas > prevGas) {
-            revert("ctx.endGasReport: Gas used can't have a negative value");
+            revert(_formatError("endGasReport", "Gas used can't have a negative value"));
         }
         println(string.concat("gas(", string(abi.encodePacked(b32Name)), "):", strings.toString(prevGas - gas)));
+    }
+
+    function _formatError(string memory func, string memory message) private pure returns (string memory) {
+        return formatError("ctx", func, message);
     }
 }
 
