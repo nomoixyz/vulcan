@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/nomoixyz/vulcan/compare/v0.3.0...v0.3.1) (2023-09-01)
+
+
+### Bug Fixes
+
+* adapt to new forge-std Vm to remove warnings ([e83ebd4](https://github.com/nomoixyz/vulcan/commit/e83ebd403e1e46d3cbf684343e967478bf0a8e29))
+
 ## [0.3.0](https://github.com/nomoixyz/vulcan/compare/v0.2.0...v0.3.0) (2023-09-01)
 
 
