@@ -74,7 +74,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The uint256 value.
-    function getUint(JsonObject memory obj, string memory key) internal returns (uint256) {
+    function getUint(JsonObject memory obj, string memory key) internal pure returns (uint256) {
         return vulcan.hevm.parseJsonUint(obj.serialized, key);
     }
 
@@ -82,7 +82,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The uint256[] value.
-    function getUintArray(JsonObject memory obj, string memory key) internal returns (uint256[] memory) {
+    function getUintArray(JsonObject memory obj, string memory key) internal pure returns (uint256[] memory) {
         return vulcan.hevm.parseJsonUintArray(obj.serialized, key);
     }
 
@@ -90,7 +90,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The int256 value.
-    function getInt(JsonObject memory obj, string memory key) internal returns (int256) {
+    function getInt(JsonObject memory obj, string memory key) internal pure returns (int256) {
         return vulcan.hevm.parseJsonInt(obj.serialized, key);
     }
 
@@ -98,7 +98,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The int256[] value.
-    function getIntArray(JsonObject memory obj, string memory key) internal returns (int256[] memory) {
+    function getIntArray(JsonObject memory obj, string memory key) internal pure returns (int256[] memory) {
         return vulcan.hevm.parseJsonIntArray(obj.serialized, key);
     }
 
@@ -106,7 +106,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The bool value.
-    function getBool(JsonObject memory obj, string memory key) internal returns (bool) {
+    function getBool(JsonObject memory obj, string memory key) internal pure returns (bool) {
         return vulcan.hevm.parseJsonBool(obj.serialized, key);
     }
 
@@ -114,7 +114,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The bool[] value.
-    function getBoolArray(JsonObject memory obj, string memory key) internal returns (bool[] memory) {
+    function getBoolArray(JsonObject memory obj, string memory key) internal pure returns (bool[] memory) {
         return vulcan.hevm.parseJsonBoolArray(obj.serialized, key);
     }
 
@@ -122,7 +122,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The address value.
-    function getAddress(JsonObject memory obj, string memory key) internal returns (address) {
+    function getAddress(JsonObject memory obj, string memory key) internal pure returns (address) {
         return vulcan.hevm.parseJsonAddress(obj.serialized, key);
     }
 
@@ -130,7 +130,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The address value.
-    function getAddressArray(JsonObject memory obj, string memory key) internal returns (address[] memory) {
+    function getAddressArray(JsonObject memory obj, string memory key) internal pure returns (address[] memory) {
         return vulcan.hevm.parseJsonAddressArray(obj.serialized, key);
     }
 
@@ -138,7 +138,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The string value.
-    function getString(JsonObject memory obj, string memory key) internal returns (string memory) {
+    function getString(JsonObject memory obj, string memory key) internal pure returns (string memory) {
         return vulcan.hevm.parseJsonString(obj.serialized, key);
     }
 
@@ -146,7 +146,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The string[] value.
-    function getStringArray(JsonObject memory obj, string memory key) internal returns (string[] memory) {
+    function getStringArray(JsonObject memory obj, string memory key) internal pure returns (string[] memory) {
         return vulcan.hevm.parseJsonStringArray(obj.serialized, key);
     }
 
@@ -154,7 +154,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The bytes value.
-    function getBytes(JsonObject memory obj, string memory key) internal returns (bytes memory) {
+    function getBytes(JsonObject memory obj, string memory key) internal pure returns (bytes memory) {
         return vulcan.hevm.parseJsonBytes(obj.serialized, key);
     }
 
@@ -162,7 +162,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The bytes[] value.
-    function getBytesArray(JsonObject memory obj, string memory key) internal returns (bytes[] memory) {
+    function getBytesArray(JsonObject memory obj, string memory key) internal pure returns (bytes[] memory) {
         return vulcan.hevm.parseJsonBytesArray(obj.serialized, key);
     }
 
@@ -170,7 +170,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The bytes32 value.
-    function getBytes32(JsonObject memory obj, string memory key) internal returns (bytes32) {
+    function getBytes32(JsonObject memory obj, string memory key) internal pure returns (bytes32) {
         return vulcan.hevm.parseJsonBytes32(obj.serialized, key);
     }
 
@@ -178,7 +178,7 @@ library json {
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.
     /// @return The bytes32[] value.
-    function getBytes32Array(JsonObject memory obj, string memory key) internal returns (bytes32[] memory) {
+    function getBytes32Array(JsonObject memory obj, string memory key) internal pure returns (bytes32[] memory) {
         return vulcan.hevm.parseJsonBytes32Array(obj.serialized, key);
     }
 
