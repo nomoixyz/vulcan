@@ -6,8 +6,7 @@ ffi = true
 fs_permissions = [
     { access = "read", path = "./out"},
     { access = "read", path = "./test/fixtures/fs/read" },
-    { access = "read-write", path = "./test/fixtures/fs/write" },
-    { access = "read-write", path = "./test/fixtures/fe/output" }
+    { access = "read-write", path = "./test/fixtures/fs/write" }
 ]
 
 [rpc_endpoints]

@@ -3,9 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import {stdStorage, StdStorage} from "forge-std/StdStorage.sol";
 
-import {strings} from "./Strings.sol";
 import "./Vulcan.sol";
-import {formatError} from "../_utils/formatError.sol";
 
 library accountsSafe {
     /// @dev Reads the storage at the specified `slot` for the given `who` address and returns the content.
@@ -88,12 +86,6 @@ library accountsSafe {
         return who;
     }
 
-    /// @dev Creates an address without label.
-    function create() internal returns (address) {
-        uint256 id = _incrementId();
-        return derive(uint256(keccak256(abi.encode(id))));
-    }
-
     /// @dev Creates an address using the hash of the specified `name` as the private key and adds a label to the address.
     /// @param name The name to use as the basis for the address.
     /// @return The newly created address.
@@ -146,49 +138,6 @@ library accountsSafe {
     /// @param who The deployer address.
     function getDeploymentAddress(address who) internal view returns (address) {
         return getDeploymentAddress(who, getNonce(who));
-    }
-
-    /// @dev Generates an array of addresses with a specific length.
-    /// @param length The amount of addresses to generate.
-    function createMany(uint256 length) internal returns (address[] memory) {
-        require(length > 0, _formatError("createMany(uint256)", "Invalid length for addresses array"));
-
-        address[] memory addresses = new address[](length);
-
-        for (uint256 i; i < length; i++) {
-            addresses[i] = create();
-        }
-
-        return addresses;
-    }
-
-    /// @dev Generates an array of addresses with a specific length and a prefix as label.
-    /// The label for each address will be `{prefix}_{i}`.
-    /// @param length The amount of addresses to generate.
-    /// @param prefix The prefix of the label for each address.
-    function createMany(uint256 length, string memory prefix) internal returns (address[] memory) {
-        require(length > 0, "accounts: invalid length for addresses array");
-
-        address[] memory addresses = new address[](length);
-
-        for (uint256 i; i < length; i++) {
-            addresses[i] = create(string.concat(prefix, "_", strings.toString(i)));
-        }
-
-        return addresses;
-    }
-
-    function _incrementId() private returns (uint256 count) {
-        bytes32 slot = keccak256("vulcan.accounts.id.counter");
-
-        assembly {
-            count := sload(slot)
-            sstore(slot, add(count, 1))
-        }
-    }
-
-    function _formatError(string memory func, string memory message) private pure returns (string memory) {
-        return formatError("accounts", func, message);
     }
 }
 
@@ -245,10 +194,6 @@ library accounts {
 
     function label(address who, string memory lbl) internal returns (address) {
         return accountsSafe.label(who, lbl);
-    }
-
-    function create() internal returns (address) {
-        return accountsSafe.create();
     }
 
     function create(string memory name) internal returns (address) {
@@ -423,11 +368,5 @@ library accounts {
     function setCode(address self, bytes memory code) internal returns (address) {
         vulcan.hevm.etch(self, code);
         return self;
-    }
-
-    /// @dev Generates an array of addresses with a specific length.
-    /// @param length The amount of addresses to generate.
-    function createMany(uint256 length) internal returns (address[] memory) {
-        return accountsSafe.createMany(length);
     }
 }

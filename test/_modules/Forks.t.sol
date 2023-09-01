@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, forks, Fork, CommandResult, println} from "../../src/test.sol";
+import {Test, expect, commands, forks, Fork, console} from "../../src/test.sol";
 import {Sender} from "../mocks/Sender.sol";
 
 contract ForksTest is Test {
@@ -9,12 +9,12 @@ contract ForksTest is Test {
     modifier skipIfEndpointFails() {
         string memory data = '{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":67}';
 
-        CommandResult memory res = commands.create("curl").args(
+        bytes memory res = commands.create("curl").args(
             ["--silent", "-H", "Content-Type: application/json", "-X", "POST", "--data", data, ENDPOINT]
         ).run();
 
-        if (res.stdout.length == 0) {
-            println("Skipping test because forking endpoint is not available");
+        if (res.length == 0) {
+            console.log("Skipping test because forking endpoint is not available");
             return;
         }
 

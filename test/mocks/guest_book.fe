@@ -1,3 +1,0 @@
-contract A {
-    target: address
-}
