@@ -217,7 +217,7 @@ library LibRequestBuilder {
             Request memory req = self.request.toValue();
             uint256 len = req.headers.length;
             req.headers = new Header[](len + 1);
-            for (uint256 i = 0; i < len; i++) {
+            for (uint256 i; i < len; i++) {
                 req.headers[i] = req.headers[i];
             }
             req.headers[len] = Header({key: key, value: value});
@@ -242,7 +242,7 @@ library LibRequest {
         string memory script =
             string.concat('response=$(curl -s -w "\\n%{http_code}" ', self.url, " -X ", toString(self.method));
 
-        for (uint256 i = 0; i < self.headers.length; i++) {
+        for (uint256 i; i < self.headers.length; i++) {
             script = string.concat(script, " -H ", '"', self.headers[i].key, ": ", self.headers[i].value, '"');
         }
 
