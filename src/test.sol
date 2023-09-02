@@ -15,7 +15,7 @@ import {fs, FsMetadata} from "./_modules/Fs.sol";
 import {gas} from "./_modules/Gas.sol";
 import {huff, Huffc} from "./_modules/Huff.sol";
 import {InvariantsBase, invariants} from "./_modules/Invariants.sol";
-import {json, JsonObject} from "./_modules/Json.sol";
+import {json, JsonObject, Ok} from "./_modules/Json.sol";
 import {strings} from "./_modules/Strings.sol";
 import {watchers, Watcher} from "./_modules/Watchers.sol";
 import {config, Rpc} from "./_modules/Config.sol";
@@ -25,6 +25,7 @@ import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
 import {bound} from "./_utils/bound.sol";
 import {formatError} from "./_utils/formatError.sol";
+import {Ok} from "./_modules/Result.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test is InvariantsBase {

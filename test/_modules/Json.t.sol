@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, console, json, JsonObject, vulcan} from "../../src/test.sol";
+import {Test, expect, println, json, JsonObject, vulcan} from "../../src/test.sol";
 
 contract JsonTest is Test {
     using vulcan for *;
@@ -9,87 +9,92 @@ contract JsonTest is Test {
         string foo;
     }
 
-    function testParse() external {
-        string memory jsonStr = '{"foo":"bar"}';
-        Foo memory obj = abi.decode(json.parse(jsonStr), (Foo));
+    function testParseImmutable() external {
+        Foo memory obj = abi.decode(json.create('{"foo":"bar"}').parse(), (Foo));
         expect(obj.foo).toEqual("bar");
     }
 
-    function testParseStruct() external {
-        JsonObject memory jsonObject = json.create().set("foo", string("bar"));
-        Foo memory obj = abi.decode(json.parse(jsonObject), (Foo));
+    function testParse() external {
+        JsonObject memory jsonObject = json.create().set("foo", string("bar")).unwrap();
+        Foo memory obj = abi.decode(jsonObject.parse(), (Foo));
         expect(obj.foo).toEqual("bar");
     }
 
     function testGetUint() external {
-        expect(json.getUint('{"foo":123}', ".foo")).toEqual(123);
+        expect(json.create('{"foo":123}').getUint(".foo")).toEqual(123);
     }
 
     function testGetUintArray() external {
-        uint256[] memory arr = json.getUintArray('{"foo":[123]}', ".foo");
+        uint256[] memory arr = json.create('{"foo":[123]}').getUintArray(".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(123);
     }
 
     function testGetInt() external {
-        expect(json.getInt('{"foo":-123}', ".foo")).toEqual(-123);
+        expect(json.create('{"foo":-123}').getInt(".foo")).toEqual(-123);
     }
 
     function testGetIntArray() external {
-        int256[] memory arr = json.getIntArray('{"foo":[-123]}', ".foo");
+        int256[] memory arr = json.create('{"foo":[-123]}').getIntArray(".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(-123);
     }
 
     function testGetBool() external {
-        expect(json.getBool('{"foo":true}', ".foo")).toEqual(true);
+        expect(json.create('{"foo":true}').getBool(".foo")).toEqual(true);
     }
 
     function testGetBoolArray() external {
-        bool[] memory arr = json.getBoolArray('{"foo":[true]}', ".foo");
+        bool[] memory arr = json.create('{"foo":[true]}').getBoolArray(".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(true);
     }
 
     function testGetAddress() external {
-        expect(json.getAddress('{"foo":"0x0000000000000000000000000000000000000001"}', ".foo")).toEqual(address(1));
+        expect(json.create('{"foo":"0x0000000000000000000000000000000000000001"}').getAddress(".foo")).toEqual(
+            address(1)
+        );
     }
 
     function testGetAddressArray() external {
-        address[] memory arr = json.getAddressArray('{"foo":["0x0000000000000000000000000000000000000001"]}', ".foo");
+        address[] memory arr =
+            json.create('{"foo":["0x0000000000000000000000000000000000000001"]}').getAddressArray(".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(address(1));
     }
 
     function testGetString() external {
-        expect(json.getString('{"foo":"bar"}', ".foo")).toEqual("bar");
+        expect(json.create('{"foo":"bar"}').getString(".foo")).toEqual("bar");
     }
 
     function testGetStringArray() external {
-        string[] memory arr = json.getStringArray('{"foo":["bar"]}', ".foo");
+        string[] memory arr = json.create('{"foo":["bar"]}').getStringArray(".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual("bar");
     }
 
     function testGetBytes() external {
-        expect(json.getBytes('{"foo":"0x1234"}', ".foo")).toEqual(hex"1234");
+        expect(json.create('{"foo":"0x1234"}').getBytes(".foo")).toEqual(hex"1234");
     }
 
     function testGetBytesArray() external {
-        bytes[] memory arr = json.getBytesArray('{"foo":["0x1234"]}', ".foo");
+        bytes[] memory arr = json.create('{"foo":["0x1234"]}').getBytesArray(".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(hex"1234");
     }
 
     function testGetBytes32() external {
-        expect(json.getBytes32('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}', ".foo"))
-            .toEqual(bytes32(uint256(1)));
+        expect(
+            json.create('{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}').getBytes32(
+                ".foo"
+            )
+        ).toEqual(bytes32(uint256(1)));
     }
 
     function testGetBytes32Array() external {
-        bytes32[] memory arr = json.getBytes32Array(
-            '{"foo":["0x0000000000000000000000000000000000000000000000000000000000000001"]}', ".foo"
-        );
+        bytes32[] memory arr = json.create(
+            '{"foo":["0x0000000000000000000000000000000000000000000000000000000000000001"]}'
+        ).getBytes32Array(".foo");
         expect(arr.length).toEqual(1);
         expect(arr[0]).toEqual(bytes32(uint256(1)));
     }
