@@ -180,8 +180,6 @@ library commands {
         } catch {
             return CommandError.commandFailed();
         }
-
-
     }
 
     function run(string[1] memory inputs) internal returns (CommandResult memory) {
@@ -263,7 +261,6 @@ library commands {
     function run(string[20] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
     }
-
 
     function _toDynamic(string[1] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](1);
@@ -442,7 +439,11 @@ library LibCommandResult {
 
     /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
     /// @param customError The error message that will be used when reverting.
-    function expect(CommandResult memory self, string memory customError) internal pure returns (CommandOutput memory) {
+    function expect(CommandResult memory self, string memory customError)
+        internal
+        pure
+        returns (CommandOutput memory)
+    {
         if (self.isError()) {
             revert(customError);
         }
