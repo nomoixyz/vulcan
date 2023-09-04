@@ -15,7 +15,12 @@ struct JsonResult {
 }
 
 library JsonError {
+    bytes32 constant INVALID_JSON = keccak256("INVALID_JSON");
     bytes32 constant IMMUTABLE_JSON = keccak256("IMMUTABLE_JSON");
+
+    function invalid() internal pure returns (JsonResult memory res) {
+        return JsonResult(Error(INVALID_JSON, "Invalid json").toResult());
+    }
 
     function immutableJson() internal pure returns (JsonResult memory res) {
         return JsonResult(Error(IMMUTABLE_JSON, "Json object is immutable").toResult());
@@ -41,6 +46,10 @@ library LibJsonResult {
 
     function toError(JsonResult memory self) internal pure returns (Error memory) {
         return self._inner.toError();
+    }
+
+    function toValue(JsonResult memory self) internal pure returns (JsonObject memory) {
+        return abi.decode(self._inner.toValue(), (JsonObject));
     }
 }
 
@@ -68,6 +77,14 @@ library json {
     /// @return abiEncodedData The ABI encoded tuple representing the json object.
     function parse(JsonObject memory jsonObj) internal pure returns (bytes memory abiEncodedData) {
         return vulcan.hevm.parseJson(jsonObj.serialized);
+    }
+
+    function isValid(string memory jsonObj) internal pure returns (bool) {
+        try vulcan.hevm.parseJson(jsonObj) {
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     /// @dev Parses the value of the `key` contained on `jsonStr` as uint256.
@@ -191,8 +208,12 @@ library json {
 
     /// @dev Creates a new JsonObject struct.
     /// @return The JsonObject struct.
-    function create(string memory obj) internal pure returns (JsonObject memory) {
-        return JsonObject({id: "", serialized: obj});
+    function create(string memory obj) internal pure returns (JsonResult memory) {
+        if (!isValid(obj)) {
+            return JsonError.invalid();
+        }
+
+        return Ok(JsonObject({id: "", serialized: obj}));
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
