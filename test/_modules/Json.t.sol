@@ -15,7 +15,7 @@ contract JsonTest is Test {
     }
 
     function testParse() external {
-        JsonObject memory jsonObject = json.create().set("foo", string("bar")).unwrap();
+        JsonObject memory jsonObject = json.create().set("foo", string("bar"));
         Foo memory obj = abi.decode(jsonObject.parse(), (Foo));
         expect(obj.foo).toEqual("bar");
     }
