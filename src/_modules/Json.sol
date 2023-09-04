@@ -87,6 +87,10 @@ library json {
         }
     }
 
+    function containsKey(JsonObject memory obj, string memory key) internal view returns (bool) {
+        return vulcan.hevm.keyExists(obj.serialized, key);
+    }
+
     /// @dev Parses the value of the `key` contained on `jsonStr` as uint256.
     /// @param obj The json object.
     /// @param key The key from the `jsonStr` to parse.

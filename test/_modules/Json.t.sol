@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, println, json, JsonObject, vulcan} from "../../src/test.sol";
@@ -27,6 +28,18 @@ contract JsonTest is Test {
         expect(json.isValid('{"foo":"bar"')).toEqual(false);
         expect(json.isValid('{"foo":bar"}')).toEqual(false);
         expect(json.isValid("asdfasf")).toEqual(false);
+    }
+
+    function testContainsKey() external {
+        JsonObject memory obj = json.create('{"foo":"bar"}').unwrap();
+        expect(obj.containsKey(".foo")).toEqual(true);
+        expect(obj.containsKey(".bar")).toEqual(false);
+    }
+
+    function testGetMaxUint() external {
+        uint256 i = json.create('{"foo":"0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}').unwrap()
+            .getUint(".foo");
+        expect(i).toEqual(type(uint256).max);
     }
 
     function testGetUint() external {
