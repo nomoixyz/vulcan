@@ -68,7 +68,7 @@ contract CommandsTest is Test {
     function testUnwrapReverts() external {
         CommandResult memory result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
 
-        bytes memory expectedError = bytes("The command failed to execute");
+        bytes memory expectedError = bytes("The command was not executed");
 
         ctx.expectRevert(expectedError);
 

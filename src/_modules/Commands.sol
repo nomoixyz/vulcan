@@ -178,7 +178,7 @@ library commands {
 
             return Ok(output);
         } catch {
-            return CommandError.commandFailed();
+            return CommandError.notExecuted();
         }
     }
 
@@ -404,8 +404,8 @@ library commands {
 library CommandError {
     bytes32 constant COMMAND_FAILED = keccak256("COMMAND_FAILED");
 
-    function commandFailed() public pure returns (CommandResult memory) {
-        return CommandResult(Error(COMMAND_FAILED, "The command failed to execute").toResult());
+    function notExecuted() public pure returns (CommandResult memory) {
+        return CommandResult(Error(COMMAND_FAILED, "The command was not executed").toResult());
     }
 }
 
@@ -422,19 +422,7 @@ library LibCommandResult {
 
     /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
     function unwrap(CommandResult memory self) internal pure returns (CommandOutput memory) {
-        string memory error;
-
-        if (self.isError()) {
-            CommandOutput memory output = abi.decode(self._inner.unwrap(), (CommandOutput));
-
-            error = string.concat("Failed to run command ", output.command.toString());
-
-            if (output.stderr.length > 0) {
-                error = string.concat(error, ":\n\n", string(output.stderr));
-            }
-        }
-
-        return expect(self, error);
+        return abi.decode(self._inner.unwrap(), (CommandOutput));
     }
 
     /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
@@ -444,13 +432,7 @@ library LibCommandResult {
         pure
         returns (CommandOutput memory)
     {
-        if (self.isError()) {
-            revert(customError);
-        }
-
-        CommandOutput memory output = abi.decode(self._inner.unwrap(), (CommandOutput));
-
-        return output;
+        return abi.decode(self._inner.expect(customError), (CommandOutput));
     }
 }
 
