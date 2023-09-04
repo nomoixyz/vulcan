@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, commands, Command, fe, Fe, fs, println, strings} from "../../src/test.sol";

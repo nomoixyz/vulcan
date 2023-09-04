@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, commands, Command, CommandResult, ctx} from "../../src/test.sol";
@@ -15,14 +16,15 @@ contract CommandsTest is Test {
         string[2] memory inputs = ["echo", "'Hello, World!'"];
         Command memory cmd = commands.create(inputs[0]).arg(inputs[1]);
 
-        expect(string(cmd.run().stdout)).toEqual(inputs[1]);
+        expect(string(cmd.run().unwrap().stdout)).toEqual(inputs[1]);
     }
 
     function testItCanRunCommandsDirectly() external {
         string[2] memory inputs = ["echo", "'Hello, World!'"];
+
         CommandResult memory result = commands.run(inputs);
 
-        expect(string(result.stdout)).toEqual(inputs[1]);
+        expect(string(result.unwrap().stdout)).toEqual(inputs[1]);
     }
 
     function testCommandToString() external {
@@ -38,13 +40,13 @@ contract CommandsTest is Test {
     }
 
     function testIsNotOk() external {
-        CommandResult memory result = commands.run(["forge", "--hlkfshjfhjas"]);
+        CommandResult memory result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
 
         expect(result.isOk()).toBeFalse();
     }
 
     function testIsError() external {
-        CommandResult memory result = commands.run(["forge", "--hlkfshjfhjas"]);
+        CommandResult memory result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
 
         expect(result.isError()).toBeTrue();
     }
@@ -58,21 +60,15 @@ contract CommandsTest is Test {
     function testUnwrap() external {
         CommandResult memory result = commands.run(["echo", "'Hello World'"]);
 
-        bytes memory output = result.unwrap();
+        bytes memory output = result.unwrap().stdout;
 
         expect(string(output)).toEqual("'Hello World'");
     }
 
     function testUnwrapReverts() external {
-        CommandResult memory result = commands.run(["forge", "--hlkfshjfhjas"]);
+        CommandResult memory result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
 
-        bytes memory expectedError = bytes(
-            string.concat(
-                "Failed to run command forge --hlkfshjfhjas:\n\n",
-                "error: unexpected argument '--hlkfshjfhjas' found\n\n",
-                "Usage: forge <COMMAND>\n\n" "For more information, try '--help'.\n"
-            )
-        );
+        bytes memory expectedError = bytes("The command failed to execute");
 
         ctx.expectRevert(expectedError);
 
