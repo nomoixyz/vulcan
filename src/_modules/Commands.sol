@@ -4,6 +4,7 @@ pragma solidity >=0.8.13 <0.9.0;
 import {VmSafe} from "forge-std/Vm.sol";
 import {vulcan} from "./Vulcan.sol";
 import {Result, ResultType, Ok, Error} from "./Result.sol";
+import {removeSelector} from "../_utils/removeSelector.sol";
 
 /// @dev Struct used to hold command parameters. Useful for creating commands that can be run
 /// multiple times
@@ -177,8 +178,10 @@ library commands {
             output.command = Command(inputs);
 
             return Ok(output);
-        } catch {
-            return CommandError.notExecuted();
+        } catch Error(string memory message) {
+            return CommandError.notExecuted(message);
+        } catch (bytes memory message) {
+            return CommandError.notExecuted(abi.decode(removeSelector(message), (string)));
         }
     }
 
@@ -404,8 +407,9 @@ library commands {
 library CommandError {
     bytes32 constant COMMAND_FAILED = keccak256("COMMAND_FAILED");
 
-    function notExecuted() public pure returns (CommandResult memory) {
-        return CommandResult(Error(COMMAND_FAILED, "The command was not executed").toResult());
+    function notExecuted(string memory reason) public pure returns (CommandResult memory) {
+        string memory message = string.concat("The command was not executed: \"", reason, "\"");
+        return CommandResult(Error(COMMAND_FAILED, message).toResult());
     }
 }
 
