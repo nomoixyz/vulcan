@@ -449,5 +449,4 @@ function Ok(CommandOutput memory output) pure returns (CommandResult memory) {
 }
 
 using commands for Command global;
-using commands for CommandResult global;
 using LibCommandResult for CommandResult global;
