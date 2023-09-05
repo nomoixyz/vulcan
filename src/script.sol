@@ -18,6 +18,7 @@ import {fmt} from "./_modules/Fmt.sol";
 import {bound} from "./_utils/bound.sol";
 import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
+import {removeSelector} from "./_utils/removeSelector.sol";
 import {huff, Huffc} from "./_modules/Huff.sol";
 import {fe, Fe} from "./_modules/Fe.sol";
 

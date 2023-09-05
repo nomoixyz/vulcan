@@ -25,6 +25,7 @@ import {format} from "./_utils/format.sol";
 import {println} from "./_utils/println.sol";
 import {bound} from "./_utils/bound.sol";
 import {formatError} from "./_utils/formatError.sol";
+import {removeSelector} from "./_utils/removeSelector.sol";
 import {Ok} from "./_modules/Result.sol";
 
 // @dev Main entry point to Vulcan tests
