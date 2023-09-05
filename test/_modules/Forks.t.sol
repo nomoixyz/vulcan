@@ -1,6 +1,6 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, forks, Fork, CommandResult, println} from "../../src/test.sol";
+import {Test, expect, commands, forks, Fork, CommandResult, CommandOutput, println} from "../../src/test.sol";
 import {Sender} from "../mocks/Sender.sol";
 
 contract ForksTest is Test {
@@ -13,7 +13,9 @@ contract ForksTest is Test {
             ["--silent", "-H", "Content-Type: application/json", "-X", "POST", "--data", data, ENDPOINT]
         ).run();
 
-        if (res.stdout.length == 0) {
+        CommandOutput memory cmdOutput = res.unwrap();
+
+        if (cmdOutput.stdout.length == 0) {
             println("Skipping test because forking endpoint is not available");
             return;
         }

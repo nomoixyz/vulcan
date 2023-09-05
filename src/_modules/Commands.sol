@@ -3,6 +3,8 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import {VmSafe} from "forge-std/Vm.sol";
 import {vulcan} from "./Vulcan.sol";
+import {Result, ResultType, Ok, Error} from "./Result.sol";
+import {removeSelector} from "../_utils/removeSelector.sol";
 
 /// @dev Struct used to hold command parameters. Useful for creating commands that can be run
 /// multiple times
@@ -11,6 +13,10 @@ struct Command {
 }
 
 struct CommandResult {
+    Result _inner;
+}
+
+struct CommandOutput {
     int32 exitCode;
     bytes stdout;
     bytes stderr;
@@ -163,12 +169,20 @@ library commands {
     /// @param inputs An array of strings representing the parameters of the command.
     /// @return result The result of the command as a bytes array.
     function run(string[] memory inputs) internal returns (CommandResult memory result) {
-        VmSafe.FfiResult memory ffiResult = vulcan.hevm.tryFfi(inputs);
+        try vulcan.hevm.tryFfi(inputs) returns (VmSafe.FfiResult memory ffiResult) {
+            CommandOutput memory output;
 
-        result.exitCode = ffiResult.exit_code;
-        result.stdout = ffiResult.stdout;
-        result.stderr = ffiResult.stderr;
-        result.command = Command(inputs);
+            output.exitCode = ffiResult.exit_code;
+            output.stdout = ffiResult.stdout;
+            output.stderr = ffiResult.stderr;
+            output.command = Command(inputs);
+
+            return Ok(output);
+        } catch Error(string memory message) {
+            return CommandError.notExecuted(message);
+        } catch (bytes memory message) {
+            return CommandError.notExecuted(abi.decode(removeSelector(message), (string)));
+        }
     }
 
     function run(string[1] memory inputs) internal returns (CommandResult memory) {
@@ -249,41 +263,6 @@ library commands {
 
     function run(string[20] memory inputs) internal returns (CommandResult memory) {
         return _toDynamic(inputs).run();
-    }
-
-    /// @dev Checks if a `CommandResult` returned an `ok` exit code.
-    function isOk(CommandResult memory self) internal pure returns (bool) {
-        return self.exitCode == 0;
-    }
-
-    /// @dev Checks if a `CommandResult` struct is an error.
-    function isError(CommandResult memory self) internal pure returns (bool) {
-        return !self.isOk();
-    }
-
-    /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
-    function unwrap(CommandResult memory self) internal pure returns (bytes memory) {
-        string memory error;
-
-        if (self.isError()) {
-            error = string.concat("Failed to run command ", self.command.toString());
-
-            if (self.stderr.length > 0) {
-                error = string.concat(error, ":\n\n", string(self.stderr));
-            }
-        }
-
-        return expect(self, error);
-    }
-
-    /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
-    /// @param customError The error message that will be used when reverting.
-    function expect(CommandResult memory self, string memory customError) internal pure returns (bytes memory) {
-        if (self.isError()) {
-            revert(customError);
-        }
-
-        return self.stdout;
     }
 
     function _toDynamic(string[1] memory inputs) private pure returns (string[] memory _inputs) {
@@ -425,5 +404,53 @@ library commands {
     }
 }
 
+library CommandError {
+    bytes32 constant NOT_EXECUTED = keccak256("COMMAND_NOT_EXECUTED");
+
+    function notExecuted(string memory reason) public pure returns (CommandResult memory) {
+        string memory message = string.concat("The command was not executed: \"", reason, "\"");
+        return CommandResult(Error(NOT_EXECUTED, message).toResult());
+    }
+}
+
+library LibCommandResult {
+    /// @dev Checks if a `CommandResult` returned an `ok` exit code.
+    function isOk(CommandResult memory self) internal pure returns (bool) {
+        return self._inner.isOk();
+    }
+
+    /// @dev Checks if a `CommandResult` struct is an error.
+    function isError(CommandResult memory self) internal pure returns (bool) {
+        return self._inner.isError();
+    }
+
+    /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
+    function unwrap(CommandResult memory self) internal pure returns (CommandOutput memory) {
+        return abi.decode(self._inner.unwrap(), (CommandOutput));
+    }
+
+    /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
+    /// @param customError The error message that will be used when reverting.
+    function expect(CommandResult memory self, string memory customError)
+        internal
+        pure
+        returns (CommandOutput memory)
+    {
+        return abi.decode(self._inner.expect(customError), (CommandOutput));
+    }
+
+    function toValue(CommandResult memory self) internal pure returns (CommandOutput memory) {
+        return abi.decode(self._inner.toValue(), (CommandOutput));
+    }
+
+    function toError(CommandResult memory self) internal pure returns (Error memory) {
+        return self._inner.toError();
+    }
+}
+
+function Ok(CommandOutput memory output) pure returns (CommandResult memory) {
+    return CommandResult(Ok(abi.encode(output)));
+}
+
 using commands for Command global;
-using commands for CommandResult global;
+using LibCommandResult for CommandResult global;

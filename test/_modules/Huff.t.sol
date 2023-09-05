@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Test, expect, Command, CommandResult, console, huff, Huffc} from "../../src/test.sol";
@@ -54,6 +55,6 @@ contract HuffTest is Test {
 
     function testCompile() external {
         CommandResult memory initcode = huff.create().setFilePath("./test/mocks/Getter.huff").compile();
-        expect(initcode.stdout.length).toBeGreaterThan(0);
+        expect(initcode.unwrap().stdout.length).toBeGreaterThan(0);
     }
 }

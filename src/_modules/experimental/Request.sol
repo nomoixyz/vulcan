@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {Command, CommandResult, commands} from "../Commands.sol";
+import {Command, CommandResult, CommandOutput, commands} from "../Commands.sol";
 import {JsonObject, json as jsonModule, JsonResult, Ok} from "../Json.sol";
 
 import {Result, Error, StringResult, Ok} from "../Result.sol";
@@ -170,10 +170,12 @@ library LibRequestBuilder {
         CommandResult memory result = req.toCommand().run();
 
         if (result.isError()) {
-            return RequestError.commandFailed();
+            return ResponseResult(result.toError().toResult());
         }
 
-        (uint256 status, bytes memory _body) = abi.decode(result.stdout, (uint256, bytes));
+        CommandOutput memory cmdOutput = result.toValue();
+
+        (uint256 status, bytes memory _body) = abi.decode(cmdOutput.stdout, (uint256, bytes));
 
         return Ok(Response({url: req.url, status: status, body: _body}));
     }
