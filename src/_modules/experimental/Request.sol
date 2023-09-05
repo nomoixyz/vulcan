@@ -173,7 +173,7 @@ library LibRequestBuilder {
             return RequestError.commandFailed();
         }
 
-        CommandOutput memory cmdOutput = abi.decode(result._inner.unwrap(), (CommandOutput));
+        CommandOutput memory cmdOutput = result.toValue();
 
         (uint256 status, bytes memory _body) = abi.decode(cmdOutput.stdout, (uint256, bytes));
 

@@ -434,6 +434,14 @@ library LibCommandResult {
     {
         return abi.decode(self._inner.expect(customError), (CommandOutput));
     }
+
+    function toValue(CommandResult memory self) internal pure returns (CommandOutput memory) {
+        return abi.decode(self._inner.toValue(), (CommandOutput));
+    }
+
+    function toError(CommandResult memory self) internal pure returns (Error memory) {
+        return self._inner.toError();
+    }
 }
 
 function Ok(CommandOutput memory output) pure returns (CommandResult memory) {
