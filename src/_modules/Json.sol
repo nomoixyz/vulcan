@@ -200,13 +200,9 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return res The modified JsonObject struct.
-    function set(JsonObject memory obj, string memory key, bool value) internal returns (JsonResult memory res) {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
-
+    function set(JsonObject memory obj, string memory key, bool value) internal returns (JsonObject memory res) {
         obj.serialized = vulcan.hevm.serializeBool(obj.id, key, value);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -214,12 +210,9 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return res The modified JsonObject struct.
-    function set(JsonObject memory obj, string memory key, uint256 value) internal returns (JsonResult memory res) {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
+    function set(JsonObject memory obj, string memory key, uint256 value) internal returns (JsonObject memory res) {
         obj.serialized = vulcan.hevm.serializeUint(obj.id, key, value);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -227,12 +220,9 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return res The modified JsonObject struct.
-    function set(JsonObject memory obj, string memory key, int256 value) internal returns (JsonResult memory res) {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
+    function set(JsonObject memory obj, string memory key, int256 value) internal returns (JsonObject memory res) {
         obj.serialized = vulcan.hevm.serializeInt(obj.id, key, value);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -240,12 +230,9 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return res The modified JsonObject struct.
-    function set(JsonObject memory obj, string memory key, address value) internal returns (JsonResult memory res) {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
+    function set(JsonObject memory obj, string memory key, address value) internal returns (JsonObject memory res) {
         obj.serialized = vulcan.hevm.serializeAddress(obj.id, key, value);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -253,12 +240,9 @@ library json {
     /// @param key The key that will hold the `value`.
     /// @param value The value of `key`.
     /// @return res The modified JsonObject struct.
-    function set(JsonObject memory obj, string memory key, bytes32 value) internal returns (JsonResult memory res) {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
+    function set(JsonObject memory obj, string memory key, bytes32 value) internal returns (JsonObject memory res) {
         obj.serialized = vulcan.hevm.serializeBytes32(obj.id, key, value);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -268,13 +252,10 @@ library json {
     /// @return res The modified JsonObject struct.
     function set(JsonObject memory obj, string memory key, string memory value)
         internal
-        returns (JsonResult memory res)
+        returns (JsonObject memory res)
     {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
         obj.serialized = vulcan.hevm.serializeString(obj.id, key, value);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -284,13 +265,10 @@ library json {
     /// @return res The modified JsonObject struct.
     function set(JsonObject memory obj, string memory key, bytes memory value)
         internal
-        returns (JsonResult memory res)
+        returns (JsonObject memory res)
     {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
         obj.serialized = vulcan.hevm.serializeBytes(obj.id, key, value);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -300,13 +278,10 @@ library json {
     /// @return res The modified JsonObject struct.
     function set(JsonObject memory obj, string memory key, bool[] memory values)
         internal
-        returns (JsonResult memory res)
+        returns (JsonObject memory res)
     {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
         obj.serialized = vulcan.hevm.serializeBool(obj.id, key, values);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -316,13 +291,10 @@ library json {
     /// @return res The modified JsonObject struct.
     function set(JsonObject memory obj, string memory key, uint256[] memory values)
         internal
-        returns (JsonResult memory res)
+        returns (JsonObject memory res)
     {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
         obj.serialized = vulcan.hevm.serializeUint(obj.id, key, values);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -332,13 +304,10 @@ library json {
     /// @return res The modified JsonObject struct.
     function set(JsonObject memory obj, string memory key, int256[] memory values)
         internal
-        returns (JsonResult memory res)
+        returns (JsonObject memory res)
     {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
         obj.serialized = vulcan.hevm.serializeInt(obj.id, key, values);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -348,13 +317,10 @@ library json {
     /// @return res The modified JsonObject struct.
     function set(JsonObject memory obj, string memory key, address[] memory values)
         internal
-        returns (JsonResult memory res)
+        returns (JsonObject memory res)
     {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
         obj.serialized = vulcan.hevm.serializeAddress(obj.id, key, values);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -364,13 +330,10 @@ library json {
     /// @return res The modified JsonObject struct.
     function set(JsonObject memory obj, string memory key, bytes32[] memory values)
         internal
-        returns (JsonResult memory res)
+        returns (JsonObject memory res)
     {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
         obj.serialized = vulcan.hevm.serializeBytes32(obj.id, key, values);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -380,13 +343,10 @@ library json {
     /// @return res The modified JsonObject struct.
     function set(JsonObject memory obj, string memory key, string[] memory values)
         internal
-        returns (JsonResult memory res)
+        returns (JsonObject memory res)
     {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
         obj.serialized = vulcan.hevm.serializeString(obj.id, key, values);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -396,13 +356,10 @@ library json {
     /// @return res The modified JsonObject struct.
     function set(JsonObject memory obj, string memory key, bytes[] memory values)
         internal
-        returns (JsonResult memory res)
+        returns (JsonObject memory res)
     {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
         obj.serialized = vulcan.hevm.serializeBytes(obj.id, key, values);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -412,13 +369,10 @@ library json {
     /// @return res The modified JsonObject struct.
     function set(JsonObject memory obj, string memory key, JsonObject memory value)
         internal
-        returns (JsonResult memory res)
+        returns (JsonObject memory res)
     {
-        if (obj.isImmutable()) {
-            return JsonError.immutableJson();
-        }
         obj.serialized = vulcan.hevm.serializeString(obj.id, key, value.serialized);
-        return Ok(obj);
+        return obj;
     }
 
     /// @dev Writes a JsonObject struct to a file.
