@@ -405,11 +405,11 @@ library commands {
 }
 
 library CommandError {
-    bytes32 constant COMMAND_FAILED = keccak256("COMMAND_FAILED");
+    bytes32 constant NOT_EXECUTED = keccak256("COMMAND_NOT_EXECUTED");
 
     function notExecuted(string memory reason) public pure returns (CommandResult memory) {
         string memory message = string.concat("The command was not executed: \"", reason, "\"");
-        return CommandResult(Error(COMMAND_FAILED, message).toResult());
+        return CommandResult(Error(NOT_EXECUTED, message).toResult());
     }
 }
 
