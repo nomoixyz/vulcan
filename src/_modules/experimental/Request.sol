@@ -185,11 +185,13 @@ library LibRequestBuilder {
     }
 
     function body(RequestBuilder memory self, string memory _body) internal pure returns (RequestBuilder memory) {
-        if (self.request.isOk()) {
-            Request memory req = self.request.toValue();
-            req.body = bytes(_body);
-            self.request = Ok(req);
+        if (self.request.isError()) {
+            return self;
         }
+
+        Request memory req = self.request.toValue();
+        req.body = bytes(_body);
+        self.request = Ok(req);
         return self;
     }
 
@@ -215,26 +217,38 @@ library LibRequestBuilder {
         pure
         returns (RequestBuilder memory)
     {
-        if (self.request.isOk()) {
-            Request memory req = self.request.toValue();
-            uint256 len = req.headers.length;
-            req.headers = new Header[](len + 1);
-            for (uint256 i; i < len; i++) {
-                req.headers[i] = req.headers[i];
-            }
-            req.headers[len] = Header({key: key, value: value});
-            self.request = Ok(req);
+        if (self.request.isError()) {
+            return self;
         }
+
+        Request memory req = self.request.toValue();
+        uint256 len = req.headers.length;
+        req.headers = new Header[](len + 1);
+        for (uint256 i; i < len; i++) {
+            req.headers[i] = req.headers[i];
+        }
+        req.headers[len] = Header({key: key, value: value});
+        self.request = Ok(req);
         return self;
     }
 
     function json(RequestBuilder memory self, JsonObject memory obj) internal pure returns (RequestBuilder memory) {
-        return self.json(obj.serialized);
+        // We assume the json has already been validated
+        return self.header("Content-Type", "application/json").body(obj.serialized);
     }
 
     function json(RequestBuilder memory self, string memory serialized) internal pure returns (RequestBuilder memory) {
-        // TODO: parse json and set error if it fails
-        return self.header("Content-Type", "application/json").body(serialized);
+        if (self.request.isError()) {
+            return self;
+        }
+
+        JsonResult memory res = jsonModule.create(serialized);
+        if (res.isError()) {
+            self.request = RequestResult(res._inner);
+            return self;
+        }
+
+        return self.json(res.toValue());
     }
 }
 
@@ -279,12 +293,13 @@ library LibRequest {
 }
 
 library LibResponse {
-    // TODO: validate response and return error if there are issues
     function json(Response memory self) internal pure returns (JsonResult memory) {
-        return Ok(jsonModule.create(string(self.body)));
+        // create() will validate the json
+        return jsonModule.create(string(self.body));
     }
 
     function text(Response memory self) internal pure returns (StringResult memory) {
+        // TODO: maybe do some encoding validation? or check not empty?
         return Ok(string(self.body));
     }
 

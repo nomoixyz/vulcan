@@ -27,6 +27,26 @@ contract RequestTest is Test {
         expect(obj.getString(".authenticated")).toEqual("true");
     }
 
+    function testJsonBody() external {
+        RequestClient memory client = request.create();
+
+        Response memory res = client.post("https://httpbin.org/post").json('{ "foo": "bar" }').send().unwrap();
+
+        expect(res.status).toEqual(200);
+
+        JsonObject memory obj = res.json().unwrap();
+
+        expect(obj.getString(".json.foo")).toEqual("bar");
+    }
+
+    function testJsonBodyFail() external {
+        RequestClient memory client = request.create();
+
+        ResponseResult memory res = client.post("https://httpbin.org/post").json('{ "foo": "bar" ').send();
+
+        expect(res.isError()).toEqual(true);
+    }
+
     function testRequestFail() external {
         Response memory res = request.get("https://httpbin.org/404").unwrap();
         expect(res.status).toEqual(404);
