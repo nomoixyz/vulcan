@@ -170,7 +170,7 @@ library LibRequestBuilder {
         CommandResult memory result = req.toCommand().run();
 
         if (result.isError()) {
-            return RequestError.commandFailed();
+            return ResponseResult(result.toError().toResult());
         }
 
         CommandOutput memory cmdOutput = result.toValue();
