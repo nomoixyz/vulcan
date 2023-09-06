@@ -3,7 +3,8 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import {VmSafe} from "forge-std/Vm.sol";
 import {vulcan} from "./Vulcan.sol";
-import {Result, ResultType, Ok, Error} from "./Result.sol";
+import {Result, ResultType, Ok} from "./Result.sol";
+import {LibError, Error} from "./Error.sol";
 import {removeSelector} from "../_utils/removeSelector.sol";
 
 /// @dev Struct used to hold command parameters. Useful for creating commands that can be run
@@ -12,9 +13,7 @@ struct Command {
     string[] inputs;
 }
 
-struct CommandResult {
-    Result _inner;
-}
+type CommandResult is bytes32;
 
 struct CommandOutput {
     int32 exitCode;
@@ -25,6 +24,7 @@ struct CommandOutput {
 
 library commands {
     using commands for *;
+    using CommandError for *;
 
     /// @dev Creates a new 'Command' struct with empty arguments.
     /// @return cmd A new empty 'Command' struct.
@@ -161,14 +161,14 @@ library commands {
     /// @dev Runs a command using the specified `Command` struct as parameters and returns the result.
     /// @param self The `Command` struct that holds the parameters of the command.
     /// @return The result of the command as a bytes array.
-    function run(Command memory self) internal returns (CommandResult memory) {
+    function run(Command memory self) internal returns (CommandResult) {
         return self.inputs.run();
     }
 
     /// @dev Runs a command with the specified `inputs` as parameters and returns the result.
     /// @param inputs An array of strings representing the parameters of the command.
     /// @return result The result of the command as a bytes array.
-    function run(string[] memory inputs) internal returns (CommandResult memory result) {
+    function run(string[] memory inputs) internal returns (CommandResult result) {
         try vulcan.hevm.tryFfi(inputs) returns (VmSafe.FfiResult memory ffiResult) {
             CommandOutput memory output;
 
@@ -179,89 +179,90 @@ library commands {
 
             return Ok(output);
         } catch Error(string memory message) {
-            return CommandError.notExecuted(message);
-        } catch (bytes memory message) {
-            return CommandError.notExecuted(abi.decode(removeSelector(message), (string)));
+            return CommandError.NotExecuted(message).toCommandResult();
+        } catch (bytes memory data) {
+            string memory message = abi.decode(removeSelector(data), (string));
+            return CommandError.NotExecuted(message).toCommandResult();
         }
     }
 
-    function run(string[1] memory inputs) internal returns (CommandResult memory) {
+    function run(string[1] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[2] memory inputs) internal returns (CommandResult memory) {
+    function run(string[2] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[3] memory inputs) internal returns (CommandResult memory) {
+    function run(string[3] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[4] memory inputs) internal returns (CommandResult memory) {
+    function run(string[4] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[5] memory inputs) internal returns (CommandResult memory) {
+    function run(string[5] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[6] memory inputs) internal returns (CommandResult memory) {
+    function run(string[6] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[7] memory inputs) internal returns (CommandResult memory) {
+    function run(string[7] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[8] memory inputs) internal returns (CommandResult memory) {
+    function run(string[8] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[9] memory inputs) internal returns (CommandResult memory) {
+    function run(string[9] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[10] memory inputs) internal returns (CommandResult memory) {
+    function run(string[10] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[11] memory inputs) internal returns (CommandResult memory) {
+    function run(string[11] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[12] memory inputs) internal returns (CommandResult memory) {
+    function run(string[12] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[13] memory inputs) internal returns (CommandResult memory) {
+    function run(string[13] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[14] memory inputs) internal returns (CommandResult memory) {
+    function run(string[14] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[15] memory inputs) internal returns (CommandResult memory) {
+    function run(string[15] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[16] memory inputs) internal returns (CommandResult memory) {
+    function run(string[16] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[17] memory inputs) internal returns (CommandResult memory) {
+    function run(string[17] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[18] memory inputs) internal returns (CommandResult memory) {
+    function run(string[18] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[19] memory inputs) internal returns (CommandResult memory) {
+    function run(string[19] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
-    function run(string[20] memory inputs) internal returns (CommandResult memory) {
+    function run(string[20] memory inputs) internal returns (CommandResult) {
         return _toDynamic(inputs).run();
     }
 
@@ -405,51 +406,64 @@ library commands {
 }
 
 library CommandError {
-    bytes32 constant NOT_EXECUTED = keccak256("COMMAND_NOT_EXECUTED");
+    using LibError for *;
 
-    function notExecuted(string memory reason) public pure returns (CommandResult memory) {
+    function NotExecuted(string memory reason) internal pure returns (Error) {
         string memory message = string.concat("The command was not executed: \"", reason, "\"");
-        return CommandResult(Error(NOT_EXECUTED, message).toResult());
+        return NotExecuted.encodeError(message, reason);
+    }
+
+    function toCommandResult(Error self) internal pure returns (CommandResult) {
+        return CommandResult.wrap(Result.unwrap(self.toResult()));
     }
 }
 
 library LibCommandResult {
-    /// @dev Checks if a `CommandResult` returned an `ok` exit code.
-    function isOk(CommandResult memory self) internal pure returns (bool) {
-        return self._inner.isOk();
+    function isOk(CommandResult self) internal pure returns (bool) {
+        return self.asResult().isOk();
     }
 
-    /// @dev Checks if a `CommandResult` struct is an error.
-    function isError(CommandResult memory self) internal pure returns (bool) {
-        return self._inner.isError();
+    function isError(CommandResult self) internal pure returns (bool) {
+        return self.asResult().isError();
     }
 
-    /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
-    function unwrap(CommandResult memory self) internal pure returns (CommandOutput memory) {
-        return abi.decode(self._inner.unwrap(), (CommandOutput));
+    function unwrap(CommandResult self) internal pure returns (CommandOutput memory val) {
+        bytes32 _val = self.asResult().unwrap();
+        assembly {
+            val := _val
+        }
     }
 
-    /// @dev Returns the output of a `CommandResult` or reverts if the result was an error.
-    /// @param customError The error message that will be used when reverting.
-    function expect(CommandResult memory self, string memory customError)
-        internal
-        pure
-        returns (CommandOutput memory)
-    {
-        return abi.decode(self._inner.expect(customError), (CommandOutput));
+    function expect(CommandResult self, string memory err) internal pure returns (CommandOutput memory) {
+        if (self.isError()) {
+            revert(err);
+        }
+
+        return self.toValue();
     }
 
-    function toValue(CommandResult memory self) internal pure returns (CommandOutput memory) {
-        return abi.decode(self._inner.toValue(), (CommandOutput));
+    function toError(CommandResult self) internal pure returns (Error) {
+        return self.asResult().toError();
     }
 
-    function toError(CommandResult memory self) internal pure returns (Error memory) {
-        return self._inner.toError();
+    function toValue(CommandResult self) internal pure returns (CommandOutput memory val) {
+        bytes32 _val = self.asResult().toValue();
+        assembly {
+            val := _val
+        }
+    }
+
+    function asResult(CommandResult self) internal pure returns (Result) {
+        return Result.wrap(CommandResult.unwrap(self));
     }
 }
 
-function Ok(CommandOutput memory output) pure returns (CommandResult memory) {
-    return CommandResult(Ok(abi.encode(output)));
+function Ok(CommandOutput memory value) pure returns (CommandResult) {
+    bytes32 _value;
+    assembly {
+        _value := value
+    }
+    return CommandResult.wrap(Result.unwrap(Ok(_value)));
 }
 
 using commands for Command global;

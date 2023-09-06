@@ -42,7 +42,7 @@ contract RequestTest is Test {
     function testJsonBodyFail() external {
         RequestClient memory client = request.create();
 
-        ResponseResult memory res = client.post("https://httpbin.org/post").json('{ "foo": "bar" ').send();
+        ResponseResult res = client.post("https://httpbin.org/post").json('{ "foo": "bar" ').send();
 
         expect(res.isError()).toEqual(true);
     }

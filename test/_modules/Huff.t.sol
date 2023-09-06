@@ -54,7 +54,7 @@ contract HuffTest is Test {
     }
 
     function testCompile() external {
-        CommandResult memory initcode = huff.create().setFilePath("./test/mocks/Getter.huff").compile();
+        CommandResult initcode = huff.create().setFilePath("./test/mocks/Getter.huff").compile();
         expect(initcode.unwrap().stdout.length).toBeGreaterThan(0);
     }
 }

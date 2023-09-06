@@ -9,7 +9,7 @@ contract ForksTest is Test {
     modifier skipIfEndpointFails() {
         string memory data = '{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":67}';
 
-        CommandResult memory res = commands.create("curl").args(
+        CommandResult res = commands.create("curl").args(
             ["--silent", "-H", "Content-Type: application/json", "-X", "POST", "--data", data, ENDPOINT]
         ).run();
 

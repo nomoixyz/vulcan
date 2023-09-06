@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Error, Result, LibResult, Ok} from "./Result.sol";
+import {Result, LibResult, Ok} from "./Result.sol";
+import {LibError, Error} from "./Error.sol";
 import "./Accounts.sol";
 import "./Vulcan.sol";
 
@@ -10,55 +11,76 @@ struct JsonObject {
     string serialized;
 }
 
-struct JsonResult {
-    Result _inner;
-}
+type JsonResult is bytes32;
 
 library JsonError {
-    bytes32 constant INVALID_JSON = keccak256("INVALID_JSON");
-    bytes32 constant IMMUTABLE_JSON = keccak256("IMMUTABLE_JSON");
+    using LibError for *;
 
-    function invalid() internal pure returns (JsonResult memory res) {
-        return JsonResult(Error(INVALID_JSON, "Invalid json").toResult());
+    function Invalid() internal pure returns (Error) {
+        return Invalid.encodeError("Invalid json");
     }
 
-    function immutableJson() internal pure returns (JsonResult memory res) {
-        return JsonResult(Error(IMMUTABLE_JSON, "Json object is immutable").toResult());
+    function Immutable() internal pure returns (Error) {
+        return Immutable.encodeError("Json object is immutable");
+    }
+
+    function toJsonResult(Error self) internal pure returns (JsonResult) {
+        return JsonResult.wrap(Result.unwrap(self.toResult()));
     }
 }
 
 library LibJsonResult {
-    function isOk(JsonResult memory self) internal pure returns (bool) {
-        return self._inner.isOk();
+    function isOk(JsonResult self) internal pure returns (bool) {
+        return self.asResult().isOk();
     }
 
-    function isError(JsonResult memory self) internal pure returns (bool) {
-        return self._inner.isError();
+    function isError(JsonResult self) internal pure returns (bool) {
+        return self.asResult().isError();
     }
 
-    function unwrap(JsonResult memory self) internal pure returns (JsonObject memory) {
-        return abi.decode(self._inner.unwrap(), (JsonObject));
+    function unwrap(JsonResult self) internal pure returns (JsonObject memory val) {
+        bytes32 _val = self.asResult().unwrap();
+        assembly {
+            val := _val
+        }
     }
 
-    function expect(JsonResult memory self, string memory err) internal pure returns (JsonObject memory) {
-        return abi.decode(self._inner.expect(err), (JsonObject));
+    function expect(JsonResult self, string memory err) internal pure returns (JsonObject memory) {
+        if (self.isError()) {
+            revert(err);
+        }
+
+        return self.toValue();
     }
 
-    function toError(JsonResult memory self) internal pure returns (Error memory) {
-        return self._inner.toError();
+    function toError(JsonResult self) internal pure returns (Error) {
+        return self.asResult().toError();
     }
 
-    function toValue(JsonResult memory self) internal pure returns (JsonObject memory) {
-        return abi.decode(self._inner.toValue(), (JsonObject));
+    function toValue(JsonResult self) internal pure returns (JsonObject memory val) {
+        bytes32 _val = self.asResult().toValue();
+
+        assembly {
+            val := _val
+        }
+    }
+
+    function asResult(JsonResult self) internal pure returns (Result) {
+        return Result.wrap(JsonResult.unwrap(self));
     }
 }
 
-function Ok(JsonObject memory value) pure returns (JsonResult memory) {
-    return JsonResult(Ok(abi.encode(value)));
+function Ok(JsonObject memory value) pure returns (JsonResult) {
+    bytes32 _value;
+    assembly {
+        _value := value
+    }
+    return JsonResult.wrap(Result.unwrap(Ok(_value)));
 }
 
 library json {
     using json for JsonObject;
+    using JsonError for Error;
 
     /// @dev Parses a json object struct by key and returns an ABI encoded value.
     /// @param jsonObj The json object struct.
@@ -212,9 +234,9 @@ library json {
 
     /// @dev Creates a new JsonObject struct.
     /// @return The JsonObject struct.
-    function create(string memory obj) internal pure returns (JsonResult memory) {
+    function create(string memory obj) internal pure returns (JsonResult) {
         if (!isValid(obj)) {
-            return JsonError.invalid();
+            return JsonError.Invalid().toJsonResult();
         }
 
         return Ok(JsonObject({id: "", serialized: obj}));

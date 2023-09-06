@@ -4,7 +4,8 @@ pragma solidity ^0.8.13;
 import {Command, CommandResult, CommandOutput, commands} from "../Commands.sol";
 import {JsonObject, json as jsonModule, JsonResult, Ok} from "../Json.sol";
 
-import {Result, Error, StringResult, Ok} from "../Result.sol";
+import {Result, BytesResult, StringResult, Ok} from "../Result.sol";
+import {LibError, Error} from "../Error.sol";
 
 enum Method {
     GET,
@@ -36,9 +37,7 @@ struct Request {
     bytes body;
 }
 
-struct RequestResult {
-    Result _inner;
-}
+type RequestResult is bytes32;
 
 // TODO: headers, etc
 struct Response {
@@ -47,9 +46,7 @@ struct Response {
     bytes body;
 }
 
-struct ResponseResult {
-    Result _inner;
-}
+type ResponseResult is bytes32;
 
 library request {
     using request for *;
@@ -57,68 +54,104 @@ library request {
     // Return an empty client
     function create() internal pure returns (RequestClient memory) {}
 
-    function get(string memory url) internal returns (ResponseResult memory) {
+    function get(string memory url) internal returns (ResponseResult) {
         return create().get(url).send();
     }
 }
 
 library RequestError {
-    bytes32 constant COMMAND_FAILED = keccak256("COMMAND_FAILED");
+    using LibError for *;
 
-    function commandFailed() public pure returns (ResponseResult memory) {
-        return ResponseResult(Error(COMMAND_FAILED, "Command failed").toResult());
+    function CommandFailed() internal pure returns (Error) {
+        return CommandFailed.encodeError("Command failed");
+    }
+
+    function toRequestResult(Error self) internal pure returns (RequestResult) {
+        return RequestResult.wrap(Result.unwrap(self.toResult()));
+    }
+
+    function toResponseResult(Error self) internal pure returns (ResponseResult) {
+        return ResponseResult.wrap(Result.unwrap(self.toResult()));
     }
 }
 
 library LibRequestResult {
-    function isOk(RequestResult memory self) internal pure returns (bool) {
-        return self._inner.isOk();
+    function isOk(RequestResult self) internal pure returns (bool) {
+        return self.asResult().isOk();
     }
 
-    function isError(RequestResult memory self) internal pure returns (bool) {
-        return self._inner.isError();
+    function isError(RequestResult self) internal pure returns (bool) {
+        return self.asResult().isError();
     }
 
-    function unwrap(RequestResult memory self) internal pure returns (Request memory) {
-        return abi.decode(self._inner.unwrap(), (Request));
+    function unwrap(RequestResult self) internal pure returns (Request memory val) {
+        bytes32 _val = self.asResult().unwrap();
+        assembly {
+            val := _val
+        }
     }
 
-    function expect(RequestResult memory self, string memory err) internal pure returns (Request memory) {
-        return abi.decode(self._inner.expect(err), (Request));
+    function expect(RequestResult self, string memory err) internal pure returns (Request memory) {
+        if (self.isError()) {
+            revert(err);
+        }
+
+        return self.toValue();
     }
 
-    function toError(RequestResult memory self) internal pure returns (Error memory) {
-        return self._inner.toError();
+    function toError(RequestResult self) internal pure returns (Error) {
+        return self.asResult().toError();
     }
 
-    function toValue(RequestResult memory self) internal pure returns (Request memory) {
-        return abi.decode(self._inner.toValue(), (Request));
+    function toValue(RequestResult self) internal pure returns (Request memory val) {
+        bytes32 _val = self.asResult().toValue();
+        assembly {
+            val := _val
+        }
+    }
+
+    function asResult(RequestResult self) internal pure returns (Result) {
+        return Result.wrap(RequestResult.unwrap(self));
     }
 }
 
 library LibResponseResult {
-    function isOk(ResponseResult memory self) internal pure returns (bool) {
-        return self._inner.isOk();
+    function isOk(ResponseResult self) internal pure returns (bool) {
+        return self.asResult().isOk();
     }
 
-    function isError(ResponseResult memory self) internal pure returns (bool) {
-        return self._inner.isError();
+    function isError(ResponseResult self) internal pure returns (bool) {
+        return self.asResult().isError();
     }
 
-    function unwrap(ResponseResult memory self) internal pure returns (Response memory) {
-        return abi.decode(self._inner.unwrap(), (Response));
+    function unwrap(ResponseResult self) internal pure returns (Response memory val) {
+        bytes32 _val = self.asResult().unwrap();
+        assembly {
+            val := _val
+        }
     }
 
-    function expect(ResponseResult memory self, string memory err) internal pure returns (Response memory) {
-        return abi.decode(self._inner.expect(err), (Response));
+    function expect(ResponseResult self, string memory err) internal pure returns (Response memory) {
+        if (self.isError()) {
+            revert(err);
+        }
+
+        return self.toValue();
     }
 
-    function toError(ResponseResult memory self) internal pure returns (Error memory) {
-        return self._inner.toError();
+    function toError(ResponseResult self) internal pure returns (Error) {
+        return self.asResult().toError();
     }
 
-    function toValue(ResponseResult memory self) internal pure returns (Response memory) {
-        return abi.decode(self._inner.toValue(), (Response));
+    function toValue(ResponseResult self) internal pure returns (Response memory val) {
+        bytes32 _val = self.asResult().toValue();
+        assembly {
+            val := _val
+        }
+    }
+
+    function asResult(ResponseResult self) internal pure returns (Result) {
+        return Result.wrap(ResponseResult.unwrap(self));
     }
 }
 
@@ -146,6 +179,7 @@ library LibRequestClient {
 
 library LibRequestBuilder {
     using request for *;
+    using RequestError for *;
 
     function create(RequestClient memory client, Method method, string memory url)
         internal
@@ -156,21 +190,21 @@ library LibRequestBuilder {
         builder.request = Ok(Request({method: method, url: url, headers: new Header[](0), body: new bytes(0)}));
     }
 
-    function send(RequestBuilder memory self) internal returns (ResponseResult memory) {
-        RequestResult memory reqResult = self.build();
+    function send(RequestBuilder memory self) internal returns (ResponseResult) {
+        RequestResult reqResult = self.build();
 
         if (reqResult.isError()) {
-            return ResponseResult(reqResult.toError().toResult());
+            return reqResult.toError().toResponseResult();
         }
 
         Request memory req = reqResult.toValue();
 
         (string(req.toCommand().toString()));
 
-        CommandResult memory result = req.toCommand().run();
+        CommandResult result = req.toCommand().run();
 
         if (result.isError()) {
-            return ResponseResult(result.toError().toResult());
+            return result.toError().toResponseResult();
         }
 
         CommandOutput memory cmdOutput = result.toValue();
@@ -180,7 +214,7 @@ library LibRequestBuilder {
         return Ok(Response({url: req.url, status: status, body: _body}));
     }
 
-    function build(RequestBuilder memory self) internal pure returns (RequestResult memory) {
+    function build(RequestBuilder memory self) internal pure returns (RequestResult) {
         return self.request;
     }
 
@@ -242,9 +276,9 @@ library LibRequestBuilder {
             return self;
         }
 
-        JsonResult memory res = jsonModule.create(serialized);
+        JsonResult res = jsonModule.create(serialized);
         if (res.isError()) {
-            self.request = RequestResult(res._inner);
+            self.request = res.toError().toRequestResult();
             return self;
         }
 
@@ -293,12 +327,12 @@ library LibRequest {
 }
 
 library LibResponse {
-    function json(Response memory self) internal pure returns (JsonResult memory) {
+    function json(Response memory self) internal pure returns (JsonResult) {
         // create() will validate the json
         return jsonModule.create(string(self.body));
     }
 
-    function text(Response memory self) internal pure returns (StringResult memory) {
+    function text(Response memory self) internal pure returns (StringResult) {
         // TODO: maybe do some encoding validation? or check not empty?
         return Ok(string(self.body));
     }
@@ -308,12 +342,20 @@ library LibResponse {
     // }
 }
 
-function Ok(Request memory value) pure returns (RequestResult memory) {
-    return RequestResult(Ok(abi.encode(value)));
+function Ok(Request memory value) pure returns (RequestResult) {
+    bytes32 _value;
+    assembly {
+        _value := value
+    }
+    return RequestResult.wrap(Result.unwrap(Ok(_value)));
 }
 
-function Ok(Response memory value) pure returns (ResponseResult memory) {
-    return ResponseResult(Ok(abi.encode(value)));
+function Ok(Response memory value) pure returns (ResponseResult) {
+    bytes32 _value;
+    assembly {
+        _value := value
+    }
+    return ResponseResult.wrap(Result.unwrap(Ok(_value)));
 }
 
 using LibRequestClient for RequestClient global;
