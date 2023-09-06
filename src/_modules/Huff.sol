@@ -32,7 +32,7 @@ library huff {
         });
     }
 
-    function compile(Huffc memory self) internal returns (CommandResult memory) {
+    function compile(Huffc memory self) internal returns (CommandResult) {
         return self.toCommand().run();
     }
 

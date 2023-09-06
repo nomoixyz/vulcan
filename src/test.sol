@@ -5,7 +5,7 @@ import {console} from "./_modules/Console.sol";
 import {vulcan, Log} from "./_modules/Vulcan.sol";
 import {any} from "./_modules/Any.sol";
 import {accounts} from "./_modules/Accounts.sol";
-import {commands, Command, CommandResult, CommandOutput} from "./_modules/Commands.sol";
+import {commands, Command, CommandResult, CommandOutput, CommandError} from "./_modules/Commands.sol";
 import {ctx} from "./_modules/Context.sol";
 import {env} from "./_modules/Env.sol";
 import {events} from "./_modules/Events.sol";
@@ -27,6 +27,7 @@ import {bound} from "./_utils/bound.sol";
 import {formatError} from "./_utils/formatError.sol";
 import {removeSelector} from "./_utils/removeSelector.sol";
 import {Ok} from "./_modules/Result.sol";
+import {Error} from "./_modules/Error.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test is InvariantsBase {

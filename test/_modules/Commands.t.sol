@@ -1,7 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, Command, CommandResult, ctx} from "../../src/test.sol";
+import {
+    Test,
+    expect,
+    commands,
+    Command,
+    CommandResult,
+    CommandOutput,
+    CommandError,
+    Error,
+    ctx,
+    println
+} from "../../src/test.sol";
 
 contract CommandsTest is Test {
     using commands for *;
@@ -14,6 +25,7 @@ contract CommandsTest is Test {
 
     function testItCanRunCommands() external {
         string[2] memory inputs = ["echo", "'Hello, World!'"];
+
         Command memory cmd = commands.create(inputs[0]).arg(inputs[1]);
 
         expect(string(cmd.run().unwrap().stdout)).toEqual(inputs[1]);
@@ -22,7 +34,7 @@ contract CommandsTest is Test {
     function testItCanRunCommandsDirectly() external {
         string[2] memory inputs = ["echo", "'Hello, World!'"];
 
-        CommandResult memory result = commands.run(inputs);
+        CommandResult result = commands.run(inputs);
 
         expect(string(result.unwrap().stdout)).toEqual(inputs[1]);
     }
@@ -34,31 +46,31 @@ contract CommandsTest is Test {
     }
 
     function testIsOk() external {
-        CommandResult memory result = commands.run(["echo", "'Hello World'"]);
+        CommandResult result = commands.run(["echo", "'Hello World'"]);
 
         expect(result.isOk()).toBeTrue();
     }
 
     function testIsNotOk() external {
-        CommandResult memory result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
+        CommandResult result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
 
         expect(result.isOk()).toBeFalse();
     }
 
     function testIsError() external {
-        CommandResult memory result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
+        CommandResult result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
 
         expect(result.isError()).toBeTrue();
     }
 
     function testIsNotError() external {
-        CommandResult memory result = commands.run(["echo", "'Hello World'"]);
+        CommandResult result = commands.run(["echo", "'Hello World'"]);
 
         expect(result.isError()).toBeFalse();
     }
 
     function testUnwrap() external {
-        CommandResult memory result = commands.run(["echo", "'Hello World'"]);
+        CommandResult result = commands.run(["echo", "'Hello World'"]);
 
         bytes memory output = result.unwrap().stdout;
 
@@ -66,7 +78,7 @@ contract CommandsTest is Test {
     }
 
     function testUnwrapReverts() external {
-        CommandResult memory result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
+        CommandResult result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
 
         bytes memory expectedError =
             bytes("The command was not executed: \"Failed to execute command: No such file or directory (os error 2)\"");
@@ -74,5 +86,11 @@ contract CommandsTest is Test {
         ctx.expectRevert(expectedError);
 
         result.unwrap();
+    }
+
+    function testCommandError() external {
+        Error error = CommandError.NotExecuted("Test");
+
+        expect(error.matches(CommandError.NotExecuted)).toBeTrue();
     }
 }
