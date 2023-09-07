@@ -143,8 +143,14 @@ library fs {
 
     /// @dev Deletes the file on `path`.
     /// @param path The path to the file.
-    function removeFile(string memory path) internal {
-        vulcan.hevm.removeFile(path);
+    function removeFile(string memory path) internal returns (EmptyResult) {
+        try vulcan.hevm.removeFile(path) {
+            return Ok();
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToRemoveFile(reason).toEmptyResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToRemoveFile(abi.decode(removeSelector(reason), (string))).toEmptyResult();
+        }
     }
 
     /// @dev Copies a file from `origin` to `target`.
@@ -160,7 +166,7 @@ library fs {
         EmptyResult writeResult = writeFileBinary(target, readResult.toValue());
 
         if (writeResult.isError()) {
-            return writeResult.toError().toEmptyResult();
+            return writeResult;
         }
 
         return Ok();
@@ -169,9 +175,20 @@ library fs {
     /// @dev Moves a file from `origin` to `target`.
     /// @param origin The file to be moved.
     /// @param target The destination of the data.
-    function moveFile(string memory origin, string memory target) internal {
-        copyFile(origin, target);
-        removeFile(origin);
+    function moveFile(string memory origin, string memory target) internal returns (EmptyResult) {
+        EmptyResult copyResult = copyFile(origin, target);
+
+        if (copyResult.isError()) {
+            return copyResult;
+        }
+
+        EmptyResult removeResult = removeFile(origin);
+
+        if (removeResult.isError()) {
+            return removeResult;
+        }
+
+        return Ok();
     }
 
     /// @dev Checks if a file or directory exists.
@@ -197,15 +214,28 @@ library fs {
     /// @dev Obtains the creation code from an artifact file located at `path`
     /// @param path The file or directory to check.
     /// @return The creation bytecode.
-    function getCode(string memory path) internal view returns (bytes memory) {
-        return vulcan.hevm.getCode(path);
+    function getCode(string memory path) internal view returns (BytesResult) {
+        try vulcan.hevm.getCode(path) returns (bytes memory code) {
+            return Ok(code);
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToGetCode(reason).toBytesResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToGetCode(abi.decode(removeSelector(reason), (string))).toBytesResult();
+        }
     }
 
     /// @dev Obtains the deployed code from an artifact file located at `path`
     /// @param path The file or directory to check.
     /// @return The deployed bytecode.
-    function getDeployedCode(string memory path) internal view returns (bytes memory) {
-        return vulcan.hevm.getDeployedCode(path);
+    function getDeployedCode(string memory path) internal view returns (BytesResult) {
+        try vulcan.hevm.getDeployedCode(path) returns (bytes memory code) {
+            return Ok(code);
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToGetCode(reason).toBytesResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToGetCode(abi.decode(removeSelector(reason),
+                                                       (string))).toBytesResult();
+        }
     }
 }
 
@@ -242,6 +272,14 @@ library FsErrors {
 
     function FailedToCloseFile(string memory reason) internal pure returns (Error) {
         return FailedToCloseFile.encodeError("Failed to close file", reason);
+    }
+
+    function FailedToRemoveFile(string memory reason) internal pure returns (Error) {
+        return FailedToRemoveFile.encodeError("Failed to remove file", reason);
+    }
+
+    function FailedToGetCode(string memory reason) internal pure returns (Error) {
+        return FailedToGetCode.encodeError("Failed to get code", reason);
     }
 
     function toStringResult(Error self) internal pure returns (StringResult) {
