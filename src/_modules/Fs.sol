@@ -62,10 +62,18 @@ library fs {
     /// @dev Obtains the metadata of the specified file or directory.
     /// @param fileOrDir The path to the file or directory.
     /// @return data The metadata of the file or directory.
-    function metadata(string memory fileOrDir) internal view returns (FsMetadata memory data) {
-        Hevm.FsMetadata memory md = vulcan.hevm.fsMetadata(fileOrDir);
-        assembly {
-            data := md
+    function metadata(string memory fileOrDir) internal view returns (FsMetadataResult) {
+        try vulcan.hevm.fsMetadata(fileOrDir) returns (Hevm.FsMetadata memory md) {
+            FsMetadata memory data;
+            assembly {
+                data := md
+            }
+
+            return Ok(data);
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToReadMetadata(reason).toFsMetadataResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToReadMetadata(abi.decode(removeSelector(reason), (string))).toFsMetadataResult();
         }
     }
 
@@ -182,6 +190,10 @@ library FsErrors {
         return FailedToReadLine.encodeError("Failed to read line", reason);
     }
 
+    function FailedToReadMetadata(string memory reason) internal pure returns (Error) {
+        return FailedToReadMetadata.encodeError("Failed to read metadata", reason);
+    }
+
     function FailedToGetProjectRoot(string memory reason) internal pure returns (Error) {
         return FailedToGetProjectRoot.encodeError("Failed to get project root", reason);
     }
@@ -201,4 +213,16 @@ library FsErrors {
     function toBoolResult(Error self) internal pure returns (BoolResult) {
         return BoolResult.wrap(Result.unwrap(self.toResult()));
     }
+
+    function toFsMetadataResult(Error self) internal pure returns (FsMetadataResult) {
+        return FsMetadataResult.wrap(Result.unwrap(self.toResult()));
+    }
+}
+
+function Ok(FsMetadata memory value) pure returns (FsMetadataResult) {
+    bytes32 _value;
+    assembly {
+        _value := value
+    }
+    return FsMetadataResult.wrap(Result.unwrap(Ok(_value)));
 }
