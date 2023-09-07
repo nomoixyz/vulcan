@@ -72,8 +72,14 @@ library fs {
     /// @dev Reads the next line of the file on `path`.
     /// @param path The path to the file.
     /// @return The line that was read.
-    function readLine(string memory path) internal view returns (string memory) {
-        return vulcan.hevm.readLine(path);
+    function readLine(string memory path) internal view returns (StringResult) {
+        try vulcan.hevm.readLine(path) returns (string memory line) {
+            return Ok(line);
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToReadLine(reason).toStringResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToReadLine(abi.decode(removeSelector(reason), (string))).toStringResult();
+        }
     }
 
     /// @dev Modifies the content of the file on `path` with `data`.
@@ -170,6 +176,10 @@ library FsErrors {
 
     function FailedToRead(string memory reason) internal pure returns (Error) {
         return FailedToRead.encodeError("Failed to read file", reason);
+    }
+
+    function FailedToReadLine(string memory reason) internal pure returns (Error) {
+        return FailedToReadLine.encodeError("Failed to read line", reason);
     }
 
     function FailedToGetProjectRoot(string memory reason) internal pure returns (Error) {
