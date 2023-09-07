@@ -11,7 +11,7 @@ import {env} from "./_modules/Env.sol";
 import {events} from "./_modules/Events.sol";
 import {expect} from "./_modules/Expect.sol";
 import {forks, Fork} from "./_modules/Forks.sol";
-import {fs, FsMetadata, FsErrors} from "./_modules/Fs.sol";
+import {fs, FsMetadata, FsMetadataResult, FsErrors} from "./_modules/Fs.sol";
 import {gas} from "./_modules/Gas.sol";
 import {huff, Huffc} from "./_modules/Huff.sol";
 import {InvariantsBase, invariants} from "./_modules/Invariants.sol";
