@@ -5,6 +5,8 @@ import "./Commands.sol";
 import "./Strings.sol";
 import "./Fs.sol";
 import {formatError} from "../_utils/formatError.sol";
+import {BoolResult} from "./Result.sol";
+import {println} from "../_utils/println.sol";
 
 struct Fe {
     string compilerPath;
@@ -83,11 +85,16 @@ library fe {
     function getBytecode(Fe memory self, string memory contractName) internal view returns (bytes memory) {
         string memory path = string.concat(self.outputDir, "/", contractName, "/", contractName, ".bin");
 
-        if (!fs.fileExists(path)) {
+        BoolResult fileExists = fs.fileExists(path);
+
+        println("file exists is error: {bool}", abi.encode(fileExists.isError()));
+        println("file exists: {bool}", abi.encode(fileExists.toValue()));
+
+        if (fileExists.isError() || fileExists.toValue() == false) {
             revert(_formatError("getBytecode(Fe,string))", "Contract not found"));
         }
 
-        return fs.readFileBinary(path);
+        return fs.readFileBinary(path).unwrap();
     }
 
     function _formatError(string memory func, string memory message) private pure returns (string memory) {

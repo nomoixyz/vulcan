@@ -2,6 +2,11 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
+import {Result, ResultType, Ok, StringResult, BoolResult, BytesResult} from "./Result.sol";
+import {LibError, Error} from "./Error.sol";
+import {removeSelector} from "../_utils/removeSelector.sol";
+
+type FsMetadataResult is bytes32;
 
 struct FsMetadata {
     bool isDir;
@@ -14,24 +19,44 @@ struct FsMetadata {
 }
 
 library fs {
+    using FsErrors for Error;
+
     /// @dev Reads the file on `path` and returns its content as a `string`.
     /// @param path The path to the file.
     /// @return The content of the file as `string`.
-    function readFile(string memory path) internal view returns (string memory) {
-        return vulcan.hevm.readFile(path);
+    function readFile(string memory path) internal view returns (StringResult) {
+        try vulcan.hevm.readFile(path) returns (string memory content) {
+            return Ok(content);
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToRead(reason).toStringResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToRead(abi.decode(removeSelector(reason), (string))).toStringResult();
+        }
     }
 
     /// @dev Reads the file on `path` and returns its content as a `bytes`.
     /// @param path The path to the file.
     /// @return The content of the file as `bytes`.
-    function readFileBinary(string memory path) internal view returns (bytes memory) {
-        return vulcan.hevm.readFileBinary(path);
+    function readFileBinary(string memory path) internal view returns (BytesResult) {
+        try vulcan.hevm.readFileBinary(path) returns (bytes memory content) {
+            return Ok(content);
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToRead(reason).toBytesResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToRead(abi.decode(removeSelector(reason), (string))).toBytesResult();
+        }
     }
 
     /// @dev Obtains the current project's root.
     /// @return The current project's root.
-    function projectRoot() internal view returns (string memory) {
-        return vulcan.hevm.projectRoot();
+    function projectRoot() internal view returns (StringResult) {
+        try vulcan.hevm.projectRoot() returns (string memory path) {
+            return Ok(path);
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToGetProjectRoot(reason).toStringResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToGetProjectRoot(abi.decode(removeSelector(reason), (string))).toStringResult();
+        }
     }
 
     /// @dev Obtains the metadata of the specified file or directory.
@@ -88,7 +113,13 @@ library fs {
     /// @param origin The file to copy.
     /// @param target The destination of the copied data.
     function copyFile(string memory origin, string memory target) internal {
-        writeFileBinary(target, readFileBinary(origin));
+        BytesResult result = readFileBinary(origin);
+
+        if (result.isError()) {
+            // wrap copy error
+        }
+
+        writeFileBinary(target, result.toValue());
     }
 
     /// @dev Moves a file from `origin` to `target`.
@@ -102,23 +133,20 @@ library fs {
     /// @dev Checks if a file or directory exists.
     /// @param path The file or directory to check.
     /// @return Whether the file on `path` exists or not.
-    function fileExists(string memory path) internal view returns (bool) {
-        try vulcan.hevm.fsMetadata(path) {
-            return true;
+    function fileExists(string memory path) internal view returns (BoolResult) {
+        try vulcan.hevm.readFile(path) {
+            return Ok(true);
         } catch Error(string memory) {
-            return false;
+            return Ok(false);
         } catch (bytes memory reason) {
             bytes4 selector = 0x0bc44503;
-            string memory errorMessage = string.concat(
-                "The path \"", string.concat(path, "\" is not allowed to be accessed for read operations.")
-            );
+            string memory errorMessage =
+                string.concat("The path \"", path, "\" is not allowed to be accessed for read operations.");
             bytes32 errorHash = keccak256(abi.encodeWithSelector(selector, errorMessage));
             if (keccak256(reason) == errorHash) {
-                assembly {
-                    revert(add(reason, 32), mload(reason))
-                }
+                return FsErrors.Forbidden(errorMessage).toBoolResult();
             }
-            return false;
+            return Ok(false);
         }
     }
 
@@ -134,5 +162,33 @@ library fs {
     /// @return The deployed bytecode.
     function getDeployedCode(string memory path) internal view returns (bytes memory) {
         return vulcan.hevm.getDeployedCode(path);
+    }
+}
+
+library FsErrors {
+    using LibError for *;
+
+    function FailedToRead(string memory reason) internal pure returns (Error) {
+        return FailedToRead.encodeError("Failed to read file", reason);
+    }
+
+    function FailedToGetProjectRoot(string memory reason) internal pure returns (Error) {
+        return FailedToGetProjectRoot.encodeError("Failed to get project root", reason);
+    }
+
+    function Forbidden(string memory reason) internal pure returns (Error) {
+        return Forbidden.encodeError("Not enough permissions to access file", reason);
+    }
+
+    function toStringResult(Error self) internal pure returns (StringResult) {
+        return StringResult.wrap(Result.unwrap(self.toResult()));
+    }
+
+    function toBytesResult(Error self) internal pure returns (BytesResult) {
+        return BytesResult.wrap(Result.unwrap(self.toResult()));
+    }
+
+    function toBoolResult(Error self) internal pure returns (BoolResult) {
+        return BoolResult.wrap(Result.unwrap(self.toResult()));
     }
 }

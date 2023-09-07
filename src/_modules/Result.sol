@@ -14,6 +14,8 @@ type BytesResult is bytes32;
 
 type StringResult is bytes32;
 
+type BoolResult is bytes32;
+
 library LibResult {
     function decode(Result self) internal pure returns (ResultType, bytes32) {
         bytes memory data;
@@ -148,6 +150,46 @@ library LibStringResult {
     }
 }
 
+library LibBoolResult {
+    function isOk(BoolResult self) internal pure returns (bool) {
+        return self.asResult().isOk();
+    }
+
+    function isError(BoolResult self) internal pure returns (bool) {
+        return self.asResult().isError();
+    }
+
+    function unwrap(BoolResult self) internal pure returns (bool val) {
+        bytes32 _val = self.asResult().unwrap();
+        assembly {
+            val := _val
+        }
+    }
+
+    function expect(BoolResult self, string memory err) internal pure returns (bool) {
+        if (self.isError()) {
+            revert(err);
+        }
+
+        return self.toValue();
+    }
+
+    function toError(BoolResult self) internal pure returns (Error) {
+        return Result.wrap(BoolResult.unwrap(self)).toError();
+    }
+
+    function toValue(BoolResult self) internal pure returns (bool val) {
+        bytes32 _val = self.asResult().toValue();
+        assembly {
+            val := _val
+        }
+    }
+
+    function asResult(BoolResult self) internal pure returns (Result) {
+        return Result.wrap(BoolResult.unwrap(self));
+    }
+}
+
 function Ok(bytes32 value) pure returns (Result) {
     return LibResult.encode(ResultType.Ok, value);
 }
@@ -168,6 +210,15 @@ function Ok(string memory value) pure returns (StringResult) {
     return StringResult.wrap(Result.unwrap(Ok(_value)));
 }
 
+function Ok(bool value) pure returns (BoolResult) {
+    bytes32 _value;
+    assembly {
+        _value := value
+    }
+    return BoolResult.wrap(Result.unwrap(Ok(_value)));
+}
+
 using LibStringResult for StringResult global;
 using LibBytesResult for BytesResult global;
+using LibBoolResult for BoolResult global;
 using LibResult for Result global;
