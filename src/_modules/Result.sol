@@ -73,7 +73,8 @@ library LibResult {
 }
 
 library LibBytesResult {
-    function isOk(BytesResult self) internal pure returns (bool) { return self.asResult().isOk();
+    function isOk(BytesResult self) internal pure returns (bool) {
+        return self.asResult().isOk();
     }
 
     function isError(BytesResult self) internal pure returns (bool) {

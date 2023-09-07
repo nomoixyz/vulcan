@@ -131,7 +131,7 @@ library fs {
 
     /// @dev Resets the state of the file on `path`.
     /// @param path The path to the file.
-    function closeFile(string memory path) internal returns (EmptyResult) { 
+    function closeFile(string memory path) internal returns (EmptyResult) {
         try vulcan.hevm.closeFile(path) {
             return Ok();
         } catch Error(string memory reason) {
@@ -233,8 +233,7 @@ library fs {
         } catch Error(string memory reason) {
             return FsErrors.FailedToGetCode(reason).toBytesResult();
         } catch (bytes memory reason) {
-            return FsErrors.FailedToGetCode(abi.decode(removeSelector(reason),
-                                                       (string))).toBytesResult();
+            return FsErrors.FailedToGetCode(abi.decode(removeSelector(reason), (string))).toBytesResult();
         }
     }
 }
