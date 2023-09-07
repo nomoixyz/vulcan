@@ -6,7 +6,6 @@ import "./Strings.sol";
 import "./Fs.sol";
 import {formatError} from "../_utils/formatError.sol";
 import {BoolResult} from "./Result.sol";
-import {println} from "../_utils/println.sol";
 
 struct Fe {
     string compilerPath;
@@ -86,9 +85,6 @@ library fe {
         string memory path = string.concat(self.outputDir, "/", contractName, "/", contractName, ".bin");
 
         BoolResult fileExists = fs.fileExists(path);
-
-        println("file exists is error: {bool}", abi.encode(fileExists.isError()));
-        println("file exists: {bool}", abi.encode(fileExists.toValue()));
 
         if (fileExists.isError() || fileExists.toValue() == false) {
             revert(_formatError("getBytecode(Fe,string))", "Contract not found"));
