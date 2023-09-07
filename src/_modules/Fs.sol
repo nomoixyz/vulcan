@@ -2,7 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
-import {Result, ResultType, Ok, StringResult, BoolResult, BytesResult} from "./Result.sol";
+import {Result, ResultType, Ok, StringResult, BoolResult, BytesResult, EmptyResult} from "./Result.sol";
 import {LibError, Error} from "./Error.sol";
 import {removeSelector} from "../_utils/removeSelector.sol";
 
@@ -93,28 +93,52 @@ library fs {
     /// @dev Modifies the content of the file on `path` with `data`.
     /// @param path The path to the file.
     /// @param data The new content of the file.
-    function writeFile(string memory path, string memory data) internal {
-        vulcan.hevm.writeFile(path, data);
+    function writeFile(string memory path, string memory data) internal returns (EmptyResult) {
+        try vulcan.hevm.writeFile(path, data) {
+            return Ok();
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToWrite(reason).toEmptyResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToWrite(abi.decode(removeSelector(reason), (string))).toEmptyResult();
+        }
     }
 
     /// @dev Modifies the content of the file on `path` with `data`.
     /// @param path The path to the file.
     /// @param data The new content of the file.
-    function writeFileBinary(string memory path, bytes memory data) internal {
-        vulcan.hevm.writeFileBinary(path, data);
+    function writeFileBinary(string memory path, bytes memory data) internal returns (EmptyResult) {
+        try vulcan.hevm.writeFileBinary(path, data) {
+            return Ok();
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToWrite(reason).toEmptyResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToWrite(abi.decode(removeSelector(reason), (string))).toEmptyResult();
+        }
     }
 
     /// @dev Adds a new line to the file on `path`.
     /// @param path The path to the file.
     /// @param data The content of the new line.
-    function writeLine(string memory path, string memory data) internal {
-        vulcan.hevm.writeLine(path, data);
+    function writeLine(string memory path, string memory data) internal returns (EmptyResult) {
+        try vulcan.hevm.writeLine(path, data) {
+            return Ok();
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToWriteLine(reason).toEmptyResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToWriteLine(abi.decode(removeSelector(reason), (string))).toEmptyResult();
+        }
     }
 
     /// @dev Resets the state of the file on `path`.
     /// @param path The path to the file.
-    function closeFile(string memory path) internal {
-        vulcan.hevm.closeFile(path);
+    function closeFile(string memory path) internal returns (EmptyResult) { 
+        try vulcan.hevm.closeFile(path) {
+            return Ok();
+        } catch Error(string memory reason) {
+            return FsErrors.FailedToCloseFile(reason).toEmptyResult();
+        } catch (bytes memory reason) {
+            return FsErrors.FailedToCloseFile(abi.decode(removeSelector(reason), (string))).toEmptyResult();
+        }
     }
 
     /// @dev Deletes the file on `path`.
@@ -126,14 +150,20 @@ library fs {
     /// @dev Copies a file from `origin` to `target`.
     /// @param origin The file to copy.
     /// @param target The destination of the copied data.
-    function copyFile(string memory origin, string memory target) internal {
-        BytesResult result = readFileBinary(origin);
+    function copyFile(string memory origin, string memory target) internal returns (EmptyResult) {
+        BytesResult readResult = readFileBinary(origin);
 
-        if (result.isError()) {
-            // wrap copy error
+        if (readResult.isError()) {
+            return readResult.toError().toEmptyResult();
         }
 
-        writeFileBinary(target, result.toValue());
+        EmptyResult writeResult = writeFileBinary(target, readResult.toValue());
+
+        if (writeResult.isError()) {
+            return writeResult.toError().toEmptyResult();
+        }
+
+        return Ok();
     }
 
     /// @dev Moves a file from `origin` to `target`.
@@ -202,6 +232,18 @@ library FsErrors {
         return Forbidden.encodeError("Not enough permissions to access file", reason);
     }
 
+    function FailedToWrite(string memory reason) internal pure returns (Error) {
+        return FailedToWrite.encodeError("Failed to write to file", reason);
+    }
+
+    function FailedToWriteLine(string memory reason) internal pure returns (Error) {
+        return FailedToWriteLine.encodeError("Failed to write line to file", reason);
+    }
+
+    function FailedToCloseFile(string memory reason) internal pure returns (Error) {
+        return FailedToCloseFile.encodeError("Failed to close file", reason);
+    }
+
     function toStringResult(Error self) internal pure returns (StringResult) {
         return StringResult.wrap(Result.unwrap(self.toResult()));
     }
@@ -216,6 +258,10 @@ library FsErrors {
 
     function toFsMetadataResult(Error self) internal pure returns (FsMetadataResult) {
         return FsMetadataResult.wrap(Result.unwrap(self.toResult()));
+    }
+
+    function toEmptyResult(Error self) internal pure returns (EmptyResult) {
+        return EmptyResult.wrap(Result.unwrap(self.toResult()));
     }
 }
 
