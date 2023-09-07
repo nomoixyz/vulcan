@@ -303,6 +303,46 @@ library FsErrors {
     }
 }
 
+library LibFsMetadataResult {
+    function isOk(FsMetadataResult self) internal pure returns (bool) {
+        return self.asResult().isOk();
+    }
+
+    function isError(FsMetadataResult self) internal pure returns (bool) {
+        return self.asResult().isError();
+    }
+
+    function unwrap(FsMetadataResult self) internal pure returns (FsMetadata memory val) {
+        bytes32 _val = self.asResult().unwrap();
+        assembly {
+            val := _val
+        }
+    }
+
+    function expect(FsMetadataResult self, string memory err) internal pure returns (FsMetadata memory) {
+        if (self.isError()) {
+            revert(err);
+        }
+
+        return self.toValue();
+    }
+
+    function toError(FsMetadataResult self) internal pure returns (Error) {
+        return self.asResult().toError();
+    }
+
+    function toValue(FsMetadataResult self) internal pure returns (FsMetadata memory val) {
+        bytes32 _val = self.asResult().toValue();
+        assembly {
+            val := _val
+        }
+    }
+
+    function asResult(FsMetadataResult self) internal pure returns (Result) {
+        return Result.wrap(FsMetadataResult.unwrap(self));
+    }
+}
+
 function Ok(FsMetadata memory value) pure returns (FsMetadataResult) {
     bytes32 _value;
     assembly {
@@ -310,3 +350,5 @@ function Ok(FsMetadata memory value) pure returns (FsMetadataResult) {
     }
     return FsMetadataResult.wrap(Result.unwrap(Ok(_value)));
 }
+
+using LibFsMetadataResult for FsMetadataResult global;
