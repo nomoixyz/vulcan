@@ -51,6 +51,6 @@ contract FeTest is Test {
 
         string memory expectedBytecode = "600180600c6000396000f3fe00";
 
-        expect(string(feCmd.getBytecode("A"))).toEqual(expectedBytecode);
+        expect(string(feCmd.getBytecode("A").toValue())).toEqual(expectedBytecode);
     }
 }

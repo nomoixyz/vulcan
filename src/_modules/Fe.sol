@@ -5,7 +5,7 @@ import "./Commands.sol";
 import "./Strings.sol";
 import "./Fs.sol";
 import {formatError} from "../_utils/formatError.sol";
-import {BoolResult} from "./Result.sol";
+import {BoolResult, BytesResult} from "./Result.sol";
 
 struct Fe {
     string compilerPath;
@@ -81,16 +81,10 @@ library fe {
 
     /// @dev Obtains the bytecode of a compiled contract with `contractName`.
     /// @param contractName The name of the contract from which to retrive the bytecode.
-    function getBytecode(Fe memory self, string memory contractName) internal view returns (bytes memory) {
+    function getBytecode(Fe memory self, string memory contractName) internal view returns (BytesResult) {
         string memory path = string.concat(self.outputDir, "/", contractName, "/", contractName, ".bin");
 
-        BoolResult fileExists = fs.fileExists(path);
-
-        if (fileExists.isError() || fileExists.toValue() == false) {
-            revert(_formatError("getBytecode(Fe,string))", "Contract not found"));
-        }
-
-        return fs.readFileBinary(path).unwrap();
+        return fs.readFileBinary(path);
     }
 
     function _formatError(string memory func, string memory message) private pure returns (string memory) {
