@@ -3,7 +3,8 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import {VmSafe} from "forge-std/Vm.sol";
 import {vulcan} from "./Vulcan.sol";
-import {Result, ResultType, Ok} from "./Result.sol";
+import {Pointer} from "./Pointer.sol";
+import {ResultType, LibResultPointer} from "./Result.sol";
 import {LibError, Error} from "./Error.sol";
 import {removeSelector} from "../_utils/removeSelector.sol";
 
@@ -414,21 +415,23 @@ library CommandError {
     }
 
     function toCommandResult(Error self) internal pure returns (CommandResult) {
-        return CommandResult.wrap(Result.unwrap(self.toResult()));
+        return CommandResult.wrap(Pointer.unwrap(self.toPointer()));
     }
 }
 
 library LibCommandResult {
+    using LibResultPointer for Pointer;
+
     function isOk(CommandResult self) internal pure returns (bool) {
-        return self.asResult().isOk();
+        return self.asPointer().isOk();
     }
 
     function isError(CommandResult self) internal pure returns (bool) {
-        return self.asResult().isError();
+        return self.asPointer().isError();
     }
 
     function unwrap(CommandResult self) internal pure returns (CommandOutput memory val) {
-        bytes32 _val = self.asResult().unwrap();
+        bytes32 _val = self.asPointer().unwrap();
         assembly {
             val := _val
         }
@@ -443,18 +446,18 @@ library LibCommandResult {
     }
 
     function toError(CommandResult self) internal pure returns (Error) {
-        return self.asResult().toError();
+        return self.asPointer().toError();
     }
 
     function toValue(CommandResult self) internal pure returns (CommandOutput memory val) {
-        bytes32 _val = self.asResult().toValue();
+        bytes32 _val = self.asPointer().toValue();
         assembly {
             val := _val
         }
     }
 
-    function asResult(CommandResult self) internal pure returns (Result) {
-        return Result.wrap(CommandResult.unwrap(self));
+    function asPointer(CommandResult self) internal pure returns (Pointer) {
+        return Pointer.wrap(CommandResult.unwrap(self));
     }
 }
 
@@ -463,7 +466,7 @@ function Ok(CommandOutput memory value) pure returns (CommandResult) {
     assembly {
         _value := value
     }
-    return CommandResult.wrap(Result.unwrap(Ok(_value)));
+    return CommandResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
 }
 
 using commands for Command global;

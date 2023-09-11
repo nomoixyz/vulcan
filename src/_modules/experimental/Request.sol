@@ -4,7 +4,8 @@ pragma solidity ^0.8.13;
 import {Command, CommandResult, CommandOutput, commands} from "../Commands.sol";
 import {JsonObject, json as jsonModule, JsonResult, Ok} from "../Json.sol";
 
-import {Result, BytesResult, StringResult, Ok} from "../Result.sol";
+import {Pointer} from "../Pointer.sol";
+import {BytesResult, StringResult, Ok, ResultType, LibResultPointer} from "../Result.sol";
 import {LibError, Error} from "../Error.sol";
 
 enum Method {
@@ -67,25 +68,27 @@ library RequestError {
     }
 
     function toRequestResult(Error self) internal pure returns (RequestResult) {
-        return RequestResult.wrap(Result.unwrap(self.toResult()));
+        return RequestResult.wrap(Pointer.unwrap(self.toPointer()));
     }
 
     function toResponseResult(Error self) internal pure returns (ResponseResult) {
-        return ResponseResult.wrap(Result.unwrap(self.toResult()));
+        return ResponseResult.wrap(Pointer.unwrap(self.toPointer()));
     }
 }
 
 library LibRequestResult {
+    using LibResultPointer for Pointer;
+
     function isOk(RequestResult self) internal pure returns (bool) {
-        return self.asResult().isOk();
+        return self.asPointer().isOk();
     }
 
     function isError(RequestResult self) internal pure returns (bool) {
-        return self.asResult().isError();
+        return self.asPointer().isError();
     }
 
     function unwrap(RequestResult self) internal pure returns (Request memory val) {
-        bytes32 _val = self.asResult().unwrap();
+        bytes32 _val = self.asPointer().unwrap();
         assembly {
             val := _val
         }
@@ -100,32 +103,34 @@ library LibRequestResult {
     }
 
     function toError(RequestResult self) internal pure returns (Error) {
-        return self.asResult().toError();
+        return self.asPointer().toError();
     }
 
     function toValue(RequestResult self) internal pure returns (Request memory val) {
-        bytes32 _val = self.asResult().toValue();
+        bytes32 _val = self.asPointer().toValue();
         assembly {
             val := _val
         }
     }
 
-    function asResult(RequestResult self) internal pure returns (Result) {
-        return Result.wrap(RequestResult.unwrap(self));
+    function asPointer(RequestResult self) internal pure returns (Pointer) {
+        return Pointer.wrap(RequestResult.unwrap(self));
     }
 }
 
 library LibResponseResult {
+    using LibResultPointer for Pointer;
+
     function isOk(ResponseResult self) internal pure returns (bool) {
-        return self.asResult().isOk();
+        return self.asPointer().isOk();
     }
 
     function isError(ResponseResult self) internal pure returns (bool) {
-        return self.asResult().isError();
+        return self.asPointer().isError();
     }
 
     function unwrap(ResponseResult self) internal pure returns (Response memory val) {
-        bytes32 _val = self.asResult().unwrap();
+        bytes32 _val = self.asPointer().unwrap();
         assembly {
             val := _val
         }
@@ -140,18 +145,18 @@ library LibResponseResult {
     }
 
     function toError(ResponseResult self) internal pure returns (Error) {
-        return self.asResult().toError();
+        return self.asPointer().toError();
     }
 
     function toValue(ResponseResult self) internal pure returns (Response memory val) {
-        bytes32 _val = self.asResult().toValue();
+        bytes32 _val = self.asPointer().toValue();
         assembly {
             val := _val
         }
     }
 
-    function asResult(ResponseResult self) internal pure returns (Result) {
-        return Result.wrap(ResponseResult.unwrap(self));
+    function asPointer(ResponseResult self) internal pure returns (Pointer) {
+        return Pointer.wrap(ResponseResult.unwrap(self));
     }
 }
 
@@ -347,7 +352,7 @@ function Ok(Request memory value) pure returns (RequestResult) {
     assembly {
         _value := value
     }
-    return RequestResult.wrap(Result.unwrap(Ok(_value)));
+    return RequestResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
 }
 
 function Ok(Response memory value) pure returns (ResponseResult) {
@@ -355,7 +360,7 @@ function Ok(Response memory value) pure returns (ResponseResult) {
     assembly {
         _value := value
     }
-    return ResponseResult.wrap(Result.unwrap(Ok(_value)));
+    return ResponseResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
 }
 
 using LibRequestClient for RequestClient global;

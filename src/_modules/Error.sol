@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {LibResult, Result, ResultType} from "./Result.sol";
+import {Pointer} from "./Pointer.sol";
+import {LibResultPointer, ResultType} from "./Result.sol";
 
 type Error is bytes32;
 
 library LibError {
     using LibError for *;
 
-    function toResult(Error err) internal pure returns (Result) {
-        return LibResult.encode(ResultType.Error, Error.unwrap(err));
+    function toPointer(Error err) internal pure returns (Pointer) {
+        return LibResultPointer.encode(ResultType.Error, Error.unwrap(err));
     }
 
     // Used internally by error functions

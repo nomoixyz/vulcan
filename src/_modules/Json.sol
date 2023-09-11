@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Result, LibResult, Ok} from "./Result.sol";
+import {Pointer} from "./Pointer.sol";
+import {ResultType, LibResultPointer} from "./Result.sol";
 import {LibError, Error} from "./Error.sol";
 import "./Accounts.sol";
 import "./Vulcan.sol";
@@ -25,21 +26,23 @@ library JsonError {
     }
 
     function toJsonResult(Error self) internal pure returns (JsonResult) {
-        return JsonResult.wrap(Result.unwrap(self.toResult()));
+        return JsonResult.wrap(Pointer.unwrap(self.toPointer()));
     }
 }
 
 library LibJsonResult {
+    using LibResultPointer for Pointer;
+
     function isOk(JsonResult self) internal pure returns (bool) {
-        return self.asResult().isOk();
+        return self.asPointer().isOk();
     }
 
     function isError(JsonResult self) internal pure returns (bool) {
-        return self.asResult().isError();
+        return self.asPointer().isError();
     }
 
     function unwrap(JsonResult self) internal pure returns (JsonObject memory val) {
-        bytes32 _val = self.asResult().unwrap();
+        bytes32 _val = self.asPointer().unwrap();
         assembly {
             val := _val
         }
@@ -54,19 +57,19 @@ library LibJsonResult {
     }
 
     function toError(JsonResult self) internal pure returns (Error) {
-        return self.asResult().toError();
+        return self.asPointer().toError();
     }
 
     function toValue(JsonResult self) internal pure returns (JsonObject memory val) {
-        bytes32 _val = self.asResult().toValue();
+        bytes32 _val = self.asPointer().toValue();
 
         assembly {
             val := _val
         }
     }
 
-    function asResult(JsonResult self) internal pure returns (Result) {
-        return Result.wrap(JsonResult.unwrap(self));
+    function asPointer(JsonResult self) internal pure returns (Pointer) {
+        return Pointer.wrap(JsonResult.unwrap(self));
     }
 }
 
@@ -75,7 +78,7 @@ function Ok(JsonObject memory value) pure returns (JsonResult) {
     assembly {
         _value := value
     }
-    return JsonResult.wrap(Result.unwrap(Ok(_value)));
+    return JsonResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
 }
 
 library json {
