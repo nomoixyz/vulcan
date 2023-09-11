@@ -197,7 +197,6 @@ library LibResultType {
     }
 }
 
-
 function Ok(bytes32 value) pure returns (Bytes32Result) {
     return Bytes32Result.wrap(Pointer.unwrap(ResultType.Ok.encode(value)));
 }
