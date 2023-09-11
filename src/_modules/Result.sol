@@ -16,8 +16,6 @@ type BytesResult is bytes32;
 type StringResult is bytes32;
 
 library LibResultPointer {
-    using LibResultPointer for Pointer;
-
     function encode(ResultType _type, bytes32 _data) internal pure returns (Pointer pointer) {
         bytes memory data = abi.encode(_type, _data);
 
@@ -26,12 +24,14 @@ library LibResultPointer {
         }
     }
 
-    function decode(Pointer self) internal pure returns (ResultType, bytes32) {
+    function decode(Pointer self) internal pure returns (ResultType, Pointer) {
         bytes memory data;
         assembly {
             data := self
         }
-        return abi.decode(data, (ResultType, bytes32));
+        (ResultType resultType, bytes32 memoryAddr) = abi.decode(data, (ResultType, bytes32));
+
+        return (resultType, Pointer.wrap(memoryAddr));
     }
 
     function isError(Pointer self) internal pure returns (bool) {
@@ -45,58 +45,59 @@ library LibResultPointer {
     }
 
     function toError(Pointer self) internal pure returns (Error) {
-        (, bytes32 data) = decode(self);
-        return Error.wrap(data);
+        (, Pointer ptr) = decode(self);
+
+        return Error.wrap(ptr.asBytes32());
     }
 
     function toValue(Pointer self) internal pure returns (bytes32) {
-        (, bytes32 data) = decode(self);
-        return data;
+        (, Pointer ptr) = decode(self);
+        return ptr.asBytes32();
     }
 
-    function unwrap(Pointer self) internal pure returns (bytes32) {
-        if (self.isError()) {
-            (, string memory message,) = self.toError().decode();
+    function unwrap(Pointer self) internal pure returns (Pointer ptr) {
+        if (isError(self)) {
+            (, string memory message,) = toError(self).decode();
             revert(message);
         }
 
-        return self.toValue();
+        (, ptr) = decode(self);
     }
 
-    function expect(Pointer self, string memory err) internal pure returns (bytes32) {
-        if (self.isError()) {
+    function expect(Pointer self, string memory err) internal pure returns (Pointer ptr) {
+        if (isError(self)) {
             revert(err);
         }
 
-        return self.toValue();
+        (, ptr) = decode(self);
     }
 }
 
 library LibBytes32Result {
-    using LibResultPointer for Pointer;
-
     function isError(Bytes32Result self) internal pure returns (bool) {
-        return Pointer.wrap(Bytes32Result.unwrap(self)).isError();
+        return LibResultPointer.isError(Pointer.wrap(Bytes32Result.unwrap(self)));
     }
 
     function isOk(Bytes32Result self) internal pure returns (bool) {
-        return Pointer.wrap(Bytes32Result.unwrap(self)).isOk();
+        return LibResultPointer.isOk(Pointer.wrap(Bytes32Result.unwrap(self)));
     }
 
     function toError(Bytes32Result self) internal pure returns (Error) {
-        return Pointer.wrap(Bytes32Result.unwrap(self)).toError();
+        return LibResultPointer.toError(Pointer.wrap(Bytes32Result.unwrap(self)));
     }
 
     function toValue(Bytes32Result self) internal pure returns (bytes32) {
-        return Pointer.wrap(Bytes32Result.unwrap(self)).toValue();
+        (, Pointer ptr) = LibResultPointer.decode(self.asPointer());
+
+        return ptr.asBytes32();
     }
 
     function unwrap(Bytes32Result self) internal pure returns (bytes32) {
-        return Pointer.wrap(Bytes32Result.unwrap(self)).unwrap();
+        return LibResultPointer.unwrap(Pointer.wrap(Bytes32Result.unwrap(self))).asBytes32();
     }
 
     function expect(Bytes32Result self, string memory err) internal pure returns (bytes32) {
-        return Pointer.wrap(Bytes32Result.unwrap(self)).expect(err);
+        return LibResultPointer.expect(Pointer.wrap(Bytes32Result.unwrap(self)), err).asBytes32();
     }
 
     function asPointer(Bytes32Result self) internal pure returns (Pointer) {
@@ -105,40 +106,30 @@ library LibBytes32Result {
 }
 
 library LibBytesResult {
-    using LibResultPointer for Pointer;
-
     function isOk(BytesResult self) internal pure returns (bool) {
-        return self.asPointer().isOk();
+        return LibResultPointer.isOk(self.asPointer());
     }
 
     function isError(BytesResult self) internal pure returns (bool) {
-        return self.asPointer().isError();
+        return LibResultPointer.isError(self.asPointer());
     }
 
-    function unwrap(BytesResult self) internal pure returns (bytes memory val) {
-        bytes32 _val = self.asPointer().unwrap();
-        assembly {
-            val := _val
-        }
+    function unwrap(BytesResult self) internal pure returns (bytes memory) {
+        return LibResultPointer.unwrap(self.asPointer()).asBytes();
     }
 
     function expect(BytesResult self, string memory err) internal pure returns (bytes memory) {
-        if (self.isError()) {
-            revert(err);
-        }
-
-        return self.toValue();
+        return LibResultPointer.expect(self.asPointer(), err).asBytes();
     }
 
     function toError(BytesResult self) internal pure returns (Error) {
-        return self.asPointer().toError();
+        return LibResultPointer.toError(self.asPointer());
     }
 
-    function toValue(BytesResult self) internal pure returns (bytes memory val) {
-        bytes32 _val = self.asPointer().toValue();
-        assembly {
-            val := _val
-        }
+    function toValue(BytesResult self) internal pure returns (bytes memory) {
+        (, Pointer ptr) = LibResultPointer.decode(self.asPointer());
+
+        return ptr.asBytes();
     }
 
     function asPointer(BytesResult self) internal pure returns (Pointer) {
@@ -147,40 +138,30 @@ library LibBytesResult {
 }
 
 library LibStringResult {
-    using LibResultPointer for Pointer;
-
     function isOk(StringResult self) internal pure returns (bool) {
-        return self.asPointer().isOk();
+        return LibResultPointer.isOk(self.asPointer());
     }
 
     function isError(StringResult self) internal pure returns (bool) {
-        return self.asPointer().isError();
+        return LibResultPointer.isError(self.asPointer());
     }
 
     function unwrap(StringResult self) internal pure returns (string memory val) {
-        bytes32 _val = self.asPointer().unwrap();
-        assembly {
-            val := _val
-        }
+        return LibResultPointer.unwrap(self.asPointer()).asString();
     }
 
     function expect(StringResult self, string memory err) internal pure returns (string memory) {
-        if (self.isError()) {
-            revert(err);
-        }
-
-        return self.toValue();
+        return LibResultPointer.expect(self.asPointer(), err).asString();
     }
 
     function toError(StringResult self) internal pure returns (Error) {
-        return Bytes32Result.wrap(StringResult.unwrap(self)).toError();
+        return LibResultPointer.toError(Pointer.wrap(StringResult.unwrap(self)));
     }
 
     function toValue(StringResult self) internal pure returns (string memory val) {
-        bytes32 _val = self.asPointer().toValue();
-        assembly {
-            val := _val
-        }
+        (, Pointer ptr) = LibResultPointer.decode(self.asPointer());
+
+        return ptr.asString();
     }
 
     function asPointer(StringResult self) internal pure returns (Pointer) {

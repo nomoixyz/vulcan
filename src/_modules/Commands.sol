@@ -419,41 +419,43 @@ library CommandError {
     }
 }
 
+library LibCommandOutputPointer {
+    function asCommandOutput(Pointer self) internal pure returns (CommandOutput memory output) {
+        bytes32 memoryAddr = self.asBytes32();
+
+        assembly {
+            output := memoryAddr
+        }
+    }
+}
+
 library LibCommandResult {
-    using LibResultPointer for Pointer;
+    using LibCommandOutputPointer for Pointer;
 
     function isOk(CommandResult self) internal pure returns (bool) {
-        return self.asPointer().isOk();
+        return LibResultPointer.isOk(self.asPointer());
     }
 
     function isError(CommandResult self) internal pure returns (bool) {
-        return self.asPointer().isError();
+        return LibResultPointer.isError(self.asPointer());
     }
 
-    function unwrap(CommandResult self) internal pure returns (CommandOutput memory val) {
-        bytes32 _val = self.asPointer().unwrap();
-        assembly {
-            val := _val
-        }
+    function unwrap(CommandResult self) internal pure returns (CommandOutput memory) {
+        return LibResultPointer.unwrap(self.asPointer()).asCommandOutput();
     }
 
     function expect(CommandResult self, string memory err) internal pure returns (CommandOutput memory) {
-        if (self.isError()) {
-            revert(err);
-        }
-
-        return self.toValue();
+        return LibResultPointer.expect(self.asPointer(), err).asCommandOutput();
     }
 
     function toError(CommandResult self) internal pure returns (Error) {
-        return self.asPointer().toError();
+        return LibResultPointer.toError(self.asPointer());
     }
 
-    function toValue(CommandResult self) internal pure returns (CommandOutput memory val) {
-        bytes32 _val = self.asPointer().toValue();
-        assembly {
-            val := _val
-        }
+    function toValue(CommandResult self) internal pure returns (CommandOutput memory) {
+        (, Pointer ptr) = LibResultPointer.decode(self.asPointer());
+
+        return ptr.asCommandOutput();
     }
 
     function asPointer(CommandResult self) internal pure returns (Pointer) {
