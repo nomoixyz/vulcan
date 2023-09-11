@@ -10,7 +10,7 @@ library LibError {
     using LibError for *;
 
     function toPointer(Error err) internal pure returns (Pointer) {
-        return LibResultPointer.encode(ResultType.Error, Error.unwrap(err));
+        return ResultType.Error.encode(Error.unwrap(err));
     }
 
     // Used internally by error functions

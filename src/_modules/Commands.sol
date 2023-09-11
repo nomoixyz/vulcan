@@ -433,32 +433,32 @@ library LibCommandResult {
     using LibCommandOutputPointer for Pointer;
 
     function isOk(CommandResult self) internal pure returns (bool) {
-        return LibResultPointer.isOk(self.asPointer());
+        return LibResultPointer.isOk(self.toPointer());
     }
 
     function isError(CommandResult self) internal pure returns (bool) {
-        return LibResultPointer.isError(self.asPointer());
+        return LibResultPointer.isError(self.toPointer());
     }
 
     function unwrap(CommandResult self) internal pure returns (CommandOutput memory) {
-        return LibResultPointer.unwrap(self.asPointer()).asCommandOutput();
+        return LibResultPointer.unwrap(self.toPointer()).asCommandOutput();
     }
 
     function expect(CommandResult self, string memory err) internal pure returns (CommandOutput memory) {
-        return LibResultPointer.expect(self.asPointer(), err).asCommandOutput();
+        return LibResultPointer.expect(self.toPointer(), err).asCommandOutput();
     }
 
     function toError(CommandResult self) internal pure returns (Error) {
-        return LibResultPointer.toError(self.asPointer());
+        return LibResultPointer.toError(self.toPointer());
     }
 
     function toValue(CommandResult self) internal pure returns (CommandOutput memory) {
-        (, Pointer ptr) = LibResultPointer.decode(self.asPointer());
+        (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
         return ptr.asCommandOutput();
     }
 
-    function asPointer(CommandResult self) internal pure returns (Pointer) {
+    function toPointer(CommandResult self) internal pure returns (Pointer) {
         return Pointer.wrap(CommandResult.unwrap(self));
     }
 }

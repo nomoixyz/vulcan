@@ -44,32 +44,32 @@ library LibJsonResult {
     using LibJsonObjectPointer for Pointer;
 
     function isOk(JsonResult self) internal pure returns (bool) {
-        return LibResultPointer.isOk(self.asPointer());
+        return LibResultPointer.isOk(self.toPointer());
     }
 
     function isError(JsonResult self) internal pure returns (bool) {
-        return LibResultPointer.isError(self.asPointer());
+        return LibResultPointer.isError(self.toPointer());
     }
 
     function unwrap(JsonResult self) internal pure returns (JsonObject memory val) {
-        return LibResultPointer.unwrap(self.asPointer()).asJsonObject();
+        return LibResultPointer.unwrap(self.toPointer()).asJsonObject();
     }
 
     function expect(JsonResult self, string memory err) internal pure returns (JsonObject memory) {
-        return LibResultPointer.expect(self.asPointer(), err).asJsonObject();
+        return LibResultPointer.expect(self.toPointer(), err).asJsonObject();
     }
 
     function toError(JsonResult self) internal pure returns (Error) {
-        return LibResultPointer.toError(self.asPointer());
+        return LibResultPointer.toError(self.toPointer());
     }
 
     function toValue(JsonResult self) internal pure returns (JsonObject memory val) {
-        (, Pointer ptr) = LibResultPointer.decode(self.asPointer());
+        (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
         return ptr.asJsonObject();
     }
 
-    function asPointer(JsonResult self) internal pure returns (Pointer) {
+    function toPointer(JsonResult self) internal pure returns (Pointer) {
         return Pointer.wrap(JsonResult.unwrap(self));
     }
 }

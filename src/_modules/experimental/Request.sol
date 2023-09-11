@@ -90,32 +90,32 @@ library LibRequestResult {
     using LibRequestPointer for Pointer;
 
     function isOk(RequestResult self) internal pure returns (bool) {
-        return LibResultPointer.isOk(self.asPointer());
+        return LibResultPointer.isOk(self.toPointer());
     }
 
     function isError(RequestResult self) internal pure returns (bool) {
-        return LibResultPointer.isError(self.asPointer());
+        return LibResultPointer.isError(self.toPointer());
     }
 
     function unwrap(RequestResult self) internal pure returns (Request memory val) {
-        return LibResultPointer.unwrap(self.asPointer()).asRequest();
+        return LibResultPointer.unwrap(self.toPointer()).asRequest();
     }
 
     function expect(RequestResult self, string memory err) internal pure returns (Request memory) {
-        return LibResultPointer.expect(self.asPointer(), err).asRequest();
+        return LibResultPointer.expect(self.toPointer(), err).asRequest();
     }
 
     function toError(RequestResult self) internal pure returns (Error) {
-        return LibResultPointer.toError(self.asPointer());
+        return LibResultPointer.toError(self.toPointer());
     }
 
     function toValue(RequestResult self) internal pure returns (Request memory val) {
-        (, Pointer ptr) = LibResultPointer.decode(self.asPointer());
+        (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
         return ptr.asRequest();
     }
 
-    function asPointer(RequestResult self) internal pure returns (Pointer) {
+    function toPointer(RequestResult self) internal pure returns (Pointer) {
         return Pointer.wrap(RequestResult.unwrap(self));
     }
 }
@@ -134,32 +134,32 @@ library LibResponseResult {
     using LibResponsePointer for Pointer;
 
     function isOk(ResponseResult self) internal pure returns (bool) {
-        return LibResultPointer.isOk(self.asPointer());
+        return LibResultPointer.isOk(self.toPointer());
     }
 
     function isError(ResponseResult self) internal pure returns (bool) {
-        return LibResultPointer.isError(self.asPointer());
+        return LibResultPointer.isError(self.toPointer());
     }
 
     function unwrap(ResponseResult self) internal pure returns (Response memory val) {
-        return LibResultPointer.unwrap(self.asPointer()).asResponse();
+        return LibResultPointer.unwrap(self.toPointer()).asResponse();
     }
 
     function expect(ResponseResult self, string memory err) internal pure returns (Response memory) {
-        return LibResultPointer.expect(self.asPointer(), err).asResponse();
+        return LibResultPointer.expect(self.toPointer(), err).asResponse();
     }
 
     function toError(ResponseResult self) internal pure returns (Error) {
-        return LibResultPointer.toError(self.asPointer());
+        return LibResultPointer.toError(self.toPointer());
     }
 
     function toValue(ResponseResult self) internal pure returns (Response memory val) {
-        (, Pointer ptr) = LibResultPointer.decode(self.asPointer());
+        (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
         return ptr.asResponse();
     }
 
-    function asPointer(ResponseResult self) internal pure returns (Pointer) {
+    function toPointer(ResponseResult self) internal pure returns (Pointer) {
         return Pointer.wrap(ResponseResult.unwrap(self));
     }
 }
