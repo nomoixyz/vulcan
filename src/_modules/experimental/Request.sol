@@ -102,7 +102,7 @@ library LibRequestResult {
     }
 
     function expect(RequestResult self, string memory err) internal pure returns (Request memory) {
-        return LibResultPointer.expect(self.asPointer() ,err).asRequest();
+        return LibResultPointer.expect(self.asPointer(), err).asRequest();
     }
 
     function toError(RequestResult self) internal pure returns (Error) {
