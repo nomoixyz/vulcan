@@ -1,6 +1,20 @@
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, console, fs, FsMetadata, commands} from "../../src/test.sol";
+import {
+    Test,
+    expect,
+    console,
+    fs,
+    FsMetadata,
+    commands,
+    StringResult,
+    BoolResult,
+    BytesResult,
+    EmptyResult,
+    FsMetadataResult,
+    Error,
+    FsErrors
+} from "../../src/test.sol";
 
 contract FsTest is Test {
     string constant HELLO_WORLD = "./test/fixtures/fs/read/hello_world.txt";
@@ -8,106 +22,150 @@ contract FsTest is Test {
     string constant BINARY_TEST_FILE = "./test/fixtures/fs/write/test_binary.txt";
 
     function testItCanReadAFile() external {
-        string memory output = fs.readFile(HELLO_WORLD);
+        StringResult output = fs.readFile(HELLO_WORLD);
 
-        expect(output).toEqual("Hello, World!\n");
+        expect(output.unwrap()).toEqual("Hello, World!\n");
+    }
+
+    function testItCanCheckIfAFileExists() external {
+        BoolResult shouldExists = fs.fileExists("./test/_modules/Fs.t.sol");
+        BoolResult shouldNotExist = fs.fileExists("./test/_modules/Fsssss.t.sol");
+        BoolResult shouldBeError = fs.fileExists("/tmp/klsajdflksjadfrlkjasdf");
+
+        expect(shouldExists.isError()).toBeFalse();
+        expect(shouldNotExist.isError()).toBeFalse();
+        expect(shouldBeError.isError()).toBeTrue();
+
+        expect(shouldExists.toValue()).toBeTrue();
+        expect(shouldNotExist.toValue()).toBeFalse();
+
+        Error err = shouldBeError.toError();
+        (, string memory message,) = err.decode();
+
+        expect(message).toEqual(
+            "Not enough permissions to access file: \"The path \"/tmp/klsajdflksjadfrlkjasdf\" is not allowed to be accessed for read operations.\""
+        );
     }
 
     function testItCanReadAFileAsBinary() external {
-        bytes memory output = fs.readFileBinary(HELLO_WORLD);
+        BytesResult result = fs.readFileBinary(HELLO_WORLD);
 
-        expect(output).toEqual(bytes("Hello, World!\n"));
+        expect(result.isOk()).toBeTrue();
+
+        expect(result.toValue()).toEqual(bytes("Hello, World!\n"));
     }
 
     function testItCanWriteAFile() external {
         string memory content = "Writing from a test";
 
-        fs.writeFile(TEXT_TEST_FILE, content);
+        EmptyResult writeResult = fs.writeFile(TEXT_TEST_FILE, content);
 
-        expect(fs.readFile(TEXT_TEST_FILE)).toEqual(content);
+        expect(writeResult.isOk()).toBeTrue();
+
+        StringResult readResult = fs.readFile(TEXT_TEST_FILE);
+
+        expect(readResult.isOk()).toBeTrue();
+
+        expect(readResult.toValue()).toEqual(content);
     }
 
     function testItCanWriteAFileAsBinary() external {
         bytes memory content = bytes("Writing from a test using bytes");
 
-        fs.writeFileBinary(BINARY_TEST_FILE, content);
+        EmptyResult writeResult = fs.writeFileBinary(BINARY_TEST_FILE, content);
 
-        expect(fs.readFileBinary(BINARY_TEST_FILE)).toEqual(content);
+        expect(writeResult.isOk()).toBeTrue();
+
+        BytesResult readResult = fs.readFileBinary(BINARY_TEST_FILE);
+
+        expect(readResult.isOk()).toBeTrue();
+
+        expect(readResult.toValue()).toEqual(content);
     }
 
     function testItCanRemoveFiles() external {
         string memory path = "./test/fixtures/fs/write/temp.txt";
 
-        fs.writeFile(path, string("Should be removed"));
+        EmptyResult writeResult = fs.writeFile(path, string("Should be removed"));
 
-        fs.removeFile(path);
+        expect(writeResult.isOk()).toBeTrue();
 
-        expect(fs.fileExists(path)).toBeFalse();
+        EmptyResult removeResult = fs.removeFile(path);
+
+        expect(removeResult.isOk()).toBeTrue();
+
+        expect(fs.fileExists(path).toValue()).toBeFalse();
     }
 
     function testItCanCopyAFile() external {
         string memory path = "./test/fixtures/fs/write/hello_world_copy.txt";
 
-        fs.copyFile(HELLO_WORLD, path);
+        EmptyResult copyResult = fs.copyFile(HELLO_WORLD, path);
 
-        expect(fs.readFile(path)).toEqual("Hello, World!\n");
+        expect(copyResult.isOk()).toBeTrue();
 
-        fs.removeFile(path);
+        expect(fs.readFile(path).toValue()).toEqual("Hello, World!\n");
+
+        expect(fs.removeFile(path).isOk()).toBeTrue();
     }
 
     function testItCanMoveAfile() external {
         string memory path = "./test/fixtures/fs/write/hello_world.txt";
         string memory newPath = "./test/fixtures/fs/write/new_hello_world.txt";
 
-        fs.copyFile(HELLO_WORLD, path);
-        fs.moveFile(path, newPath);
+        expect(fs.copyFile(HELLO_WORLD, path).isOk()).toBeTrue();
+        expect(fs.moveFile(path, newPath).isOk()).toBeTrue();
 
-        expect(fs.readFile(newPath)).toEqual("Hello, World!\n");
+        expect(fs.readFile(newPath).toValue()).toEqual("Hello, World!\n");
 
-        expect(fs.fileExists(path)).toBeFalse();
+        expect(fs.fileExists(path).toValue()).toBeFalse();
 
-        fs.removeFile(newPath);
+        expect(fs.removeFile(newPath).isOk()).toBeTrue();
     }
 
     function testItCanReadLines() external {
         string memory content = "Lorem\nipsum\ndolor\nsit\n";
         string memory path = "./test/fixtures/fs/write/test_read_lines.txt";
 
-        fs.writeFile(path, content);
+        expect(fs.writeFile(path, content).isOk()).toBeTrue();
 
-        expect(fs.readLine(path)).toEqual("Lorem");
-        expect(fs.readLine(path)).toEqual("ipsum");
-        expect(fs.readLine(path)).toEqual("dolor");
-        expect(fs.readLine(path)).toEqual("sit");
+        expect(fs.readLine(path).toValue()).toEqual("Lorem");
+        expect(fs.readLine(path).toValue()).toEqual("ipsum");
+        expect(fs.readLine(path).toValue()).toEqual("dolor");
+        expect(fs.readLine(path).toValue()).toEqual("sit");
 
-        fs.removeFile(path);
+        expect(fs.removeFile(path).isOk()).toBeTrue();
     }
 
     function testItCanWriteLines() external {
         string memory content = "Lorem\nipsum\ndolor\nsit\n";
         string memory path = "./test/fixtures/fs/write/test_write_lines.txt";
 
-        fs.writeFile(path, content);
+        expect(fs.writeFile(path, content).isOk()).toBeTrue();
 
-        fs.writeLine(path, string("amet"));
+        expect(fs.writeLine(path, string("amet")).isOk()).toBeTrue();
 
-        expect(fs.readLine(path)).toEqual("Lorem");
-        expect(fs.readLine(path)).toEqual("ipsum");
-        expect(fs.readLine(path)).toEqual("dolor");
-        expect(fs.readLine(path)).toEqual("sit");
-        expect(fs.readLine(path)).toEqual("amet");
+        expect(fs.readLine(path).toValue()).toEqual("Lorem");
+        expect(fs.readLine(path).toValue()).toEqual("ipsum");
+        expect(fs.readLine(path).toValue()).toEqual("dolor");
+        expect(fs.readLine(path).toValue()).toEqual("sit");
+        expect(fs.readLine(path).toValue()).toEqual("amet");
 
-        fs.removeFile(path);
+        expect(fs.removeFile(path).isOk()).toBeTrue();
     }
 
     function testItCanGetMetadata() external {
         string memory dirPath = "./test/fixtures/fs/read";
         string memory filePath = HELLO_WORLD;
 
-        FsMetadata memory dirMetadata = fs.metadata(dirPath);
-        expect(dirMetadata.isDir).toBeTrue();
+        FsMetadataResult dirMetadataResult = fs.metadata(dirPath);
 
-        FsMetadata memory fileMetadata = fs.metadata(filePath);
-        expect(fileMetadata.isDir).toBeFalse();
+        expect(dirMetadataResult.isOk()).toBeTrue();
+        expect(dirMetadataResult.toValue().isDir).toBeTrue();
+
+        FsMetadataResult fileMetadataResult = fs.metadata(filePath);
+
+        expect(fileMetadataResult.isOk()).toBeTrue();
+        expect(fileMetadataResult.toValue().isDir).toBeFalse();
     }
 }

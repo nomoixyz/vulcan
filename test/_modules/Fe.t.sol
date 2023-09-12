@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, commands, Command, fe, Fe, fs, println, strings} from "../../src/test.sol";
+import {Test, expect, commands, Command, fe, Fe, fs, println, strings, StringResult} from "../../src/test.sol";
 
 contract FeTest is Test {
     function testToCommandAllSet() external {
@@ -39,9 +39,9 @@ contract FeTest is Test {
             true
         ).build();
 
-        string memory result = fs.readFile("./test/fixtures/fe/output/A/A.bin");
+        StringResult result = fs.readFile("./test/fixtures/fe/output/A/A.bin");
 
-        expect(bytes(result).length).toBeGreaterThan(0);
+        expect(bytes(result.unwrap()).length).toBeGreaterThan(0);
     }
 
     function testCompileAndRead() external {
@@ -51,6 +51,6 @@ contract FeTest is Test {
 
         string memory expectedBytecode = "600180600c6000396000f3fe00";
 
-        expect(string(feCmd.getBytecode("A"))).toEqual(expectedBytecode);
+        expect(string(feCmd.getBytecode("A").toValue())).toEqual(expectedBytecode);
     }
 }
