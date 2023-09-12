@@ -42,7 +42,9 @@ contract FsTest is Test {
         Error err = shouldBeError.toError();
         (, string memory message,) = err.decode();
 
-        expect(message).toEqual("Not enough permissions to access file");
+        expect(message).toEqual(
+            "Not enough permissions to access file: \"The path \"/tmp/klsajdflksjadfrlkjasdf\" is not allowed to be accessed for read operations.\""
+        );
     }
 
     function testItCanReadAFileAsBinary() external {

@@ -20,6 +20,7 @@ struct FsMetadata {
 }
 
 library fs {
+    using LibError for *;
     using FsErrors for Error;
 
     /// @dev Reads the file on `path` and returns its content as a `string`.
@@ -243,55 +244,53 @@ library FsErrors {
     using LibError for *;
 
     function FailedToRead(string memory reason) internal pure returns (Error) {
-        return FailedToRead.encodeError("Failed to read file", reason);
+        string memory message = string.concat("Failed to read file: \"", reason, "\"");
+        return FailedToRead.encodeError(message, reason);
     }
 
     function FailedToReadLine(string memory reason) internal pure returns (Error) {
-        return FailedToReadLine.encodeError("Failed to read line", reason);
+        string memory message = string.concat("Failed to read line: \"", reason, "\"");
+        return FailedToReadLine.encodeError(message, reason);
     }
 
     function FailedToReadMetadata(string memory reason) internal pure returns (Error) {
-        return FailedToReadMetadata.encodeError("Failed to read metadata", reason);
+        string memory message = string.concat("Failed to read metadata: \"", reason, "\"");
+        return FailedToReadMetadata.encodeError(message, reason);
     }
 
     function FailedToGetProjectRoot(string memory reason) internal pure returns (Error) {
-        return FailedToGetProjectRoot.encodeError("Failed to get project root", reason);
+        string memory message = string.concat("Failed to get project root: \"", reason, "\"");
+        return FailedToGetProjectRoot.encodeError(message, reason);
     }
 
     function Forbidden(string memory reason) internal pure returns (Error) {
-        return Forbidden.encodeError("Not enough permissions to access file", reason);
+        string memory message = string.concat("Not enough permissions to access file: \"", reason, "\"");
+        return Forbidden.encodeError(message, reason);
     }
 
     function FailedToWrite(string memory reason) internal pure returns (Error) {
-        return FailedToWrite.encodeError("Failed to write to file", reason);
+        string memory message = string.concat("Failed to write file: \"", reason, "\"");
+        return FailedToWrite.encodeError(message, reason);
     }
 
     function FailedToWriteLine(string memory reason) internal pure returns (Error) {
-        return FailedToWriteLine.encodeError("Failed to write line to file", reason);
+        string memory message = string.concat("Failed to write line: \"", reason, "\"");
+        return FailedToWriteLine.encodeError(message, reason);
     }
 
     function FailedToCloseFile(string memory reason) internal pure returns (Error) {
-        return FailedToCloseFile.encodeError("Failed to close file", reason);
+        string memory message = string.concat("Failed to close file: \"", reason, "\"");
+        return FailedToCloseFile.encodeError(message, reason);
     }
 
     function FailedToRemoveFile(string memory reason) internal pure returns (Error) {
-        return FailedToRemoveFile.encodeError("Failed to remove file", reason);
+        string memory message = string.concat("Failed to remove file: \"", reason, "\"");
+        return FailedToRemoveFile.encodeError(message, reason);
     }
 
     function FailedToGetCode(string memory reason) internal pure returns (Error) {
-        return FailedToGetCode.encodeError("Failed to get code", reason);
-    }
-
-    function toStringResult(Error self) internal pure returns (StringResult) {
-        return StringResult.wrap(Pointer.unwrap(self.toPointer()));
-    }
-
-    function toBytesResult(Error self) internal pure returns (BytesResult) {
-        return BytesResult.wrap(Pointer.unwrap(self.toPointer()));
-    }
-
-    function toBoolResult(Error self) internal pure returns (BoolResult) {
-        return BoolResult.wrap(Pointer.unwrap(self.toPointer()));
+        string memory message = string.concat("Failed to get code: \"", reason, "\"");
+        return FailedToGetCode.encodeError(message, reason);
     }
 
     function toFsMetadataResult(Error self) internal pure returns (FsMetadataResult) {

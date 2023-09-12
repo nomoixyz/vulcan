@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {Pointer} from "./Pointer.sol";
-import {LibResultPointer, ResultType} from "./Result.sol";
+import {LibResultPointer, ResultType, StringResult, BytesResult, BoolResult} from "./Result.sol";
 
 type Error is bytes32;
 
@@ -104,6 +104,18 @@ library LibError {
     function decodeAs(Error err, function(string memory) returns(Error)) internal pure returns (string memory) {
         (,, bytes memory data) = decode(err);
         return abi.decode(data, (string));
+    }
+
+    function toStringResult(Error self) internal pure returns (StringResult) {
+        return StringResult.wrap(Pointer.unwrap(self.toPointer()));
+    }
+
+    function toBytesResult(Error self) internal pure returns (BytesResult) {
+        return BytesResult.wrap(Pointer.unwrap(self.toPointer()));
+    }
+
+    function toBoolResult(Error self) internal pure returns (BoolResult) {
+        return BoolResult.wrap(Pointer.unwrap(self.toPointer()));
     }
 }
 
