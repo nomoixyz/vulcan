@@ -240,7 +240,7 @@ library json {
         }
 
         JsonObject memory jsonObj = create();
-        jsonObj.serialized = vulcan.hevm.serializeJson("", obj);
+        jsonObj.serialized = vulcan.hevm.serializeJson(jsonObj.id, obj);
 
         return Ok(jsonObj);
     }
