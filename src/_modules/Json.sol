@@ -21,10 +21,6 @@ library JsonError {
         return Invalid.encodeError("Invalid json");
     }
 
-    function Immutable() internal pure returns (Error) {
-        return Immutable.encodeError("Json object is immutable");
-    }
-
     function toJsonResult(Error self) internal pure returns (JsonResult) {
         return JsonResult.wrap(Pointer.unwrap(self.toPointer()));
     }
@@ -238,12 +234,15 @@ library json {
 
     /// @dev Creates a new JsonObject struct.
     /// @return The JsonObject struct.
-    function create(string memory obj) internal pure returns (JsonResult) {
+    function create(string memory obj) internal returns (JsonResult) {
         if (!isValid(obj)) {
             return JsonError.Invalid().toJsonResult();
         }
 
-        return Ok(JsonObject({id: "", serialized: obj}));
+        JsonObject memory jsonObj = create();
+        jsonObj.serialized = vulcan.hevm.serializeJson("", obj);
+
+        return Ok(jsonObj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -439,10 +438,6 @@ library json {
     /// @param path The path where the file will be saved.
     function write(JsonObject memory obj, string memory path, string memory key) internal {
         vulcan.hevm.writeJson(obj.serialized, path, key);
-    }
-
-    function isImmutable(JsonObject memory obj) internal pure returns (bool) {
-        return bytes(obj.id).length == 0;
     }
 
     function _incrementId() private returns (uint256 count) {

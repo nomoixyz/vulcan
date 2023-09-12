@@ -280,7 +280,7 @@ library LibRequestBuilder {
         return self.header("Content-Type", "application/json").body(obj.serialized);
     }
 
-    function json(RequestBuilder memory self, string memory serialized) internal pure returns (RequestBuilder memory) {
+    function json(RequestBuilder memory self, string memory serialized) internal returns (RequestBuilder memory) {
         if (self.request.isError()) {
             return self;
         }
@@ -336,7 +336,7 @@ library LibRequest {
 }
 
 library LibResponse {
-    function json(Response memory self) internal pure returns (JsonResult) {
+    function json(Response memory self) internal returns (JsonResult) {
         // create() will validate the json
         return jsonModule.create(string(self.body));
     }
