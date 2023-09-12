@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Result, LibResult, Ok} from "./Result.sol";
+import {Pointer} from "./Pointer.sol";
+import {ResultType, LibResultPointer} from "./Result.sol";
 import {LibError, Error} from "./Error.sol";
 import "./Accounts.sol";
 import "./Vulcan.sol";
@@ -25,48 +26,51 @@ library JsonError {
     }
 
     function toJsonResult(Error self) internal pure returns (JsonResult) {
-        return JsonResult.wrap(Result.unwrap(self.toResult()));
+        return JsonResult.wrap(Pointer.unwrap(self.toPointer()));
+    }
+}
+
+library LibJsonObjectPointer {
+    function asJsonObject(Pointer self) internal pure returns (JsonObject memory obj) {
+        bytes32 memoryAddr = self.asBytes32();
+
+        assembly {
+            obj := memoryAddr
+        }
     }
 }
 
 library LibJsonResult {
+    using LibJsonObjectPointer for Pointer;
+
     function isOk(JsonResult self) internal pure returns (bool) {
-        return self.asResult().isOk();
+        return LibResultPointer.isOk(self.toPointer());
     }
 
     function isError(JsonResult self) internal pure returns (bool) {
-        return self.asResult().isError();
+        return LibResultPointer.isError(self.toPointer());
     }
 
     function unwrap(JsonResult self) internal pure returns (JsonObject memory val) {
-        bytes32 _val = self.asResult().unwrap();
-        assembly {
-            val := _val
-        }
+        return LibResultPointer.unwrap(self.toPointer()).asJsonObject();
     }
 
     function expect(JsonResult self, string memory err) internal pure returns (JsonObject memory) {
-        if (self.isError()) {
-            revert(err);
-        }
-
-        return self.toValue();
+        return LibResultPointer.expect(self.toPointer(), err).asJsonObject();
     }
 
     function toError(JsonResult self) internal pure returns (Error) {
-        return self.asResult().toError();
+        return LibResultPointer.toError(self.toPointer());
     }
 
     function toValue(JsonResult self) internal pure returns (JsonObject memory val) {
-        bytes32 _val = self.asResult().toValue();
+        (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
-        assembly {
-            val := _val
-        }
+        return ptr.asJsonObject();
     }
 
-    function asResult(JsonResult self) internal pure returns (Result) {
-        return Result.wrap(JsonResult.unwrap(self));
+    function toPointer(JsonResult self) internal pure returns (Pointer) {
+        return Pointer.wrap(JsonResult.unwrap(self));
     }
 }
 
@@ -75,7 +79,7 @@ function Ok(JsonObject memory value) pure returns (JsonResult) {
     assembly {
         _value := value
     }
-    return JsonResult.wrap(Result.unwrap(Ok(_value)));
+    return JsonResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
 }
 
 library json {
