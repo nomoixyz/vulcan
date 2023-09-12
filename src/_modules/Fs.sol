@@ -2,7 +2,8 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
-import {Result, ResultType, Ok, StringResult, BoolResult, BytesResult, EmptyResult} from "./Result.sol";
+import {Pointer} from "./Pointer.sol";
+import {ResultType, Ok, StringResult, BoolResult, BytesResult, EmptyResult, LibResultPointer} from "./Result.sol";
 import {LibError, Error} from "./Error.sol";
 import {removeSelector} from "../_utils/removeSelector.sol";
 
@@ -282,63 +283,67 @@ library FsErrors {
     }
 
     function toStringResult(Error self) internal pure returns (StringResult) {
-        return StringResult.wrap(Result.unwrap(self.toResult()));
+        return StringResult.wrap(Pointer.unwrap(self.toPointer()));
     }
 
     function toBytesResult(Error self) internal pure returns (BytesResult) {
-        return BytesResult.wrap(Result.unwrap(self.toResult()));
+        return BytesResult.wrap(Pointer.unwrap(self.toPointer()));
     }
 
     function toBoolResult(Error self) internal pure returns (BoolResult) {
-        return BoolResult.wrap(Result.unwrap(self.toResult()));
+        return BoolResult.wrap(Pointer.unwrap(self.toPointer()));
     }
 
     function toFsMetadataResult(Error self) internal pure returns (FsMetadataResult) {
-        return FsMetadataResult.wrap(Result.unwrap(self.toResult()));
+        return FsMetadataResult.wrap(Pointer.unwrap(self.toPointer()));
     }
 
     function toEmptyResult(Error self) internal pure returns (EmptyResult) {
-        return EmptyResult.wrap(Result.unwrap(self.toResult()));
+        return EmptyResult.wrap(Pointer.unwrap(self.toPointer()));
+    }
+}
+
+library LibFsMetadataPointer {
+    function asFsMetadata(Pointer self) internal pure returns (FsMetadata memory metadata) {
+        bytes32 memoryAddr = self.asBytes32();
+
+        assembly {
+            metadata := memoryAddr
+        }
     }
 }
 
 library LibFsMetadataResult {
+    using LibFsMetadataPointer for Pointer;
+
     function isOk(FsMetadataResult self) internal pure returns (bool) {
-        return self.asResult().isOk();
+        return LibResultPointer.isOk(self.toPointer());
     }
 
     function isError(FsMetadataResult self) internal pure returns (bool) {
-        return self.asResult().isError();
+        return LibResultPointer.isError(self.toPointer());
     }
 
     function unwrap(FsMetadataResult self) internal pure returns (FsMetadata memory val) {
-        bytes32 _val = self.asResult().unwrap();
-        assembly {
-            val := _val
-        }
+        return LibResultPointer.unwrap(self.toPointer()).asFsMetadata();
     }
 
     function expect(FsMetadataResult self, string memory err) internal pure returns (FsMetadata memory) {
-        if (self.isError()) {
-            revert(err);
-        }
-
-        return self.toValue();
+        return LibResultPointer.expect(self.toPointer(), err).asFsMetadata();
     }
 
     function toError(FsMetadataResult self) internal pure returns (Error) {
-        return self.asResult().toError();
+        return LibResultPointer.toError(self.toPointer());
     }
 
     function toValue(FsMetadataResult self) internal pure returns (FsMetadata memory val) {
-        bytes32 _val = self.asResult().toValue();
-        assembly {
-            val := _val
-        }
+        (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
+
+        return ptr.asFsMetadata();
     }
 
-    function asResult(FsMetadataResult self) internal pure returns (Result) {
-        return Result.wrap(FsMetadataResult.unwrap(self));
+    function toPointer(FsMetadataResult self) internal pure returns (Pointer) {
+        return Pointer.wrap(FsMetadataResult.unwrap(self));
     }
 }
 
@@ -347,7 +352,7 @@ function Ok(FsMetadata memory value) pure returns (FsMetadataResult) {
     assembly {
         _value := value
     }
-    return FsMetadataResult.wrap(Result.unwrap(Ok(_value)));
+    return FsMetadataResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
 }
 
 using LibFsMetadataResult for FsMetadataResult global;
