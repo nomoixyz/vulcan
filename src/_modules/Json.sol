@@ -27,18 +27,26 @@ library JsonError {
 }
 
 library LibJsonObjectPointer {
-    function asJsonObject(Pointer self) internal pure returns (JsonObject memory obj) {
-        bytes32 memoryAddr = self.asBytes32();
-
+    function toJsonObject(Pointer self) internal pure returns (JsonObject memory obj) {
         assembly {
-            obj := memoryAddr
+            obj := self
+        }
+    }
+
+    function toJsonResult(Pointer self) internal pure returns (JsonResult result) {
+        assembly {
+            result := self
+        }
+    }
+
+    function toPointer(JsonObject memory obj) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := obj
         }
     }
 }
 
 library LibJsonResult {
-    using LibJsonObjectPointer for Pointer;
-
     function isOk(JsonResult self) internal pure returns (bool) {
         return LibResultPointer.isOk(self.toPointer());
     }
@@ -48,11 +56,11 @@ library LibJsonResult {
     }
 
     function unwrap(JsonResult self) internal pure returns (JsonObject memory val) {
-        return LibResultPointer.unwrap(self.toPointer()).asJsonObject();
+        return LibResultPointer.unwrap(self.toPointer()).toJsonObject();
     }
 
     function expect(JsonResult self, string memory err) internal pure returns (JsonObject memory) {
-        return LibResultPointer.expect(self.toPointer(), err).asJsonObject();
+        return LibResultPointer.expect(self.toPointer(), err).toJsonObject();
     }
 
     function toError(JsonResult self) internal pure returns (Error) {
@@ -62,7 +70,7 @@ library LibJsonResult {
     function toValue(JsonResult self) internal pure returns (JsonObject memory val) {
         (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
-        return ptr.asJsonObject();
+        return ptr.toJsonObject();
     }
 
     function toPointer(JsonResult self) internal pure returns (Pointer) {
@@ -75,7 +83,8 @@ function Ok(JsonObject memory value) pure returns (JsonResult) {
     assembly {
         _value := value
     }
-    return JsonResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
+
+    return ResultType.Ok.encode(_value).toJsonResult();
 }
 
 library json {
@@ -450,5 +459,10 @@ library json {
     }
 }
 
+// Local
+using LibJsonObjectPointer for Pointer;
+using LibJsonObjectPointer for JsonObject;
+
+// Global
 using json for JsonObject global;
 using LibJsonResult for JsonResult global;

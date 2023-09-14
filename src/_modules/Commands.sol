@@ -420,18 +420,26 @@ library CommandError {
 }
 
 library LibCommandOutputPointer {
-    function asCommandOutput(Pointer self) internal pure returns (CommandOutput memory output) {
-        bytes32 memoryAddr = self.asBytes32();
-
+    function toCommandOutput(Pointer self) internal pure returns (CommandOutput memory output) {
         assembly {
-            output := memoryAddr
+            output := self
+        }
+    }
+
+    function toCommandResult(Pointer self) internal pure returns (CommandResult result) {
+        assembly {
+            result := self
+        }
+    }
+
+    function toPointer(CommandOutput memory self) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := self
         }
     }
 }
 
 library LibCommandResult {
-    using LibCommandOutputPointer for Pointer;
-
     function isOk(CommandResult self) internal pure returns (bool) {
         return LibResultPointer.isOk(self.toPointer());
     }
@@ -441,11 +449,11 @@ library LibCommandResult {
     }
 
     function unwrap(CommandResult self) internal pure returns (CommandOutput memory) {
-        return LibResultPointer.unwrap(self.toPointer()).asCommandOutput();
+        return LibResultPointer.unwrap(self.toPointer()).toCommandOutput();
     }
 
     function expect(CommandResult self, string memory err) internal pure returns (CommandOutput memory) {
-        return LibResultPointer.expect(self.toPointer(), err).asCommandOutput();
+        return LibResultPointer.expect(self.toPointer(), err).toCommandOutput();
     }
 
     function toError(CommandResult self) internal pure returns (Error) {
@@ -455,7 +463,7 @@ library LibCommandResult {
     function toValue(CommandResult self) internal pure returns (CommandOutput memory) {
         (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
-        return ptr.asCommandOutput();
+        return ptr.toCommandOutput();
     }
 
     function toPointer(CommandResult self) internal pure returns (Pointer) {
@@ -468,8 +476,13 @@ function Ok(CommandOutput memory value) pure returns (CommandResult) {
     assembly {
         _value := value
     }
-    return CommandResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
+    return ResultType.Ok.encode(_value).toCommandResult();
 }
 
+// Local
+using LibCommandOutputPointer for Pointer;
+using LibCommandOutputPointer for CommandOutput;
+
+// Global
 using commands for Command global;
 using LibCommandResult for CommandResult global;

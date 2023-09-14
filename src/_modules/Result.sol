@@ -21,11 +21,7 @@ type EmptyResult is bytes32;
 
 library LibResultPointer {
     function decode(Pointer self) internal pure returns (ResultType, Pointer) {
-        bytes memory data;
-        assembly {
-            data := self
-        }
-        (ResultType resultType, bytes32 memoryAddr) = abi.decode(data, (ResultType, bytes32));
+        (ResultType resultType, bytes32 memoryAddr) = abi.decode(self.asBytes(), (ResultType, bytes32));
 
         return (resultType, Pointer.wrap(memoryAddr));
     }
@@ -44,11 +40,6 @@ library LibResultPointer {
         (, Pointer ptr) = decode(self);
 
         return Error.wrap(ptr.asBytes32());
-    }
-
-    function toValue(Pointer self) internal pure returns (bytes32) {
-        (, Pointer ptr) = decode(self);
-        return ptr.asBytes32();
     }
 
     function unwrap(Pointer self) internal pure returns (Pointer ptr) {
