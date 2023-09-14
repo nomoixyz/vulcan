@@ -77,11 +77,21 @@ library RequestError {
 }
 
 library LibRequestPointer {
-    function asRequest(Pointer self) internal pure returns (Request memory req) {
-        bytes32 memoryAddr = self.asBytes32();
-
+    function toRequest(Pointer self) internal pure returns (Request memory req) {
         assembly {
-            req := memoryAddr
+            req := self
+        }
+    }
+
+    function toRequestResult(Pointer self) internal pure returns (RequestResult result) {
+        assembly {
+            result := self
+        }
+    }
+
+    function toPointer(Request memory self) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := self
         }
     }
 }
@@ -98,11 +108,11 @@ library LibRequestResult {
     }
 
     function unwrap(RequestResult self) internal pure returns (Request memory val) {
-        return LibResultPointer.unwrap(self.toPointer()).asRequest();
+        return LibResultPointer.unwrap(self.toPointer()).toRequest();
     }
 
     function expect(RequestResult self, string memory err) internal pure returns (Request memory) {
-        return LibResultPointer.expect(self.toPointer(), err).asRequest();
+        return LibResultPointer.expect(self.toPointer(), err).toRequest();
     }
 
     function toError(RequestResult self) internal pure returns (Error) {
@@ -112,7 +122,7 @@ library LibRequestResult {
     function toValue(RequestResult self) internal pure returns (Request memory val) {
         (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
-        return ptr.asRequest();
+        return ptr.toRequest();
     }
 
     function toPointer(RequestResult self) internal pure returns (Pointer) {
@@ -121,11 +131,21 @@ library LibRequestResult {
 }
 
 library LibResponsePointer {
-    function asResponse(Pointer self) internal pure returns (Response memory res) {
-        bytes32 memoryAddr = self.asBytes32();
-
+    function toResponse(Pointer self) internal pure returns (Response memory res) {
         assembly {
-            res := memoryAddr
+            res := self
+        }
+    }
+
+    function toResponseResult(Pointer self) internal pure returns (ResponseResult result) {
+        assembly {
+            result := self
+        }
+    }
+
+    function toPointer(Response memory self) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := self
         }
     }
 }
@@ -142,11 +162,11 @@ library LibResponseResult {
     }
 
     function unwrap(ResponseResult self) internal pure returns (Response memory val) {
-        return LibResultPointer.unwrap(self.toPointer()).asResponse();
+        return LibResultPointer.unwrap(self.toPointer()).toResponse();
     }
 
     function expect(ResponseResult self, string memory err) internal pure returns (Response memory) {
-        return LibResultPointer.expect(self.toPointer(), err).asResponse();
+        return LibResultPointer.expect(self.toPointer(), err).toResponse();
     }
 
     function toError(ResponseResult self) internal pure returns (Error) {
@@ -156,7 +176,7 @@ library LibResponseResult {
     function toValue(ResponseResult self) internal pure returns (Response memory val) {
         (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
-        return ptr.asResponse();
+        return ptr.toResponse();
     }
 
     function toPointer(ResponseResult self) internal pure returns (Pointer) {
@@ -352,21 +372,22 @@ library LibResponse {
 }
 
 function Ok(Request memory value) pure returns (RequestResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-    return RequestResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
+    return ResultType.Ok.encode(value.toPointer()).toRequestResult();
 }
 
 function Ok(Response memory value) pure returns (ResponseResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-    return ResponseResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
+    return ResultType.Ok.encode(value.toPointer()).toResponseResult();
 }
 
+// Local
+using LibRequestPointer for Pointer;
+using LibRequestPointer for Request;
+
+// Local
+using LibResponsePointer for Pointer;
+using LibResponsePointer for Response;
+
+// Global
 using LibRequestClient for RequestClient global;
 using LibRequest for Request global;
 using LibResponse for Response global;
