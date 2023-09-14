@@ -372,19 +372,11 @@ library LibResponse {
 }
 
 function Ok(Request memory value) pure returns (RequestResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-    return ResultType.Ok.encode(_value).toRequestResult();
+    return ResultType.Ok.encode(value.toPointer()).toRequestResult();
 }
 
 function Ok(Response memory value) pure returns (ResponseResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-    return ResultType.Ok.encode(_value).toResponseResult();
+    return ResultType.Ok.encode(value.toPointer()).toResponseResult();
 }
 
 // Local

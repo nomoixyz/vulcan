@@ -472,11 +472,7 @@ library LibCommandResult {
 }
 
 function Ok(CommandOutput memory value) pure returns (CommandResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-    return ResultType.Ok.encode(_value).toCommandResult();
+    return ResultType.Ok.encode(value.toPointer()).toCommandResult();
 }
 
 // Local

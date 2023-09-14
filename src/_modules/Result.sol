@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Pointer} from "./Pointer.sol";
+import {Pointer, LibPointer} from "./Pointer.sol";
 import {Error} from "./Error.sol";
 
 enum ResultType {
@@ -60,6 +60,14 @@ library LibResultPointer {
     }
 }
 
+library LibBytes32ResultPointer {
+    function toBytes32Result(Pointer self) internal pure returns (Bytes32Result res) {
+        assembly {
+            res := self
+        }
+    }
+}
+
 library LibBytes32Result {
     function isError(Bytes32Result self) internal pure returns (bool) {
         return LibResultPointer.isError(Pointer.wrap(Bytes32Result.unwrap(self)));
@@ -89,6 +97,14 @@ library LibBytes32Result {
 
     function toPointer(Bytes32Result self) internal pure returns (Pointer) {
         return Pointer.wrap(Bytes32Result.unwrap(self));
+    }
+}
+
+library LibBytesResultPointer {
+    function toBytesResult(Pointer self) internal pure returns (BytesResult res) {
+        assembly {
+            res := self
+        }
     }
 }
 
@@ -124,6 +140,14 @@ library LibBytesResult {
     }
 }
 
+library LibStringResultPointer {
+    function toStringResult(Pointer self) internal pure returns (StringResult res) {
+        assembly {
+            res := self
+        }
+    }
+}
+
 library LibStringResult {
     function isOk(StringResult self) internal pure returns (bool) {
         return LibResultPointer.isOk(self.toPointer());
@@ -153,6 +177,14 @@ library LibStringResult {
 
     function toPointer(StringResult self) internal pure returns (Pointer) {
         return Pointer.wrap(StringResult.unwrap(self));
+    }
+}
+
+library LibBoolResultPointer {
+    function toBoolResult(Pointer self) internal pure returns (BoolResult res) {
+        assembly {
+            res := self
+        }
     }
 }
 
@@ -188,6 +220,14 @@ library LibBoolResult {
     }
 }
 
+library LibEmptyResultPointer {
+    function toEmptyResult(Pointer self) internal pure returns (EmptyResult res) {
+        assembly {
+            res := self
+        }
+    }
+}
+
 library LibEmptyResult {
     function isOk(EmptyResult self) internal pure returns (bool) {
         return LibResultPointer.isOk(self.toPointer());
@@ -215,46 +255,50 @@ library LibEmptyResult {
 }
 
 library LibResultType {
-    function encode(ResultType _type, bytes32 _data) internal pure returns (Pointer result) {
-        bytes memory data = abi.encode(_type, _data);
+    function encode(ResultType _type, Pointer _dataPtr) internal pure returns (Pointer result) {
+        bytes memory data = abi.encode(_type, _dataPtr);
         assembly {
             result := data
         }
     }
 }
 
+function Ok() pure returns (EmptyResult) {
+    Pointer ptr;
+    return ResultType.Ok.encode(ptr).toEmptyResult();
+}
+
 function Ok(bytes32 value) pure returns (Bytes32Result) {
-    return Bytes32Result.wrap(Pointer.unwrap(ResultType.Ok.encode(value)));
+    return ResultType.Ok.encode(value.toPointer()).toBytes32Result();
 }
 
 function Ok(bytes memory value) pure returns (BytesResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-    return BytesResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
+    return ResultType.Ok.encode(value.toPointer()).toBytesResult();
 }
 
 function Ok(string memory value) pure returns (StringResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-    return StringResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
+    return ResultType.Ok.encode(value.toPointer()).toStringResult();
 }
 
 function Ok(bool value) pure returns (BoolResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-    return BoolResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
+    return ResultType.Ok.encode(value.toPointer()).toBoolResult();
 }
 
-function Ok() pure returns (EmptyResult) {
-    return EmptyResult.wrap(Pointer.unwrap(ResultType.Ok.encode(bytes32(0))));
-}
+// Local
+using LibPointer for bytes32;
+using LibPointer for bytes;
+using LibPointer for string;
+using LibPointer for address;
+using LibPointer for bool;
+using LibPointer for uint256;
+using LibPointer for int256;
+using LibEmptyResultPointer for Pointer;
+using LibBytes32ResultPointer for Pointer;
+using LibBytesResultPointer for Pointer;
+using LibStringResultPointer for Pointer;
+using LibBoolResultPointer for Pointer;
 
+// Global
 using LibStringResult for StringResult global;
 using LibBytesResult for BytesResult global;
 using LibBoolResult for BoolResult global;

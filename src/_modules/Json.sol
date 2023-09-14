@@ -79,12 +79,7 @@ library LibJsonResult {
 }
 
 function Ok(JsonObject memory value) pure returns (JsonResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-
-    return ResultType.Ok.encode(_value).toJsonResult();
+    return ResultType.Ok.encode(value.toPointer()).toJsonResult();
 }
 
 library json {

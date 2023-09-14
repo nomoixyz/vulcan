@@ -43,6 +43,48 @@ library LibPointer {
             val := self
         }
     }
+
+    function toPointer(bytes32 value) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := value
+        }
+    }
+
+    function toPointer(string memory value) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := value
+        }
+    }
+
+    function toPointer(bytes memory value) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := value
+        }
+    }
+
+    function toPointer(bool value) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := value
+        }
+    }
+
+    function toPointer(uint256 value) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := value
+        }
+    }
+
+    function toPointer(int256 value) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := value
+        }
+    }
+
+    function toPointer(address value) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := value
+        }
+    }
 }
 
 using LibPointer for Pointer global;

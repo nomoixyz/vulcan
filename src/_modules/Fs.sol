@@ -355,12 +355,7 @@ library LibFsMetadataResult {
 }
 
 function Ok(FsMetadata memory value) pure returns (FsMetadataResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-
-    return ResultType.Ok.encode(_value).toFsMetadataResult();
+    return ResultType.Ok.encode(value.toPointer()).toFsMetadataResult();
 }
 
 using LibFsMetadataPointer for Pointer;
