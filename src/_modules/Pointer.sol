@@ -9,34 +9,38 @@ library LibPointer {
     }
 
     function asString(Pointer self) internal pure returns (string memory val) {
-        bytes32 memoryAddr = self.asBytes32();
-
         assembly {
-            val := memoryAddr
+            val := self
         }
     }
 
     function asBytes(Pointer self) internal pure returns (bytes memory val) {
-        bytes32 memoryAddr = self.asBytes32();
-
         assembly {
-            val := memoryAddr
+            val := self
         }
     }
 
     function asBool(Pointer self) internal pure returns (bool val) {
-        bytes32 memoryAddr = self.asBytes32();
-
         assembly {
-            val := memoryAddr
+            val := self
         }
     }
 
     function asUint256(Pointer self) internal pure returns (uint256 val) {
-        bytes32 memoryAddr = self.asBytes32();
-
         assembly {
-            val := memoryAddr
+            val := self
+        }
+    }
+
+    function asInt256(Pointer self) internal pure returns (int256 val) {
+        assembly {
+            val := self
+        }
+    }
+
+    function asAddress(Pointer self) internal pure returns (address val) {
+        assembly {
+            val := self
         }
     }
 }
