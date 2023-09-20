@@ -8,8 +8,6 @@ import {Pointer} from "../Pointer.sol";
 import {BytesResult, StringResult, Ok, ResultType, LibResultPointer} from "../Result.sol";
 import {LibError, Error} from "../Error.sol";
 
-import {println} from "../../_utils/println.sol";
-
 enum Method {
     GET,
     POST,
