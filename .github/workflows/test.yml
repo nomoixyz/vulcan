@@ -10,6 +10,13 @@ env:
   FOUNDRY_PROFILE: ci
 
 jobs:
+  curl:
+    name: Curl
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run curl
+        run: |
+          curl -sw '%{header_json}\n' curl.se
   tests:
     name: Foundry project
     runs-on: ubuntu-latest
