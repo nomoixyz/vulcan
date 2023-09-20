@@ -8,6 +8,8 @@ import {Pointer} from "../Pointer.sol";
 import {BytesResult, StringResult, Ok, ResultType, LibResultPointer} from "../Result.sol";
 import {LibError, Error} from "../Error.sol";
 
+import {println} from "../../_utils/println.sol";
+
 enum Method {
     GET,
     POST,
@@ -44,7 +46,7 @@ type RequestResult is bytes32;
 struct Response {
     string url;
     uint256 status;
-    Header[] headers;
+    JsonObject headers;
     bytes body;
 }
 
@@ -237,9 +239,12 @@ library LibRequestBuilder {
 
         CommandOutput memory cmdOutput = result.toValue();
 
-        (uint256 status, bytes memory _body, bytes memory _headers) = abi.decode(cmdOutput.stdout, (uint256, bytes, bytes));
+        (uint256 status, bytes memory _body, bytes memory _headers) =
+            abi.decode(cmdOutput.stdout, (uint256, bytes, bytes));
 
-        return Ok(Response({url: req.url, status: status, body: _body, headers: new Header[](0)}));
+        return Ok(
+            Response({url: req.url, status: status, body: _body, headers: jsonModule.create(string(_headers)).unwrap()})
+        );
     }
 
     function build(RequestBuilder memory self) internal pure returns (RequestResult) {
@@ -317,8 +322,9 @@ library LibRequestBuilder {
 library LibRequest {
     function toCommand(Request memory self) internal pure returns (Command memory) {
         // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
-        string memory script =
-            string.concat('response=$(curl -s -w "\\n%{header_json}\\n\\n%{http_code}" ', self.url, " -X ", toString(self.method));
+        string memory script = string.concat(
+            'response=$(curl -s -w "\\n%{header_json}\\n\\n%{http_code}" ', self.url, " -X ", toString(self.method)
+        );
 
         for (uint256 i; i < self.headers.length; i++) {
             script = string.concat(script, " -H ", '"', self.headers[i].key, ": ", self.headers[i].value, '"');

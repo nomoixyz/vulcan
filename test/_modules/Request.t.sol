@@ -65,6 +65,7 @@ contract RequestTest is Test {
         // { ... "json": { "foo": "bar" } ... }
         expect(res.json().unwrap().getString(".json.foo")).toEqual("bar");
         expect(res.status).toEqual(200);
+        expect(res.headers.getStringArray(".content-type")[0]).toEqual("application/json");
     }
 
     function testRequestJsonDecode() external {
