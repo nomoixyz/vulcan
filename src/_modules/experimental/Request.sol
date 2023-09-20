@@ -44,6 +44,7 @@ type RequestResult is bytes32;
 struct Response {
     string url;
     uint256 status;
+    Header[] headers;
     bytes body;
 }
 
@@ -228,8 +229,6 @@ library LibRequestBuilder {
 
         Request memory req = reqResult.toValue();
 
-        (string(req.toCommand().toString()));
-
         CommandResult result = req.toCommand().run();
 
         if (result.isError()) {
@@ -238,9 +237,9 @@ library LibRequestBuilder {
 
         CommandOutput memory cmdOutput = result.toValue();
 
-        (uint256 status, bytes memory _body) = abi.decode(cmdOutput.stdout, (uint256, bytes));
+        (uint256 status, bytes memory _body, bytes memory _headers) = abi.decode(cmdOutput.stdout, (uint256, bytes, bytes));
 
-        return Ok(Response({url: req.url, status: status, body: _body}));
+        return Ok(Response({url: req.url, status: status, body: _body, headers: new Header[](0)}));
     }
 
     function build(RequestBuilder memory self) internal pure returns (RequestResult) {
@@ -319,7 +318,7 @@ library LibRequest {
     function toCommand(Request memory self) internal pure returns (Command memory) {
         // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
         string memory script =
-            string.concat('response=$(curl -s -w "\\n%{http_code}" ', self.url, " -X ", toString(self.method));
+            string.concat('response=$(curl -s -w "\\n%{header_json}\\n\\n%{http_code}" ', self.url, " -X ", toString(self.method));
 
         for (uint256 i; i < self.headers.length; i++) {
             script = string.concat(script, " -H ", '"', self.headers[i].key, ": ", self.headers[i].value, '"');
@@ -331,7 +330,7 @@ library LibRequest {
 
         script = string.concat(
             script,
-            ');body=$(sed "$ d" <<< "$response" | tr -d "\\n");code=$(tail -n 1 <<< "$response");cast abi-encode "response(uint256,string)" "$code" "$body";'
+            ');reverse_response=$(echo "$response" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");headers=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR==2" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");code=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR==1" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");body=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR>2" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");cast abi-encode "response(uint256,string,string)" "$code" "$body" "$headers";'
         );
 
         return commands.create("bash").arg("-c").arg(script);
