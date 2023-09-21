@@ -303,18 +303,26 @@ library FsErrors {
 }
 
 library LibFsMetadataPointer {
-    function asFsMetadata(Pointer self) internal pure returns (FsMetadata memory metadata) {
-        bytes32 memoryAddr = self.asBytes32();
-
+    function toFsMetadata(Pointer self) internal pure returns (FsMetadata memory metadata) {
         assembly {
-            metadata := memoryAddr
+            metadata := self
+        }
+    }
+
+    function toFsMetadataResult(Pointer self) internal pure returns (FsMetadataResult ptr) {
+        assembly {
+            ptr := self
+        }
+    }
+
+    function toPointer(FsMetadata memory self) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := self
         }
     }
 }
 
 library LibFsMetadataResult {
-    using LibFsMetadataPointer for Pointer;
-
     function isOk(FsMetadataResult self) internal pure returns (bool) {
         return LibResultPointer.isOk(self.toPointer());
     }
@@ -324,11 +332,11 @@ library LibFsMetadataResult {
     }
 
     function unwrap(FsMetadataResult self) internal pure returns (FsMetadata memory val) {
-        return LibResultPointer.unwrap(self.toPointer()).asFsMetadata();
+        return LibResultPointer.unwrap(self.toPointer()).toFsMetadata();
     }
 
     function expect(FsMetadataResult self, string memory err) internal pure returns (FsMetadata memory) {
-        return LibResultPointer.expect(self.toPointer(), err).asFsMetadata();
+        return LibResultPointer.expect(self.toPointer(), err).toFsMetadata();
     }
 
     function toError(FsMetadataResult self) internal pure returns (Error) {
@@ -338,7 +346,7 @@ library LibFsMetadataResult {
     function toValue(FsMetadataResult self) internal pure returns (FsMetadata memory val) {
         (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
-        return ptr.asFsMetadata();
+        return ptr.toFsMetadata();
     }
 
     function toPointer(FsMetadataResult self) internal pure returns (Pointer) {
@@ -347,11 +355,10 @@ library LibFsMetadataResult {
 }
 
 function Ok(FsMetadata memory value) pure returns (FsMetadataResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-    return FsMetadataResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
+    return ResultType.Ok.encode(value.toPointer()).toFsMetadataResult();
 }
+
+using LibFsMetadataPointer for Pointer;
+using LibFsMetadataPointer for FsMetadata;
 
 using LibFsMetadataResult for FsMetadataResult global;

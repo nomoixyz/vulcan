@@ -21,28 +21,32 @@ library JsonError {
         return Invalid.encodeError("Invalid json");
     }
 
-    function Immutable() internal pure returns (Error) {
-        return Immutable.encodeError("Json object is immutable");
-    }
-
     function toJsonResult(Error self) internal pure returns (JsonResult) {
         return JsonResult.wrap(Pointer.unwrap(self.toPointer()));
     }
 }
 
 library LibJsonObjectPointer {
-    function asJsonObject(Pointer self) internal pure returns (JsonObject memory obj) {
-        bytes32 memoryAddr = self.asBytes32();
-
+    function toJsonObject(Pointer self) internal pure returns (JsonObject memory obj) {
         assembly {
-            obj := memoryAddr
+            obj := self
+        }
+    }
+
+    function toJsonResult(Pointer self) internal pure returns (JsonResult result) {
+        assembly {
+            result := self
+        }
+    }
+
+    function toPointer(JsonObject memory obj) internal pure returns (Pointer ptr) {
+        assembly {
+            ptr := obj
         }
     }
 }
 
 library LibJsonResult {
-    using LibJsonObjectPointer for Pointer;
-
     function isOk(JsonResult self) internal pure returns (bool) {
         return LibResultPointer.isOk(self.toPointer());
     }
@@ -52,11 +56,11 @@ library LibJsonResult {
     }
 
     function unwrap(JsonResult self) internal pure returns (JsonObject memory val) {
-        return LibResultPointer.unwrap(self.toPointer()).asJsonObject();
+        return LibResultPointer.unwrap(self.toPointer()).toJsonObject();
     }
 
     function expect(JsonResult self, string memory err) internal pure returns (JsonObject memory) {
-        return LibResultPointer.expect(self.toPointer(), err).asJsonObject();
+        return LibResultPointer.expect(self.toPointer(), err).toJsonObject();
     }
 
     function toError(JsonResult self) internal pure returns (Error) {
@@ -66,7 +70,7 @@ library LibJsonResult {
     function toValue(JsonResult self) internal pure returns (JsonObject memory val) {
         (, Pointer ptr) = LibResultPointer.decode(self.toPointer());
 
-        return ptr.asJsonObject();
+        return ptr.toJsonObject();
     }
 
     function toPointer(JsonResult self) internal pure returns (Pointer) {
@@ -75,11 +79,7 @@ library LibJsonResult {
 }
 
 function Ok(JsonObject memory value) pure returns (JsonResult) {
-    bytes32 _value;
-    assembly {
-        _value := value
-    }
-    return JsonResult.wrap(Pointer.unwrap(ResultType.Ok.encode(_value)));
+    return ResultType.Ok.encode(value.toPointer()).toJsonResult();
 }
 
 library json {
@@ -238,12 +238,15 @@ library json {
 
     /// @dev Creates a new JsonObject struct.
     /// @return The JsonObject struct.
-    function create(string memory obj) internal pure returns (JsonResult) {
+    function create(string memory obj) internal returns (JsonResult) {
         if (!isValid(obj)) {
             return JsonError.Invalid().toJsonResult();
         }
 
-        return Ok(JsonObject({id: "", serialized: obj}));
+        JsonObject memory jsonObj = create();
+        jsonObj.serialized = vulcan.hevm.serializeJson(jsonObj.id, obj);
+
+        return Ok(jsonObj);
     }
 
     /// @dev Serializes and sets the key and value for the provided json object.
@@ -441,10 +444,6 @@ library json {
         vulcan.hevm.writeJson(obj.serialized, path, key);
     }
 
-    function isImmutable(JsonObject memory obj) internal pure returns (bool) {
-        return bytes(obj.id).length == 0;
-    }
-
     function _incrementId() private returns (uint256 count) {
         bytes32 slot = keccak256("vulcan.json.id.counter");
 
@@ -455,5 +454,10 @@ library json {
     }
 }
 
+// Local
+using LibJsonObjectPointer for Pointer;
+using LibJsonObjectPointer for JsonObject;
+
+// Global
 using json for JsonObject global;
 using LibJsonResult for JsonResult global;
