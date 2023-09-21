@@ -21,13 +21,17 @@ contract SemverTest is Test {
         expect(version.major).toEqual(1);
         expect(version.minor).toEqual(0);
         expect(version.patch).toEqual(0);
+    }
 
-        version = semver.create("v0.6.9");
+    function testParse() external {
+        Semver memory version;
+
+        version = semver.parse("v0.6.9");
         expect(version.major).toEqual(0);
         expect(version.minor).toEqual(6);
         expect(version.patch).toEqual(9);
 
-        version = semver.create("0.6.9");
+        version = semver.parse("0.6.9");
         expect(version.major).toEqual(0);
         expect(version.minor).toEqual(6);
         expect(version.patch).toEqual(9);

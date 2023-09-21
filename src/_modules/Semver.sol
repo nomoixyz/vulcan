@@ -26,7 +26,7 @@ library semver {
         return create(major, 0, 0);
     }
 
-    function create(string memory input) internal pure returns (Semver memory) {
+    function parse(string memory input) internal pure returns (Semver memory) {
         bytes memory inputBytes = bytes(input);
 
         if (inputBytes.length > 0 && inputBytes[0] == bytes1("v")) {
