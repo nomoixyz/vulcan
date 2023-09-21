@@ -21,6 +21,7 @@ import {println} from "./_utils/println.sol";
 import {removeSelector} from "./_utils/removeSelector.sol";
 import {huff, Huffc} from "./_modules/Huff.sol";
 import {fe, Fe} from "./_modules/Fe.sol";
+import {semver, Semver} from "./_modules/Semver.sol";
 
 contract Script {
     bool public IS_SCRIPT = true;
