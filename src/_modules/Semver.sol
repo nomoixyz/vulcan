@@ -100,7 +100,9 @@ library semver {
         returns (string memory)
     {
         bytes memory inputBytes = bytes(input);
-        require(startIndex < inputBytes.length, _formatError("_substring(uint256,uint256,uint256)", "Invalid start index"));
+        require(
+            startIndex < inputBytes.length, _formatError("_substring(uint256,uint256,uint256)", "Invalid start index")
+        );
         require(endIndex <= inputBytes.length, _formatError("_substring(uint256,uint256,uint256)", "Invalid end index"));
 
         bytes memory result = new bytes(endIndex - startIndex);
