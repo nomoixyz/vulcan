@@ -47,7 +47,7 @@ type RequestHeaders is bytes32;
 struct Response {
     string url;
     uint256 status;
-    JsonObject headers;
+    ResponseHeaders headers;
     bytes body;
 }
 
@@ -205,6 +205,7 @@ library LibResponseResult {
 
 library LibRequestClient {
     using RequestError for *;
+    using LibHeaders for *;
 
     function get(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.GET, url);
@@ -239,7 +240,12 @@ library LibRequestClient {
             abi.decode(cmdOutput.stdout, (uint256, bytes, bytes));
 
         return Ok(
-            Response({url: req.url, status: status, body: _body, headers: jsonModule.create(string(_headers)).unwrap()})
+            Response({
+                url: req.url,
+                status: status,
+                body: _body,
+                headers: jsonModule.create(string(_headers)).unwrap().toResponseHeaders()
+            })
         );
     }
 
@@ -324,11 +330,8 @@ library LibRequestBuilder {
         internal
         returns (RequestBuilder memory)
     {
-        // "Authorization: Basic $(base64 <<<"joeuser:secretpass")"
-
-        string memory userPassword = string.concat("\"", username, ":", password, "\"");
         Command memory base64Cmd = commands.create("bash").args(
-            ["-c", string.concat("pass=$(echo -n ", userPassword, " | base64);echo $pass")]
+            ["-c", string.concat("pass=$(echo -n \"", username, ":", password, "\" | base64);echo $pass")]
         );
         return self.header("Authorization", string.concat("Basic ", string(base64Cmd.run().unwrap().stdout)));
     }

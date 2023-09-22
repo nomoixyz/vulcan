@@ -94,6 +94,6 @@ contract RequestTest is Test {
 
         Response memory res = client.post("https://httpbin.org/post").json('{ "foo": "bar" }').send().unwrap();
 
-        expect(res.headers.getStringArray(".content-type")[0]).toEqual("application/json");
+        expect(res.headers.get("content-type")[0]).toEqual("application/json");
     }
 }
