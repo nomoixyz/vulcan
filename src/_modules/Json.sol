@@ -6,7 +6,6 @@ import {ResultType, LibResultPointer} from "./Result.sol";
 import {LibError, Error} from "./Error.sol";
 import "./Accounts.sol";
 import "./Vulcan.sol";
-import {console} from "./Console.sol";
 
 struct JsonObject {
     string id;
@@ -231,7 +230,6 @@ library json {
     }
 
     function getKeys(JsonObject memory obj, string memory key) internal returns (string[] memory) {
-        console.log(obj.serialized);
         return vulcan.hevm.parseJsonKeys(obj.serialized, key);
     }
 

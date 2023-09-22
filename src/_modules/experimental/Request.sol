@@ -8,7 +8,6 @@ import {semver, Semver} from "../Semver.sol";
 import {Pointer} from "../Pointer.sol";
 import {BytesResult, StringResult, Ok, ResultType, LibResultPointer} from "../Result.sol";
 import {LibError, Error} from "../Error.sol";
-import {console} from "../Console.sol";
 
 enum Method {
     GET,
@@ -228,14 +227,11 @@ library LibRequestClient {
     }
 
     function execute(RequestClient memory self, Request memory req) internal returns (ResponseResult) {
-        console.log("Before toCommand");
         CommandResult result = toCommand(self, req).run();
 
-        console.log("Before isError");
         if (result.isError()) {
             return result.toError().toResponseResult();
         }
-        console.log("After is error");
 
         CommandOutput memory cmdOutput = result.toValue();
 
@@ -259,9 +255,7 @@ library LibRequestClient {
             "response=$(curl -s -w ", curlWriteOutTemplate, req.url, " -X ", LibRequest.toString(req.method)
         );
 
-        console.log("Before getKeys");
         string[] memory headersKeys = req.headers.getKeys();
-        console.log("After getKeys");
 
         for (uint256 i; i < headersKeys.length; i++) {
             string memory key = headersKeys[i];
@@ -331,7 +325,12 @@ library LibRequestBuilder {
         returns (RequestBuilder memory)
     {
         // "Authorization: Basic $(base64 <<<"joeuser:secretpass")"
-        return self.header("Authorization", string.concat('Basic $(echo -n "', username, ":", password, '" | base64)'));
+
+        string memory userPassword = string.concat("\"", username, ":", password, "\"");
+        Command memory base64Cmd = commands.create("bash").args(
+            ["-c", string.concat("pass=$(echo -n ", userPassword, " | base64);echo $pass")]
+        );
+        return self.header("Authorization", string.concat("Basic ", string(base64Cmd.run().unwrap().stdout)));
     }
 
     function bearerAuth(RequestBuilder memory self, string memory token) internal returns (RequestBuilder memory) {
@@ -343,7 +342,6 @@ library LibRequestBuilder {
         returns (RequestBuilder memory)
     {
         if (self.request.isError()) {
-            console.log("request.isError");
             return self;
         }
 
@@ -432,7 +430,6 @@ library LibHeaders {
     }
 
     function getKeys(RequestHeaders self) internal returns (string[] memory) {
-        console.log("JsonObject", self.toJsonObject().serialized);
         return self.toJsonObject().getKeys();
     }
 
