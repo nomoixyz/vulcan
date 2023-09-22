@@ -171,4 +171,15 @@ contract JsonTest is Test {
             '{"bar":{"foo":"0x0000000000000000000000000000000000000000000000000000000000000001"}}'
         );
     }
+
+    function testGetKeys() external {
+        JsonObject memory obj = json.create('{"foo": {"bar": "baz"}}').unwrap();
+
+        string[] memory outerKeys = obj.getKeys();
+
+        string[] memory innerKeys = obj.getKeys(".foo");
+
+        expect(outerKeys[0]).toEqual("foo");
+        expect(innerKeys[0]).toEqual("bar");
+    }
 }

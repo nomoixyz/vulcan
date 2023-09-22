@@ -6,6 +6,7 @@ import {ResultType, LibResultPointer} from "./Result.sol";
 import {LibError, Error} from "./Error.sol";
 import "./Accounts.sol";
 import "./Vulcan.sol";
+import {console} from "./Console.sol";
 
 struct JsonObject {
     string id;
@@ -227,6 +228,15 @@ library json {
     /// @return The bytes32[] value.
     function getBytes32Array(JsonObject memory obj, string memory key) internal pure returns (bytes32[] memory) {
         return vulcan.hevm.parseJsonBytes32Array(obj.serialized, key);
+    }
+
+    function getKeys(JsonObject memory obj, string memory key) internal returns (string[] memory) {
+        console.log(obj.serialized);
+        return vulcan.hevm.parseJsonKeys(obj.serialized, key);
+    }
+
+    function getKeys(JsonObject memory obj) internal returns (string[] memory) {
+        return getKeys(obj, "");
     }
 
     /// @dev Creates a new JsonObject struct.

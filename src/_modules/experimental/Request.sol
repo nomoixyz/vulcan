@@ -8,6 +8,7 @@ import {semver, Semver} from "../Semver.sol";
 import {Pointer} from "../Pointer.sol";
 import {BytesResult, StringResult, Ok, ResultType, LibResultPointer} from "../Result.sol";
 import {LibError, Error} from "../Error.sol";
+import {console} from "../Console.sol";
 
 enum Method {
     GET,
@@ -36,13 +37,14 @@ struct RequestBuilder {
 struct Request {
     Method method;
     string url;
-    Header[] headers;
+    RequestHeaders headers;
     bytes body;
 }
 
 type RequestResult is bytes32;
 
-// TODO: headers, etc
+type RequestHeaders is bytes32;
+
 struct Response {
     string url;
     uint256 status;
@@ -51,6 +53,8 @@ struct Response {
 }
 
 type ResponseResult is bytes32;
+
+type ResponseHeaders is bytes32;
 
 library request {
     using request for *;
@@ -203,32 +207,35 @@ library LibResponseResult {
 library LibRequestClient {
     using RequestError for *;
 
-    function get(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
+    function get(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.GET, url);
     }
 
-    function del(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
+    function del(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.DELETE, url);
     }
 
-    function patch(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
+    function patch(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.PATCH, url);
     }
 
-    function post(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
+    function post(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.POST, url);
     }
 
-    function put(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
+    function put(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.PUT, url);
     }
 
     function execute(RequestClient memory self, Request memory req) internal returns (ResponseResult) {
+        console.log("Before toCommand");
         CommandResult result = toCommand(self, req).run();
 
+        console.log("Before isError");
         if (result.isError()) {
             return result.toError().toResponseResult();
         }
+        console.log("After is error");
 
         CommandOutput memory cmdOutput = result.toValue();
 
@@ -240,7 +247,7 @@ library LibRequestClient {
         );
     }
 
-    function toCommand(RequestClient memory self, Request memory req) internal pure returns (Command memory) {
+    function toCommand(RequestClient memory self, Request memory req) internal returns (Command memory) {
         // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
         string memory curlWriteOutTemplate = "\"\\n%{header_json}\\n\\n%{http_code}\" ";
 
@@ -252,8 +259,13 @@ library LibRequestClient {
             "response=$(curl -s -w ", curlWriteOutTemplate, req.url, " -X ", LibRequest.toString(req.method)
         );
 
-        for (uint256 i; i < req.headers.length; i++) {
-            script = string.concat(script, " -H ", '"', req.headers[i].key, ": ", req.headers[i].value, '"');
+        console.log("Before getKeys");
+        string[] memory headersKeys = req.headers.getKeys();
+        console.log("After getKeys");
+
+        for (uint256 i; i < headersKeys.length; i++) {
+            string memory key = headersKeys[i];
+            script = string.concat(script, " -H ", '"', key, ": ", req.headers.get(key), '"');
         }
 
         if (req.body.length > 0) {
@@ -272,14 +284,21 @@ library LibRequestClient {
 library LibRequestBuilder {
     using request for *;
     using RequestError for *;
+    using LibHeaders for *;
 
     function create(RequestClient memory client, Method method, string memory url)
         internal
-        pure
         returns (RequestBuilder memory builder)
     {
         builder.client = client;
-        builder.request = Ok(Request({method: method, url: url, headers: new Header[](0), body: new bytes(0)}));
+        builder.request = Ok(
+            Request({
+                method: method,
+                url: url,
+                headers: jsonModule.create("{}").unwrap().toRequestHeaders(),
+                body: new bytes(0)
+            })
+        );
     }
 
     function send(RequestBuilder memory self) internal returns (ResponseResult) {
@@ -309,42 +328,32 @@ library LibRequestBuilder {
 
     function basicAuth(RequestBuilder memory self, string memory username, string memory password)
         internal
-        pure
         returns (RequestBuilder memory)
     {
         // "Authorization: Basic $(base64 <<<"joeuser:secretpass")"
         return self.header("Authorization", string.concat('Basic $(echo -n "', username, ":", password, '" | base64)'));
     }
 
-    function bearerAuth(RequestBuilder memory self, string memory token)
-        internal
-        pure
-        returns (RequestBuilder memory)
-    {
+    function bearerAuth(RequestBuilder memory self, string memory token) internal returns (RequestBuilder memory) {
         return self.header("Authorization", string.concat("Bearer ", token));
     }
 
     function header(RequestBuilder memory self, string memory key, string memory value)
         internal
-        pure
         returns (RequestBuilder memory)
     {
         if (self.request.isError()) {
+            console.log("request.isError");
             return self;
         }
 
         Request memory req = self.request.toValue();
-        uint256 len = req.headers.length;
-        req.headers = new Header[](len + 1);
-        for (uint256 i; i < len; i++) {
-            req.headers[i] = req.headers[i];
-        }
-        req.headers[len] = Header({key: key, value: value});
+        req.headers.set(key, value);
         self.request = Ok(req);
         return self;
     }
 
-    function json(RequestBuilder memory self, JsonObject memory obj) internal pure returns (RequestBuilder memory) {
+    function json(RequestBuilder memory self, JsonObject memory obj) internal returns (RequestBuilder memory) {
         // We assume the json has already been validated
         return self.header("Content-Type", "application/json").body(obj.serialized);
     }
@@ -399,6 +408,55 @@ library LibResponse {
     // }
 }
 
+library LibHeaders {
+    function toJsonObject(RequestHeaders self) internal pure returns (JsonObject memory obj) {
+        assembly {
+            obj := self
+        }
+    }
+
+    function toRequestHeaders(JsonObject memory obj) internal pure returns (RequestHeaders headers) {
+        assembly {
+            headers := obj
+        }
+    }
+
+    function set(RequestHeaders self, string memory key, string memory value) internal returns (RequestHeaders) {
+        self.toJsonObject().set(key, value);
+
+        return self;
+    }
+
+    function get(RequestHeaders self, string memory key) internal pure returns (string memory) {
+        return self.toJsonObject().getString(string.concat(".", key));
+    }
+
+    function getKeys(RequestHeaders self) internal returns (string[] memory) {
+        console.log("JsonObject", self.toJsonObject().serialized);
+        return self.toJsonObject().getKeys();
+    }
+
+    function toJsonObject(ResponseHeaders self) internal pure returns (JsonObject memory obj) {
+        assembly {
+            obj := self
+        }
+    }
+
+    function toResponseHeaders(JsonObject memory obj) internal pure returns (ResponseHeaders headers) {
+        assembly {
+            headers := obj
+        }
+    }
+
+    function get(ResponseHeaders self, string memory key) internal pure returns (string[] memory) {
+        return self.toJsonObject().getStringArray(string.concat(".", key));
+    }
+
+    function getKeys(ResponseHeaders self) internal returns (string[] memory) {
+        return self.toJsonObject().getKeys();
+    }
+}
+
 function Ok(Request memory value) pure returns (RequestResult) {
     return ResultType.Ok.encode(value.toPointer()).toRequestResult();
 }
@@ -422,3 +480,5 @@ using LibResponse for Response global;
 using LibRequestBuilder for RequestBuilder global;
 using LibRequestResult for RequestResult global;
 using LibResponseResult for ResponseResult global;
+using LibHeaders for RequestHeaders global;
+using LibHeaders for ResponseHeaders global;
