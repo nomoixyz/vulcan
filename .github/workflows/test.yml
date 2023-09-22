@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Run curl
         run: |
-          curl -sw '%{header_json}\n' curl.se
+          curl --version
   tests:
     name: Foundry project
     runs-on: ubuntu-latest

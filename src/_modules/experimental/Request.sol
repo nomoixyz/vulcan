@@ -3,6 +3,7 @@ pragma solidity ^0.8.13;
 
 import {Command, CommandResult, CommandOutput, commands} from "../Commands.sol";
 import {JsonObject, json as jsonModule, JsonResult, Ok} from "../Json.sol";
+import {semver, Semver} from "../Semver.sol";
 
 import {Pointer} from "../Pointer.sol";
 import {BytesResult, StringResult, Ok, ResultType, LibResultPointer} from "../Result.sol";
@@ -24,6 +25,7 @@ struct Header {
 struct RequestClient {
     // Default headers, not used yet
     Header[] headers;
+    Semver _curlVersion;
 }
 
 struct RequestBuilder {
@@ -54,7 +56,20 @@ library request {
     using request for *;
 
     // Return an empty client
-    function create() internal pure returns (RequestClient memory) {}
+    function create() internal returns (RequestClient memory client) {
+        Command memory curlVersionCmd = commands.create("bash").args(
+            [
+                "-c",
+                "version=$(curl --version | grep -oE 'curl [0-9]+\\.[0-9]+\\.[0-9]+' | awk '{print $2}');echo $version"
+            ]
+        );
+
+        CommandOutput memory curlVersion = curlVersionCmd.run().unwrap();
+
+        client._curlVersion = semver.parse(string(curlVersion.stdout));
+
+        return client;
+    }
 
     function get(string memory url) internal returns (ResponseResult) {
         return create().get(url).send();
@@ -186,6 +201,8 @@ library LibResponseResult {
 }
 
 library LibRequestClient {
+    using RequestError for *;
+
     function get(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.GET, url);
     }
@@ -204,6 +221,51 @@ library LibRequestClient {
 
     function put(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.PUT, url);
+    }
+
+    function execute(RequestClient memory self, Request memory req) internal returns (ResponseResult) {
+        CommandResult result = toCommand(self, req).run();
+
+        if (result.isError()) {
+            return result.toError().toResponseResult();
+        }
+
+        CommandOutput memory cmdOutput = result.toValue();
+
+        (uint256 status, bytes memory _body, bytes memory _headers) =
+            abi.decode(cmdOutput.stdout, (uint256, bytes, bytes));
+
+        return Ok(
+            Response({url: req.url, status: status, body: _body, headers: jsonModule.create(string(_headers)).unwrap()})
+        );
+    }
+
+    function toCommand(RequestClient memory self, Request memory req) internal pure returns (Command memory) {
+        // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
+        string memory curlWriteOutTemplate = "\"\\n%{header_json}\\n\\n%{http_code}\" ";
+
+        if (self._curlVersion.lessThan(semver.create(7, 83))) {
+            curlWriteOutTemplate = "\"\\n{}\\n\\n%{http_code}\" ";
+        }
+
+        string memory script = string.concat(
+            "response=$(curl -s -w ", curlWriteOutTemplate, req.url, " -X ", LibRequest.toString(req.method)
+        );
+
+        for (uint256 i; i < req.headers.length; i++) {
+            script = string.concat(script, " -H ", '"', req.headers[i].key, ": ", req.headers[i].value, '"');
+        }
+
+        if (req.body.length > 0) {
+            script = string.concat(script, " -d ", "'", string(req.body), "'");
+        }
+
+        script = string.concat(
+            script,
+            ');reverse_response=$(echo "$response" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");headers=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR==2" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");code=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR==1" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");body=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR>2" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");cast abi-encode "response(uint256,string,string)" "$code" "$body" "$headers";'
+        );
+
+        return commands.create("bash").arg("-c").arg(script);
     }
 }
 
@@ -227,22 +289,7 @@ library LibRequestBuilder {
             return reqResult.toError().toResponseResult();
         }
 
-        Request memory req = reqResult.toValue();
-
-        CommandResult result = req.toCommand().run();
-
-        if (result.isError()) {
-            return result.toError().toResponseResult();
-        }
-
-        CommandOutput memory cmdOutput = result.toValue();
-
-        (uint256 status, bytes memory _body, bytes memory _headers) =
-            abi.decode(cmdOutput.stdout, (uint256, bytes, bytes));
-
-        return Ok(
-            Response({url: req.url, status: status, body: _body, headers: jsonModule.create(string(_headers)).unwrap()})
-        );
+        return self.client.execute(reqResult.toValue());
     }
 
     function build(RequestBuilder memory self) internal pure returns (RequestResult) {
@@ -318,28 +365,6 @@ library LibRequestBuilder {
 }
 
 library LibRequest {
-    function toCommand(Request memory self) internal pure returns (Command memory) {
-        // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
-        string memory script = string.concat(
-            'response=$(curl -s -w "\\n%{header_json}\\n\\n%{http_code}" ', self.url, " -X ", toString(self.method)
-        );
-
-        for (uint256 i; i < self.headers.length; i++) {
-            script = string.concat(script, " -H ", '"', self.headers[i].key, ": ", self.headers[i].value, '"');
-        }
-
-        if (self.body.length > 0) {
-            script = string.concat(script, " -d ", "'", string(self.body), "'");
-        }
-
-        script = string.concat(
-            script,
-            ');reverse_response=$(echo "$response" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");headers=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR==2" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");code=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR==1" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");body=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR>2" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");cast abi-encode "response(uint256,string,string)" "$code" "$body" "$headers";'
-        );
-
-        return commands.create("bash").arg("-c").arg(script);
-    }
-
     function toString(Method method) internal pure returns (string memory) {
         if (method == Method.GET) {
             return "GET";
