@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, println, json, JsonObject, vulcan, commands} from "../../src/test.sol";
+import {Test, expect, println, json, JsonObject, vulcan, commands, semver, console} from "../../src/test.sol";
 
 import {
     request,
@@ -65,7 +65,6 @@ contract RequestTest is Test {
         // { ... "json": { "foo": "bar" } ... }
         expect(res.json().unwrap().getString(".json.foo")).toEqual("bar");
         expect(res.status).toEqual(200);
-        expect(res.headers.getStringArray(".content-type")[0]).toEqual("application/json");
     }
 
     function testRequestJsonDecode() external {
@@ -84,5 +83,17 @@ contract RequestTest is Test {
         HttpBinIpResponse memory res = abi.decode(obj.parse(), (HttpBinIpResponse));
 
         expect(bytes(res.origin).length).toBeGreaterThan(0);
+    }
+
+    function testResponseHeaders() external {
+        RequestClient memory client = request.create();
+
+        // Skip this test because this version of curl migth not support the `--write-out "%{header_json}"`
+        // option
+        vulcan.hevm.skip(client._curlVersion.lessThan(semver.create(7, 83)));
+
+        Response memory res = client.post("https://httpbin.org/post").json('{ "foo": "bar" }').send().unwrap();
+
+        expect(res.headers.getStringArray(".content-type")[0]).toEqual("application/json");
     }
 }
