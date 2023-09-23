@@ -265,7 +265,11 @@ library LibRequestClient {
 
         for (uint256 i; i < headersKeys.length; i++) {
             string memory key = headersKeys[i];
-            script = string.concat(script, " -H ", '"', key, ": ", req.headers.get(key), '"');
+            string[] memory headersValues = req.headers.getAll(key);
+
+            for (uint256 j; j < headersValues.length; j++) {
+                script = string.concat(script, " -H ", '"', key, ": ", headersValues[j], '"');
+            }
         }
 
         if (req.body.length > 0) {
@@ -423,13 +427,42 @@ library LibHeaders {
     }
 
     function set(RequestHeaders self, string memory key, string memory value) internal returns (RequestHeaders) {
-        self.toJsonObject().set(key, value);
+        string[] memory values = new string[](1);
+        values[0] = value;
+
+        return set(self, key, values);
+    }
+
+    function set(RequestHeaders self, string memory key, string[] memory values) internal returns (RequestHeaders) {
+        if (!self.toJsonObject().containsKey(string.concat(".", key))) {
+            self.toJsonObject().set(key, values);
+
+            return self;
+        }
+
+        string[] memory currentValues = self.toJsonObject().getStringArray(key);
+
+        string[] memory newValues = new string[](currentValues.length + values.length);
+
+        for (uint256 i; i < currentValues.length; i++) {
+            newValues[i] = currentValues[i];
+        }
+
+        for (uint256 i; i < values.length; i++) {
+            newValues[i + currentValues.length] = values[i];
+        }
+
+        self.toJsonObject().set(key, newValues);
 
         return self;
     }
 
     function get(RequestHeaders self, string memory key) internal pure returns (string memory) {
-        return self.toJsonObject().getString(string.concat(".", key));
+        return getAll(self, key)[0];
+    }
+
+    function getAll(RequestHeaders self, string memory key) internal pure returns (string[] memory) {
+        return self.toJsonObject().getStringArray(string.concat(".", key));
     }
 
     function getKeys(RequestHeaders self) internal returns (string[] memory) {
