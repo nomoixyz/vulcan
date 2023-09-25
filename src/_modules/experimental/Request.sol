@@ -290,7 +290,6 @@ library LibRequestClient {
     }
 
     function toCommand(RequestClient memory self, Request memory req) internal returns (Command memory) {
-        // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
         string memory curlWriteOutTemplate = "\"\\n%{header_json}\\n\\n%{http_code}\" ";
 
         if (self._curlVersion.lessThan(semver.create(7, 83))) {
