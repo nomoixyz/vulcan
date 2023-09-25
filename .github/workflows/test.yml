@@ -10,6 +10,14 @@ env:
   FOUNDRY_PROFILE: ci
 
 jobs:
+  test-docker:
+    name: Run tests on docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build image
+        run: docker build . -t nomoixyz/vulcan-test-suite
+      - name: Run tests
+        run: docker run --rm nomoixyz/vulcan-test-suite
   tests:
     name: Foundry project
     runs-on: ubuntu-latest
