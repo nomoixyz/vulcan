@@ -8,7 +8,8 @@ import {
     RequestResult,
     RequestClient,
     Response,
-    ResponseResult
+    ResponseResult,
+    RequestBuilder
 } from "../../src/_modules/experimental/Request.sol";
 
 contract RequestTest is Test {
@@ -95,5 +96,15 @@ contract RequestTest is Test {
         Response memory res = client.post("https://httpbin.org/post").json('{ "foo": "bar" }').send().unwrap();
 
         expect(res.headers.get("content-type")[0]).toEqual("application/json");
+    }
+
+    function testDefaultHeaders() external {
+        RequestClient memory client = request.create().setDefaultHeaders("foo", "bar");
+
+        expect(client.headers.get("foo")).toEqual("bar");
+
+        RequestBuilder memory builder = client.post("");
+
+        expect(builder.request.unwrap().headers.get("foo")).toEqual("bar");
     }
 }

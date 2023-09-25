@@ -24,7 +24,7 @@ struct Header {
 
 struct RequestClient {
     // Default headers, not used yet
-    Header[] headers;
+    RequestHeaders headers;
     Semver _curlVersion;
 }
 
@@ -57,6 +57,7 @@ type ResponseHeaders is bytes32;
 
 library request {
     using request for *;
+    using LibHeaders for *;
 
     // Return an empty client
     function create() internal returns (RequestClient memory client) {
@@ -70,6 +71,8 @@ library request {
         CommandOutput memory curlVersion = curlVersionCmd.run().unwrap();
 
         client._curlVersion = semver.parse(string(curlVersion.stdout));
+
+        client.headers = jsonModule.create("{}").unwrap().toRequestHeaders();
 
         return client;
     }
@@ -207,24 +210,61 @@ library LibRequestClient {
     using RequestError for *;
     using LibHeaders for *;
 
-    function get(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
+    function get(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.GET, url);
     }
 
-    function del(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
+    function del(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.DELETE, url);
     }
 
-    function patch(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
+    function patch(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.PATCH, url);
     }
 
-    function post(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
+    function post(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.POST, url);
     }
 
-    function put(RequestClient memory self, string memory url) internal returns (RequestBuilder memory) {
+    function put(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.PUT, url);
+    }
+
+    function setDefaultHeaders(RequestClient memory self, string memory key, string memory value)
+        internal
+        returns (RequestClient memory)
+    {
+        string[] memory values = new string[](1);
+        values[0] = value;
+
+        return setDefaultHeaders(self, key, values);
+    }
+
+    function setDefaultHeaders(RequestClient memory self, string memory key, string[] memory values)
+        internal
+        returns (RequestClient memory)
+    {
+        if (!self.headers.toJsonObject().containsKey(string.concat(".", key))) {
+            self.headers.toJsonObject().set(key, values);
+
+            return self;
+        }
+
+        string[] memory currentValues = self.headers.toJsonObject().getStringArray(key);
+
+        string[] memory newValues = new string[](currentValues.length + values.length);
+
+        for (uint256 i; i < currentValues.length; i++) {
+            newValues[i] = currentValues[i];
+        }
+
+        for (uint256 i; i < values.length; i++) {
+            newValues[i + currentValues.length] = values[i];
+        }
+
+        self.headers.toJsonObject().set(key, newValues);
+
+        return self;
     }
 
     function execute(RequestClient memory self, Request memory req) internal returns (ResponseResult) {
@@ -292,17 +332,11 @@ library LibRequestBuilder {
 
     function create(RequestClient memory client, Method method, string memory url)
         internal
+        pure
         returns (RequestBuilder memory builder)
     {
         builder.client = client;
-        builder.request = Ok(
-            Request({
-                method: method,
-                url: url,
-                headers: jsonModule.create("{}").unwrap().toRequestHeaders(),
-                body: new bytes(0)
-            })
-        );
+        builder.request = Ok(Request({method: method, url: url, headers: client.headers, body: new bytes(0)}));
     }
 
     function send(RequestBuilder memory self) internal returns (ResponseResult) {
