@@ -37,7 +37,7 @@ contract FeTest is Test {
     function testCompile() external {
         fe.create().setFilePath("./test/mocks/guest_book.fe").setOutputDir("./test/fixtures/fe/output").setOverwrite(
             true
-        ).build();
+        ).build().unwrap();
 
         StringResult result = fs.readFile("./test/fixtures/fe/output/A/A.bin");
 

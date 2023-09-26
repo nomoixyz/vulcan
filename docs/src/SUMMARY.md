@@ -23,6 +23,7 @@
     - [Strings](./modules/strings.md)
     - [Utils](./modules/utils.md)
     - [Watchers](./modules/watchers.md)
+    - Results
 
 # Reference
 

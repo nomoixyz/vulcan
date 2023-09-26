@@ -23,9 +23,9 @@ library fs {
     using LibError for *;
     using FsErrors for Error;
 
-    /// @dev Reads the file on `path` and returns its content as a `string`.
+    /// @dev Reads the file on `path` and returns its content as a `StringResult`.
     /// @param path The path to the file.
-    /// @return The content of the file as `string`.
+    /// @return The content of the file as `StringResult`.
     function readFile(string memory path) internal view returns (StringResult) {
         try vulcan.hevm.readFile(path) returns (string memory content) {
             return Ok(content);
@@ -36,9 +36,9 @@ library fs {
         }
     }
 
-    /// @dev Reads the file on `path` and returns its content as a `bytes`.
+    /// @dev Reads the file on `path` and returns its content as a `BytesResult`.
     /// @param path The path to the file.
-    /// @return The content of the file as `bytes`.
+    /// @return The content of the file as `BytesResult`.
     function readFileBinary(string memory path) internal view returns (BytesResult) {
         try vulcan.hevm.readFileBinary(path) returns (bytes memory content) {
             return Ok(content);
@@ -50,7 +50,7 @@ library fs {
     }
 
     /// @dev Obtains the current project's root.
-    /// @return The current project's root.
+    /// @return The current project's root as `StringResult`.
     function projectRoot() internal view returns (StringResult) {
         try vulcan.hevm.projectRoot() returns (string memory path) {
             return Ok(path);
@@ -63,7 +63,7 @@ library fs {
 
     /// @dev Obtains the metadata of the specified file or directory.
     /// @param fileOrDir The path to the file or directory.
-    /// @return data The metadata of the file or directory.
+    /// @return data The metadata of the file or directory as `FsMetadataResult`.
     function metadata(string memory fileOrDir) internal view returns (FsMetadataResult) {
         try vulcan.hevm.fsMetadata(fileOrDir) returns (Hevm.FsMetadata memory md) {
             FsMetadata memory data;

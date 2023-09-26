@@ -237,7 +237,7 @@ library json {
     }
 
     /// @dev Creates a new JsonObject struct.
-    /// @return The JsonObject struct.
+    /// @return The JsonObject struct wrapped in a JsonResult.
     function create(string memory obj) internal returns (JsonResult) {
         if (!isValid(obj)) {
             return JsonError.Invalid().toJsonResult();

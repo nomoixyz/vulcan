@@ -1,7 +1,7 @@
 # Commands
 
 Execute external commands. The `ffi` setting must be enabled on `foundry.toml` for this module to
-work.
+work. The `commands` module uses [`Results`](./results.md) when returning values.
 
 ```solidity
 import { Test, Command, commands, CommandResult } from "vulcan/test.sol";
