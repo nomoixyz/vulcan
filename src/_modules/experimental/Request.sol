@@ -61,15 +61,15 @@ library request {
 
     // Return an empty client
     function create() internal returns (RequestClient memory client) {
-        CommandOutput memory curlVersion = commands.run(
+        bytes memory rawCurlVersion = commands.run(
             [
                 "bash",
                 "-c",
                 "curl --version | awk '/curl [0-9]+\\.[0-9]+\\.[0-9]+/ {print $2}'"
             ]
-        ).expect("Failed to get curl version");
+        ).expect("Failed to get curl version").stdout;
 
-        client._curlVersion = semver.parse(string(curlVersion.stdout));
+        client._curlVersion = semver.parse(string(rawCurlVersion));
 
         client.headers = jsonModule.create("{}").unwrap().toRequestHeaders();
 
