@@ -65,7 +65,7 @@ library request {
             [
                 "bash",
                 "-c",
-                "version=$(curl --version | grep -oE 'curl [0-9]+\\.[0-9]+\\.[0-9]+' | awk '{print $2}');echo $version"
+                "curl --version | awk '/curl [0-9]+\\.[0-9]+\\.[0-9]+/ {print $2}'"
             ]
         ).unwrap();
 
