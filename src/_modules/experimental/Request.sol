@@ -62,11 +62,7 @@ library request {
     // Return an empty client
     function create() internal returns (RequestClient memory client) {
         bytes memory rawCurlVersion = commands.run(
-            [
-                "bash",
-                "-c",
-                "curl --version | awk '/curl [0-9]+\\.[0-9]+\\.[0-9]+/ {print $2}'"
-            ]
+            ["bash", "-c", "curl --version | awk '/curl [0-9]+\\.[0-9]+\\.[0-9]+/ {print $2}'"]
         ).expect("Failed to get curl version").stdout;
 
         client._curlVersion = semver.parse(string(rawCurlVersion));
@@ -230,14 +226,16 @@ library LibRequestClient {
     }
 
     function insertDefaultHeader(RequestClient memory self, string memory key, string memory value)
-    internal returns (RequestClient memory)
+        internal
+        returns (RequestClient memory)
     {
         self.headers.insert(key, value);
         return self;
     }
 
     function insertDefaultHeader(RequestClient memory self, string memory key, string[] memory values)
-    internal returns (RequestClient memory)
+        internal
+        returns (RequestClient memory)
     {
         self.headers.insert(key, values);
         return self;
@@ -463,16 +461,14 @@ library LibHeaders {
         }
     }
 
-    function insert(RequestHeaders self, string memory key, string memory value) internal returns
-    (RequestHeaders) {
-        string [] memory values = new string[](1);
+    function insert(RequestHeaders self, string memory key, string memory value) internal returns (RequestHeaders) {
+        string[] memory values = new string[](1);
         values[0] = value;
 
         return insert(self, key, values);
     }
 
-    function insert(RequestHeaders self, string memory key, string[] memory values) internal returns
-    (RequestHeaders) {
+    function insert(RequestHeaders self, string memory key, string[] memory values) internal returns (RequestHeaders) {
         self.toJsonObject().set(key, values);
 
         return self;
@@ -509,11 +505,10 @@ library LibHeaders {
         return self;
     }
 
-    function get(RequestHeaders self, string memory key, uint256 index) internal pure returns (string
-                                                                                      memory) {
+    function get(RequestHeaders self, string memory key, uint256 index) internal pure returns (string memory) {
         return getAll(self, key)[index];
     }
- 
+
     function get(RequestHeaders self, string memory key) internal pure returns (string memory) {
         return get(self, key, 0);
     }
