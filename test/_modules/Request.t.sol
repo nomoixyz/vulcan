@@ -86,6 +86,20 @@ contract RequestTest is Test {
         expect(bytes(res.origin).length).toBeGreaterThan(0);
     }
 
+    function testRequestHeaders() external {
+        RequestClient memory client = request.create();
+
+        client.insertDefaultHeader("foo", "bar");
+        expect(client.headers.get("foo")).toEqual("bar");
+
+        client.insertDefaultHeader("foo", "baz");
+        expect(client.headers.get("foo")).toEqual("baz");
+
+        client.appendDefaultHeader("foo", "bar");
+        expect(client.headers.get("foo")).toEqual("baz");
+        expect(client.headers.get("foo", 1)).toEqual("bar");
+    }
+
     function testResponseHeaders() external {
         RequestClient memory client = request.create();
 
@@ -99,7 +113,7 @@ contract RequestTest is Test {
     }
 
     function testDefaultHeaders() external {
-        RequestClient memory client = request.create().setDefaultHeaders("foo", "bar");
+        RequestClient memory client = request.create().insertDefaultHeader("foo", "bar");
 
         expect(client.headers.get("foo")).toEqual("bar");
 

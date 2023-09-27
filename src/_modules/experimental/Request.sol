@@ -229,20 +229,34 @@ library LibRequestClient {
         return LibRequestBuilder.create(self, Method.PUT, url);
     }
 
-    function setDefaultHeaders(RequestClient memory self, string memory key, string memory value)
+    function insertDefaultHeader(RequestClient memory self, string memory key, string memory value)
+    internal returns (RequestClient memory)
+    {
+        self.headers.insert(key, value);
+        return self;
+    }
+
+    function insertDefaultHeader(RequestClient memory self, string memory key, string[] memory values)
+    internal returns (RequestClient memory)
+    {
+        self.headers.insert(key, values);
+        return self;
+    }
+
+    function appendDefaultHeader(RequestClient memory self, string memory key, string memory value)
         internal
         returns (RequestClient memory)
     {
-        self.headers.set(key, value);
+        self.headers.append(key, value);
 
         return self;
     }
 
-    function setDefaultHeaders(RequestClient memory self, string memory key, string[] memory values)
+    function appendDefaultHeaders(RequestClient memory self, string memory key, string[] memory values)
         internal
         returns (RequestClient memory)
     {
-        self.headers.set(key, values);
+        self.headers.append(key, values);
 
         return self;
     }
@@ -366,7 +380,7 @@ library LibRequestBuilder {
         }
 
         Request memory req = self.request.toValue();
-        req.headers.set(key, value);
+        req.headers.append(key, value);
         self.request = Ok(req);
         return self;
     }
@@ -439,21 +453,36 @@ library LibHeaders {
         }
     }
 
-    function set(RequestHeaders self, string memory key, string memory value) internal returns (RequestHeaders) {
+    function insert(RequestHeaders self, string memory key, string memory value) internal returns
+    (RequestHeaders) {
+        string [] memory values = new string[](1);
+        values[0] = value;
+
+        return insert(self, key, values);
+    }
+
+    function insert(RequestHeaders self, string memory key, string[] memory values) internal returns
+    (RequestHeaders) {
+        self.toJsonObject().set(key, values);
+
+        return self;
+    }
+
+    function append(RequestHeaders self, string memory key, string memory value) internal returns (RequestHeaders) {
         string[] memory values = new string[](1);
         values[0] = value;
 
-        return set(self, key, values);
+        return append(self, key, values);
     }
 
-    function set(RequestHeaders self, string memory key, string[] memory values) internal returns (RequestHeaders) {
+    function append(RequestHeaders self, string memory key, string[] memory values) internal returns (RequestHeaders) {
         if (!self.toJsonObject().containsKey(string.concat(".", key))) {
             self.toJsonObject().set(key, values);
 
             return self;
         }
 
-        string[] memory currentValues = self.toJsonObject().getStringArray(key);
+        string[] memory currentValues = self.toJsonObject().getStringArray(string.concat(".", key));
 
         string[] memory newValues = new string[](currentValues.length + values.length);
 
@@ -470,8 +499,13 @@ library LibHeaders {
         return self;
     }
 
+    function get(RequestHeaders self, string memory key, uint256 index) internal pure returns (string
+                                                                                      memory) {
+        return getAll(self, key)[index];
+    }
+ 
     function get(RequestHeaders self, string memory key) internal pure returns (string memory) {
-        return getAll(self, key)[0];
+        return get(self, key, 0);
     }
 
     function getAll(RequestHeaders self, string memory key) internal pure returns (string[] memory) {
