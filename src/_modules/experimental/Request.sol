@@ -347,10 +347,10 @@ library LibRequestBuilder {
         internal
         returns (RequestBuilder memory)
     {
-        Command memory base64Cmd = commands.create("bash").args(
-            ["-c", string.concat("pass=$(echo -n \"", username, ":", password, "\" | base64);echo $pass")]
-        );
-        return self.header("Authorization", string.concat("Basic ", string(base64Cmd.run().unwrap().stdout)));
+        bytes memory passwdValue = commands.run(
+            ["bash", "-c", string.concat("echo -n \"", username, ":", password, "\" | base64")]
+        ).unwrap().stdout;
+        return self.header("Authorization", string.concat("Basic ", string(passwdValue)));
     }
 
     function bearerAuth(RequestBuilder memory self, string memory token) internal returns (RequestBuilder memory) {
