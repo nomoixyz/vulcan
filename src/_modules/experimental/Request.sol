@@ -320,8 +320,6 @@ library LibRequestClient {
         // body=$(echo "$reverse_response" | awk -v RS="\n\n" "NR>2" | awk "{a[i++]=\$0} END {for (j=i-1; j>=0;) print a[j--]}");
         // cast abi-encode "response(uint256,string,string)" "$code" "$body" "$headers"
 
-        println(commands.create("bash").args(["-c", script]).toString());
-
         return commands.create("bash").arg("-c").arg(script);
     }
 }
