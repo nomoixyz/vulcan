@@ -67,7 +67,7 @@ library request {
                 "-c",
                 "curl --version | awk '/curl [0-9]+\\.[0-9]+\\.[0-9]+/ {print $2}'"
             ]
-        ).unwrap();
+        ).expect("Failed to get curl version");
 
         client._curlVersion = semver.parse(string(curlVersion.stdout));
 
@@ -349,7 +349,7 @@ library LibRequestBuilder {
     {
         bytes memory passwdValue = commands.run(
             ["bash", "-c", string.concat("echo -n \"", username, ":", password, "\" | base64")]
-        ).unwrap().stdout;
+        ).expect("Failed to build basic auth header").stdout;
         return self.header("Authorization", string.concat("Basic ", string(passwdValue)));
     }
 
