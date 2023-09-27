@@ -233,35 +233,16 @@ library LibRequestClient {
         internal
         returns (RequestClient memory)
     {
-        string[] memory values = new string[](1);
-        values[0] = value;
+        self.headers.set(key, value);
 
-        return setDefaultHeaders(self, key, values);
+        return self;
     }
 
     function setDefaultHeaders(RequestClient memory self, string memory key, string[] memory values)
         internal
         returns (RequestClient memory)
     {
-        if (!self.headers.toJsonObject().containsKey(string.concat(".", key))) {
-            self.headers.toJsonObject().set(key, values);
-
-            return self;
-        }
-
-        string[] memory currentValues = self.headers.toJsonObject().getStringArray(key);
-
-        string[] memory newValues = new string[](currentValues.length + values.length);
-
-        for (uint256 i; i < currentValues.length; i++) {
-            newValues[i] = currentValues[i];
-        }
-
-        for (uint256 i; i < values.length; i++) {
-            newValues[i + currentValues.length] = values[i];
-        }
-
-        self.headers.toJsonObject().set(key, newValues);
+        self.headers.set(key, values);
 
         return self;
     }
