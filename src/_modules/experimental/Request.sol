@@ -61,14 +61,13 @@ library request {
 
     // Return an empty client
     function create() internal returns (RequestClient memory client) {
-        Command memory curlVersionCmd = commands.create("bash").args(
+        CommandOutput memory curlVersion = commands.run(
             [
+                "bash",
                 "-c",
                 "version=$(curl --version | grep -oE 'curl [0-9]+\\.[0-9]+\\.[0-9]+' | awk '{print $2}');echo $version"
             ]
-        );
-
-        CommandOutput memory curlVersion = curlVersionCmd.run().unwrap();
+        ).unwrap();
 
         client._curlVersion = semver.parse(string(curlVersion.stdout));
 
