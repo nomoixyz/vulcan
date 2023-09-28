@@ -9,7 +9,9 @@ import {
     RequestClient,
     Response,
     ResponseResult,
-    RequestBuilder
+    RequestBuilder,
+    Header,
+    LibHeaders
 } from "../../src/_modules/experimental/Request.sol";
 
 contract RequestTest is Test {
@@ -89,15 +91,11 @@ contract RequestTest is Test {
     function testRequestHeaders() external {
         RequestClient memory client = request.create();
 
-        client.insertDefaultHeader("foo", "bar");
+        client.defaultHeader("foo", "bar");
         expect(client.headers.get("foo")).toEqual("bar");
 
-        client.insertDefaultHeader("foo", "baz");
+        client.defaultHeader("foo", "baz");
         expect(client.headers.get("foo")).toEqual("baz");
-
-        client.appendDefaultHeader("foo", "bar");
-        expect(client.headers.get("foo")).toEqual("baz");
-        expect(client.headers.get("foo", 1)).toEqual("bar");
     }
 
     function testResponseHeaders() external {
@@ -109,16 +107,41 @@ contract RequestTest is Test {
 
         Response memory res = client.post("https://httpbin.org/post").json('{ "foo": "bar" }').send().unwrap();
 
-        expect(res.headers.get("content-type")[0]).toEqual("application/json");
+        expect(res.headers.get("content-type")).toEqual("application/json");
     }
 
     function testDefaultHeaders() external {
-        RequestClient memory client = request.create().insertDefaultHeader("foo", "bar");
+        RequestClient memory client = request.create().defaultHeader("foo", "bar");
 
         expect(client.headers.get("foo")).toEqual("bar");
 
         RequestBuilder memory builder = client.post("");
 
         expect(builder.request.unwrap().headers.get("foo")).toEqual("bar");
+    }
+
+    function testHeaders() external {
+        Header headers = LibHeaders.create();
+
+        headers.insert("test", "true");
+
+        expect(headers.get("test")).toEqual("true");
+
+        string[] memory headerValues = new string[](2);
+        headerValues[0] = "foo";
+        headerValues[1] = "bar";
+
+        headers.insert("test", headerValues);
+
+        expect(headers.getAll("test").length).toEqual(2);
+        expect(headers.get("test", 0)).toEqual("foo");
+        expect(headers.get("test", 1)).toEqual("bar");
+
+        headers.append("test", "baz");
+
+        expect(headers.getAll("test").length).toEqual(3);
+        expect(headers.get("test", 0)).toEqual("foo");
+        expect(headers.get("test", 1)).toEqual("bar");
+        expect(headers.get("test", 2)).toEqual("baz");
     }
 }
