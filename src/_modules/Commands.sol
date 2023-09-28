@@ -161,15 +161,15 @@ library commands {
 
     /// @dev Runs a command using the specified `Command` struct as parameters and returns the result.
     /// @param self The `Command` struct that holds the parameters of the command.
-    /// @return The result of the command as a bytes array.
+    /// @return The result of the command wrapped in a `CommandResult`.
     function run(Command memory self) internal returns (CommandResult) {
         return self.inputs.run();
     }
 
     /// @dev Runs a command with the specified `inputs` as parameters and returns the result.
     /// @param inputs An array of strings representing the parameters of the command.
-    /// @return result The result of the command as a bytes array.
-    function run(string[] memory inputs) internal returns (CommandResult result) {
+    /// @return The result of the command wrapped in a `CommandResult`.
+    function run(string[] memory inputs) internal returns (CommandResult) {
         try vulcan.hevm.tryFfi(inputs) returns (VmSafe.FfiResult memory ffiResult) {
             CommandOutput memory output;
 

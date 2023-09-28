@@ -23,6 +23,8 @@
     - [Strings](./modules/strings.md)
     - [Utils](./modules/utils.md)
     - [Watchers](./modules/watchers.md)
+    - [Results](./modules/results.md)
+    - [Requests](./modules/requests.md)
 
 # Reference
 

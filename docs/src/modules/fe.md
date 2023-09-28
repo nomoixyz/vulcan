@@ -16,7 +16,7 @@ contract TestMyContract is Test {
             .build()
             .unwrap();
 
-        bytes memory bytecode = fe.getBytecode("GuestBook");
+        bytes memory bytecode = fe.getBytecode("GuestBook").unwrap();
     }
 
 }
