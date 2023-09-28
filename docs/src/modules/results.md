@@ -11,33 +11,30 @@ Similar to Rust's Results API, Vulcan implements the following functions for all
 - `toValue()`: gets the Result's underlying value (if the Result is Ok)
 
 ```solidity
-import { Test, StringResult, Ok, console } from "vulcan/test.sol";
+import { Test, StringResult, Ok, console, CommandResult, Error } from "vulcan/test.sol";
 
 contract TestMyContract is Test {
     function testMyContract() external {
-        // foo.bar() returns a StringResult
-        StringResult result = foo.bar();
+        CommandResult result = commands.run(["echo", "Hello, world!"]);
 
-        // Check if the function failed
+        // We can handle different types of errors
         if (result.isError()) {
-            // Decode the error and get the message that can explain why the function failed
-            (, string memory message, ) = result.toError().decode();
+        Error err = result.toError();
 
-            expect(message).toEqual("foo.bar() failed");
+        if (err.matches(CommandError.NotExecuted)) {
+            revert("Something weird happened!");
         } else {
-            // Otherwise get the value encapsulated in the `StringResult`
-            string memory value = result.toValue();
-
-            expect(value).toEqual("baz");
+            revert("Unknown error");
         }
 
-        // Another way to get the value of a `Result` is to use `unwrap`.
-        // `unwrap` will return the value if the function call didn't fail or revert if its an error
-        string memory a = result.unwrap();
+        // Or we could immediately get the actual output, reverting if the command failed to run
+        bytes memory out = result.expect("wtf echo failed!").stdout;
 
-        // There is also a `expect(string)` function that is similar to `unwrap` but a custom error message can
-        // be set
-        string memory b = result.expect("Could not extract foo.bar() result value");
+        // Another way is to check if the result is ok
+        if (result.isOk()) {
+            // We know the result is ok so we can access the underlying value
+            out = result.toValue().stdout;
+        }
     }
 }
 ```
