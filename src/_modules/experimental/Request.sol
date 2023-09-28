@@ -3,6 +3,7 @@ pragma solidity ^0.8.13;
 
 import {Command, CommandResult, CommandOutput, commands} from "../Commands.sol";
 import {JsonObject, json as jsonModule, JsonResult, Ok} from "../Json.sol";
+import {semver, Semver} from "../Semver.sol";
 
 import {Pointer} from "../Pointer.sol";
 import {BytesResult, StringResult, Ok, ResultType, LibResultPointer} from "../Result.sol";
@@ -16,14 +17,11 @@ enum Method {
     DELETE
 }
 
-struct Header {
-    string key;
-    string value;
-}
+type Headers is bytes32;
 
 struct RequestClient {
-    // Default headers, not used yet
-    Header[] headers;
+    Headers headers;
+    Semver _curlVersion;
 }
 
 struct RequestBuilder {
@@ -34,16 +32,16 @@ struct RequestBuilder {
 struct Request {
     Method method;
     string url;
-    Header[] headers;
+    Headers headers;
     bytes body;
 }
 
 type RequestResult is bytes32;
 
-// TODO: headers, etc
 struct Response {
     string url;
     uint256 status;
+    Headers headers;
     bytes body;
 }
 
@@ -51,9 +49,24 @@ type ResponseResult is bytes32;
 
 library request {
     using request for *;
+    using LibHeaders for *;
 
     // Return an empty client
-    function create() internal pure returns (RequestClient memory) {}
+    function create() internal returns (RequestClient memory client) {
+        bytes memory rawCurlVersion = commands.run(
+            ["bash", "-c", "curl --version | awk '/curl [0-9]+\\.[0-9]+\\.[0-9]+/ {print $2}'"]
+        ).expect("Failed to get curl version").stdout;
+
+        client._curlVersion = semver.parse(string(rawCurlVersion));
+
+        client.headers = createHeaders();
+
+        return client;
+    }
+
+    function createHeaders() internal returns (Headers) {
+        return LibHeaders.create();
+    }
 
     function get(string memory url) internal returns (ResponseResult) {
         return create().get(url).send();
@@ -185,6 +198,9 @@ library LibResponseResult {
 }
 
 library LibRequestClient {
+    using RequestError for *;
+    using LibHeaders for *;
+
     function get(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.GET, url);
     }
@@ -204,11 +220,98 @@ library LibRequestClient {
     function put(RequestClient memory self, string memory url) internal pure returns (RequestBuilder memory) {
         return LibRequestBuilder.create(self, Method.PUT, url);
     }
+
+    function defaultHeader(RequestClient memory self, string memory key, string memory value)
+        internal
+        returns (RequestClient memory)
+    {
+        self.headers.insert(key, value);
+        return self;
+    }
+
+    function defaultHeader(RequestClient memory self, string memory key, string[] memory values)
+        internal
+        returns (RequestClient memory)
+    {
+        self.headers.insert(key, values);
+        return self;
+    }
+
+    function defaultHeaders(RequestClient memory self, Headers headers) internal pure returns (RequestClient memory) {
+        self.headers = headers;
+
+        return self;
+    }
+
+    function execute(RequestClient memory self, Request memory req) internal returns (ResponseResult) {
+        CommandResult result = toCommand(self, req).run();
+
+        if (result.isError()) {
+            return result.toError().toResponseResult();
+        }
+
+        CommandOutput memory cmdOutput = result.toValue();
+
+        (uint256 status, bytes memory _body, bytes memory _headers) =
+            abi.decode(cmdOutput.stdout, (uint256, bytes, bytes));
+
+        return Ok(
+            Response({
+                url: req.url,
+                status: status,
+                body: _body,
+                headers: LibHeaders.encode(jsonModule.create(string(_headers)).unwrap(), true)
+            })
+        );
+    }
+
+    function toCommand(RequestClient memory self, Request memory req) internal returns (Command memory) {
+        string memory curlWriteOutTemplate = "\"\\n%{header_json}\\n\\n%{http_code}\" ";
+
+        if (self._curlVersion.lessThan(semver.create(7, 83))) {
+            curlWriteOutTemplate = "\"\\n{}\\n\\n%{http_code}\" ";
+        }
+
+        string memory script = string.concat(
+            "response=$(curl -s -w ", curlWriteOutTemplate, req.url, " -X ", LibRequest.toString(req.method)
+        );
+
+        string[] memory headersKeys = req.headers.getKeys();
+
+        for (uint256 i; i < headersKeys.length; i++) {
+            string memory key = headersKeys[i];
+            string[] memory headersValues = req.headers.getAll(key);
+
+            for (uint256 j; j < headersValues.length; j++) {
+                script = string.concat(script, " -H ", '"', key, ": ", headersValues[j], '"');
+            }
+        }
+
+        if (req.body.length > 0) {
+            script = string.concat(script, " -d ", "'", string(req.body), "'");
+        }
+
+        script = string.concat(
+            script,
+            ');reverse_response=$(echo "$response" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");headers=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR==2" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");code=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR==1" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");body=$(echo "$reverse_response" | awk -v RS="\\n\\n" "NR>2" | awk "{a[i++]=\\$0} END {for (j=i-1; j>=0;) print a[j--]}");cast abi-encode "response(uint256,string,string)" "$code" "$body" "$headers";'
+        );
+
+        // The script to obtain the response body, status code and headers looks like this:
+        // bash -c response=$(curl -s -w "\n%{header_json}\n\n%{http_code}" https://example.com - GET);
+        // reverse_response=$(echo "$response" | awk "{a[i++]=\$0} END {for (j=i-1; j>=0;) print a[j--]}");
+        // headers=$(echo "$reverse_response" | awk -v RS="\n\n" "NR==2" | awk "{a[i++]=\$0} END {for (j=i-1; j>=0;) print a[j--]}");
+        // code=$(echo "$reverse_response" | awk -v RS="\n\n" "NR==1" | awk "{a[i++]=\$0} END {for (j=i-1; j>=0;) print a[j--]}");
+        // body=$(echo "$reverse_response" | awk -v RS="\n\n" "NR>2" | awk "{a[i++]=\$0} END {for (j=i-1; j>=0;) print a[j--]}");
+        // cast abi-encode "response(uint256,string,string)" "$code" "$body" "$headers"
+
+        return commands.create("bash").arg("-c").arg(script);
+    }
 }
 
 library LibRequestBuilder {
     using request for *;
     using RequestError for *;
+    using LibHeaders for *;
 
     function create(RequestClient memory client, Method method, string memory url)
         internal
@@ -216,7 +319,7 @@ library LibRequestBuilder {
         returns (RequestBuilder memory builder)
     {
         builder.client = client;
-        builder.request = Ok(Request({method: method, url: url, headers: new Header[](0), body: new bytes(0)}));
+        builder.request = Ok(Request({method: method, url: url, headers: client.headers, body: new bytes(0)}));
     }
 
     function send(RequestBuilder memory self) internal returns (ResponseResult) {
@@ -226,21 +329,7 @@ library LibRequestBuilder {
             return reqResult.toError().toResponseResult();
         }
 
-        Request memory req = reqResult.toValue();
-
-        (string(req.toCommand().toString()));
-
-        CommandResult result = req.toCommand().run();
-
-        if (result.isError()) {
-            return result.toError().toResponseResult();
-        }
-
-        CommandOutput memory cmdOutput = result.toValue();
-
-        (uint256 status, bytes memory _body) = abi.decode(cmdOutput.stdout, (uint256, bytes));
-
-        return Ok(Response({url: req.url, status: status, body: _body}));
+        return self.client.execute(reqResult.toValue());
     }
 
     function build(RequestBuilder memory self) internal pure returns (RequestResult) {
@@ -260,24 +349,20 @@ library LibRequestBuilder {
 
     function basicAuth(RequestBuilder memory self, string memory username, string memory password)
         internal
-        pure
         returns (RequestBuilder memory)
     {
-        // "Authorization: Basic $(base64 <<<"joeuser:secretpass")"
-        return self.header("Authorization", string.concat('Basic $(echo -n "', username, ":", password, '" | base64)'));
+        bytes memory passwdValue = commands.run(
+            ["bash", "-c", string.concat("echo -n \"", username, ":", password, "\" | base64")]
+        ).expect("Failed to build basic auth header").stdout;
+        return self.header("Authorization", string.concat("Basic ", string(passwdValue)));
     }
 
-    function bearerAuth(RequestBuilder memory self, string memory token)
-        internal
-        pure
-        returns (RequestBuilder memory)
-    {
+    function bearerAuth(RequestBuilder memory self, string memory token) internal returns (RequestBuilder memory) {
         return self.header("Authorization", string.concat("Bearer ", token));
     }
 
-    function header(RequestBuilder memory self, string memory key, string memory value)
+    function header(RequestBuilder memory self, string memory key, string[] memory values)
         internal
-        pure
         returns (RequestBuilder memory)
     {
         if (self.request.isError()) {
@@ -285,17 +370,33 @@ library LibRequestBuilder {
         }
 
         Request memory req = self.request.toValue();
-        uint256 len = req.headers.length;
-        req.headers = new Header[](len + 1);
-        for (uint256 i; i < len; i++) {
-            req.headers[i] = req.headers[i];
-        }
-        req.headers[len] = Header({key: key, value: value});
+        req.headers.insert(key, values);
         self.request = Ok(req);
         return self;
     }
 
-    function json(RequestBuilder memory self, JsonObject memory obj) internal pure returns (RequestBuilder memory) {
+    function header(RequestBuilder memory self, string memory key, string memory value)
+        internal
+        returns (RequestBuilder memory)
+    {
+        string[] memory values = new string[](1);
+        values[0] = value;
+
+        return header(self, key, values);
+    }
+
+    function headers(RequestBuilder memory self, Headers newHeaders) internal pure returns (RequestBuilder memory) {
+        if (self.request.isError()) {
+            return self;
+        }
+
+        Request memory req = self.request.toValue();
+        req.headers = newHeaders;
+        self.request = Ok(req);
+        return self;
+    }
+
+    function json(RequestBuilder memory self, JsonObject memory obj) internal returns (RequestBuilder memory) {
         // We assume the json has already been validated
         return self.header("Content-Type", "application/json").body(obj.serialized);
     }
@@ -316,27 +417,6 @@ library LibRequestBuilder {
 }
 
 library LibRequest {
-    function toCommand(Request memory self) internal pure returns (Command memory) {
-        // Adapted from https://github.com/memester-xyz/surl/blob/034c912ae9b5e707a5afd21f145b452ad8e800df/src/Surl.sol#L90
-        string memory script =
-            string.concat('response=$(curl -s -w "\\n%{http_code}" ', self.url, " -X ", toString(self.method));
-
-        for (uint256 i; i < self.headers.length; i++) {
-            script = string.concat(script, " -H ", '"', self.headers[i].key, ": ", self.headers[i].value, '"');
-        }
-
-        if (self.body.length > 0) {
-            script = string.concat(script, " -d ", "'", string(self.body), "'");
-        }
-
-        script = string.concat(
-            script,
-            ');body=$(sed "$ d" <<< "$response" | tr -d "\\n");code=$(tail -n 1 <<< "$response");cast abi-encode "response(uint256,string)" "$code" "$body";'
-        );
-
-        return commands.create("bash").arg("-c").arg(script);
-    }
-
     function toString(Method method) internal pure returns (string memory) {
         if (method == Method.GET) {
             return "GET";
@@ -371,6 +451,123 @@ library LibResponse {
     // }
 }
 
+library LibHeaders {
+    function create() internal returns (Headers header) {
+        return encode(jsonModule.create("{}").unwrap(), false);
+    }
+
+    function toImmutable(Headers self) internal pure returns (Headers header) {
+        (JsonObject memory values,) = decode(self);
+
+        return encode(values, true);
+    }
+
+    function isImmutable(Headers self) internal pure returns (bool headerIsImmutable) {
+        (, headerIsImmutable) = decode(self);
+    }
+
+    function encode(JsonObject memory values, bool headerIsImmutable) internal pure returns (Headers header) {
+        bytes32 valuesMemoryAddr;
+
+        assembly {
+            valuesMemoryAddr := values
+        }
+
+        bytes memory data = abi.encode(valuesMemoryAddr, headerIsImmutable);
+
+        assembly {
+            header := data
+        }
+    }
+
+    function decode(Headers self) internal pure returns (JsonObject memory values, bool) {
+        bytes memory data;
+
+        assembly {
+            data := self
+        }
+
+        (bytes32 valuesMemoryAddr, bool headerIsImmutable) = abi.decode(data, (bytes32, bool));
+
+        assembly {
+            values := valuesMemoryAddr
+        }
+
+        return (values, headerIsImmutable);
+    }
+
+    function insert(Headers self, string memory key, string memory value) internal returns (Headers) {
+        string[] memory values = new string[](1);
+        values[0] = value;
+
+        return insert(self, key, values);
+    }
+
+    function insert(Headers self, string memory key, string[] memory values) internal returns (Headers) {
+        (JsonObject memory newValues, bool headerIsImmutable) = decode(self);
+
+        require(!headerIsImmutable, "Cannot insert into immutable header");
+
+        newValues.set(key, values);
+
+        return self;
+    }
+
+    function append(Headers self, string memory key, string memory value) internal returns (Headers) {
+        string[] memory values = new string[](1);
+        values[0] = value;
+
+        return append(self, key, values);
+    }
+
+    function append(Headers self, string memory key, string[] memory values) internal returns (Headers) {
+        (JsonObject memory jsonObj, bool headerIsImmutable) = decode(self);
+
+        require(!headerIsImmutable, "Cannot append into immutable header");
+
+        if (!jsonObj.containsKey(string.concat(".", key))) {
+            jsonObj.set(key, values);
+
+            return self;
+        }
+
+        string[] memory currentValues = jsonObj.getStringArray(string.concat(".", key));
+
+        string[] memory newValues = new string[](currentValues.length + values.length);
+
+        for (uint256 i; i < currentValues.length; i++) {
+            newValues[i] = currentValues[i];
+        }
+
+        for (uint256 i; i < values.length; i++) {
+            newValues[i + currentValues.length] = values[i];
+        }
+
+        jsonObj.set(key, newValues);
+
+        return self;
+    }
+
+    function get(Headers self, string memory key, uint256 index) internal pure returns (string memory) {
+        return getAll(self, key)[index];
+    }
+
+    function get(Headers self, string memory key) internal pure returns (string memory) {
+        return get(self, key, 0);
+    }
+
+    function getAll(Headers self, string memory key) internal pure returns (string[] memory) {
+        (JsonObject memory values,) = decode(self);
+
+        return values.getStringArray(string.concat(".", key));
+    }
+
+    function getKeys(Headers self) internal returns (string[] memory) {
+        (JsonObject memory values,) = decode(self);
+        return values.getKeys();
+    }
+}
+
 function Ok(Request memory value) pure returns (RequestResult) {
     return ResultType.Ok.encode(value.toPointer()).toRequestResult();
 }
@@ -394,3 +591,4 @@ using LibResponse for Response global;
 using LibRequestBuilder for RequestBuilder global;
 using LibRequestResult for RequestResult global;
 using LibResponseResult for ResponseResult global;
+using LibHeaders for Headers global;
