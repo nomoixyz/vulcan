@@ -1,7 +1,8 @@
 # Requests
 
-Provides utilities to interact with the filesystem. In order to use this module the
-`fs_permissions` setting must be set correctly in `foundry.toml`.
+The request module is inspired by the rust reqwest library. It provides a flexible API to interact
+with external web services allowing to work with request headers, request authorization, response
+headers, parsing a response body as JSON and others.
 
 ```solidity
 import { Test, request, RequestClient, ResponseResult, Response, JsonObject } from "vulcan/test.sol";
