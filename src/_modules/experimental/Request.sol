@@ -225,6 +225,14 @@ library LibRequestClient {
         return self;
     }
 
+    function defaultHeader(RequestClient memory self, string memory key, string[] memory values)
+        internal
+        returns (RequestClient memory)
+    {
+        self.headers.insert(key, values);
+        return self;
+    }
+
     function defaultHeaders(RequestClient memory self, Header headers) internal pure returns (RequestClient memory) {
         self.headers = headers;
 
@@ -349,7 +357,7 @@ library LibRequestBuilder {
         return self.header("Authorization", string.concat("Bearer ", token));
     }
 
-    function header(RequestBuilder memory self, string memory key, string memory value)
+    function header(RequestBuilder memory self, string memory key, string[] memory values)
         internal
         returns (RequestBuilder memory)
     {
@@ -358,9 +366,19 @@ library LibRequestBuilder {
         }
 
         Request memory req = self.request.toValue();
-        req.headers.insert(key, value);
+        req.headers.insert(key, values);
         self.request = Ok(req);
         return self;
+    }
+
+    function header(RequestBuilder memory self, string memory key, string memory value)
+        internal
+        returns (RequestBuilder memory)
+    {
+        string[] memory values = new string[](1);
+        values[0] = value;
+
+        return header(self, key, values);
     }
 
     function headers(RequestBuilder memory self, Header newHeaders) internal pure returns (RequestBuilder memory) {
