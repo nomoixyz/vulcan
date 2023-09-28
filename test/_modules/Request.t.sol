@@ -10,8 +10,7 @@ import {
     Response,
     ResponseResult,
     RequestBuilder,
-    Header,
-    LibHeaders
+    Headers
 } from "../../src/_modules/experimental/Request.sol";
 
 contract RequestTest is Test {
@@ -121,7 +120,7 @@ contract RequestTest is Test {
     }
 
     function testHeaders() external {
-        Header headers = LibHeaders.create();
+        Headers headers = request.createHeaders();
 
         headers.insert("test", "true");
 

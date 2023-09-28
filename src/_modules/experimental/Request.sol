@@ -17,10 +17,10 @@ enum Method {
     DELETE
 }
 
-type Header is bytes32;
+type Headers is bytes32;
 
 struct RequestClient {
-    Header headers;
+    Headers headers;
     Semver _curlVersion;
 }
 
@@ -32,7 +32,7 @@ struct RequestBuilder {
 struct Request {
     Method method;
     string url;
-    Header headers;
+    Headers headers;
     bytes body;
 }
 
@@ -41,7 +41,7 @@ type RequestResult is bytes32;
 struct Response {
     string url;
     uint256 status;
-    Header headers;
+    Headers headers;
     bytes body;
 }
 
@@ -59,9 +59,13 @@ library request {
 
         client._curlVersion = semver.parse(string(rawCurlVersion));
 
-        client.headers = LibHeaders.create();
+        client.headers = createHeaders();
 
         return client;
+    }
+
+    function createHeaders() internal returns (Headers) {
+        return LibHeaders.create();
     }
 
     function get(string memory url) internal returns (ResponseResult) {
@@ -233,7 +237,7 @@ library LibRequestClient {
         return self;
     }
 
-    function defaultHeaders(RequestClient memory self, Header headers) internal pure returns (RequestClient memory) {
+    function defaultHeaders(RequestClient memory self, Headers headers) internal pure returns (RequestClient memory) {
         self.headers = headers;
 
         return self;
@@ -293,7 +297,7 @@ library LibRequestClient {
         );
 
         // The script to obtain the response body, status code and headers looks like this:
-        // bash -c response=$(curl -s -w "\n%{header_json}\n\n%{http_code}" https://test.com - GET);
+        // bash -c response=$(curl -s -w "\n%{header_json}\n\n%{http_code}" https://example.com - GET);
         // reverse_response=$(echo "$response" | awk "{a[i++]=\$0} END {for (j=i-1; j>=0;) print a[j--]}");
         // headers=$(echo "$reverse_response" | awk -v RS="\n\n" "NR==2" | awk "{a[i++]=\$0} END {for (j=i-1; j>=0;) print a[j--]}");
         // code=$(echo "$reverse_response" | awk -v RS="\n\n" "NR==1" | awk "{a[i++]=\$0} END {for (j=i-1; j>=0;) print a[j--]}");
@@ -381,7 +385,7 @@ library LibRequestBuilder {
         return header(self, key, values);
     }
 
-    function headers(RequestBuilder memory self, Header newHeaders) internal pure returns (RequestBuilder memory) {
+    function headers(RequestBuilder memory self, Headers newHeaders) internal pure returns (RequestBuilder memory) {
         if (self.request.isError()) {
             return self;
         }
@@ -448,21 +452,21 @@ library LibResponse {
 }
 
 library LibHeaders {
-    function create() internal returns (Header header) {
+    function create() internal returns (Headers header) {
         return encode(jsonModule.create("{}").unwrap(), false);
     }
 
-    function toImmutable(Header self) internal pure returns (Header header) {
+    function toImmutable(Headers self) internal pure returns (Headers header) {
         (JsonObject memory values,) = decode(self);
 
         return encode(values, true);
     }
 
-    function isImmutable(Header self) internal pure returns (bool headerIsImmutable) {
+    function isImmutable(Headers self) internal pure returns (bool headerIsImmutable) {
         (, headerIsImmutable) = decode(self);
     }
 
-    function encode(JsonObject memory values, bool headerIsImmutable) internal pure returns (Header header) {
+    function encode(JsonObject memory values, bool headerIsImmutable) internal pure returns (Headers header) {
         bytes32 valuesMemoryAddr;
 
         assembly {
@@ -476,7 +480,7 @@ library LibHeaders {
         }
     }
 
-    function decode(Header self) internal pure returns (JsonObject memory values, bool) {
+    function decode(Headers self) internal pure returns (JsonObject memory values, bool) {
         bytes memory data;
 
         assembly {
@@ -492,14 +496,14 @@ library LibHeaders {
         return (values, headerIsImmutable);
     }
 
-    function insert(Header self, string memory key, string memory value) internal returns (Header) {
+    function insert(Headers self, string memory key, string memory value) internal returns (Headers) {
         string[] memory values = new string[](1);
         values[0] = value;
 
         return insert(self, key, values);
     }
 
-    function insert(Header self, string memory key, string[] memory values) internal returns (Header) {
+    function insert(Headers self, string memory key, string[] memory values) internal returns (Headers) {
         (JsonObject memory newValues, bool headerIsImmutable) = decode(self);
 
         require(!headerIsImmutable, "Cannot insert into immutable header");
@@ -509,14 +513,14 @@ library LibHeaders {
         return self;
     }
 
-    function append(Header self, string memory key, string memory value) internal returns (Header) {
+    function append(Headers self, string memory key, string memory value) internal returns (Headers) {
         string[] memory values = new string[](1);
         values[0] = value;
 
         return append(self, key, values);
     }
 
-    function append(Header self, string memory key, string[] memory values) internal returns (Header) {
+    function append(Headers self, string memory key, string[] memory values) internal returns (Headers) {
         (JsonObject memory jsonObj, bool headerIsImmutable) = decode(self);
 
         require(!headerIsImmutable, "Cannot append into immutable header");
@@ -544,21 +548,21 @@ library LibHeaders {
         return self;
     }
 
-    function get(Header self, string memory key, uint256 index) internal pure returns (string memory) {
+    function get(Headers self, string memory key, uint256 index) internal pure returns (string memory) {
         return getAll(self, key)[index];
     }
 
-    function get(Header self, string memory key) internal pure returns (string memory) {
+    function get(Headers self, string memory key) internal pure returns (string memory) {
         return get(self, key, 0);
     }
 
-    function getAll(Header self, string memory key) internal pure returns (string[] memory) {
+    function getAll(Headers self, string memory key) internal pure returns (string[] memory) {
         (JsonObject memory values,) = decode(self);
 
         return values.getStringArray(string.concat(".", key));
     }
 
-    function getKeys(Header self) internal returns (string[] memory) {
+    function getKeys(Headers self) internal returns (string[] memory) {
         (JsonObject memory values,) = decode(self);
         return values.getKeys();
     }
@@ -587,4 +591,4 @@ using LibResponse for Response global;
 using LibRequestBuilder for RequestBuilder global;
 using LibRequestResult for RequestResult global;
 using LibResponseResult for ResponseResult global;
-using LibHeaders for Header global;
+using LibHeaders for Headers global;
