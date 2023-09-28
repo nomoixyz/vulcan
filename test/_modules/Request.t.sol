@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {Test, expect, println, json, JsonObject, vulcan, commands} from "../../src/test.sol";
+import {Test, expect, println, json, JsonObject, vulcan, commands, semver, console} from "../../src/test.sol";
 
 import {
     request,
     RequestResult,
     RequestClient,
     Response,
-    ResponseResult
+    ResponseResult,
+    RequestBuilder,
+    Headers
 } from "../../src/_modules/experimental/Request.sol";
 
 contract RequestTest is Test {
@@ -83,5 +85,62 @@ contract RequestTest is Test {
         HttpBinIpResponse memory res = abi.decode(obj.parse(), (HttpBinIpResponse));
 
         expect(bytes(res.origin).length).toBeGreaterThan(0);
+    }
+
+    function testRequestHeaders() external {
+        RequestClient memory client = request.create();
+
+        client.defaultHeader("foo", "bar");
+        expect(client.headers.get("foo")).toEqual("bar");
+
+        client.defaultHeader("foo", "baz");
+        expect(client.headers.get("foo")).toEqual("baz");
+    }
+
+    function testResponseHeaders() external {
+        RequestClient memory client = request.create();
+
+        // Skip this test because this version of curl migth not support the `--write-out "%{header_json}"`
+        // option
+        vulcan.hevm.skip(client._curlVersion.lessThan(semver.create(7, 83)));
+
+        Response memory res = client.post("https://httpbin.org/post").json('{ "foo": "bar" }').send().unwrap();
+
+        expect(res.headers.get("content-type")).toEqual("application/json");
+    }
+
+    function testDefaultHeaders() external {
+        RequestClient memory client = request.create().defaultHeader("foo", "bar");
+
+        expect(client.headers.get("foo")).toEqual("bar");
+
+        RequestBuilder memory builder = client.post("");
+
+        expect(builder.request.unwrap().headers.get("foo")).toEqual("bar");
+    }
+
+    function testHeaders() external {
+        Headers headers = request.createHeaders();
+
+        headers.insert("test", "true");
+
+        expect(headers.get("test")).toEqual("true");
+
+        string[] memory headerValues = new string[](2);
+        headerValues[0] = "foo";
+        headerValues[1] = "bar";
+
+        headers.insert("test", headerValues);
+
+        expect(headers.getAll("test").length).toEqual(2);
+        expect(headers.get("test", 0)).toEqual("foo");
+        expect(headers.get("test", 1)).toEqual("bar");
+
+        headers.append("test", "baz");
+
+        expect(headers.getAll("test").length).toEqual(3);
+        expect(headers.get("test", 0)).toEqual("foo");
+        expect(headers.get("test", 1)).toEqual("bar");
+        expect(headers.get("test", 2)).toEqual("baz");
     }
 }

@@ -229,6 +229,14 @@ library json {
         return vulcan.hevm.parseJsonBytes32Array(obj.serialized, key);
     }
 
+    function getKeys(JsonObject memory obj, string memory key) internal returns (string[] memory) {
+        return vulcan.hevm.parseJsonKeys(obj.serialized, key);
+    }
+
+    function getKeys(JsonObject memory obj) internal returns (string[] memory) {
+        return getKeys(obj, "");
+    }
+
     /// @dev Creates a new JsonObject struct.
     /// @return The JsonObject struct.
     function create() internal returns (JsonObject memory) {
