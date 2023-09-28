@@ -15,7 +15,7 @@ contract TestMyContract is Test {
         fs.writeBinary("test.bin", abi.encodeWithSignature("test(uint256)", 1e18)).unwrap();
 
         // Read a file as a string
-        string memory content = fs.read("test.txt");
+        string memory content = fs.read("test.txt").unwrap();
 
         // Read a file as bytes
         BytesResult binContentResult = fs.readBinary("test.bin");
