@@ -1,8 +1,14 @@
 # Results
 
-Results are an idea taken from
-[`rust`](https://doc.rust-lang.org/rust-by-example/error/result.html). The main idea is to have
-types that can be used to return values and provide ways to handle errors if they ocurr.
+The concept of "Results" is inspired by Rust. It centers around using specific types for returning values while also offering mechanisms to handle any potential errors.
+
+Similar to Rust's Results API, Vulcan implements the following functions for all result types:
+- `unwrap()`: if the Result is an Error, reverts with the default error message. If if is `Ok`, it returns the underlying value
+- `expect(message)`: same as `unwrap()`, but reverts with the provided error message
+- `isError()`: returns `true` if the `Result` is an error, `false` otherwise
+- `isOk()`: the oposite of `isError()`
+- `toError()`: transforms the Result into an `Error`
+- `toValue()`: gets the Result's underlying value (if the Result is Ok)
 
 ```solidity
 import { Test, StringResult, Ok, console } from "vulcan/test.sol";
