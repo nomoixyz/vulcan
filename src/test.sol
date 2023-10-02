@@ -29,6 +29,16 @@ import {removeSelector} from "./_utils/removeSelector.sol";
 import {Ok, StringResult, BoolResult, BytesResult, EmptyResult} from "./_modules/Result.sol";
 import {Error} from "./_modules/Error.sol";
 import {semver, Semver} from "./_modules/Semver.sol";
+import {
+    request,
+    Headers,
+    ResponseResult,
+    RequestResult,
+    Response,
+    Request,
+    RequestClient,
+    RequestBuilder
+} from "./_modules/Request.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test is InvariantsBase {
