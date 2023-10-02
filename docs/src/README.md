@@ -22,49 +22,35 @@ Our goal is to provide:
 Vulcan test example:
 
 ```solidity
-import { Test, expect, accounts, any, commands, Command,  watchers } from "vulcan/test.sol";
+```solidity
+import { Test, expect, commands, Command, CommandResult, println } from "vulcan/test.sol";
 
 contract TestSomething is Test {
-    using accounts for *;
-    using watchers for *;
 
     function testSomething() external {
         // Format strings with rust-like syntax
         println("Hello {s}", abi.encode("world!")); // Hello world!
+
+        // Format numbers as decimals
         println("Balance: {u:d18}", abi.encode(1e17)); // Balance: 0.1
-
-        // Create an address from a string, set the ETH balance and impersonate calls
-        address alice = accounts.create("Alice").setBalance(123).impersonate();
-
-        // Expect style assertions!
-        expect(true).toBeTrue();
-        expect("Hello world!").toContain("Hello");
 
         // Nice external command API!
         Command memory ping = commands.create("ping").args(["-c", "1"]);
-        res = ping.arg("etherscan.io").run();
-        res = ping.arg("arbiscan.io").run();
+        CommandResult pingResult = ping.arg("etherscan.io").run();
 
-        // Monitor calls and events!
-        MyContract mc = new MyContract();
-        address(mc).watch().captureReverts(); // Watch calls and record their execution
-        mc.doSomething();
+        // Rust-like results
+        Bytes memory pingOutput = pingResult.expect("Ping command failed").stdout;
 
-        // Check that `doSomething()` reverted
-        expect(address(mc).lastCall()).toHaveRevertedWith("Something went wrong");
+        println("Ping result: {s}", abi.encode(pingOutput));
 
-        mc.doSomethingElse();
-
-        // Check event emissions
-        expect(address(mc).lastCall()).toHaveEmitted(
-            "SomeEvent(address,bytes32,uint256)",
-            [address(1).topic(), any()], // Event topics
-            abi.encode(123) // Event data
-        );
+        // Expect style assertions!
+        expect(pingResult.isError()).toBeFalse();
+        expect(pingResult.isOk()).toBeTrue();
 
         // And much more!
     }
 }
+```
 ```
 
 ## Planned Features
