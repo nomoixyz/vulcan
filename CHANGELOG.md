@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.4.0](https://github.com/nomoixyz/vulcan/compare/v0.3.1...v0.4.0) (2023-10-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* use results on fs module ([#191](https://github.com/nomoixyz/vulcan/issues/191))
+* use custom types for Results and Error, and use error functions ([#189](https://github.com/nomoixyz/vulcan/issues/189))
+* remove Results from json setters ([#182](https://github.com/nomoixyz/vulcan/issues/182))
+* add results to commands ([#179](https://github.com/nomoixyz/vulcan/issues/179))
+
+### Features
+
+* add basic types to pointer casting ([#198](https://github.com/nomoixyz/vulcan/issues/198)) ([5f96f7b](https://github.com/nomoixyz/vulcan/commit/5f96f7b254c12684e579666a7a05f8bce7a3afce))
+* add results to commands ([#179](https://github.com/nomoixyz/vulcan/issues/179)) ([9770c9e](https://github.com/nomoixyz/vulcan/commit/9770c9ef2f58c638a4d25c33487cee5bf11ce103))
+* add semver module ([#204](https://github.com/nomoixyz/vulcan/issues/204)) ([b4a687b](https://github.com/nomoixyz/vulcan/commit/b4a687b1fd2d6d355e11bf4581ef1cc7fb2bec27))
+* improved json validation using Results ([#178](https://github.com/nomoixyz/vulcan/issues/178)) ([50b1d14](https://github.com/nomoixyz/vulcan/commit/50b1d14439866ac1cf76a4be959b5631184c88aa))
+* remove Results from json setters ([#182](https://github.com/nomoixyz/vulcan/issues/182)) ([6a601ae](https://github.com/nomoixyz/vulcan/commit/6a601ae623a3aa6c84b42270636c2d46ef630ba6))
+* request module ([#174](https://github.com/nomoixyz/vulcan/issues/174)) ([63b58b4](https://github.com/nomoixyz/vulcan/commit/63b58b4803d50ad62e131ba344046bb054adb52f))
+* use `serializeJson` cheatcode ([#196](https://github.com/nomoixyz/vulcan/issues/196)) ([6a90b1b](https://github.com/nomoixyz/vulcan/commit/6a90b1bea3a14b87c59ddf8edc2721d463b43d22))
+* use custom types for Results and Error, and use error functions ([#189](https://github.com/nomoixyz/vulcan/issues/189)) ([4e69e1c](https://github.com/nomoixyz/vulcan/commit/4e69e1cd7f9beadcfead37fafc0d0ea5ee37599f))
+* use forge-std@705263c ([#195](https://github.com/nomoixyz/vulcan/issues/195)) ([392d99e](https://github.com/nomoixyz/vulcan/commit/392d99e4525c642cae1da577e274326fcefa4de2))
+* use results on fs module ([#191](https://github.com/nomoixyz/vulcan/issues/191)) ([f2998a1](https://github.com/nomoixyz/vulcan/commit/f2998a1821132d9fbb8fda8ef807de61d6dc0bf3))
+
 ## [0.3.1](https://github.com/nomoixyz/vulcan/compare/v0.3.0...v0.3.1) (2023-09-01)
 
 
