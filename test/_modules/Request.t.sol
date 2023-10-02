@@ -11,7 +11,7 @@ import {
     ResponseResult,
     RequestBuilder,
     Headers
-} from "../../src/_modules/experimental/Request.sol";
+} from "../../src/_modules/Request.sol";
 
 contract RequestTest is Test {
     using vulcan for *;

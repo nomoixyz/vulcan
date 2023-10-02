@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {Command, CommandResult, CommandOutput, commands} from "../Commands.sol";
-import {JsonObject, json as jsonModule, JsonResult, Ok} from "../Json.sol";
-import {semver, Semver} from "../Semver.sol";
+import {Command, CommandResult, CommandOutput, commands} from "./Commands.sol";
+import {JsonObject, json as jsonModule, JsonResult, Ok} from "./Json.sol";
+import {semver, Semver} from "./Semver.sol";
 
-import {Pointer} from "../Pointer.sol";
-import {BytesResult, StringResult, Ok, ResultType, LibResultPointer} from "../Result.sol";
-import {LibError, Error} from "../Error.sol";
+import {Pointer} from "./Pointer.sol";
+import {BytesResult, StringResult, Ok, ResultType, LibResultPointer} from "./Result.sol";
+import {LibError, Error} from "./Error.sol";
 
 enum Method {
     GET,
