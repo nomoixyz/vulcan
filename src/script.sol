@@ -4,12 +4,12 @@ pragma solidity >=0.8.13 <0.9.0;
 import {console} from "./_modules/Console.sol";
 import {vulcan} from "./_modules/Vulcan.sol";
 import {accountsSafe as accounts, accounts as accountsUnsafe} from "./_modules/Accounts.sol";
-import {commands, Command, CommandResult, CommandOutput, CommandError} from "./_modules/Commands.sol";
+import {commands, Command, CommandResult, CommandOutput, CommandError, Ok} from "./_modules/Commands.sol";
 import {ctxSafe as ctx, ctx as ctxUnsafe} from "./_modules/Context.sol";
 import {env} from "./_modules/Env.sol";
 import {events} from "./_modules/Events.sol";
 import {forks as forksUnsafe} from "./_modules/Forks.sol";
-import {fs, FsMetadata, FsMetadataResult, FsErrors} from "./_modules/Fs.sol";
+import {fs, FsMetadata, FsMetadataResult, FsErrors, Ok} from "./_modules/Fs.sol";
 import {json, JsonObject, Ok} from "./_modules/Json.sol";
 import {strings} from "./_modules/Strings.sol";
 import {watchers as watchersUnsafe} from "./_modules/Watchers.sol";
@@ -32,7 +32,8 @@ import {
     Response,
     Request,
     RequestClient,
-    RequestBuilder
+    RequestBuilder,
+    Ok
 } from "./_modules/Request.sol";
 
 contract Script {
