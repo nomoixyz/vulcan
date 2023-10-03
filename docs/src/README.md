@@ -22,7 +22,6 @@ Our goal is to provide:
 Vulcan test example:
 
 ```solidity
-```solidity
 import { Test, expect, commands, Command, CommandResult, println } from "vulcan/test.sol";
 
 contract TestSomething is Test {
@@ -50,7 +49,6 @@ contract TestSomething is Test {
         // And much more!
     }
 }
-```
 ```
 
 ## Planned Features
