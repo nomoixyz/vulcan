@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.1](https://github.com/nomoixyz/vulcan/compare/v0.4.0...v0.4.1) (2023-10-03)
+
+
+### Bug Fixes
+
+* add missing imports on script.sol ([#212](https://github.com/nomoixyz/vulcan/issues/212)) ([294c9d9](https://github.com/nomoixyz/vulcan/commit/294c9d9079b8d0045bbe2b33e7021665c6e0fe53))
+* use forge@v1.6.1 ([#210](https://github.com/nomoixyz/vulcan/issues/210)) ([bda8bf0](https://github.com/nomoixyz/vulcan/commit/bda8bf0df6daf609ec03bae7ebbaed099438a396))
+
 ## [0.4.0](https://github.com/nomoixyz/vulcan/compare/v0.3.1...v0.4.0) (2023-10-02)
 
 
