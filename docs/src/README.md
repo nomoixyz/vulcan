@@ -39,7 +39,7 @@ contract TestSomething is Test {
         CommandResult pingResult = ping.arg("etherscan.io").run();
 
         // Rust-like results
-        Bytes memory pingOutput = pingResult.expect("Ping command failed").stdout;
+        bytes memory pingOutput = pingResult.expect("Ping command failed").stdout;
 
         println("Ping result: {s}", abi.encode(pingOutput));
 
