@@ -257,7 +257,7 @@ library json {
             return JsonError.Invalid().toJsonResult();
         }
 
-        // TODO: remove hack to use the unreleased `serializeJson` Vm cheatcode 
+        // TODO: remove hack to use the unreleased `serializeJson` Vm cheatcode
         SerializeJson vm = SerializeJson(address(vulcan.hevm));
         JsonObject memory jsonObj = create();
         jsonObj.serialized = vm.serializeJson(jsonObj.id, obj);
