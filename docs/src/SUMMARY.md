@@ -4,27 +4,30 @@
 
 - [Installation](./guide/installation.md)
 - [Testing](./testing/README.md)
-    - [Expect](./testing/expect.md)
 - [Scripts](./scripts/README.md)
-- [Using modules](./modules/README.md)
-    - [Accounts](./modules/accounts.md)
-    - [Commands](./modules/commands.md)
+
+# Modules
+
+- [Accounts](./modules/accounts.md)
+- [Commands](./modules/commands.md)
+- [Expect](./modules/expect.md)
+- [Format](./modules/fmt.md)
+- [Json](./modules/json.md)
+- [Results \& Errors](./modules/results.md)
+- [Requests](./modules/requests.md)
+- [Others](./OTHER_MODULES.md)
     - [Config](./modules/config.md)
     - [Console](./modules/console.md)
     - [Context](./modules/context.md)
     - [Env](./modules/env.md)
     - [Events](./modules/events.md)
     - [Fe](./modules/fe.md)
-    - [Format](./modules/fmt.md)
     - [Forks](./modules/forks.md)
     - [Fs](./modules/fs.md)
     - [Huff](./modules/huff.md)
-    - [Json](./modules/json.md)
     - [Strings](./modules/strings.md)
     - [Utils](./modules/utils.md)
     - [Watchers](./modules/watchers.md)
-    - [Results](./modules/results.md)
-    - [Requests](./modules/requests.md)
 
 # Reference
 

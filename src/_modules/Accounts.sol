@@ -430,4 +430,12 @@ library accounts {
     function createMany(uint256 length) internal returns (address[] memory) {
         return accountsSafe.createMany(length);
     }
+
+    /// @dev Generates an array of addresses with a specific length and a prefix as label.
+    /// The label for each address will be `{prefix}_{i}`.
+    /// @param length The amount of addresses to generate.
+    /// @param prefix The prefix of the label for each address.
+    function createMany(uint256 length, string memory prefix) internal returns (address[] memory) {
+        return accountsSafe.createMany(length, prefix);
+    }
 }
