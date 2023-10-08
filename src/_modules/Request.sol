@@ -265,7 +265,7 @@ library LibRequestClient {
         );
     }
 
-    function toCommand(RequestClient memory self, Request memory req) internal returns (Command memory) {
+    function toCommand(RequestClient memory self, Request memory req) internal pure returns (Command memory) {
         string memory curlWriteOutTemplate = "\"\\n%{header_json}\\n\\n%{http_code}\" ";
 
         if (self._curlVersion.lessThan(semver.create(7, 83))) {
@@ -562,7 +562,7 @@ library LibHeaders {
         return values.getStringArray(string.concat(".", key));
     }
 
-    function getKeys(Headers self) internal returns (string[] memory) {
+    function getKeys(Headers self) internal pure returns (string[] memory) {
         (JsonObject memory values,) = decode(self);
         return values.getKeys();
     }
