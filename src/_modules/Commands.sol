@@ -173,7 +173,7 @@ library commands {
         try vulcan.hevm.tryFfi(inputs) returns (VmSafe.FfiResult memory ffiResult) {
             CommandOutput memory output;
 
-            output.exitCode = ffiResult.exit_code;
+            output.exitCode = ffiResult.exitCode;
             output.stdout = ffiResult.stdout;
             output.stderr = ffiResult.stderr;
             output.command = Command(inputs);
