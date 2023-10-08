@@ -7,12 +7,6 @@ import {LibError, Error} from "./Error.sol";
 import "./Accounts.sol";
 import "./Vulcan.sol";
 
-/// Hacky interface to use the `serializeJson` vm cheatcode
-/// TODO: remove
-interface SerializeJson {
-    function serializeJson(string memory, string memory) external returns (string memory);
-}
-
 struct JsonObject {
     string id;
     string serialized;
@@ -235,11 +229,11 @@ library json {
         return vulcan.hevm.parseJsonBytes32Array(obj.serialized, key);
     }
 
-    function getKeys(JsonObject memory obj, string memory key) internal returns (string[] memory) {
+    function getKeys(JsonObject memory obj, string memory key) internal pure returns (string[] memory) {
         return vulcan.hevm.parseJsonKeys(obj.serialized, key);
     }
 
-    function getKeys(JsonObject memory obj) internal returns (string[] memory) {
+    function getKeys(JsonObject memory obj) internal pure returns (string[] memory) {
         return getKeys(obj, "");
     }
 
@@ -257,10 +251,8 @@ library json {
             return JsonError.Invalid().toJsonResult();
         }
 
-        // TODO: remove hack to use the unreleased `serializeJson` Vm cheatcode
-        SerializeJson vm = SerializeJson(address(vulcan.hevm));
         JsonObject memory jsonObj = create();
-        jsonObj.serialized = vm.serializeJson(jsonObj.id, obj);
+        jsonObj.serialized = vulcan.hevm.serializeJson(jsonObj.id, obj);
 
         return Ok(jsonObj);
     }
