@@ -11,10 +11,12 @@ contract ExampleTest is Test {
         expect(value).toEqual(1);
         expect(value).not.toEqual(2);
         expect(value).toBeLessThan(2);
-        expect("Hello World!).toContain("World");
+        expect("Hello World!").toContain("World");
     }
 }
 ```
+
+# Invariant testing
 
 In addition to the basic testing framework, Vulcan also provides utilities to facilitate the use of Foundry's invariant testing. These functions are provided through the `invariants` module.
 

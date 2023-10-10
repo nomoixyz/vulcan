@@ -7,25 +7,5 @@ Functionality to interact with the current runtime context:
   [`watchers`](./watchers.md))
 - Vm state snapshots
 
-```solidity
-import { Test, ctx } from "vulcan/test.sol";
+{{#include ../examples/context/example.md}}
 
-contract TestMyContract is Test {
-    function testMyContract() external {
-        // Update block state
-        ctx.setBlockTimestamp(123).setBlockNumber(456);
-
-        // Use snapshots
-        uint256 snapshotId = ctx.snapshot();
-        ctx.revertToSnapshot(snapshotId);
-
-        // Enable/disable gas metering
-        ctx.pauseGasMetering();
-        ctx.resumeGasMetering();
-
-        // Use Forge's `expectRevert`
-        ctx.expectRevert();
-        myContract.mayRevert();
-    }
-}
-```
