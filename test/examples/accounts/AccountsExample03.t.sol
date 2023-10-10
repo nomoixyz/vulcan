@@ -4,8 +4,8 @@ pragma solidity ^0.8.13;
 import {Test, expect, accounts} from "vulcan/test.sol";
 
 /// @title Create multiple addresses
-/// @dev This example shows how to create multiple addresses
-contract AccountsExample03 is Test {
+/// @dev Creating multiple addresses
+contract AccountsExample is Test {
     function test() external {
         address[] memory addresses = accounts.createMany(10);
 

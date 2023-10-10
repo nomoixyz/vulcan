@@ -1,7 +1,7 @@
 ## Examples
 ### Create an address
 
-This example shows how to create an address
+How to create a simple address
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -9,7 +9,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect, accounts} from "vulcan/test.sol";
 
-contract AccountsExample01 is Test {
+contract AccountsExample is Test {
     function test() external {
         address alice = accounts.create();
 
@@ -21,7 +21,7 @@ contract AccountsExample01 is Test {
 
 ### Create a labeled address
 
-This example shows how to create an address labeled as "Alice"
+Creating an address labeled as "Alice"
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -29,7 +29,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect, accounts} from "vulcan/test.sol";
 
-contract AccountsExample02 is Test {
+contract AccountsExample is Test {
     function test() external {
         address alice = accounts.create("Alice");
 
@@ -41,7 +41,7 @@ contract AccountsExample02 is Test {
 
 ### Create multiple addresses
 
-This example shows how to create multiple addresses
+Creating multiple addresses
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -49,7 +49,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect, accounts} from "vulcan/test.sol";
 
-contract AccountsExample03 is Test {
+contract AccountsExample is Test {
     function test() external {
         address[] memory addresses = accounts.createMany(10);
 
@@ -61,7 +61,7 @@ contract AccountsExample03 is Test {
 
 ### Create multiple labeled addresses with a prefix
 
-This example shows how to create multiple addresses labeled with the prefix `Account`
+Creating multiple addresses labeled with the prefix `Account`
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -69,7 +69,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect, accounts} from "vulcan/test.sol";
 
-contract AccountsExample04 is Test {
+contract AccountsExample is Test {
     function test() external {
         address[] memory addresses = accounts.createMany(10, "Account");
 
@@ -81,7 +81,7 @@ contract AccountsExample04 is Test {
 
 ### Use method chaining on addresses
 
-This example shows how to use method chaining on addresses
+Use method chaining on addresses to call multiple methods
 
 ```solidity
 // SPDX-License-Identifier: MIT

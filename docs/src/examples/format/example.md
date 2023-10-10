@@ -1,7 +1,7 @@
 ## Examples
 ### Using templates
 
-This example shows how to use templates with the `format` module
+Using templates with the `format` module to format data
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -9,7 +9,7 @@ pragma solidity ^0.8.13;
 
 import {Test, accounts, expect, fmt} from "vulcan/test.sol";
 
-contract FormatExample01 is Test {
+contract FormatExample is Test {
     using accounts for address;
 
     function test() external {
@@ -26,7 +26,7 @@ contract FormatExample01 is Test {
 
 ### Formatting decimals
 
-This example shows how to use the `{uint:dx}` placeholder to format numbers with decimals
+Use the `{uint:dx}` placeholder to format numbers with decimals
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -34,7 +34,7 @@ pragma solidity ^0.8.13;
 
 import {Test, accounts, expect, fmt} from "vulcan/test.sol";
 
-contract FormatExample02 is Test {
+contract FormatExample is Test {
     using accounts for address;
 
     function test() external {

@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import {Test, expect, accounts} from "vulcan/test.sol";
 
 /// @title Use method chaining on addresses
-/// @dev This example shows how to use method chaining on addresses
+/// @dev Use method chaining on addresses to call multiple methods
 contract AccountsExample05 is Test {
     using accounts for address;
 

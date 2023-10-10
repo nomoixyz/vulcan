@@ -4,8 +4,8 @@ pragma solidity ^0.8.13;
 import {Test, accounts, expect, fmt} from "vulcan/test.sol";
 
 /// @title Formatting decimals
-/// @dev This example shows how to use the `{uint:dx}` placeholder to format numbers with decimals
-contract FormatExample02 is Test {
+/// @dev Use the `{uint:dx}` placeholder to format numbers with decimals
+contract FormatExample is Test {
     using accounts for address;
 
     function test() external {

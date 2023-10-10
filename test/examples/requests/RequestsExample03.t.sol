@@ -4,8 +4,8 @@ pragma solidity ^0.8.13;
 import {Test, expect, request, Response, RequestClient} from "vulcan/test.sol";
 
 /// @title Request authentication
-/// @dev This example shows different methods of authentication
-contract RequestExample03 is Test {
+/// @dev How to use different methods of authentication
+contract RequestExample is Test {
     function test() external {
         RequestClient memory client = request.create();
 

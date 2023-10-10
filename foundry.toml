@@ -12,7 +12,7 @@ fs_permissions = [
 ]
 
 [rpc_endpoints]
-fake = "https://my-fake-rpc-url"
-solana-rulz = "https://solana-rulz.gg"
+mainnet = "https://mainnet.rpc.io"
+arbitrum = "https://arbitrum.rpc.io"
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

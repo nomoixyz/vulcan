@@ -4,8 +4,8 @@ pragma solidity ^0.8.13;
 import {Test, expect, request, Headers, Response, Request, RequestClient} from "vulcan/test.sol";
 
 /// @title Working with headers
-/// @dev This example shows different methods of working with headers
-contract RequestExample04 is Test {
+/// @dev Using the request module to work with request headers
+contract RequestExample is Test {
     function test() external {
         // Setting a default header as key value
         RequestClient memory client = request.create().defaultHeader("X-Foo", "true");

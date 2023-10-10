@@ -4,8 +4,8 @@ pragma solidity ^0.8.13;
 import {Test, expect, StringResult, Ok} from "vulcan/test.sol";
 
 /// @title Working with result values
-/// @dev This example shows different ways of getting the underlyng value of a `Result`
-contract ResultExample01 is Test {
+/// @dev Different methods of getting the underlyng value of a `Result`
+contract ResultExample is Test {
     function test() external {
         StringResult result = Ok(string("foo"));
 

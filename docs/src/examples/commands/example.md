@@ -1,7 +1,7 @@
 ## Examples
 ### Run a simple command
 
-This example shows how to run a simple command and obtain the output
+Run a simple command and obtain the output
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -26,7 +26,7 @@ contract RunCommandExample is Test {
 
 ### Reuse a command
 
-This example shows how reuse a command with different arguments
+Reuse a command with different arguments
 
 ```solidity
 // SPDX-License-Identifier: MIT

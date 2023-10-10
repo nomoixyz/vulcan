@@ -2,19 +2,10 @@
 
 This module provides a set of utility functions that make use of other modules in Vulcan.
 
-```solidity
-import {Test, expect, println, format} from "vulcan/test.sol";
+Some of the utility functions:
+- `format`: Formats a string in a similar way to rust [`format!`](https://doc.rust-lang.org/std/macro.format.html) macro. This function uses the [`fmt` module](./fmt.md) underneath meaning that all templating options from the [`fmt` module](./fmt.md) are available.
+- `println`: Logs a formatted string in a similar way to rust [`println!`](https://doc.rust-lang.org/std/macro.println.html) macro. This function uses
+  the `format` function underneath
 
-contract TestMyContract is Test {
-    function testUtils() external {
-        // Print a string
-        println("Hello world!");
+{{#include ../examples/utils/example.md}}
 
-        // Print a formatted string - see Format module for more details
-        println("Hello {string}!", abi.encode("world"));
-
-        // Format a string
-        expect(format("Hello {string}!", abi.encode("world"))).toEqual("Hello world!");
-    }
-}
-```

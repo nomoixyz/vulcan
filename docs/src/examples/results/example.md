@@ -1,7 +1,7 @@
 ## Examples
 ### Working with result values
 
-This example shows different ways of getting the underlyng value of a `Result`
+Different methods of getting the underlyng value of a `Result`
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -9,7 +9,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect, StringResult, Ok} from "vulcan/test.sol";
 
-contract ResultExample01 is Test {
+contract ResultExample is Test {
     function test() external {
         StringResult result = Ok(string("foo"));
 
@@ -34,7 +34,7 @@ contract ResultExample01 is Test {
 
 ### Working with Errors
 
-This example shows different ways of handling errors.
+Different ways of handling errors.
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -42,7 +42,7 @@ pragma solidity ^0.8.13;
 
 import {Test, commands, ctx, expect, CommandResult, CommandError} from "vulcan/test.sol";
 
-contract ResultExample02 is Test {
+contract ResultExample is Test {
     function test() external {
         // Run a non existent command
         CommandResult result = commands.run(["asdf12897u391723"]);

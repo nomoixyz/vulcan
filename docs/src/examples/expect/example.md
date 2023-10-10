@@ -1,7 +1,7 @@
 ## Examples
 ### Use different matchers
 
-This example shows how to use the `expect` function and its different matchers
+Using the `expect` function and its different matchers
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -9,7 +9,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect} from "vulcan/test.sol";
 
-contract ExpectExample01 is Test {
+contract ExpectExample is Test {
     function test() external {
         expect(string("foo")).toEqual(string("foo"));
         expect(string("foo")).not.toEqual(string("bar"));

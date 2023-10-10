@@ -4,8 +4,8 @@ pragma solidity ^0.8.13;
 import {Test, expect} from "vulcan/test.sol";
 
 /// @title Use different matchers
-/// @dev This example shows how to use the `expect` function and its different matchers
-contract ExpectExample01 is Test {
+/// @dev Using the `expect` function and its different matchers
+contract ExpectExample is Test {
     function test() external {
         expect(string("foo")).toEqual(string("foo"));
         expect(string("foo")).not.toEqual(string("bar"));

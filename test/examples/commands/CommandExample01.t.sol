@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import {Test, expect, commands, CommandResult, CommandOutput} from "vulcan/test.sol";
 
 /// @title Run a simple command
-/// @dev This example shows how to run a simple command and obtain the output
+/// @dev Run a simple command and obtain the output
 contract RunCommandExample is Test {
     function test() external {
         // Run a command to get a result

@@ -1,7 +1,7 @@
 ## Examples
 ### Sending requests
 
-This example shows how to send a requests to an http server
+How to send requests to an http server
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -9,7 +9,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect, request, Response} from "vulcan/test.sol";
 
-contract RequestExample01 is Test {
+contract RequestExample is Test {
     function test() external {
         Response memory getResponse = request.create().get("https://httpbin.org/get").send().unwrap();
         Response memory postResponse = request.create().post("https://httpbin.org/post").send().unwrap();
@@ -29,7 +29,7 @@ contract RequestExample01 is Test {
 
 ### Sending a JSON payload
 
-This example shows how to send a request with a JSON body
+How to send a request with a JSON body
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -37,7 +37,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect, request, Response, RequestClient, JsonObject} from "vulcan/test.sol";
 
-contract RequestExample02 is Test {
+contract RequestExample is Test {
     function test() external {
         RequestClient memory client = request.create();
 
@@ -55,7 +55,7 @@ contract RequestExample02 is Test {
 
 ### Request authentication
 
-This example shows different methods of authentication
+How to use different methods of authentication
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -63,7 +63,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect, request, Response, RequestClient} from "vulcan/test.sol";
 
-contract RequestExample03 is Test {
+contract RequestExample is Test {
     function test() external {
         RequestClient memory client = request.create();
 
@@ -82,7 +82,7 @@ contract RequestExample03 is Test {
 
 ### Working with headers
 
-This example shows different methods of working with headers
+Using the request module to work with request headers
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -90,7 +90,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect, request, Headers, Response, Request, RequestClient} from "vulcan/test.sol";
 
-contract RequestExample04 is Test {
+contract RequestExample is Test {
     function test() external {
         // Setting a default header as key value
         RequestClient memory client = request.create().defaultHeader("X-Foo", "true");

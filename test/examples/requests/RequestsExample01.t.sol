@@ -4,8 +4,8 @@ pragma solidity ^0.8.13;
 import {Test, expect, request, Response} from "vulcan/test.sol";
 
 /// @title Sending requests
-/// @dev This example shows how to send a requests to an http server
-contract RequestExample01 is Test {
+/// @dev How to send requests to an http server
+contract RequestExample is Test {
     function test() external {
         Response memory getResponse = request.create().get("https://httpbin.org/get").send().unwrap();
         Response memory postResponse = request.create().post("https://httpbin.org/post").send().unwrap();

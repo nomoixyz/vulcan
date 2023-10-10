@@ -4,8 +4,8 @@ pragma solidity ^0.8.13;
 import {Test, accounts, expect, fmt} from "vulcan/test.sol";
 
 /// @title Using templates
-/// @dev This example shows how to use templates with the `format` module
-contract FormatExample01 is Test {
+/// @dev Using templates with the `format` module to format data
+contract FormatExample is Test {
     using accounts for address;
 
     function test() external {

@@ -4,8 +4,8 @@ pragma solidity ^0.8.13;
 import {Test, expect, request, Response, RequestClient, JsonObject} from "vulcan/test.sol";
 
 /// @title Sending a JSON payload
-/// @dev This example shows how to send a request with a JSON body
-contract RequestExample02 is Test {
+/// @dev How to send a request with a JSON body
+contract RequestExample is Test {
     function test() external {
         RequestClient memory client = request.create();
 
