@@ -7,13 +7,8 @@ import {Test, expect, ctx} from "vulcan/test.sol";
 /// @dev Use the context module to modify chain parameters using method chaining
 contract ContextExample is Test {
     function test() external {
-        ctx.setBlockTimestamp(1)
-            .setBlockNumber(123)
-            .setBlockBaseFee(99999)
-            .setBlockPrevrandao(bytes32(uint256(123)))
-            .setChainId(666)
-            .setBlockCoinbase(address(1))
-            .setGasPrice(1e18);
+        ctx.setBlockTimestamp(1).setBlockNumber(123).setBlockBaseFee(99999).setBlockPrevrandao(bytes32(uint256(123)))
+            .setChainId(666).setBlockCoinbase(address(1)).setGasPrice(1e18);
 
         expect(block.timestamp).toEqual(1);
         expect(block.number).toEqual(123);
