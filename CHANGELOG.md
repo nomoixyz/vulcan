@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/nomoixyz/vulcan/compare/v0.4.1...v0.4.2) (2023-10-10)
+
+
+### Bug Fixes
+
+* update forge-std ([#214](https://github.com/nomoixyz/vulcan/issues/214)) ([8e3fb60](https://github.com/nomoixyz/vulcan/commit/8e3fb600b34b8ece7e2ff43b2f59ce01919ad611))
+
 ## [0.4.1](https://github.com/nomoixyz/vulcan/compare/v0.4.0...v0.4.1) (2023-10-03)
 
 
