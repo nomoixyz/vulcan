@@ -68,8 +68,29 @@ library request {
         return LibHeaders.create();
     }
 
+    /// @dev Alias to `request.create().get(url).send()`
     function get(string memory url) internal returns (ResponseResult) {
         return create().get(url).send();
+    }
+
+    /// @dev Alias to `request.create().post(url).send()`
+    function post(string memory url) internal returns (ResponseResult) {
+        return create().post(url).send();
+    }
+
+    /// @dev Alias to `request.create().put(url).send()`
+    function put(string memory url) internal returns (ResponseResult) {
+        return create().put(url).send();
+    }
+
+    /// @dev Alias to `request.create().patch(url).send()`
+    function patch(string memory url) internal returns (ResponseResult) {
+        return create().patch(url).send();
+    }
+
+    /// @dev Alias to `request.create().del(url).send()`
+    function del(string memory url) internal returns (ResponseResult) {
+        return create().del(url).send();
     }
 }
 
