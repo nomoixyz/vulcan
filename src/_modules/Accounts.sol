@@ -155,12 +155,8 @@ library accountsSafe {
 
         address[] memory addresses = new address[](length);
 
-        for (uint256 i; i < length;) {
+        for (uint256 i = 0; i < length; i++) {
             addresses[i] = create();
-
-            unchecked {
-                ++i;
-            }
         }
 
         return addresses;
@@ -175,12 +171,8 @@ library accountsSafe {
 
         address[] memory addresses = new address[](length);
 
-        for (uint256 i; i < length;) {
+        for (uint256 i = 0; i < length; i++) {
             addresses[i] = create(string.concat(prefix, "_", strings.toString(i)));
-
-            unchecked {
-                ++i;
-            }
         }
 
         return addresses;
