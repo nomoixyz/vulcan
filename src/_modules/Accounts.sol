@@ -155,7 +155,7 @@ library accountsSafe {
 
         address[] memory addresses = new address[](length);
 
-        for (uint256 i; i < length; i++) {
+        for (uint256 i = 0; i < length; i++) {
             addresses[i] = create();
         }
 
@@ -171,7 +171,7 @@ library accountsSafe {
 
         address[] memory addresses = new address[](length);
 
-        for (uint256 i; i < length; i++) {
+        for (uint256 i = 0; i < length; i++) {
             addresses[i] = create(string.concat(prefix, "_", strings.toString(i)));
         }
 
@@ -359,7 +359,7 @@ library accounts {
     /// @dev self The address that will own the tokens.
     /// @dev token The token to mint.
     /// @dev amount The amount of tokens to mint.
-    /// @return The adress that owns the minted tokens.
+    /// @return The address that owns the minted tokens.
     function mintToken(address self, address token, uint256 amount) internal returns (address) {
         (, bytes memory balData) = token.call(abi.encodeWithSelector(0x70a08231, self));
 
@@ -375,11 +375,11 @@ library accounts {
         return self;
     }
 
-    /// @dev Burns an amount of tokens from an address.This operation modifies the total supply of the token.
+    /// @dev Burns an amount of tokens from an address. This operation modifies the total supply of the token.
     /// @dev self The address that owns the tokens.
     /// @dev token The token to burn.
     /// @dev amount The amount of tokens to burn.
-    /// @return The adress that owned the burned tokens.
+    /// @return The address that owned the burned tokens.
     function burnToken(address self, address token, uint256 amount) internal returns (address) {
         (, bytes memory balData) = token.call(abi.encodeWithSelector(0x70a08231, self));
 
@@ -406,7 +406,7 @@ library accounts {
         return self;
     }
 
-    /// @dev Sets the token total supply of a token.
+    /// @dev Sets the total supply of a token.
     /// @param token The token that will be modified.
     /// @param totalSupply The new total supply of token.
     /// @return The token address.
