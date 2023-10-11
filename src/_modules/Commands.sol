@@ -42,8 +42,12 @@ library commands {
 
     function arg(Command memory self, string memory _arg) internal pure returns (Command memory) {
         string[] memory inputs = new string[](self.inputs.length + 1);
-        for (uint256 i = 0; i < self.inputs.length; i++) {
+        for (uint256 i = 0; i < self.inputs.length;) {
             inputs[i] = self.inputs[i];
+
+            unchecked {
+                ++i;
+            }
         }
         inputs[inputs.length - 1] = _arg;
         return Command(inputs);
@@ -51,11 +55,17 @@ library commands {
 
     function args(Command memory self, string[] memory _args) internal pure returns (Command memory) {
         string[] memory inputs = new string[](self.inputs.length + _args.length);
-        for (uint256 i = 0; i < self.inputs.length; i++) {
+        for (uint256 i; i < self.inputs.length;) {
             inputs[i] = self.inputs[i];
+            unchecked {
+                ++i;
+            }
         }
-        for (uint256 i = 0; i < _args.length; i++) {
+        for (uint256 i = 0; i < _args.length;) {
             inputs[self.inputs.length + i] = _args[i];
+            unchecked {
+                ++i;
+            }
         }
         return Command(inputs);
     }
@@ -148,11 +158,14 @@ library commands {
 
         uint256 length = self.inputs.length;
 
-        for (uint256 i; i < length; ++i) {
+        for (uint256 i; i < length;) {
             output = string.concat(output, self.inputs[i]);
 
             if (i < length - 1) {
                 output = string.concat(output, " ");
+            }
+            unchecked {
+                ++i;
             }
         }
 
@@ -274,134 +287,191 @@ library commands {
 
     function _toDynamic(string[2] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](2);
-        for (uint256 i = 0; i < 2; i++) {
+        for (uint256 i = 0; i < 2;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[3] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](3);
-        for (uint256 i = 0; i < 3; i++) {
+        for (uint256 i = 0; i < 3;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[4] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](4);
-        for (uint256 i = 0; i < 4; i++) {
+        for (uint256 i = 0; i < 4;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[5] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](5);
-        for (uint256 i = 0; i < 5; i++) {
+        for (uint256 i = 0; i < 5;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[6] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](6);
-        for (uint256 i = 0; i < 6; i++) {
+        for (uint256 i = 0; i < 6;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[7] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](7);
-        for (uint256 i = 0; i < 7; i++) {
+        for (uint256 i = 0; i < 7;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[8] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](8);
-        for (uint256 i = 0; i < 8; i++) {
+        for (uint256 i = 0; i < 8;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[9] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](9);
-        for (uint256 i = 0; i < 9; i++) {
+        for (uint256 i = 0; i < 9;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[10] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](10);
-        for (uint256 i = 0; i < 10; i++) {
+        for (uint256 i = 0; i < 10;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[11] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](11);
-        for (uint256 i = 0; i < 11; i++) {
+        for (uint256 i = 0; i < 11;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[12] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](12);
-        for (uint256 i = 0; i < 12; i++) {
+        for (uint256 i = 0; i < 12;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[13] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](13);
-        for (uint256 i = 0; i < 13; i++) {
+        for (uint256 i = 0; i < 13;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[14] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](14);
-        for (uint256 i = 0; i < 14; i++) {
+        for (uint256 i = 0; i < 14;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[15] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](15);
-        for (uint256 i = 0; i < 15; i++) {
+        for (uint256 i = 0; i < 15;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[16] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](16);
-        for (uint256 i = 0; i < 16; i++) {
+        for (uint256 i = 0; i < 16;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[17] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](17);
-        for (uint256 i = 0; i < 17; i++) {
+        for (uint256 i = 0; i < 17;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[18] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](18);
-        for (uint256 i = 0; i < 18; i++) {
+        for (uint256 i = 0; i < 18;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[19] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](19);
-        for (uint256 i = 0; i < 19; i++) {
+        for (uint256 i = 0; i < 19;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 
     function _toDynamic(string[20] memory inputs) private pure returns (string[] memory _inputs) {
         _inputs = new string[](20);
-        for (uint256 i = 0; i < 20; i++) {
+        for (uint256 i = 0; i < 20;) {
             _inputs[i] = inputs[i];
+            unchecked {
+                ++i;
+            }
         }
     }
 }
