@@ -1,45 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import {console} from "./_modules/Console.sol";
-import {vulcan, Log} from "./_modules/Vulcan.sol";
-import {any} from "./_modules/Any.sol";
-import {accounts} from "./_modules/Accounts.sol";
-import {commands, Command, CommandResult, CommandOutput, CommandError, Ok} from "./_modules/Commands.sol";
-import {ctx} from "./_modules/Context.sol";
-import {env} from "./_modules/Env.sol";
-import {events} from "./_modules/Events.sol";
-import {expect} from "./_modules/Expect.sol";
-import {forks, Fork} from "./_modules/Forks.sol";
-import {fs, FsMetadata, FsMetadataResult, FsErrors, Ok} from "./_modules/Fs.sol";
-import {gas} from "./_modules/Gas.sol";
-import {huff, Huffc} from "./_modules/Huff.sol";
-import {InvariantsBase, invariants} from "./_modules/Invariants.sol";
-import {json, JsonObject, Ok} from "./_modules/Json.sol";
-import {strings} from "./_modules/Strings.sol";
-import {watchers, Watcher} from "./_modules/Watchers.sol";
-import {config, Rpc} from "./_modules/Config.sol";
-import {fmt} from "./_modules/Fmt.sol";
-import {fe, Fe} from "./_modules/Fe.sol";
-import {format} from "./_utils/format.sol";
-import {println} from "./_utils/println.sol";
+// Common imports
+import "./_imports.sol";
+
+// Unsafe or test only imports
+import {accountsUnsafe as accounts} from "./_private/AccountsUnsafe.sol";
+import {ctxUnsafe as ctx} from "./_private/ContextUnsafe.sol";
+import {expect, any} from "./_private/Expect.sol";
+import {forksUnsafe as forks, Fork} from "./_private/ForksUnsafe.sol";
+import {InvariantsBase, invariants} from "./_private/Invariants.sol";
 import {bound} from "./_utils/bound.sol";
 import {formatError} from "./_utils/formatError.sol";
-import {removeSelector} from "./_utils/removeSelector.sol";
-import {Ok, StringResult, BoolResult, BytesResult, EmptyResult} from "./_modules/Result.sol";
-import {Error} from "./_modules/Error.sol";
-import {semver, Semver} from "./_modules/Semver.sol";
-import {
-    request,
-    Headers,
-    ResponseResult,
-    RequestResult,
-    Response,
-    Request,
-    RequestClient,
-    RequestBuilder,
-    Ok
-} from "./_modules/Request.sol";
 
 // @dev Main entry point to Vulcan tests
 contract Test is InvariantsBase {
