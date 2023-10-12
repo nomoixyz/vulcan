@@ -6,7 +6,7 @@ import {expect} from "src/test/Expect.sol";
 import {fs, FsErrors, FsMetadata, FsMetadataResult} from "src/test/Fs.sol";
 import {commands} from "src/test/Commands.sol";
 import {Error} from "src/test/Error.sol";
-import {StringResult, BoolResult, BytesResult, EmptyResult} from "src/test/Results.sol";
+import {StringResult, BoolResult, BytesResult, EmptyResult} from "src/test/Result.sol";
 
 contract FsTest is Test {
     string constant HELLO_WORLD = "./test/fixtures/fs/read/hello_world.txt";

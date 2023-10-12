@@ -7,7 +7,7 @@ import {commands, Command} from "src/test/Commands.sol";
 import {fe, Fe} from "src/test/Fe.sol";
 import {fs} from "src/test/Fs.sol";
 import {strings} from "src/test/Strings.sol";
-import {StringResult} from "src/test/Results.sol";
+import {StringResult} from "src/test/Result.sol";
 import {println} from "src/utils.sol";
 
 contract FeTest is Test {
