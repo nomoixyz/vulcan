@@ -76,4 +76,3 @@ library ctxSafe {
         return formatError("ctx", func, message);
     }
 }
-

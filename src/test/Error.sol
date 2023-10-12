@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import { Error } from "../_private/Error.sol";
-
+import {Error} from "../_private/Error.sol";

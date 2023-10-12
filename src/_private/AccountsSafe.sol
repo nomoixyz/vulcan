@@ -191,4 +191,3 @@ library accountsSafe {
         return formatError("accounts", func, message);
     }
 }
-

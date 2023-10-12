@@ -31,4 +31,3 @@ import {
     RequestClient,
     RequestBuilder
 } from "./_private/Request.sol";
-
