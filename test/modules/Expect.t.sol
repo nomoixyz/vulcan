@@ -4,7 +4,7 @@ pragma solidity >=0.8.13 <0.9.0;
 import {Test} from "src/test.sol";
 import {ctx} from "src/test/Context.sol";
 import {any, expect} from "src/test/Expect.sol";
-import {events} from "src/test/events.sol";
+import {events} from "src/test/Events.sol";
 import {vulcan} from "src/test/Vulcan.sol";
 import {watchers, Watcher} from "src/test/Watchers.sol";
 import {delta} from "src/utils.sol";

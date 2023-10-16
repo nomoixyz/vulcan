@@ -2,7 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import {Test} from "../../src/test.sol";
-import {commands} from "src/test/commands.sol";
+import {commands} from "src/test/Commands.sol";
 import {expect} from "src/test/Expect.sol";
 import {json, JsonObject} from "src/test/Json.sol";
 import {
