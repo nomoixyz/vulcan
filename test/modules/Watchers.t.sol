@@ -3,7 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import {Test} from "src/test.sol";
 import {expect} from "src/test/Expect.sol";
-import {watchersUnsafe as watchers, Watcher} from "src/_private/WatchersUnsafe.sol";
+import {watchersUnsafe as watchers, Watcher} from "src/_private/Watchers.sol";
 
 contract WatcherTarget {
     struct SomeStruct {
