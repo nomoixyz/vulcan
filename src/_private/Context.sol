@@ -83,7 +83,6 @@ library ctxSafe {
     }
 }
 
-
 /// @dev Contract used to check if a call is static or not.
 contract CallContext {
     uint256 private val = 0;
