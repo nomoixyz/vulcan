@@ -3,7 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Vulcan.sol";
 import "./Events.sol";
-import {accountsUnsafe as _accountsUnsafe} from "./AccountsUnsafe.sol";
+import {accountsUnsafe as accounts} from "./Accounts.sol";
 import {ctxUnsafe as _ctxUnsafe} from "./ContextUnsafe.sol";
 import {formatError} from "../_utils/formatError.sol";
 
@@ -51,15 +51,15 @@ library watchersUnsafe {
         address _watcher = watcherAddress(target);
         require(_watcher.code.length == 0, _formatError("watch(address)", "Address already has a watcher"));
 
-        _accountsUnsafe.setCode(_watcher, type(Watcher).runtimeCode);
+        accounts.setCode(_watcher, type(Watcher).runtimeCode);
 
         WatcherProxy proxy = new WatcherProxy();
 
         bytes memory targetCode = target.code;
 
         // Switcheroo
-        _accountsUnsafe.setCode(target, address(proxy).code);
-        _accountsUnsafe.setCode(address(proxy), targetCode);
+        accounts.setCode(target, address(proxy).code);
+        accounts.setCode(address(proxy), targetCode);
 
         Watcher(_watcher).setImplementationAddress(address(proxy));
 
@@ -198,7 +198,7 @@ contract Watcher {
     /// @dev Stops watching calls for the `implementation` contract.
     function stop() external {
         address target = watchersUnsafe.targetAddress(address(this));
-        _accountsUnsafe.setCode(target, implementation.code);
+        accounts.setCode(target, implementation.code);
 
         shouldCaptureReverts = false;
         implementation = address(0);
@@ -206,7 +206,7 @@ contract Watcher {
         // the array
         delete _calls;
 
-        _accountsUnsafe.setCode(address(this), bytes(""));
+        accounts.setCode(address(this), bytes(""));
     }
 
     /// @dev Sets the address of the `implementation` contract.

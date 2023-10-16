@@ -3,7 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./_imports.sol";
 
-import {accountsSafe as accounts} from "./_private/AccountsSafe.sol";
+import {accountsSafe as accounts} from "./_private/Accounts.sol";
 import {ctxSafe as ctx} from "./_private/ContextSafe.sol";
 
 contract Script {
