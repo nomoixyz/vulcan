@@ -4,7 +4,7 @@ pragma solidity >=0.8.13 <0.9.0;
 import "./Vulcan.sol";
 import "./Events.sol";
 import {accountsUnsafe as accounts} from "./Accounts.sol";
-import {ctxUnsafe as _ctxUnsafe} from "./Context.sol";
+import {ctxUnsafe as ctx} from "./Context.sol";
 import {formatError} from "../_utils/formatError.sol";
 
 struct Call {
@@ -231,18 +231,18 @@ contract WatcherProxy {
     /// @param _callData The call data.
     /// @return The data returnded from the `_target` contract proxied call.
     fallback(bytes calldata _callData) external payable returns (bytes memory) {
-        _ctxUnsafe.pauseGasMetering();
-        bool isStatic = _ctxUnsafe.isStaticcall();
+        ctx.pauseGasMetering();
+        bool isStatic = ctx.isStaticcall();
 
         if (!isStatic) {
             events.recordLogs();
         }
 
-        _ctxUnsafe.resumeGasMetering();
+        ctx.resumeGasMetering();
 
         (bool success, bytes memory returnData) = _target.delegatecall(_callData);
 
-        _ctxUnsafe.pauseGasMetering();
+        ctx.pauseGasMetering();
 
         // TODO: ugly, try to clean up
         if (!isStatic) {
@@ -268,19 +268,19 @@ contract WatcherProxy {
             watcher.storeCall(_callData, success, returnData, filteredLogs);
 
             if (!watcher.shouldCaptureReverts() && !success) {
-                _ctxUnsafe.resumeGasMetering();
+                ctx.resumeGasMetering();
                 assembly {
                     revert(add(returnData, 32), mload(returnData))
                 }
             }
         } else if (!success) {
-            _ctxUnsafe.resumeGasMetering();
+            ctx.resumeGasMetering();
             assembly {
                 revert(add(returnData, 32), mload(returnData))
             }
         }
 
-        _ctxUnsafe.resumeGasMetering();
+        ctx.resumeGasMetering();
 
         return returnData;
     }
