@@ -8,7 +8,7 @@ import "./_imports.sol";
 import {accountsUnsafe as accounts} from "./_internal/Accounts.sol";
 import {ctxUnsafe as ctx} from "./_internal/Context.sol";
 import {expect, any} from "./_internal/Expect.sol";
-import {forksUnsafe as forks, Fork} from "./_internal/ForksUnsafe.sol";
+import {forksUnsafe as forks, Fork} from "./_internal/Forks.sol";
 import {InvariantsBase, invariants} from "./_internal/Invariants.sol";
 import {bound, formatError} from "./_internal/Utils.sol";
 
