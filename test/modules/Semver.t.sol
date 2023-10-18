@@ -3,7 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import {Test} from "src/test.sol";
 import {expect} from "src/test/Expect.sol";
-import {semver, Semver} from "src/_private/Semver.sol";
+import {semver, Semver} from "src/_internal/Semver.sol";
 
 contract SemverTest is Test {
     function testCreate() external {

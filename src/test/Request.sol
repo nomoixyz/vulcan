@@ -10,4 +10,4 @@ import {
     Request,
     RequestClient,
     RequestBuilder
-} from "../_private/Request.sol";
+} from "../_internal/Request.sol";

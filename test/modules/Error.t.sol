@@ -9,7 +9,7 @@ import {json} from "src/test/Json.sol";
 import {vulcan} from "src/test/Vulcan.sol";
 import {println} from "src/utils.sol";
 
-import {LibError, Error} from "../../src/_private/Error.sol";
+import {LibError, Error} from "../../src/_internal/Error.sol";
 
 function FooError(uint256 value) pure returns (Error) {
     return LibError.encodeError(FooError, "Foo error message", value);

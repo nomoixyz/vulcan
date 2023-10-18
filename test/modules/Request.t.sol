@@ -15,7 +15,7 @@ import {
     Headers
 } from "src/test/Request.sol";
 import {vulcan} from "src/test/Vulcan.sol";
-import {semver} from "src/_private/Semver.sol";
+import {semver} from "src/_internal/Semver.sol";
 
 contract RequestTest is Test {
     using vulcan for *;

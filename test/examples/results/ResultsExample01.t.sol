@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 import {Test, expect, StringResult} from "vulcan/test.sol";
 // This import is just to demonstration, it's not meant to be imported on projects using Vulcan
-import {Ok} from "vulcan/_private/Result.sol";
+import {Ok} from "vulcan/_internal/Result.sol";
 
 /// @title Working with result values
 /// @dev Different methods of getting the underlyng value of a `Result`

@@ -5,7 +5,7 @@ import {Test} from "src/test.sol";
 import {expect} from "src/test/Expect.sol";
 import {config, Rpc} from "src/test/Config.sol";
 import {fmt} from "src/test/Fmt.sol";
-import {Type, Placeholder} from "src/_private/Fmt.sol";
+import {Type, Placeholder} from "src/_internal/Fmt.sol";
 
 contract FmtTest is Test {
     function testFormat() external {
