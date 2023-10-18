@@ -1,14 +1,16 @@
 # Config
 
-#### **`rpcUrl(string name) → (string )`**
+## config
+
+### **rpcUrl(string name) &rarr; (string)**
 
 Obtains a specific RPC from the configuration by name.
 
-#### **`rpcUrls() → (string[2][] )`**
+### **rpcUrls() &rarr; (string[2][])**
 
 Obtains all the RPCs from the configuration.
 
-#### **`rpcUrlStructs() → (Rpc[] rpcs)`**
+### **rpcUrlStructs() &rarr; (Rpc[] rpcs)**
 
 Obtains all the RPCs from the configuration.
 

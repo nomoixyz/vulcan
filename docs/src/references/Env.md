@@ -1,118 +1,120 @@
 # Env
 
-#### **`set(string name, string value)`**
+## env
+
+### **set(string name, string value)**
 
 sets the value of the  environment variable with name `name` to `value`.
 
-#### **`getBool(string name) → (bool)`**
+### **getBool(string name) &rarr; (bool)**
 
 Reads the environment variable with name `name` and returns the value as `bool`.
 
-#### **`getUint(string name) → (uint256)`**
+### **getUint(string name) &rarr; (uint256)**
 
 Reads the environment variable with name `name` and returns the value as `uint256`.
 
-#### **`getInt(string name) → (int256)`**
+### **getInt(string name) &rarr; (int256)**
 
 Reads the environment variable with name `name` and returns the value as `int256`.
 
-#### **`getAddress(string name) → (address)`**
+### **getAddress(string name) &rarr; (address)**
 
 Reads the environment variable with name `name` and returns the value as `address`.
 
-#### **`getBytes32(string name) → (bytes32)`**
+### **getBytes32(string name) &rarr; (bytes32)**
 
 Reads the environment variable with name `name` and returns the value as `bytes32`.
 
-#### **`getString(string name) → (string )`**
+### **getString(string name) &rarr; (string)**
 
 Reads the environment variable with name `name` and returns the value as `string`.
 
-#### **`getBytes(string name) → (bytes )`**
+### **getBytes(string name) &rarr; (bytes)**
 
 Reads the environment variable with name `name` and returns the value as `bytes`.
 
-#### **`getBoolArray(string name, string delim) → (bool[] )`**
+### **getBoolArray(string name, string delim) &rarr; (bool[])**
 
 Reads the environment variable with name `name` and returns the value as `bool[]`.
 
-#### **`getUintArray(string name, string delim) → (uint256[] )`**
+### **getUintArray(string name, string delim) &rarr; (uint256[])**
 
 Reads the environment variable with name `name` and returns the value as `uint256[]`.
 
-#### **`getIntArray(string name, string delim) → (int256[] )`**
+### **getIntArray(string name, string delim) &rarr; (int256[])**
 
 Reads the environment variable with name `name` and returns the value as `int256[]`.
 
-#### **`getAddressArray(string name, string delim) → (address[] )`**
+### **getAddressArray(string name, string delim) &rarr; (address[])**
 
 Reads the environment variable with name `name` and returns the value as `address[]`.
 
-#### **`getBytes32Array(string name, string delim) → (bytes32[] )`**
+### **getBytes32Array(string name, string delim) &rarr; (bytes32[])**
 
 Reads the environment variable with name `name` and returns the value as `bytes32[]`.
 
-#### **`getStringArray(string name, string delim) → (string[] )`**
+### **getStringArray(string name, string delim) &rarr; (string[])**
 
 Reads the environment variable with name `name` and returns the value as `string[]`.
 
-#### **`getBytesArray(string name, string delim) → (bytes[] )`**
+### **getBytesArray(string name, string delim) &rarr; (bytes[])**
 
 Reads the environment variable with name `name` and returns the value as `bytes[]`.
 
-#### **`getBool(string name, bool defaultValue) → (bool value)`**
+### **getBool(string name, bool defaultValue) &rarr; (bool value)**
 
 Reads the environment variable with name `name` and returns the value as `bool`.
 
-#### **`getUint(string name, uint256 defaultValue) external → (uint256 value)`**
+### **getUint(string name, uint256 defaultValue) &rarr; (uint256 value)**
 
 Reads the environment variable with name `name` and returns the value as `uint256`.
 
-#### **`getInt(string name, int256 defaultValue) external → (int256 value)`**
+### **getInt(string name, int256 defaultValue) &rarr; (int256 value)**
 
 Reads the environment variable with name `name` and returns the value as `int256`.
 
-#### **`getAddress(string name, address defaultValue) external → (address value)`**
+### **getAddress(string name, address defaultValue) &rarr; (address value)**
 
 Reads the environment variable with name `name` and returns the value as `address`.
 
-#### **`getBytes32(string name, bytes32 defaultValue) external → (bytes32 value)`**
+### **getBytes32(string name, bytes32 defaultValue) &rarr; (bytes32 value)**
 
 Reads the environment variable with name `name` and returns the value as `bytes32`.
 
-#### **`getString(string name, string defaultValue) external → (string value)`**
+### **getString(string name, string defaultValue) &rarr; (string value)**
 
 Reads the environment variable with name `name` and returns the value as `string`.
 
-#### **`getBytes(string name, bytes defaultValue) external → (bytes value)`**
+### **getBytes(string name, bytes defaultValue) &rarr; (bytes value)**
 
 Reads the environment variable with name `name` and returns the value as `bytes`.
 
-#### **`getBoolArray(string name, string delim, bool[] defaultValue) external → (bool[] value)`**
+### **getBoolArray(string name, string delim, bool[] defaultValue) &rarr; (bool[] value)**
 
 Reads the environment variable with name `name` and returns the value as `bool[]`.
 
-#### **`getUintArray(string name, string delim, uint256[] defaultValue) external → (uint256[] value)`**
+### **getUintArray(string name, string delim, uint256[] defaultValue) &rarr; (uint256[] value)**
 
 Reads the environment variable with name `name` and returns the value as `uint256[]`.
 
-#### **`getIntArray(string name, string delim, int256[] defaultValue) external → (int256[] value)`**
+### **getIntArray(string name, string delim, int256[] defaultValue) &rarr; (int256[] value)**
 
 Reads the environment variable with name `name` and returns the value as `int256[]`.
 
-#### **`getAddressArray(string name, string delim, address[] defaultValue) external → (address[] value)`**
+### **getAddressArray(string name, string delim, address[] defaultValue) &rarr; (address[] value)**
 
 Reads the environment variable with name `name` and returns the value as `address[]`.
 
-#### **`getBytes32Array(string name, string delim, bytes32[] defaultValue) external → (bytes32[] value)`**
+### **getBytes32Array(string name, string delim, bytes32[] defaultValue) &rarr; (bytes32[] value)**
 
 Reads the environment variable with name `name` and returns the value as `bytes32[]`.
 
-#### **`getStringArray(string name, string delim, string[] defaultValue) external → (string[] value)`**
+### **getStringArray(string name, string delim, string[] defaultValue) &rarr; (string[] value)**
 
 Reads the environment variable with name `name` and returns the value as `string[]`.
 
-#### **`getBytesArray(string name, string delim, bytes[] defaultValue) external → (bytes[] value)`**
+### **getBytesArray(string name, string delim, bytes[] defaultValue) &rarr; (bytes[] value)**
 
 Reads the environment variable with name `name` and returns the value as `bytes[]`.
 
