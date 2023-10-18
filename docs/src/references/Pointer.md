@@ -4,6 +4,10 @@
 
 ### Pointer
 
+```solidity
+type Pointer is bytes32;
+```
+
 
 
 ## LibPointer

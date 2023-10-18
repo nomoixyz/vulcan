@@ -4,6 +4,14 @@
 
 ### Log
 
+```solidity
+struct Log {
+	bytes32[] topics
+	bytes data
+	address emitter
+}
+```
+
 Struct that represent an EVM log
 
 ## vulcan

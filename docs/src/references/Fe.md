@@ -4,6 +4,15 @@
 
 ### Fe
 
+```solidity
+struct Fe {
+	string compilerPath
+	string filePath
+	string outputDir
+	bool overwrite
+}
+```
+
 
 
 ## fe

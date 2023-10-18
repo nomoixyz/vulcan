@@ -4,6 +4,10 @@
 
 ### Error
 
+```solidity
+type Error is bytes32;
+```
+
 
 
 ## LibError

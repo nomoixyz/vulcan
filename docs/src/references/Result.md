@@ -4,21 +4,41 @@
 
 ### Bytes32Result
 
+```solidity
+type Bytes32Result is bytes32;
+```
+
 
 
 ### BytesResult
+
+```solidity
+type BytesResult is bytes32;
+```
 
 
 
 ### StringResult
 
+```solidity
+type StringResult is bytes32;
+```
+
 
 
 ### BoolResult
 
+```solidity
+type BoolResult is bytes32;
+```
+
 
 
 ### EmptyResult
+
+```solidity
+type EmptyResult is bytes32;
+```
 
 
 

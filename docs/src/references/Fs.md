@@ -4,11 +4,27 @@
 
 ### FsMetadataResult
 
+```solidity
+type FsMetadataResult is bytes32;
+```
+
 
 
 ## Structs
 
 ### FsMetadata
+
+```solidity
+struct FsMetadata {
+	bool isDir
+	bool isSymlink
+	uint256 length
+	bool readOnly
+	uint256 modified
+	uint256 accessed
+	uint256 created
+}
+```
 
 
 

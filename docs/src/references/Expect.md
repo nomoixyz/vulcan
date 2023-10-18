@@ -4,65 +4,169 @@
 
 ### _BoolExpectation
 
+```solidity
+struct _BoolExpectation {
+	bool actual
+	_BoolExpectationNot not
+}
+```
+
 
 
 ### _BoolExpectationNot
+
+```solidity
+struct _BoolExpectationNot {
+	bool actual
+}
+```
 
 
 
 ### _UintExpectation
 
+```solidity
+struct _UintExpectation {
+	uint256 actual
+	_UintExpectationNot not
+}
+```
+
 
 
 ### _UintExpectationNot
+
+```solidity
+struct _UintExpectationNot {
+	uint256 actual
+}
+```
 
 
 
 ### _IntExpectation
 
+```solidity
+struct _IntExpectation {
+	int256 actual
+	_IntExpectationNot not
+}
+```
+
 
 
 ### _IntExpectationNot
+
+```solidity
+struct _IntExpectationNot {
+	int256 actual
+}
+```
 
 
 
 ### _AddressExpectation
 
+```solidity
+struct _AddressExpectation {
+	address actual
+	_AddressExpectationNot not
+}
+```
+
 
 
 ### _AddressExpectationNot
+
+```solidity
+struct _AddressExpectationNot {
+	address actual
+}
+```
 
 
 
 ### _Bytes32Expectation
 
+```solidity
+struct _Bytes32Expectation {
+	bytes32 actual
+	_Bytes32ExpectationNot not
+}
+```
+
 
 
 ### _Bytes32ExpectationNot
+
+```solidity
+struct _Bytes32ExpectationNot {
+	bytes32 actual
+}
+```
 
 
 
 ### _BytesExpectation
 
+```solidity
+struct _BytesExpectation {
+	bytes actual
+	_BytesExpectationNot not
+}
+```
+
 
 
 ### _BytesExpectationNot
+
+```solidity
+struct _BytesExpectationNot {
+	bytes actual
+}
+```
 
 
 
 ### _StringExpectation
 
+```solidity
+struct _StringExpectation {
+	string actual
+	_StringExpectationNot not
+}
+```
+
 
 
 ### _StringExpectationNot
+
+```solidity
+struct _StringExpectationNot {
+	string actual
+}
+```
 
 
 
 ### _CallExpectation
 
+```solidity
+struct _CallExpectation {
+	Call call
+	_CallExpectationNot not
+}
+```
+
 
 
 ### _CallExpectationNot
+
+```solidity
+struct _CallExpectationNot {
+	Call call
+}
+```
 
 
 

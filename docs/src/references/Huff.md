@@ -4,6 +4,18 @@
 
 ### Huffc
 
+```solidity
+struct Huffc {
+	string compilerPath
+	string filePath
+	string outputPath
+	string mainName
+	string constructorName
+	bool onlyRuntime
+	string[] constantOverrides
+}
+```
+
 
 
 ## huff

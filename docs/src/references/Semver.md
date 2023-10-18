@@ -4,6 +4,14 @@
 
 ### Semver
 
+```solidity
+struct Semver {
+	uint256 major
+	uint256 minor
+	uint256 patch
+}
+```
+
 
 
 ## semver

@@ -4,6 +4,10 @@
 
 ### Context
 
+```solidity
+type Context is bytes32;
+```
+
 
 
 ## ctxSafe

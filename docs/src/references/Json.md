@@ -4,11 +4,22 @@
 
 ### JsonResult
 
+```solidity
+type JsonResult is bytes32;
+```
+
 
 
 ## Structs
 
 ### JsonObject
+
+```solidity
+struct JsonObject {
+	string id
+	string serialized
+}
+```
 
 
 

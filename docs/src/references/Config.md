@@ -4,6 +4,13 @@
 
 ### Rpc
 
+```solidity
+struct Rpc {
+	string name
+	string url
+}
+```
+
 Struct that represents an RPC endpoint
 
 ## config

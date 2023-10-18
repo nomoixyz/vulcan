@@ -4,16 +4,35 @@
 
 ### CommandResult
 
+```solidity
+type CommandResult is bytes32;
+```
+
 
 
 ## Structs
 
 ### Command
 
+```solidity
+struct Command {
+	string[] inputs
+}
+```
+
 Struct used to hold command parameters. Useful for creating commands that can be run
 multiple times
 
 ### CommandOutput
+
+```solidity
+struct CommandOutput {
+	int32 exitCode
+	bytes stdout
+	bytes stderr
+	Command command
+}
+```
 
 
 

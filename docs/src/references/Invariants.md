@@ -4,6 +4,13 @@
 
 ### FuzzSelector
 
+```solidity
+struct FuzzSelector {
+	address addr
+	bytes4[] selectors
+}
+```
+
 A struct that represents a Fuzz Selector
 
 ## invariants

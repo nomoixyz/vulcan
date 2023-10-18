@@ -4,6 +4,15 @@
 
 ### Call
 
+```solidity
+struct Call {
+	bytes callData
+	bool success
+	bytes returnData
+	Log[] logs
+}
+```
+
 
 
 ## watchersUnsafe

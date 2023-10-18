@@ -4,6 +4,10 @@
 
 ### Fork
 
+```solidity
+type Fork is uint256;
+```
+
 Holds a fork's id.
 
 ## forksUnsafe
