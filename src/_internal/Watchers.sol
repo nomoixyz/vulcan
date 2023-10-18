@@ -5,7 +5,7 @@ import "./Vulcan.sol";
 import "./Events.sol";
 import {accountsUnsafe as accounts} from "./Accounts.sol";
 import {ctxUnsafe as ctx} from "./Context.sol";
-import {formatError} from "../_utils/formatError.sol";
+import {formatError} from "./Utils.sol";
 
 struct Call {
     bytes callData;

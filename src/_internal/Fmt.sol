@@ -2,7 +2,7 @@
 pragma solidity >=0.8.13 <0.9.0;
 
 import "./Strings.sol";
-import {formatError} from "../_utils/formatError.sol";
+import {formatError} from "./Utils.sol";
 
 enum Type {
     Bool,

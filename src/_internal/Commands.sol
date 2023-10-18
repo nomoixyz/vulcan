@@ -6,7 +6,7 @@ import {vulcan} from "./Vulcan.sol";
 import {Pointer} from "./Pointer.sol";
 import {ResultType, LibResultPointer} from "./Result.sol";
 import {LibError, Error} from "./Error.sol";
-import {removeSelector} from "../_utils/removeSelector.sol";
+import {removeSelector} from "./Utils.sol";
 
 /// @dev Struct used to hold command parameters. Useful for creating commands that can be run
 /// multiple times

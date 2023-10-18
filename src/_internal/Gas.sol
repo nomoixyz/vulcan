@@ -3,7 +3,7 @@ pragma solidity ^0.8.17;
 
 import "./Vulcan.sol";
 import {accountsUnsafe as accounts} from "./Accounts.sol";
-import {formatError} from "../_utils/formatError.sol";
+import {formatError} from "./Utils.sol";
 
 library gas {
     bytes32 constant GAS_MEASUREMENTS_MAGIC = keccak256("vulcan.gas.measurements.magic");

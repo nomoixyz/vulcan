@@ -5,7 +5,7 @@ import "./Vulcan.sol";
 import {Pointer} from "./Pointer.sol";
 import {ResultType, Ok, StringResult, BoolResult, BytesResult, EmptyResult, LibResultPointer} from "./Result.sol";
 import {LibError, Error} from "./Error.sol";
-import {removeSelector} from "../_utils/removeSelector.sol";
+import {removeSelector} from "./Utils.sol";
 
 type FsMetadataResult is bytes32;
 

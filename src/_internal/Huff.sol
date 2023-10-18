@@ -3,7 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import "./Commands.sol";
 import "./Strings.sol";
-import {formatError} from "../_utils/formatError.sol";
+import {formatError} from "./Utils.sol";
 
 struct Huffc {
     string compilerPath;

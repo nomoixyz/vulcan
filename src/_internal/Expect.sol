@@ -5,7 +5,7 @@ import "./Console.sol";
 import "./Events.sol";
 import "./Vulcan.sol";
 import "./Strings.sol";
-import {delta} from "../_utils/delta.sol";
+import {delta} from "./Utils.sol";
 
 struct _BoolExpectation {
     bool actual;

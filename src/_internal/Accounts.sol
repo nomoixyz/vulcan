@@ -5,7 +5,7 @@ import {stdStorage, StdStorage} from "forge-std/StdStorage.sol";
 
 import {strings} from "./Strings.sol";
 import "./Vulcan.sol";
-import {formatError} from "../_utils/formatError.sol";
+import {formatError} from "./Utils.sol";
 
 /// @title Accounts module
 /// @dev vulcan-docgen-safe-module
