@@ -1,5 +1,11 @@
 # Vulcan
 
+## Structs
+
+### Log
+
+Struct that represent an EVM log
+
 ## vulcan
 
 ### **init()**

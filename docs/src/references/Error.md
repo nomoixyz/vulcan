@@ -1,5 +1,11 @@
 # Error
 
+## Custom types
+
+### Error
+
+
+
 ## LibError
 
 ### **toPointer(Error err) &rarr; (Pointer)**

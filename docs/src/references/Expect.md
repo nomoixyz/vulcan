@@ -1,5 +1,109 @@
 # Expect
 
+## Structs
+
+### _BoolExpectation
+
+
+
+### _BoolExpectationNot
+
+
+
+### _UintExpectation
+
+
+
+### _UintExpectationNot
+
+
+
+### _IntExpectation
+
+
+
+### _IntExpectationNot
+
+
+
+### _AddressExpectation
+
+
+
+### _AddressExpectationNot
+
+
+
+### _Bytes32Expectation
+
+
+
+### _Bytes32ExpectationNot
+
+
+
+### _BytesExpectation
+
+
+
+### _BytesExpectationNot
+
+
+
+### _StringExpectation
+
+
+
+### _StringExpectationNot
+
+
+
+### _CallExpectation
+
+
+
+### _CallExpectationNot
+
+
+
+## Functions
+
+### **expect(bool actual) &rarr; (_BoolExpectation)**
+
+
+
+### **expect(uint256 actual) &rarr; (_UintExpectation)**
+
+
+
+### **expect(int256 actual) &rarr; (_IntExpectation)**
+
+
+
+### **expect(address actual) &rarr; (_AddressExpectation)**
+
+
+
+### **expect(bytes32 actual) &rarr; (_Bytes32Expectation)**
+
+
+
+### **expect(bytes actual) &rarr; (_BytesExpectation)**
+
+
+
+### **expect(string actual) &rarr; (_StringExpectation)**
+
+
+
+### **expect(Call call) &rarr; (_CallExpectation)**
+
+
+
+### **any() &rarr; (bytes32)**
+
+
+
 ## ExpectLib
 
 ### **toEqual(_BoolExpectation self, bool expected)**

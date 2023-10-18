@@ -1,5 +1,11 @@
 # ForksUnsafe
 
+## Custom types
+
+### Fork
+
+Holds a fork's id.
+
 ## forksUnsafe
 
 ### **create(string nameOrEndpoint) &rarr; (Fork)**

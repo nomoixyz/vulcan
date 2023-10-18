@@ -1,5 +1,11 @@
 # Huff
 
+## Structs
+
+### Huffc
+
+
+
 ## huff
 
 ### **create() &rarr; (Huffc)**

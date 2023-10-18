@@ -1,5 +1,23 @@
 # Fs
 
+## Custom types
+
+### FsMetadataResult
+
+
+
+## Structs
+
+### FsMetadata
+
+
+
+## Functions
+
+### **Ok(FsMetadata value) &rarr; (FsMetadataResult)**
+
+
+
 ## fs
 
 ### **readFile(string path) &rarr; (StringResult)**

@@ -1,5 +1,49 @@
 # Result
 
+## Custom types
+
+### Bytes32Result
+
+
+
+### BytesResult
+
+
+
+### StringResult
+
+
+
+### BoolResult
+
+
+
+### EmptyResult
+
+
+
+## Functions
+
+### **Ok() &rarr; (EmptyResult)**
+
+
+
+### **Ok(bytes32 value) &rarr; (Bytes32Result)**
+
+
+
+### **Ok(bytes value) &rarr; (BytesResult)**
+
+
+
+### **Ok(string value) &rarr; (StringResult)**
+
+
+
+### **Ok(bool value) &rarr; (BoolResult)**
+
+
+
 ## LibResultPointer
 
 ### **decode(Pointer self) &rarr; (ResultType, Pointer)**

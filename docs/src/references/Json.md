@@ -1,5 +1,23 @@
 # Json
 
+## Custom types
+
+### JsonResult
+
+
+
+## Structs
+
+### JsonObject
+
+
+
+## Functions
+
+### **Ok(JsonObject value) &rarr; (JsonResult)**
+
+
+
 ## JsonError
 
 ### **Invalid() &rarr; (Error)**

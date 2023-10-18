@@ -1,5 +1,11 @@
 # Invariants
 
+## Structs
+
+### FuzzSelector
+
+A struct that represents a Fuzz Selector
+
 ## invariants
 
 ### **getState() &rarr; (State state)**

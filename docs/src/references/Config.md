@@ -1,5 +1,11 @@
 # Config
 
+## Structs
+
+### Rpc
+
+Struct that represents an RPC endpoint
+
 ## config
 
 ### **rpcUrl(string name) &rarr; (string)**

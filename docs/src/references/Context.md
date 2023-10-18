@@ -1,5 +1,11 @@
 # Context
 
+## Custom types
+
+### Context
+
+
+
 ## ctxSafe
 
 ### **broadcast()**

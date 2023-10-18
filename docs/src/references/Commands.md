@@ -1,5 +1,28 @@
 # Commands
 
+## Custom types
+
+### CommandResult
+
+
+
+## Structs
+
+### Command
+
+Struct used to hold command parameters. Useful for creating commands that can be run
+multiple times
+
+### CommandOutput
+
+
+
+## Functions
+
+### **Ok(CommandOutput value) &rarr; (CommandResult)**
+
+
+
 ## commands
 
 ### **create() &rarr; (Command cmd)**
