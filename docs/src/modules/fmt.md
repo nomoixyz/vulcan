@@ -15,3 +15,5 @@ For the `uint256` type there is a special placeholder to deal with decimals `{u:
 the number of decimals, for example `{u:d18}` to format numbers with `18` decimals.
 
 {{#include ../examples/format/example.md}}
+
+[**Format API reference**](../references/fmt.md)

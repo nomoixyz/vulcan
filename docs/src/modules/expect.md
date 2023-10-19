@@ -7,3 +7,5 @@ context. For instance, with a string like `"Hello World"`, you can use `.toConta
 checking across various data types.
 
 {{#include ../examples/expect/example.md}}
+
+[**Expect API reference**](../references/expect.md)

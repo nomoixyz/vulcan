@@ -34,7 +34,6 @@
 - [Accounts](./references/Accounts.md)
 - [Commands](./references/Commands.md)
 - [Config](./references/Config.md)
-- [Console](./references/Console.md)
 - [Context](./references/Context.md)
 - [Env](./references/Env.md)
 - [Error](./references/Error.md)

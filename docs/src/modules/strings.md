@@ -4,4 +4,4 @@ Convert basic types from / to strings.
 
 {{#include ../examples/strings/example.md}}
 
-[**Strings API reference**](../reference/modules/strings.md)
+[**Strings API reference**](../references/strings.md)

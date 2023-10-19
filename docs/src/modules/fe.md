@@ -5,5 +5,5 @@ to work. This module requires the `fe` binary installed in order to work.
 
 {{ #include ../examples/fe/example.md }}
 
-[**Fe API reference**](../reference/modules/fe.md)
+[**Fe API reference**](../references/fe.md)
 

@@ -39,4 +39,4 @@ contract TestMyContract is Test {
 }
 ```
 
-[**Watchers API reference**](../reference/modules/watchers.md)
+[**Watchers API reference**](../references/watchers.md)

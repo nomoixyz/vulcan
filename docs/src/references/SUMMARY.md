@@ -1,7 +1,6 @@
 - [Accounts](./Accounts.md)
 - [Commands](./Commands.md)
 - [Config](./Config.md)
-- [Console](./Console.md)
 - [Context](./Context.md)
 - [Env](./Env.md)
 - [Error](./Error.md)
