@@ -44,6 +44,8 @@ struct CommandOutput {
 
 ## commands
 
+
+
 ### **create() &rarr; (Command cmd)**
 
 Creates a new 'Command' struct with empty arguments.
@@ -234,6 +236,8 @@ Runs a command with the specified `inputs` as parameters and returns the result.
 
 ## CommandError
 
+
+
 ### **NotExecuted(string reason) &rarr; (Error)**
 
 
@@ -243,6 +247,8 @@ Runs a command with the specified `inputs` as parameters and returns the result.
 
 
 ## LibCommandOutputPointer
+
+
 
 ### **toCommandOutput(Pointer self) &rarr; (CommandOutput output)**
 
@@ -257,6 +263,8 @@ Runs a command with the specified `inputs` as parameters and returns the result.
 
 
 ## LibCommandResult
+
+
 
 ### **isOk(CommandResult self) &rarr; (bool)**
 

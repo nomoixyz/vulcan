@@ -2,6 +2,8 @@
 
 ## events
 
+
+
 ### **topic(uint256 _param) &rarr; (bytes32)**
 
 Obtains the topic representation of an `uint256` parameter.

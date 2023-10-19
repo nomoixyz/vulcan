@@ -66,6 +66,8 @@ type EmptyResult is bytes32;
 
 ## LibResultPointer
 
+
+
 ### **decode(Pointer self) &rarr; (ResultType, Pointer)**
 
 
@@ -92,11 +94,15 @@ type EmptyResult is bytes32;
 
 ## LibBytes32ResultPointer
 
+
+
 ### **toBytes32Result(Pointer self) &rarr; (Bytes32Result res)**
 
 
 
 ## LibBytes32Result
+
+
 
 ### **isError(Bytes32Result self) &rarr; (bool)**
 
@@ -128,11 +134,15 @@ type EmptyResult is bytes32;
 
 ## LibBytesResultPointer
 
+
+
 ### **toBytesResult(Pointer self) &rarr; (BytesResult res)**
 
 
 
 ## LibBytesResult
+
+
 
 ### **isOk(BytesResult self) &rarr; (bool)**
 
@@ -164,11 +174,15 @@ type EmptyResult is bytes32;
 
 ## LibStringResultPointer
 
+
+
 ### **toStringResult(Pointer self) &rarr; (StringResult res)**
 
 
 
 ## LibStringResult
+
+
 
 ### **isOk(StringResult self) &rarr; (bool)**
 
@@ -200,11 +214,15 @@ type EmptyResult is bytes32;
 
 ## LibBoolResultPointer
 
+
+
 ### **toBoolResult(Pointer self) &rarr; (BoolResult res)**
 
 
 
 ## LibBoolResult
+
+
 
 ### **isOk(BoolResult self) &rarr; (bool)**
 
@@ -236,11 +254,15 @@ type EmptyResult is bytes32;
 
 ## LibEmptyResultPointer
 
+
+
 ### **toEmptyResult(Pointer self) &rarr; (EmptyResult res)**
 
 
 
 ## LibEmptyResult
+
+
 
 ### **isOk(EmptyResult self) &rarr; (bool)**
 
@@ -267,6 +289,8 @@ type EmptyResult is bytes32;
 
 
 ## LibResultType
+
+
 
 ### **encode(ResultType _type, Pointer _dataPtr) &rarr; (Pointer result)**
 

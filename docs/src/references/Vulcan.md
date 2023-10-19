@@ -16,6 +16,8 @@ Struct that represent an EVM log
 
 ## vulcan
 
+
+
 ### **init()**
 
 Initializes the context module

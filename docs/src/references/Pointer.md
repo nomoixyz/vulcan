@@ -12,6 +12,8 @@ type Pointer is bytes32;
 
 ## LibPointer
 
+
+
 ### **asBytes32(Pointer self) &rarr; (bytes32)**
 
 

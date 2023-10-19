@@ -12,6 +12,8 @@ type Context is bytes32;
 
 ## ctxSafe
 
+
+
 ### **broadcast()**
 
 
@@ -61,6 +63,8 @@ type Context is bytes32;
 
 
 ## ctxUnsafe
+
+
 
 ### **init()**
 

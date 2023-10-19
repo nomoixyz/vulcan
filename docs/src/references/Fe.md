@@ -17,6 +17,8 @@ struct Fe {
 
 ## fe
 
+
+
 ### **create() &rarr; (Fe)**
 
 Creates a new `Fe` struct with default values.

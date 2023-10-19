@@ -15,6 +15,8 @@ Struct that represents an RPC endpoint
 
 ## config
 
+
+
 ### **rpcUrl(string name) &rarr; (string)**
 
 Obtains a specific RPC from the configuration by name.

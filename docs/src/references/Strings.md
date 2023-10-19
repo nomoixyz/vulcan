@@ -2,6 +2,8 @@
 
 ## strings
 
+
+
 ### **format(string template, bytes args) &rarr; (string)**
 
 

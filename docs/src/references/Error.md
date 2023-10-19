@@ -12,6 +12,8 @@ type Error is bytes32;
 
 ## LibError
 
+
+
 ### **toPointer(Error err) &rarr; (Pointer)**
 
 

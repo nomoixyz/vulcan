@@ -2,6 +2,8 @@
 
 ## accountsSafe
 
+Accounts module for scripts
+
 ### **readStorage(address who, bytes32 slot) &rarr; (bytes32)**
 
 Reads the storage at the specified `slot` for the given `who` address and returns the content.
@@ -72,6 +74,8 @@ Generates an array of addresses with a specific length and a prefix as label.
 The label for each address will be `{prefix}_{i}`.
 
 ## accountsUnsafe
+
+Accounts module for tests
 
 ### **stdStore() &rarr; (StdStorage s)**
 

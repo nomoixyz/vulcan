@@ -7,8 +7,7 @@ import {strings} from "./Strings.sol";
 import "./Vulcan.sol";
 import {formatError} from "./Utils.sol";
 
-/// @title Accounts module
-/// @dev vulcan-docgen-safe-module
+/// @dev Accounts module for scripts
 library accountsSafe {
     /// @dev Reads the storage at the specified `slot` for the given `who` address and returns the content.
     /// @param who The address whose storage will be read.
@@ -194,8 +193,7 @@ library accountsSafe {
     }
 }
 
-/// @title Accounts module
-/// @dev vulcan-docgen-unsafe-module
+/// @dev Accounts module for tests
 library accountsUnsafe {
     using stdStorage for StdStorage;
 

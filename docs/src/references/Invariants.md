@@ -15,6 +15,8 @@ A struct that represents a Fuzz Selector
 
 ## invariants
 
+
+
 ### **getState() &rarr; (State state)**
 
 Returns the state struct that contains the invariants related data

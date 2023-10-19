@@ -36,6 +36,8 @@ struct FsMetadata {
 
 ## fs
 
+
+
 ### **readFile(string path) &rarr; (StringResult)**
 
 Reads the file on `path` and returns its content as a `StringResult`.
@@ -98,6 +100,8 @@ Obtains the deployed code from an artifact file located at `path`
 
 ## FsErrors
 
+
+
 ### **FailedToRead(string reason) &rarr; (Error)**
 
 
@@ -148,6 +152,8 @@ Obtains the deployed code from an artifact file located at `path`
 
 ## LibFsMetadataPointer
 
+
+
 ### **toFsMetadata(Pointer self) &rarr; (FsMetadata metadata)**
 
 
@@ -161,6 +167,8 @@ Obtains the deployed code from an artifact file located at `path`
 
 
 ## LibFsMetadataResult
+
+
 
 ### **isOk(FsMetadataResult self) &rarr; (bool)**
 
