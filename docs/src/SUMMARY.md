@@ -31,7 +31,7 @@
 
 # References
 
-- [Accounts](./references/accounts.md)
+- [Accounts](./references/Accounts.md)
 - [Commands](./references/commands.md)
 - [Config](./references/config.md)
 - [Context](./references/context.md)
