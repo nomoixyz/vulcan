@@ -5,4 +5,4 @@ work. The `commands` module uses [`Results`](./results.md) when returning values
 
 {{#include ../examples/commands/example.md}}
 
-[**Commands API reference**](../reference/modules/commands.md)
+[**Commands API reference**](../references/commands.md)

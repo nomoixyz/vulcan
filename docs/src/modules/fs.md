@@ -5,4 +5,4 @@ Provides utilities to interact with the filesystem. In order to use this module 
 
 {{#include ../examples/fs/example.md}}
 
-[**Fs API reference**](../reference/modules/fs.md)
+[**Fs API reference**](../references/fs.md)

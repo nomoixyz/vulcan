@@ -4,4 +4,4 @@ Provides utilities to get logs and transform values into their topic representat
 
 {{#include ../examples/events/example.md}}
 
-[**Events API reference**](../reference/modules/events.md)
+[**Events API reference**](../references/events.md)

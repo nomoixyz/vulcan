@@ -18,4 +18,4 @@ contract TestMyContract is Test {
     }
 }
 ```
-[**Forks API reference**](../reference/modules/forks.md)
+[**Forks API reference**](../references/forks.md)

@@ -11,3 +11,7 @@ Similar to Rust's Results API, Vulcan implements the following functions for all
 - `toValue()`: gets the Result's underlying value (if the Result is Ok)
 
 {{#include ../examples/results/example.md}}
+
+[**Results API reference**](../references/result.md)
+
+[**Errors API reference**](../references/error.md)
