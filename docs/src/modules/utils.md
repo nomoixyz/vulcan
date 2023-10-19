@@ -9,4 +9,4 @@ Some of the utility functions:
 
 {{#include ../examples/utils/example.md}}
 
-[**Utils API reference**](../references/utils.md)
+[**Utils API reference**](../references/Utils.md)

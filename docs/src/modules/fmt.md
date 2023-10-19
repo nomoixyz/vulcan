@@ -16,4 +16,4 @@ the number of decimals, for example `{u:d18}` to format numbers with `18` decima
 
 {{#include ../examples/format/example.md}}
 
-[**Format API reference**](../references/fmt.md)
+[**Format API reference**](../references/Fmt.md)

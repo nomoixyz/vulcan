@@ -9,4 +9,4 @@ Functionality to interact with the current runtime context:
 
 {{#include ../examples/context/example.md}}
 
-[**Context API reference**](../references/context.md)
+[**Context API reference**](../references/Context.md)

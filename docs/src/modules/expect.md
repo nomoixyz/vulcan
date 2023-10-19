@@ -8,4 +8,4 @@ checking across various data types.
 
 {{#include ../examples/expect/example.md}}
 
-[**Expect API reference**](../references/expect.md)
+[**Expect API reference**](../references/Expect.md)
