@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.3](https://github.com/nomoixyz/vulcan/compare/v0.4.2...v0.4.3) (2023-10-26)
+
+
+### Features
+
+* new project structure ([#220](https://github.com/nomoixyz/vulcan/issues/220)) ([2d45c4c](https://github.com/nomoixyz/vulcan/commit/2d45c4c9b5072f218514997e6e656d3c2a10262e))
+
+
+### Bug Fixes
+
+* fix cast abi-encode command ([#226](https://github.com/nomoixyz/vulcan/issues/226)) ([b340aaf](https://github.com/nomoixyz/vulcan/commit/b340aafad4b2efcdb4d0c983ee6d02c79c1c1dea))
+
 ## [0.4.2](https://github.com/nomoixyz/vulcan/compare/v0.4.1...v0.4.2) (2023-10-10)
 
 
