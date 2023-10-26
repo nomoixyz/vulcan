@@ -2,7 +2,7 @@
     Vulcan
 </h1>
 
-![test workflow](https://github.com/nomoixyz/vulcan/actions/workflows/test.yml/badge.svg)
+![test workflow](https://github.com/nomoixyz/vulcan/actions/workflows/forge.yml/badge.svg)
 [![GitHub release](https://img.shields.io/github/v/release/nomoixyz/vulcan?link=https%3A%2F%2Fgithub.com%2Fnomoixyz%2Fvulcan%2Freleases)](https://github.com/nomoixyz/vulcan/releases)
 [![Telegram](https://img.shields.io/badge/chat-gray?logo=telegram)](https://t.me/+XYA0By2mKls3OWIx)
 
