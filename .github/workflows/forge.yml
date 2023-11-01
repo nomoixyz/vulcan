@@ -12,8 +12,8 @@ env:
   FOUNDRY_PROFILE: ci
 
 jobs:
-  setup:
-    name: Install foundry
+  run:
+    name: Run forge
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,17 +25,7 @@ jobs:
           version: nightly
       - name: Print forge version
         run: forge --version
-  test:
-    name: Run tests
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - name: Run forge test
-        run: forge test
-  format:
-    name: Check format
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
       - name: Run forge fmt
         run: forge fmt --check
+      - name: Run forge test
+        run: forge test
