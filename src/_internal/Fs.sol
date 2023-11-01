@@ -202,12 +202,16 @@ library fs {
         } catch Error(string memory) {
             return Ok(false);
         } catch (bytes memory reason) {
-            bytes4 selector = 0x0bc44503;
-            string memory errorMessage =
+            bytes32 errorHash = keccak256(bytes(abi.decode(removeSelector(reason), (string))));
+            string memory expectedErrorMessage =
                 string.concat("The path \"", path, "\" is not allowed to be accessed for read operations.");
-            bytes32 errorHash = keccak256(abi.encodeWithSelector(selector, errorMessage));
-            if (keccak256(reason) == errorHash) {
-                return FsErrors.Forbidden(errorMessage).toBoolResult();
+            bytes32 expectedErrorHash = keccak256(bytes(expectedErrorMessage));
+
+            string memory expectedErrorMessage2 =
+                string.concat("the path ", path, " is not allowed to be accessed for read operations");
+            bytes32 expectedErrorHash2 = keccak256(bytes(expectedErrorMessage2));
+            if (expectedErrorHash == errorHash || expectedErrorHash2 == errorHash) {
+                return FsErrors.Forbidden(expectedErrorMessage).toBoolResult();
             }
             return Ok(false);
         }
