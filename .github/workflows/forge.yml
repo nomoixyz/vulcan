@@ -12,7 +12,7 @@ env:
   FOUNDRY_PROFILE: ci
 
 jobs:
-  install:
+  setup:
     name: Install foundry
     runs-on: ubuntu-latest
     steps:
@@ -28,12 +28,14 @@ jobs:
   test:
     name: Run tests
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - name: Run forge test
         run: forge test
   format:
     name: Check format
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - name: Run forge fmt
         run: forge fmt --check
