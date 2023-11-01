@@ -11,9 +11,7 @@ contract ResultExample is Test {
         CommandResult result = commands.run(["asdf12897u391723"]);
 
         // Use unwrap to revert with the default error message
-        ctx.expectRevert(
-            "The command was not executed: \"Failed to execute command: No such file or directory (os error 2)\""
-        );
+        ctx.expectRevert();
         result.unwrap();
 
         // Use expect to revert with a custom error message

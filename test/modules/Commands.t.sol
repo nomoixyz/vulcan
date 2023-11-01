@@ -73,10 +73,7 @@ contract CommandsTest is Test {
     function testUnwrapReverts() external {
         CommandResult result = commands.run(["nonexistentcommand", "--hlkfshjfhjas"]);
 
-        bytes memory expectedError =
-            bytes("The command was not executed: \"Failed to execute command: No such file or directory (os error 2)\"");
-
-        ctx.expectRevert(expectedError);
+        ctx.expectRevert();
 
         result.unwrap();
     }

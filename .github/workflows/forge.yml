@@ -12,20 +12,30 @@ env:
   FOUNDRY_PROFILE: ci
 
 jobs:
-  run:
-    name: Run forge
+  test:
+    name: Run tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
+      - name: Build image
+        run: docker build . -t nomoixyz/vulcan-test-suite
+      - name: Run tests
+        run: docker run --rm nomoixyz/vulcan-test-suite
+  format:
+    name: Check format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
       - name: Install Foundry
         uses: onbjerg/foundry-toolchain@v1
         with:
           version: nightly
+
       - name: Print forge version
         run: forge --version
-      - name: Run forge fmt
+
+      - name: Check formatting
         run: forge fmt --check
-      - name: Run forge test
-        run: forge test
