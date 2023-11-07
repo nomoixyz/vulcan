@@ -203,15 +203,15 @@ library fs {
             return Ok(false);
         } catch (bytes memory reason) {
             bytes32 errorHash = keccak256(bytes(abi.decode(removeSelector(reason), (string))));
-            string memory expectedErrorMessage =
+            string memory linuxErrorMessage =
                 string.concat("The path \"", path, "\" is not allowed to be accessed for read operations.");
-            bytes32 expectedErrorHash = keccak256(bytes(expectedErrorMessage));
+            bytes32 linuxErrorHash = keccak256(bytes(linuxErrorMessage));
 
-            string memory expectedErrorMessage2 =
+            string memory macErrorMessage =
                 string.concat("the path ", path, " is not allowed to be accessed for read operations");
-            bytes32 expectedErrorHash2 = keccak256(bytes(expectedErrorMessage2));
-            if (expectedErrorHash == errorHash || expectedErrorHash2 == errorHash) {
-                return FsErrors.Forbidden(expectedErrorMessage).toBoolResult();
+            bytes32 macErrorHash = keccak256(bytes(macErrorMessage));
+            if (errorHash == linuxErrorHash || errorHash == macErrorHash) {
+                return FsErrors.Forbidden(linuxErrorMessage).toBoolResult();
             }
             return Ok(false);
         }
