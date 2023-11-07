@@ -90,7 +90,12 @@ library ExpectLib {
     /* BOOL */
 
     function toEqual(_BoolExpectation memory self, bool expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_BoolExpectation memory self, bool expected, string memory message) internal {
         if (self.actual != expected) {
+            printMessage(message);
             console.log("Error: a == b not satisfied [bool]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
@@ -99,7 +104,12 @@ library ExpectLib {
     }
 
     function toEqual(_BoolExpectationNot memory self, bool expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_BoolExpectationNot memory self, bool expected, string memory message) internal {
         if (self.actual == expected) {
+            printMessage(message);
             console.log("Error: a != b not satisfied [bool]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
@@ -108,17 +118,30 @@ library ExpectLib {
     }
 
     function toBeTrue(_BoolExpectation memory self) internal {
-        toEqual(self, true);
+        self.toBeTrue(string(""));
+    }
+
+    function toBeTrue(_BoolExpectation memory self, string memory message) internal {
+        toEqual(self, true, message);
     }
 
     function toBeFalse(_BoolExpectation memory self) internal {
-        toEqual(self, false);
+        self.toBeFalse(string(""));
+    }
+
+    function toBeFalse(_BoolExpectation memory self, string memory message) internal {
+        toEqual(self, false, message);
     }
 
     /* ADDRESS */
 
     function toEqual(_AddressExpectation memory self, address expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_AddressExpectation memory self, address expected, string memory message) internal {
         if (self.actual != expected) {
+            printMessage(message);
             console.log("Error: a == b not satisfied [address]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
@@ -127,7 +150,12 @@ library ExpectLib {
     }
 
     function toEqual(_AddressExpectationNot memory self, address expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_AddressExpectationNot memory self, address expected, string memory message) internal {
         if (self.actual == expected) {
+            printMessage(message);
             console.log("Error: a != b not satisfied [address]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
@@ -136,7 +164,12 @@ library ExpectLib {
     }
 
     function toBeAContract(_AddressExpectation memory self) internal {
+        self.toBeAContract(string(""));
+    }
+
+    function toBeAContract(_AddressExpectation memory self, string memory message) internal {
         if (self.actual.code.length == 0) {
+            printMessage(message);
             console.log("Error: a is not a contract [address]");
             console.log("  Value", self.actual);
             vulcan.fail();
@@ -144,7 +177,12 @@ library ExpectLib {
     }
 
     function toBeAContract(_AddressExpectationNot memory self) internal {
-        if (self.actual.code.length == 0) {
+        self.toBeAContract(string(""));
+    }
+
+    function toBeAContract(_AddressExpectationNot memory self, string memory message) internal {
+        if (self.actual.code.length != 0) {
+            printMessage(message);
             console.log("Error: a is a contract [address]");
             console.log("  Value", self.actual);
             vulcan.fail();
@@ -154,7 +192,12 @@ library ExpectLib {
     /* BYTES32 */
 
     function toEqual(_Bytes32Expectation memory self, bytes32 expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_Bytes32Expectation memory self, bytes32 expected, string memory message) internal {
         if (self.actual != expected) {
+            printMessage(message);
             console.log("Error: a == b not satisfied [bytes32]");
             console.log("  Expected", strings.toString(expected));
             console.log("    Actual", strings.toString(self.actual));
@@ -163,7 +206,12 @@ library ExpectLib {
     }
 
     function toEqual(_Bytes32ExpectationNot memory self, bytes32 expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_Bytes32ExpectationNot memory self, bytes32 expected, string memory message) internal {
         if (self.actual == expected) {
+            printMessage(message);
             console.log("Error: a != b not satisfied [bytes32]");
             console.log("  Value a", strings.toString(expected));
             console.log("  Value b", strings.toString(self.actual));
@@ -172,7 +220,12 @@ library ExpectLib {
     }
 
     function toBeTheHashOf(_Bytes32Expectation memory self, bytes memory data) internal {
+        self.toBeTheHashOf(data, string(""));
+    }
+
+    function toBeTheHashOf(_Bytes32Expectation memory self, bytes memory data, string memory message) internal {
         if (self.actual != keccak256(data)) {
+            printMessage(message);
             console.log("Error: a is not the hash of b [bytes32]");
             console.log("  Expected", strings.toString(data));
             console.log("    Actual", strings.toString(self.actual));
@@ -181,7 +234,12 @@ library ExpectLib {
     }
 
     function toBeTheHashOf(_Bytes32ExpectationNot memory self, bytes memory data) internal {
+        self.toBeTheHashOf(data, string(""));
+    }
+
+    function toBeTheHashOf(_Bytes32ExpectationNot memory self, bytes memory data, string memory message) internal {
         if (self.actual == keccak256(data)) {
+            printMessage(message);
             console.log("Error: a is the hash of b [bytes32]");
             console.log("  Value a", strings.toString(data));
             console.log("  Value b", strings.toString(self.actual));
@@ -192,7 +250,12 @@ library ExpectLib {
     /* BYTES */
 
     function toEqual(_BytesExpectation memory self, bytes memory expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_BytesExpectation memory self, bytes memory expected, string memory message) internal {
         if (keccak256(self.actual) != keccak256(expected)) {
+            printMessage(message);
             console.log("Error: a == b not satisfied [bytes]");
             console.log("  Expected", strings.toString(expected));
             console.log("    Actual", strings.toString(self.actual));
@@ -201,7 +264,12 @@ library ExpectLib {
     }
 
     function toEqual(_BytesExpectationNot memory self, bytes memory expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_BytesExpectationNot memory self, bytes memory expected, string memory message) internal {
         if (keccak256(self.actual) == keccak256(expected)) {
+            printMessage(message);
             console.log("Error: a != b not satisfied [bytes]");
             console.log("  Value", strings.toString(expected));
             console.log("  Value", strings.toString(self.actual));
@@ -212,7 +280,12 @@ library ExpectLib {
     /* STRING */
 
     function toEqual(_StringExpectation memory self, string memory expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_StringExpectation memory self, string memory expected, string memory message) internal {
         if (keccak256(abi.encodePacked(self.actual)) != keccak256(abi.encodePacked(expected))) {
+            printMessage(message);
             console.log("Error: a == b not satisfied [string]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
@@ -221,7 +294,12 @@ library ExpectLib {
     }
 
     function toEqual(_StringExpectationNot memory self, string memory expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_StringExpectationNot memory self, string memory expected, string memory message) internal {
         if (keccak256(abi.encodePacked(self.actual)) == keccak256(abi.encodePacked(expected))) {
+            printMessage(message);
             console.log("Error: a != b not satisfied [string]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
@@ -230,6 +308,10 @@ library ExpectLib {
     }
 
     function toContain(_StringExpectation memory self, string memory contained) internal {
+        self.toContain(contained, string(""));
+    }
+
+    function toContain(_StringExpectation memory self, string memory contained, string memory message) internal {
         bytes memory actual = bytes(self.actual);
         bytes memory expected = bytes(contained);
 
@@ -250,6 +332,7 @@ library ExpectLib {
             }
         }
 
+        printMessage(message);
         console.log("Error: a does not contain b [string]");
         console.log("  Value a", self.actual);
         console.log("  Value b", contained);
@@ -257,6 +340,10 @@ library ExpectLib {
     }
 
     function toContain(_StringExpectationNot memory self, string memory contained) internal {
+        self.toContain(contained, string(""));
+    }
+
+    function toContain(_StringExpectationNot memory self, string memory contained, string memory message) internal {
         bytes memory actual = bytes(self.actual);
         bytes memory expected = bytes(contained);
 
@@ -274,6 +361,7 @@ library ExpectLib {
 
             // Found
             if (j == expected.length) {
+                printMessage(message);
                 console.log("Error: a contains b [string]");
                 console.log("  Value a", self.actual);
                 console.log("  Value b", contained);
@@ -284,7 +372,12 @@ library ExpectLib {
     }
 
     function toHaveLength(_StringExpectation memory self, uint256 expected) internal {
+        self.toHaveLength(expected, string(""));
+    }
+
+    function toHaveLength(_StringExpectation memory self, uint256 expected, string memory message) internal {
         if (bytes(self.actual).length != expected) {
+            printMessage(message);
             console.log("Error: a.length != b [string]");
             console.log("  Expected", expected);
             console.log("    Actual", bytes(self.actual).length);
@@ -293,7 +386,12 @@ library ExpectLib {
     }
 
     function toHaveLength(_StringExpectationNot memory self, uint256 expected) internal {
+        self.toHaveLength(expected, string(""));
+    }
+
+    function toHaveLength(_StringExpectationNot memory self, uint256 expected, string memory message) internal {
         if (bytes(self.actual).length == expected) {
+            printMessage(message);
             console.log("Error: a.length == b [string]");
             console.log("  Value a", expected);
             console.log("  Value b", bytes(self.actual).length);
@@ -304,7 +402,12 @@ library ExpectLib {
     /* UINT256 */
 
     function toEqual(_UintExpectation memory self, uint256 expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_UintExpectation memory self, uint256 expected, string memory message) internal {
         if (self.actual != expected) {
+            printMessage(message);
             console.log("Error: a == b not satisfied [uint]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
@@ -313,7 +416,12 @@ library ExpectLib {
     }
 
     function toEqual(_UintExpectationNot memory self, uint256 expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_UintExpectationNot memory self, uint256 expected, string memory message) internal {
         if (self.actual == expected) {
+            printMessage(message);
             console.log("Error: a != b not satisfied [uint]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
@@ -322,8 +430,13 @@ library ExpectLib {
     }
 
     function toBeCloseTo(_UintExpectation memory self, uint256 expected, uint256 d) internal {
+        self.toBeCloseTo(expected, d, string(""));
+    }
+
+    function toBeCloseTo(_UintExpectation memory self, uint256 expected, uint256 d, string memory message) internal {
         uint256 diff = delta(self.actual, expected);
         if (diff > d) {
+            printMessage(message);
             console.log("Error: a ~= b not satisfied [uint]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
@@ -334,7 +447,12 @@ library ExpectLib {
     }
 
     function toBeLessThan(_UintExpectation memory self, uint256 expected) internal {
+        self.toBeLessThan(expected, string(""));
+    }
+
+    function toBeLessThan(_UintExpectation memory self, uint256 expected, string memory message) internal {
         if (self.actual >= expected) {
+            printMessage(message);
             console.log("Error: a < b not satisfied [uint]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
@@ -343,7 +461,12 @@ library ExpectLib {
     }
 
     function toBeLessThanOrEqual(_UintExpectation memory self, uint256 expected) internal {
+        self.toBeLessThanOrEqual(expected, string(""));
+    }
+
+    function toBeLessThanOrEqual(_UintExpectation memory self, uint256 expected, string memory message) internal {
         if (self.actual > expected) {
+            printMessage(message);
             console.log("Error: a <= b not satisfied [uint]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
@@ -352,7 +475,12 @@ library ExpectLib {
     }
 
     function toBeGreaterThan(_UintExpectation memory self, uint256 expected) internal {
+        self.toBeGreaterThan(expected, string(""));
+    }
+
+    function toBeGreaterThan(_UintExpectation memory self, uint256 expected, string memory message) internal {
         if (self.actual <= expected) {
+            printMessage(message);
             console.log("Error: a > b not satisfied [uint]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
@@ -361,7 +489,12 @@ library ExpectLib {
     }
 
     function toBeGreaterThanOrEqual(_UintExpectation memory self, uint256 expected) internal {
+        self.toBeGreaterThanOrEqual(expected, string(""));
+    }
+
+    function toBeGreaterThanOrEqual(_UintExpectation memory self, uint256 expected, string memory message) internal {
         if (self.actual < expected) {
+            printMessage(message);
             console.log("Error: a >= b not satisfied [uint]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
@@ -372,7 +505,12 @@ library ExpectLib {
     /* INT */
 
     function toEqual(_IntExpectation memory self, int256 expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_IntExpectation memory self, int256 expected, string memory message) internal {
         if (self.actual != expected) {
+            printMessage(message);
             console.log("Error: a == b not satisfied [int]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
@@ -381,7 +519,12 @@ library ExpectLib {
     }
 
     function toEqual(_IntExpectationNot memory self, int256 expected) internal {
+        self.toEqual(expected, string(""));
+    }
+
+    function toEqual(_IntExpectationNot memory self, int256 expected, string memory message) internal {
         if (self.actual == expected) {
+            printMessage(message);
             console.log("Error: a != b not satisfied [int]");
             console.log("  Value a", expected);
             console.log("  Value b", self.actual);
@@ -390,9 +533,14 @@ library ExpectLib {
     }
 
     function toBeCloseTo(_IntExpectation memory self, int256 expected, uint256 d) internal {
+        self.toBeCloseTo(expected, d, string(""));
+    }
+
+    function toBeCloseTo(_IntExpectation memory self, int256 expected, uint256 d, string memory message) internal {
         uint256 diff = delta(self.actual, expected);
 
         if (diff > d) {
+            printMessage(message);
             console.log("Error: a ~= b not satisfied [uint]");
             console.log("  Expected", expected);
             console.log("    Actual", self.actual);
@@ -403,7 +551,12 @@ library ExpectLib {
     }
 
     function toBeLessThan(_IntExpectation memory self, int256 expected) internal {
+        self.toBeLessThan(expected, string(""));
+    }
+
+    function toBeLessThan(_IntExpectation memory self, int256 expected, string memory message) internal {
         if (self.actual >= expected) {
+            printMessage(message);
             console.log("Error: a < b not satisfied [int]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
@@ -412,7 +565,12 @@ library ExpectLib {
     }
 
     function toBeLessThanOrEqual(_IntExpectation memory self, int256 expected) internal {
+        self.toBeLessThanOrEqual(expected, string(""));
+    }
+
+    function toBeLessThanOrEqual(_IntExpectation memory self, int256 expected, string memory message) internal {
         if (self.actual > expected) {
+            printMessage(message);
             console.log("Error: a <= b not satisfied [int]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
@@ -421,7 +579,12 @@ library ExpectLib {
     }
 
     function toBeGreaterThan(_IntExpectation memory self, int256 expected) internal {
+        self.toBeGreaterThan(expected, string(""));
+    }
+
+    function toBeGreaterThan(_IntExpectation memory self, int256 expected, string memory message) internal {
         if (self.actual <= expected) {
+            printMessage(message);
             console.log("Error: a > b not satisfied [int]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
@@ -430,7 +593,12 @@ library ExpectLib {
     }
 
     function toBeGreaterThanOrEqual(_IntExpectation memory self, int256 expected) internal {
+        self.toBeGreaterThanOrEqual(expected, string(""));
+    }
+
+    function toBeGreaterThanOrEqual(_IntExpectation memory self, int256 expected, string memory message) internal {
         if (self.actual < expected) {
+            printMessage(message);
             console.log("Error: a >= b not satisfied [int]");
             console.log("  Value a", self.actual);
             console.log("  Value b", expected);
@@ -441,18 +609,30 @@ library ExpectLib {
     /* CALLS */
 
     function toHaveReverted(_CallExpectation memory self) internal {
+        self.toHaveReverted(string(""));
+    }
+
+    function toHaveReverted(_CallExpectation memory self, string memory message) internal {
         if (self.call.success) {
+            printMessage(message);
             console.log("Error: call expected to revert [call]");
             vulcan.fail();
         }
     }
 
     function toHaveRevertedWith(_CallExpectation memory self, bytes4 expectedSelector) internal {
+        self.toHaveRevertedWith(expectedSelector, string(""));
+    }
+
+    function toHaveRevertedWith(_CallExpectation memory self, bytes4 expectedSelector, string memory message)
+        internal
+    {
         self.toHaveReverted();
 
         bytes4 actualSelector = bytes4(self.call.returnData);
 
         if (actualSelector != expectedSelector) {
+            printMessage(message);
             console.log("Error: call expected to revert with selector [call]");
             console.log("  Expected error", strings.toString(bytes32(expectedSelector)));
             console.log("    Actual error", strings.toString(bytes32(actualSelector)));
@@ -462,9 +642,16 @@ library ExpectLib {
     }
 
     function toHaveRevertedWith(_CallExpectationNot memory self, bytes4 expectedSelector) internal {
+        self.toHaveRevertedWith(expectedSelector, string(""));
+    }
+
+    function toHaveRevertedWith(_CallExpectationNot memory self, bytes4 expectedSelector, string memory message)
+        internal
+    {
         bytes4 actualSelector = bytes4(self.call.returnData);
 
         if (!self.call.success && actualSelector == expectedSelector) {
+            printMessage(message);
             console.log("Error: call expected to not revert with selector [call]");
             console.log("    Actual error", strings.toString(bytes32(actualSelector)));
 
@@ -473,25 +660,40 @@ library ExpectLib {
     }
 
     function toHaveRevertedWith(_CallExpectation memory self, string memory error) internal {
+        self.toHaveRevertedWith(error, string(""));
+    }
+
+    function toHaveRevertedWith(_CallExpectation memory self, string memory error, string memory message) internal {
         bytes memory expectedError = abi.encodeWithSignature("Error(string)", error);
 
-        self.toHaveRevertedWith(expectedError);
+        self.toHaveRevertedWith(expectedError, message);
     }
 
     function toHaveRevertedWith(_CallExpectationNot memory self, string memory error) internal {
+        self.toHaveRevertedWith(error, string(""));
+    }
+
+    function toHaveRevertedWith(_CallExpectationNot memory self, string memory error, string memory message) internal {
         bytes memory expectedError = abi.encodeWithSignature("Error(string)", error);
 
         // This will use the `not` version of the function
-        self.toHaveRevertedWith(expectedError);
+        self.toHaveRevertedWith(expectedError, message);
     }
 
     function toHaveRevertedWith(_CallExpectation memory self, bytes memory expectedError) internal {
+        self.toHaveRevertedWith(expectedError, string(""));
+    }
+
+    function toHaveRevertedWith(_CallExpectation memory self, bytes memory expectedError, string memory message)
+        internal
+    {
         self.toHaveReverted();
 
         bytes32 expectedHash = keccak256(expectedError);
         bytes32 actualHash = keccak256(self.call.returnData);
 
         if (!self.call.success && actualHash != expectedHash) {
+            printMessage(message);
             console.log("Error: function expected to revert with error [call]");
             console.log("  Expected error", strings.toString(expectedError));
             console.log("    Actual error", strings.toString(self.call.returnData));
@@ -501,10 +703,17 @@ library ExpectLib {
     }
 
     function toHaveRevertedWith(_CallExpectationNot memory self, bytes memory expectedError) internal {
+        self.toHaveRevertedWith(expectedError, string(""));
+    }
+
+    function toHaveRevertedWith(_CallExpectationNot memory self, bytes memory expectedError, string memory message)
+        internal
+    {
         bytes32 expectedHash = keccak256(expectedError);
         bytes32 actualHash = keccak256(self.call.returnData);
 
         if (!self.call.success && actualHash == expectedHash) {
+            printMessage(message);
             console.log("Error: function expected to not revert with error [call]");
             console.log("    Actual error", strings.toString(self.call.returnData));
 
@@ -513,62 +722,160 @@ library ExpectLib {
     }
 
     function toHaveSucceeded(_CallExpectation memory self) internal {
+        self.toHaveSucceeded(string(""));
+    }
+
+    function toHaveSucceeded(_CallExpectation memory self, string memory message) internal {
         if (!self.call.success) {
+            printMessage(message);
             console.log("Error: call expected to succeed [call]");
             vulcan.fail();
         }
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig) internal {
-        self.toHaveEmitted(eventSig, new bytes32[](0), new bytes(0));
+        self.toHaveEmitted(eventSig, string(""));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, string memory eventSig, string memory message) internal {
+        self.toHaveEmitted(eventSig, new bytes32[](0), new bytes(0), message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[1] memory topics) internal {
-        self.toHaveEmitted("", _toDynamic(topics), new bytes(0));
+        self.toHaveEmitted(topics, string(""));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, bytes32[1] memory topics, string memory message) internal {
+        self.toHaveEmitted("", _toDynamic(topics), new bytes(0), message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[2] memory topics) internal {
-        self.toHaveEmitted("", _toDynamic(topics), new bytes(0));
+        self.toHaveEmitted(topics, string(""));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, bytes32[2] memory topics, string memory message) internal {
+        self.toHaveEmitted("", _toDynamic(topics), new bytes(0), message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[3] memory topics) internal {
-        self.toHaveEmitted("", _toDynamic(topics), new bytes(0));
+        self.toHaveEmitted(topics, string(""));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, bytes32[3] memory topics, string memory message) internal {
+        self.toHaveEmitted("", _toDynamic(topics), new bytes(0), message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[4] memory topics) internal {
-        self.toHaveEmitted("", _toDynamic(topics), new bytes(0));
+        self.toHaveEmitted(topics, string(""));
+    }
+
+    function toHaveEmitted(_CallExpectation memory self, bytes32[4] memory topics, string memory message) internal {
+        self.toHaveEmitted("", _toDynamic(topics), new bytes(0), message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes memory data) internal {
-        self.toHaveEmitted(eventSig, new bytes32[](0), data);
+        self.toHaveEmitted(eventSig, data, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes memory data,
+        string memory message
+    ) internal {
+        self.toHaveEmitted(eventSig, new bytes32[](0), data, message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[1] memory topics) internal {
-        self.toHaveEmitted(eventSig, _toDynamic(topics), new bytes(0));
+        self.toHaveEmitted(eventSig, topics, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[1] memory topics,
+        string memory message
+    ) internal {
+        self.toHaveEmitted(eventSig, _toDynamic(topics), new bytes(0), message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[2] memory topics) internal {
-        self.toHaveEmitted(eventSig, _toDynamic(topics), new bytes(0));
+        self.toHaveEmitted(eventSig, topics, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[2] memory topics,
+        string memory message
+    ) internal {
+        printMessage(message);
+        self.toHaveEmitted(eventSig, _toDynamic(topics), new bytes(0), message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, string memory eventSig, bytes32[3] memory topics) internal {
-        self.toHaveEmitted(eventSig, _toDynamic(topics), new bytes(0));
+        self.toHaveEmitted(eventSig, topics, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[3] memory topics,
+        string memory message
+    ) internal {
+        self.toHaveEmitted(eventSig, _toDynamic(topics), new bytes(0), message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[1] memory topics, bytes memory data) internal {
-        self.toHaveEmitted("", _toDynamic(topics), data);
+        self.toHaveEmitted(topics, data, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        bytes32[1] memory topics,
+        bytes memory data,
+        string memory message
+    ) internal {
+        self.toHaveEmitted("", _toDynamic(topics), data, message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[2] memory topics, bytes memory data) internal {
-        self.toHaveEmitted("", _toDynamic(topics), data);
+        self.toHaveEmitted(topics, data, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        bytes32[2] memory topics,
+        bytes memory data,
+        string memory message
+    ) internal {
+        self.toHaveEmitted("", _toDynamic(topics), data, message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[3] memory topics, bytes memory data) internal {
-        self.toHaveEmitted("", _toDynamic(topics), data);
+        self.toHaveEmitted(topics, data, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        bytes32[3] memory topics,
+        bytes memory data,
+        string memory message
+    ) internal {
+        self.toHaveEmitted("", _toDynamic(topics), data, message);
     }
 
     function toHaveEmitted(_CallExpectation memory self, bytes32[4] memory topics, bytes memory data) internal {
-        self.toHaveEmitted("", _toDynamic(topics), data);
+        self.toHaveEmitted(topics, data, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        bytes32[4] memory topics,
+        bytes memory data,
+        string memory message
+    ) internal {
+        self.toHaveEmitted("", _toDynamic(topics), data, message);
     }
 
     function toHaveEmitted(
@@ -577,7 +884,17 @@ library ExpectLib {
         bytes32[1] memory topics,
         bytes memory data
     ) internal {
-        self.toHaveEmitted(eventSig, _toDynamic(topics), data);
+        self.toHaveEmitted(eventSig, topics, data, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[1] memory topics,
+        bytes memory data,
+        string memory message
+    ) internal {
+        self.toHaveEmitted(eventSig, _toDynamic(topics), data, message);
     }
 
     function toHaveEmitted(
@@ -586,7 +903,17 @@ library ExpectLib {
         bytes32[2] memory topics,
         bytes memory data
     ) internal {
-        self.toHaveEmitted(eventSig, _toDynamic(topics), data);
+        self.toHaveEmitted(eventSig, topics, data, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[2] memory topics,
+        bytes memory data,
+        string memory message
+    ) internal {
+        self.toHaveEmitted(eventSig, _toDynamic(topics), data, message);
     }
 
     function toHaveEmitted(
@@ -595,7 +922,17 @@ library ExpectLib {
         bytes32[3] memory topics,
         bytes memory data
     ) internal {
-        self.toHaveEmitted(eventSig, _toDynamic(topics), data);
+        self.toHaveEmitted(eventSig, topics, data, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[3] memory topics,
+        bytes memory data,
+        string memory message
+    ) internal {
+        self.toHaveEmitted(eventSig, _toDynamic(topics), data, message);
     }
 
     function toHaveEmitted(
@@ -603,6 +940,16 @@ library ExpectLib {
         string memory eventSig,
         bytes32[] memory topics,
         bytes memory data
+    ) internal {
+        self.toHaveEmitted(eventSig, topics, data, string(""));
+    }
+
+    function toHaveEmitted(
+        _CallExpectation memory self,
+        string memory eventSig,
+        bytes32[] memory topics,
+        bytes memory data,
+        string memory message
     ) internal {
         self.toHaveSucceeded();
 
@@ -642,6 +989,7 @@ library ExpectLib {
         }
 
         // If we reach here, the topics did not match
+        printMessage(message);
         console.log("Error: event not emitted [call]");
         console.log("  Event", bytes(eventSig).length > 0 ? eventSig : "anonymous");
         vulcan.fail();
@@ -683,6 +1031,12 @@ library ExpectLib {
         _topics[1] = topics[1];
         _topics[2] = topics[2];
         _topics[3] = topics[3];
+    }
+
+    function printMessage(string memory message) internal pure {
+        if (bytes(message).length > 0) {
+            console.log("Message:", message);
+        }
     }
 }
 
