@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.5](https://github.com/nomoixyz/vulcan/compare/v0.4.4...v0.4.5) (2023-11-07)
+
+
+### Features
+
+* add message to expect utilities ([#231](https://github.com/nomoixyz/vulcan/issues/231)) ([7e0754a](https://github.com/nomoixyz/vulcan/commit/7e0754a8c6e5e21852895d5dd5981b4a794f0b9b))
+
 ## [0.4.4](https://github.com/nomoixyz/vulcan/compare/v0.4.3...v0.4.4) (2023-11-07)
 
 
