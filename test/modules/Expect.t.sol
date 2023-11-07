@@ -91,11 +91,11 @@ contract ExpectTest is Test {
         expect(a).not.toEqual(b, "a should not equal b");
     }
 
-    function testUintNotToEqualFailWithMessage(uint256 a) external shouldFail {
+    function testUintNotToEqualFail(uint256 a) external shouldFail {
         expect(a).not.toEqual(a);
     }
 
-    function testUintNotToEqualFail(uint256 a) external shouldFail {
+    function testUintNotToEqualFailWithMessage(uint256 a) external shouldFail {
         expect(a).not.toEqual(a, "a should not equal a");
     }
 
