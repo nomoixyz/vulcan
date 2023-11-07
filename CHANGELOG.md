@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.4](https://github.com/nomoixyz/vulcan/compare/v0.4.3...v0.4.4) (2023-11-07)
+
+
+### Bug Fixes
+
+* fix file exists ([#228](https://github.com/nomoixyz/vulcan/issues/228)) ([c02feb1](https://github.com/nomoixyz/vulcan/commit/c02feb19aa34449376f52805663414aefafdc06a))
+
 ## [0.4.3](https://github.com/nomoixyz/vulcan/compare/v0.4.2...v0.4.3) (2023-10-26)
 
 
