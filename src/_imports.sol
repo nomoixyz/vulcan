@@ -28,3 +28,4 @@ import {
     RequestClient,
     RequestBuilder
 } from "./_internal/Request.sol";
+import {rpc} from "./_internal/Rpc.sol";
