@@ -4,7 +4,6 @@
 Logging events and reading events topics and data
 
 ```solidity
-//// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
 import {Test, expect, events, Log} from "vulcan/test.sol";
