@@ -26,7 +26,7 @@ contract RpcTest is Test {
             chainId := mload(add(data, 0x01))
         }
 
-        expect(chainId).toEqual(1);
+        expect(chainId).toEqual(block.chainid);
     }
 }
 
