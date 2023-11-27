@@ -73,7 +73,10 @@ Obtain metadata and check if file exists
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {Test, expect, fs, BoolResult, FsMetadataResult} from "vulcan/test.sol";
+import {Test} from "vulcan/test.sol";
+import {expect} from "vulcan/test/Expect.sol";
+import {fs, FsMetadataResult} from "vulcan/test/Fs.sol";
+import {BoolResult} from "vulcan/test/Result.sol";
 
 contract FsExample is Test {
     // These files are available only on the context of vulcan

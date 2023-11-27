@@ -16,6 +16,7 @@
 - [Json](./Json.md)
 - [Pointer](./Pointer.md)
 - [Result](./Result.md)
+- [Rpc](./Rpc.md)
 - [Semver](./Semver.md)
 - [Strings](./Strings.md)
 - [Utils](./Utils.md)
