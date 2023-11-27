@@ -13,4 +13,3 @@ library rpc {
         return vulcan.hevm.rpc(method, params);
     }
 }
-
