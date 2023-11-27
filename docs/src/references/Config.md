@@ -2,10 +2,10 @@
 
 ## Structs
 
-### Rpc
+### RpcConfig
 
 ```solidity
-struct Rpc {
+struct RpcConfig {
 	string name
 	string url
 }
@@ -25,7 +25,7 @@ Obtains a specific RPC from the configuration by name.
 
 Obtains all the RPCs from the configuration.
 
-### **rpcUrlStructs() &rarr; (Rpc[] rpcs)**
+### **rpcUrlStructs() &rarr; (RpcConfig[] rpcs)**
 
 Obtains all the RPCs from the configuration.
 

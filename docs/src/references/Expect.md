@@ -216,7 +216,15 @@ struct _CallExpectationNot {
 
 
 
+### **toEqual(_BoolExpectation self, bool expected, string message)**
+
+
+
 ### **toEqual(_BoolExpectationNot self, bool expected)**
+
+
+
+### **toEqual(_BoolExpectationNot self, bool expected, string message)**
 
 
 
@@ -224,7 +232,15 @@ struct _CallExpectationNot {
 
 
 
+### **toBeTrue(_BoolExpectation self, string message)**
+
+
+
 ### **toBeFalse(_BoolExpectation self)**
+
+
+
+### **toBeFalse(_BoolExpectation self, string message)**
 
 
 
@@ -232,7 +248,15 @@ struct _CallExpectationNot {
 
 
 
+### **toEqual(_AddressExpectation self, address expected, string message)**
+
+
+
 ### **toEqual(_AddressExpectationNot self, address expected)**
+
+
+
+### **toEqual(_AddressExpectationNot self, address expected, string message)**
 
 
 
@@ -240,7 +264,15 @@ struct _CallExpectationNot {
 
 
 
+### **toBeAContract(_AddressExpectation self, string message)**
+
+
+
 ### **toBeAContract(_AddressExpectationNot self)**
+
+
+
+### **toBeAContract(_AddressExpectationNot self, string message)**
 
 
 
@@ -248,7 +280,15 @@ struct _CallExpectationNot {
 
 
 
+### **toEqual(_Bytes32Expectation self, bytes32 expected, string message)**
+
+
+
 ### **toEqual(_Bytes32ExpectationNot self, bytes32 expected)**
+
+
+
+### **toEqual(_Bytes32ExpectationNot self, bytes32 expected, string message)**
 
 
 
@@ -256,7 +296,15 @@ struct _CallExpectationNot {
 
 
 
+### **toBeTheHashOf(_Bytes32Expectation self, bytes data, string message)**
+
+
+
 ### **toBeTheHashOf(_Bytes32ExpectationNot self, bytes data)**
+
+
+
+### **toBeTheHashOf(_Bytes32ExpectationNot self, bytes data, string message)**
 
 
 
@@ -264,7 +312,15 @@ struct _CallExpectationNot {
 
 
 
+### **toEqual(_BytesExpectation self, bytes expected, string message)**
+
+
+
 ### **toEqual(_BytesExpectationNot self, bytes expected)**
+
+
+
+### **toEqual(_BytesExpectationNot self, bytes expected, string message)**
 
 
 
@@ -272,7 +328,15 @@ struct _CallExpectationNot {
 
 
 
+### **toEqual(_StringExpectation self, string expected, string message)**
+
+
+
 ### **toEqual(_StringExpectationNot self, string expected)**
+
+
+
+### **toEqual(_StringExpectationNot self, string expected, string message)**
 
 
 
@@ -280,7 +344,15 @@ struct _CallExpectationNot {
 
 
 
+### **toContain(_StringExpectation self, string contained, string message)**
+
+
+
 ### **toContain(_StringExpectationNot self, string contained)**
+
+
+
+### **toContain(_StringExpectationNot self, string contained, string message)**
 
 
 
@@ -288,7 +360,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveLength(_StringExpectation self, uint256 expected, string message)**
+
+
+
 ### **toHaveLength(_StringExpectationNot self, uint256 expected)**
+
+
+
+### **toHaveLength(_StringExpectationNot self, uint256 expected, string message)**
 
 
 
@@ -296,7 +376,15 @@ struct _CallExpectationNot {
 
 
 
+### **toEqual(_UintExpectation self, uint256 expected, string message)**
+
+
+
 ### **toEqual(_UintExpectationNot self, uint256 expected)**
+
+
+
+### **toEqual(_UintExpectationNot self, uint256 expected, string message)**
 
 
 
@@ -304,7 +392,15 @@ struct _CallExpectationNot {
 
 
 
+### **toBeCloseTo(_UintExpectation self, uint256 expected, uint256 d, string message)**
+
+
+
 ### **toBeLessThan(_UintExpectation self, uint256 expected)**
+
+
+
+### **toBeLessThan(_UintExpectation self, uint256 expected, string message)**
 
 
 
@@ -312,7 +408,15 @@ struct _CallExpectationNot {
 
 
 
+### **toBeLessThanOrEqual(_UintExpectation self, uint256 expected, string message)**
+
+
+
 ### **toBeGreaterThan(_UintExpectation self, uint256 expected)**
+
+
+
+### **toBeGreaterThan(_UintExpectation self, uint256 expected, string message)**
 
 
 
@@ -320,7 +424,15 @@ struct _CallExpectationNot {
 
 
 
+### **toBeGreaterThanOrEqual(_UintExpectation self, uint256 expected, string message)**
+
+
+
 ### **toEqual(_IntExpectation self, int256 expected)**
+
+
+
+### **toEqual(_IntExpectation self, int256 expected, string message)**
 
 
 
@@ -328,7 +440,15 @@ struct _CallExpectationNot {
 
 
 
+### **toEqual(_IntExpectationNot self, int256 expected, string message)**
+
+
+
 ### **toBeCloseTo(_IntExpectation self, int256 expected, uint256 d)**
+
+
+
+### **toBeCloseTo(_IntExpectation self, int256 expected, uint256 d, string message)**
 
 
 
@@ -336,7 +456,15 @@ struct _CallExpectationNot {
 
 
 
+### **toBeLessThan(_IntExpectation self, int256 expected, string message)**
+
+
+
 ### **toBeLessThanOrEqual(_IntExpectation self, int256 expected)**
+
+
+
+### **toBeLessThanOrEqual(_IntExpectation self, int256 expected, string message)**
 
 
 
@@ -344,7 +472,15 @@ struct _CallExpectationNot {
 
 
 
+### **toBeGreaterThan(_IntExpectation self, int256 expected, string message)**
+
+
+
 ### **toBeGreaterThanOrEqual(_IntExpectation self, int256 expected)**
+
+
+
+### **toBeGreaterThanOrEqual(_IntExpectation self, int256 expected, string message)**
 
 
 
@@ -352,7 +488,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveReverted(_CallExpectation self, string message)**
+
+
+
 ### **toHaveRevertedWith(_CallExpectation self, bytes4 expectedSelector)**
+
+
+
+### **toHaveRevertedWith(_CallExpectation self, bytes4 expectedSelector, string message)**
 
 
 
@@ -360,7 +504,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveRevertedWith(_CallExpectationNot self, bytes4 expectedSelector, string message)**
+
+
+
 ### **toHaveRevertedWith(_CallExpectation self, string error)**
+
+
+
+### **toHaveRevertedWith(_CallExpectation self, string error, string message)**
 
 
 
@@ -368,7 +520,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveRevertedWith(_CallExpectationNot self, string error, string message)**
+
+
+
 ### **toHaveRevertedWith(_CallExpectation self, bytes expectedError)**
+
+
+
+### **toHaveRevertedWith(_CallExpectation self, bytes expectedError, string message)**
 
 
 
@@ -376,7 +536,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveRevertedWith(_CallExpectationNot self, bytes expectedError, string message)**
+
+
+
 ### **toHaveSucceeded(_CallExpectation self)**
+
+
+
+### **toHaveSucceeded(_CallExpectation self, string message)**
 
 
 
@@ -384,7 +552,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveEmitted(_CallExpectation self, string eventSig, string message)**
+
+
+
 ### **toHaveEmitted(_CallExpectation self, bytes32[1] topics)**
+
+
+
+### **toHaveEmitted(_CallExpectation self, bytes32[1] topics, string message)**
 
 
 
@@ -392,7 +568,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveEmitted(_CallExpectation self, bytes32[2] topics, string message)**
+
+
+
 ### **toHaveEmitted(_CallExpectation self, bytes32[3] topics)**
+
+
+
+### **toHaveEmitted(_CallExpectation self, bytes32[3] topics, string message)**
 
 
 
@@ -400,7 +584,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveEmitted(_CallExpectation self, bytes32[4] topics, string message)**
+
+
+
 ### **toHaveEmitted(_CallExpectation self, string eventSig, bytes data)**
+
+
+
+### **toHaveEmitted(_CallExpectation self, string eventSig, bytes data, string message)**
 
 
 
@@ -408,7 +600,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[1] topics, string message)**
+
+
+
 ### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[2] topics)**
+
+
+
+### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[2] topics, string message)**
 
 
 
@@ -416,7 +616,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[3] topics, string message)**
+
+
+
 ### **toHaveEmitted(_CallExpectation self, bytes32[1] topics, bytes data)**
+
+
+
+### **toHaveEmitted(_CallExpectation self, bytes32[1] topics, bytes data, string message)**
 
 
 
@@ -424,7 +632,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveEmitted(_CallExpectation self, bytes32[2] topics, bytes data, string message)**
+
+
+
 ### **toHaveEmitted(_CallExpectation self, bytes32[3] topics, bytes data)**
+
+
+
+### **toHaveEmitted(_CallExpectation self, bytes32[3] topics, bytes data, string message)**
 
 
 
@@ -432,7 +648,15 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveEmitted(_CallExpectation self, bytes32[4] topics, bytes data, string message)**
+
+
+
 ### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[1] topics, bytes data)**
+
+
+
+### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[1] topics, bytes data, string message)**
 
 
 
@@ -440,11 +664,27 @@ struct _CallExpectationNot {
 
 
 
+### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[2] topics, bytes data, string message)**
+
+
+
 ### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[3] topics, bytes data)**
 
 
 
+### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[3] topics, bytes data, string message)**
+
+
+
 ### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[] topics, bytes data)**
+
+
+
+### **toHaveEmitted(_CallExpectation self, string eventSig, bytes32[] topics, bytes data, string message)**
+
+
+
+### **printMessage(string message)**
 
 
 

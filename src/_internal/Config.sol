@@ -4,7 +4,7 @@ pragma solidity >=0.8.13 <0.9.0;
 import {vulcan, Hevm} from "./Vulcan.sol";
 
 /// @dev Struct that represents an RPC endpoint
-struct Rpc {
+struct RpcConfig {
     string name;
     string url;
 }
@@ -25,7 +25,7 @@ library config {
 
     /// @dev Obtains all the RPCs from the configuration.
     /// @return rpcs All the RPCs as `Rpc[]`.
-    function rpcUrlStructs() internal view returns (Rpc[] memory rpcs) {
+    function rpcUrlStructs() internal view returns (RpcConfig[] memory rpcs) {
         Hevm.Rpc[] memory _rpcs = vulcan.hevm.rpcUrlStructs();
         assembly {
             rpcs := _rpcs
