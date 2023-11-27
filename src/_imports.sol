@@ -10,7 +10,7 @@ import {events} from "./_internal/Events.sol";
 import {fs, FsMetadata, FsMetadataResult, FsErrors} from "./_internal/Fs.sol";
 import {json, JsonObject, JsonResult} from "./_internal/Json.sol";
 import {strings} from "./_internal/Strings.sol";
-import {config, Rpc} from "./_internal/Config.sol";
+import {config, RpcConfig} from "./_internal/Config.sol";
 import {fmt} from "./_internal/Fmt.sol";
 import {bound, format, println, removeSelector} from "./_internal/Utils.sol";
 import {huff, Huffc} from "./_internal/Huff.sol";

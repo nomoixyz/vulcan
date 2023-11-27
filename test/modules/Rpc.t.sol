@@ -7,12 +7,11 @@ import {Fork, forks} from "vulcan/test/Forks.sol";
 
 contract RpcTest is Test {
     function testNetVersion() external {
-        forks.create("https://rpc.mevblocker.io/fast").select();
-
+        string memory rpcUrl = "https://rpc.mevblocker.io/fast";
         string memory method = "eth_chainId";
         string memory params = "[]";
 
-        bytes memory data = rpc.call(method, params);
+        bytes memory data = rpc.call(rpcUrl, method, params);
 
         uint8 chainId;
 

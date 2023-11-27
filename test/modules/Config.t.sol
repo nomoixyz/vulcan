@@ -3,7 +3,7 @@ pragma solidity >=0.8.13 <0.9.0;
 
 import {Test} from "../../src/test.sol";
 import {expect} from "src/test/Expect.sol";
-import {config, Rpc} from "src/test/Config.sol";
+import {config, RpcConfig} from "src/test/Config.sol";
 
 contract ConfigTest is Test {
     function testItCanObtainRpcUrls() external {
@@ -23,7 +23,7 @@ contract ConfigTest is Test {
     }
 
     function testItCanObtainAllRpcUrlsAsStructs() external {
-        Rpc[] memory rpcs = config.rpcUrlStructs();
+        RpcConfig[] memory rpcs = config.rpcUrlStructs();
 
         expect(rpcs.length).toEqual(2);
         expect(rpcs[0].name).toEqual("arbitrum");
