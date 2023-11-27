@@ -6,8 +6,7 @@ import {forksUnsafe, Fork} from "./Forks.sol";
 import {JsonObject} from "./Json.sol";
 
 library rpc {
-    /// @dev Calls an JSON-RPC method on a specific RPC endpoint. If there was a previous active
-    /// fork it will return back to that one once the method is called.
+    /// @dev Calls an JSON-RPC method on a specific RPC endpoint. If there was a previous active fork it will return back to that one once the method is called.
     /// @param url The url of the RPC endpoint to use
     /// @param method The JSON-RPC method to call
     /// @param params The method params as a JSON string
