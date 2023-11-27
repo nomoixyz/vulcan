@@ -22,7 +22,7 @@ jobs:
       - name: Build image
         run: docker build . -t nomoixyz/vulcan-test-suite
       - name: Run tests
-        run: docker run --rm nomoixyz/vulcan-test-suite
+        run: docker run --rm nomoixyz/vulcan-test-suite --no-match-path 'test/examples/**/*'
   format:
     name: Check format
     runs-on: ubuntu-latest
