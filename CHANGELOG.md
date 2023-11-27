@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.6](https://github.com/nomoixyz/vulcan/compare/v0.4.5...v0.4.6) (2023-11-27)
+
+
+### Features
+
+* rpc module ([#236](https://github.com/nomoixyz/vulcan/issues/236)) ([d02a2ac](https://github.com/nomoixyz/vulcan/commit/d02a2ac5cb8bf3d64e014d8a55ab2f475712c65b))
+* update forge-std to v1.7.3 ([95ce186](https://github.com/nomoixyz/vulcan/commit/95ce1863037a91a7c8db5f9d631ecc625243f4c9))
+
 ## [0.4.5](https://github.com/nomoixyz/vulcan/compare/v0.4.4...v0.4.5) (2023-11-07)
 
 
