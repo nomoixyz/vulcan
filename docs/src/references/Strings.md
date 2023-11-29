@@ -56,3 +56,7 @@ Parses a bytes32 string.
 
 Parses a boolean string.
 
+### **parseJson(string value) &rarr; (JsonResult)**
+
+Parses a JSON string.
+

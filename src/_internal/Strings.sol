@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.13 <0.9.0;
 
-import "./Vulcan.sol";
+import {vulcan} from "./Vulcan.sol";
+import {json, JsonResult} from "./Json.sol";
 import {fmt} from "./Fmt.sol";
 
 library strings {
@@ -91,5 +92,11 @@ library strings {
     /// @return The parsed boolean.
     function parseBool(string memory value) internal pure returns (bool) {
         return vulcan.hevm.parseBool(value);
+    }
+
+    /// @dev Parses a JSON string.
+    /// @param value The string to parse
+    function parseJson(string memory value) internal returns (JsonResult) {
+        return json.create(value);
     }
 }

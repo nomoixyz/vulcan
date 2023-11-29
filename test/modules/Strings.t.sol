@@ -79,4 +79,10 @@ contract StringsTest is Test {
 
         expect(value.parseBool()).toBeFalse();
     }
+
+    function testItCanParseJson() external {
+        string memory value = '{"foo": "bar"}';
+
+        expect(value.parseJson().expect("Invalid JSON").getString(".foo")).toEqual("bar");
+    }
 }
