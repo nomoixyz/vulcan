@@ -46,7 +46,7 @@ contract FeTest is Test {
             true
         ).build().unwrap();
 
-        StringResult result = fs.readFile("./test/fixtures/fe/output/A/A.bin");
+        StringResult result = fs.readFile("./test/fixtures/fe/output/MyFeContract/MyFeContract.bin");
 
         expect(bytes(result.unwrap()).length).toBeGreaterThan(0);
     }
