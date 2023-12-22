@@ -11,20 +11,18 @@ contract FsExample is Test {
     string constant TEXT_TEST_FILE = "./test/fixtures/fs/write/example.txt";
 
     function test() external {
-        EmptyResult writeStringResult = fs.writeFile(TEXT_TEST_FILE, "This is a test");
+        // Write string
+        fs.writeFile(TEXT_TEST_FILE, "This is a test").expect("Failed to write file");
 
-        expect(writeStringResult.isOk()).toBeTrue();
+        string memory readStringResult = fs.readFile(TEXT_TEST_FILE).unwrap();
 
-        StringResult readStringResult = fs.readFile(TEXT_TEST_FILE);
+        expect(readStringResult).toEqual("This is a test");
 
-        expect(readStringResult.unwrap()).toEqual("This is a test");
+        // Write binary
+        fs.writeFileBinary(TEXT_TEST_FILE, "This is a test in binary").expect("Failed to write file");
 
-        EmptyResult writeBytesResult = fs.writeFileBinary(TEXT_TEST_FILE, bytes("This is a test in binary"));
+        bytes memory readBytesResult = fs.readFileBinary(TEXT_TEST_FILE).unwrap();
 
-        expect(writeBytesResult.isOk()).toBeTrue();
-
-        BytesResult readBytesResult = fs.readFileBinary(TEXT_TEST_FILE);
-
-        expect(readBytesResult.unwrap()).toEqual(bytes("This is a test in binary"));
+        expect(readBytesResult).toEqual("This is a test in binary");
     }
 }

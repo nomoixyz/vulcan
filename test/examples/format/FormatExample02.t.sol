@@ -12,8 +12,9 @@ contract FormatExample is Test {
         address target = address(1).setBalance(1e17);
         uint256 balance = target.balance;
 
-        expect(fmt.format("The account {address} has {uint:d18} eth", abi.encode(target, balance))).toEqual(
-            "The account 0x0000000000000000000000000000000000000001 has 0.1 eth"
-        );
+        // Store it as a string
+        string memory result = fmt.format("The account {address} has {uint:d18} eth", abi.encode(target, balance));
+
+        expect(result).toEqual("The account 0x0000000000000000000000000000000000000001 has 0.1 eth");
     }
 }

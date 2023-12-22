@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 import {Test} from "vulcan/test.sol";
 import {expect} from "vulcan/test/Expect.sol";
-import {fs, FsMetadataResult} from "vulcan/test/Fs.sol";
+import {fs, FsMetadata} from "vulcan/test/Fs.sol";
 import {BoolResult} from "vulcan/test/Result.sol";
 
 /// @title Other operations
@@ -15,16 +15,13 @@ contract FsExample is Test {
     string constant NOT_FOUND_EXAMPLE = "./test/fixtures/fs/read/lkjjsadflkjasdf.txt";
 
     function test() external {
-        FsMetadataResult metadataResult = fs.metadata(READ_EXAMPLE);
-        expect(metadataResult.isOk()).toBeTrue();
-        expect(metadataResult.unwrap().isDir).toBeFalse();
+        FsMetadata memory metadata = fs.metadata(READ_EXAMPLE).expect("Failed to get metadata");
+        expect(metadata.isDir).toBeFalse();
 
-        BoolResult existsResult = fs.fileExists(READ_EXAMPLE);
-        expect(existsResult.isOk()).toBeTrue();
-        expect(existsResult.unwrap()).toBeTrue();
+        bool exists = fs.fileExists(READ_EXAMPLE).unwrap();
+        expect(exists).toBeTrue();
 
-        BoolResult notFoundResult = fs.fileExists(NOT_FOUND_EXAMPLE);
-        expect(notFoundResult.isOk()).toBeTrue();
-        expect(notFoundResult.unwrap()).toBeFalse();
+        exists = fs.fileExists(NOT_FOUND_EXAMPLE).unwrap();
+        expect(exists).toBeFalse();
     }
 }

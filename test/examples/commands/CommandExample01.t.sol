@@ -7,13 +7,10 @@ import {Test, expect, commands, CommandResult, CommandOutput} from "vulcan/test.
 /// @dev Run a simple command and obtain the output
 contract RunCommandExample is Test {
     function test() external {
-        // Run a command to get a result
-        CommandResult cmdResult = commands.run(["echo", "Hello, World!"]);
-
-        // Obtain the output from the result
-        CommandOutput memory output = cmdResult.expect("Failed to run command");
+        // Run the command
+        CommandOutput memory result = commands.run(["echo", "Hello, World!"]).unwrap();
 
         // Check the output
-        expect(string(output.stdout)).toEqual("Hello, World!");
+        expect(string(result.stdout)).toEqual("Hello, World!");
     }
 }

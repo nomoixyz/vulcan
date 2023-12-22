@@ -5,6 +5,7 @@ import {Test, expect, console} from "vulcan/test.sol";
 
 /// @title Log values
 /// @dev Use the `console` function to log values.
+/// NOTE: Prefer `println` over `console.log` for a more flexible API.
 contract ConsoleExample is Test {
     function test() external pure {
         string memory foo = "foo";

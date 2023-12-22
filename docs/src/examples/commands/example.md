@@ -11,14 +11,11 @@ import {Test, expect, commands, CommandResult, CommandOutput} from "vulcan/test.
 
 contract RunCommandExample is Test {
     function test() external {
-        // Run a command to get a result
-        CommandResult cmdResult = commands.run(["echo", "Hello, World!"]);
-
-        // Obtain the output from the result
-        CommandOutput memory output = cmdResult.expect("Failed to run command");
+        // Run the command
+        CommandOutput memory result = commands.run(["echo", "Hello, World!"]).unwrap();
 
         // Check the output
-        expect(string(output.stdout)).toEqual("Hello, World!");
+        expect(string(result.stdout)).toEqual("Hello, World!");
     }
 }
 
@@ -39,13 +36,9 @@ contract ReuseACommandExample is Test {
         // Create a command
         Command memory echo = commands.create("echo");
 
-        // Run the commands and get the results
-        CommandResult fooResult = echo.arg("foo").run();
-        CommandResult barResult = echo.arg("bar").run();
-
-        // Obtain the outputs from the results
-        CommandOutput memory fooOutput = fooResult.expect("Failed to run echo 'foo'");
-        CommandOutput memory barOutput = barResult.expect("Failed to run echo 'bar'");
+        // Run the commands and unwrap the results
+        CommandOutput memory fooOutput = echo.arg("foo").run().unwrap();
+        CommandOutput memory barOutput = echo.arg("bar").run().unwrap();
 
         // Check the outputs
         expect(string(fooOutput.stdout)).toEqual("foo");

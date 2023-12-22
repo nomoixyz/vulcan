@@ -12,13 +12,10 @@ contract FsExample is Test {
     string constant BINARY_TEST_FILE = "./test/fixtures/fs/write/test_binary.txt";
 
     function test() external {
-        StringResult stringResult = fs.readFile(HELLO_WORLD);
-        BytesResult bytesResult = fs.readFileBinary(HELLO_WORLD);
+        string memory stringResult = fs.readFile(HELLO_WORLD).unwrap();
+        expect(stringResult).toEqual("Hello, World!\n");
 
-        expect(stringResult.isOk()).toBeTrue();
-        expect(bytesResult.isOk()).toBeTrue();
-
-        expect(stringResult.unwrap()).toEqual("Hello, World!\n");
-        expect(bytesResult.toValue()).toEqual(bytes("Hello, World!\n"));
+        bytes memory bytesResult = fs.readFileBinary(HELLO_WORLD).unwrap();
+        expect(bytesResult).toEqual("Hello, World!\n");
     }
 }
