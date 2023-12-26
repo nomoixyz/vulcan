@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Result</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../book.css">
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="../index.html">Introduction</a></li><li class="chapter-item affix "><li class="part-title">User Guide</li><li class="chapter-item "><a href="../guide/installation.html">Installation</a></li><li class="chapter-item "><a href="../testing/index.html">Testing</a></li><li class="chapter-item "><a href="../scripts/index.html">Scripts</a></li><li class="chapter-item affix "><li class="part-title">Modules</li><li class="chapter-item "><a href="../modules/accounts.html">Accounts</a></li><li class="chapter-item "><a href="../modules/commands.html">Commands</a></li><li class="chapter-item "><a href="../modules/context.html">Context</a></li><li class="chapter-item "><a href="../modules/expect.html">Expect</a></li><li class="chapter-item "><a href="../modules/fe.html">Fe</a></li><li class="chapter-item "><a href="../modules/fmt.html">Format</a></li><li class="chapter-item "><a href="../modules/fs.html">Fs</a></li><li class="chapter-item "><a href="../modules/gas.html">Gas</a></li><li class="chapter-item "><a href="../modules/huff.html">Huff</a></li><li class="chapter-item "><a href="../modules/json.html">Json</a></li><li class="chapter-item "><a href="../modules/results.html">Results &amp; Errors</a></li><li class="chapter-item "><a href="../modules/requests.html">Requests</a></li><li class="chapter-item "><a href="../modules/utils.html">Utils</a></li><li class="chapter-item "><a href="../OTHER_MODULES.html">Others</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../modules/config.html">Config</a></li><li class="chapter-item "><a href="../modules/console.html">Console</a></li><li class="chapter-item "><a href="../modules/env.html">Env</a></li><li class="chapter-item "><a href="../modules/events.html">Events</a></li><li class="chapter-item "><a href="../modules/forks.html">Forks</a></li><li class="chapter-item "><a href="../modules/rpc.html">RPC</a></li><li class="chapter-item "><a href="../modules/strings.html">Strings</a></li></ol></li><li class="chapter-item "><li class="part-title">References</li><li class="chapter-item "><a href="../references/Accounts.html">Accounts</a></li><li class="chapter-item "><a href="../references/Commands.html">Commands</a></li><li class="chapter-item "><a href="../references/Config.html">Config</a></li><li class="chapter-item "><a href="../references/Context.html">Context</a></li><li class="chapter-item "><a href="../references/Env.html">Env</a></li><li class="chapter-item "><a href="../references/Error.html">Error</a></li><li class="chapter-item "><a href="../references/Events.html">Events</a></li><li class="chapter-item "><a href="../references/Expect.html">Expect</a></li><li class="chapter-item "><a href="../references/Fe.html">Fe</a></li><li class="chapter-item "><a href="../references/Fmt.html">Fmt</a></li><li class="chapter-item "><a href="../references/Forks.html">Forks</a></li><li class="chapter-item "><a href="../references/Fs.html">Fs</a></li><li class="chapter-item "><a href="../references/Gas.html">Gas</a></li><li class="chapter-item "><a href="../references/Huff.html">Huff</a></li><li class="chapter-item "><a href="../references/Invariants.html">Invariants</a></li><li class="chapter-item "><a href="../references/Json.html">Json</a></li><li class="chapter-item "><a href="../references/Pointer.html">Pointer</a></li><li class="chapter-item expanded "><a href="../references/Result.html" class="active">Result</a></li><li class="chapter-item "><a href="../references/Semver.html">Semver</a></li><li class="chapter-item "><a href="../references/Strings.html">Strings</a></li><li class="chapter-item "><a href="../references/Utils.html">Utils</a></li><li class="chapter-item "><a href="../references/Vulcan.html">Vulcan</a></li><li class="chapter-item "><a href="../references/Watchers.html">Watchers</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/nomoixyz/vulcan" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="result"><a class="header" href="#result">Result</a></h1>
+<h2 id="custom-types"><a class="header" href="#custom-types">Custom types</a></h2>
+<h3 id="bytes32result"><a class="header" href="#bytes32result">Bytes32Result</a></h3>
+<pre><code class="language-solidity">type Bytes32Result is bytes32;
+</code></pre>
+<h3 id="bytesresult"><a class="header" href="#bytesresult">BytesResult</a></h3>
+<pre><code class="language-solidity">type BytesResult is bytes32;
+</code></pre>
+<h3 id="stringresult"><a class="header" href="#stringresult">StringResult</a></h3>
+<pre><code class="language-solidity">type StringResult is bytes32;
+</code></pre>
+<h3 id="boolresult"><a class="header" href="#boolresult">BoolResult</a></h3>
+<pre><code class="language-solidity">type BoolResult is bytes32;
+</code></pre>
+<h3 id="emptyresult"><a class="header" href="#emptyresult">EmptyResult</a></h3>
+<pre><code class="language-solidity">type EmptyResult is bytes32;
+</code></pre>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="ok--emptyresult"><a class="header" href="#ok--emptyresult"><strong>Ok() → (EmptyResult)</strong></a></h3>
+<h3 id="okbytes32-value--bytes32result"><a class="header" href="#okbytes32-value--bytes32result"><strong>Ok(bytes32 value) → (Bytes32Result)</strong></a></h3>
+<h3 id="okbytes-value--bytesresult"><a class="header" href="#okbytes-value--bytesresult"><strong>Ok(bytes value) → (BytesResult)</strong></a></h3>
+<h3 id="okstring-value--stringresult"><a class="header" href="#okstring-value--stringresult"><strong>Ok(string value) → (StringResult)</strong></a></h3>
+<h3 id="okbool-value--boolresult"><a class="header" href="#okbool-value--boolresult"><strong>Ok(bool value) → (BoolResult)</strong></a></h3>
+<h2 id="libresultpointer"><a class="header" href="#libresultpointer">LibResultPointer</a></h2>
+<h3 id="decodepointer-self--resulttype-pointer"><a class="header" href="#decodepointer-self--resulttype-pointer"><strong>decode(Pointer self) → (ResultType, Pointer)</strong></a></h3>
+<h3 id="iserrorpointer-self--bool"><a class="header" href="#iserrorpointer-self--bool"><strong>isError(Pointer self) → (bool)</strong></a></h3>
+<h3 id="isokpointer-self--bool"><a class="header" href="#isokpointer-self--bool"><strong>isOk(Pointer self) → (bool)</strong></a></h3>
+<h3 id="toerrorpointer-self--error"><a class="header" href="#toerrorpointer-self--error"><strong>toError(Pointer self) → (Error)</strong></a></h3>
+<h3 id="unwrappointer-self--pointer-ptr"><a class="header" href="#unwrappointer-self--pointer-ptr"><strong>unwrap(Pointer self) → (Pointer ptr)</strong></a></h3>
+<h3 id="expectpointer-self-string-err--pointer-ptr"><a class="header" href="#expectpointer-self-string-err--pointer-ptr"><strong>expect(Pointer self, string err) → (Pointer ptr)</strong></a></h3>
+<h2 id="libbytes32resultpointer"><a class="header" href="#libbytes32resultpointer">LibBytes32ResultPointer</a></h2>
+<h3 id="tobytes32resultpointer-self--bytes32result-res"><a class="header" href="#tobytes32resultpointer-self--bytes32result-res"><strong>toBytes32Result(Pointer self) → (Bytes32Result res)</strong></a></h3>
+<h2 id="libbytes32result"><a class="header" href="#libbytes32result">LibBytes32Result</a></h2>
+<h3 id="iserrorbytes32result-self--bool"><a class="header" href="#iserrorbytes32result-self--bool"><strong>isError(Bytes32Result self) → (bool)</strong></a></h3>
+<h3 id="isokbytes32result-self--bool"><a class="header" href="#isokbytes32result-self--bool"><strong>isOk(Bytes32Result self) → (bool)</strong></a></h3>
+<h3 id="toerrorbytes32result-self--error"><a class="header" href="#toerrorbytes32result-self--error"><strong>toError(Bytes32Result self) → (Error)</strong></a></h3>
+<h3 id="tovaluebytes32result-self--bytes32"><a class="header" href="#tovaluebytes32result-self--bytes32"><strong>toValue(Bytes32Result self) → (bytes32)</strong></a></h3>
+<h3 id="unwrapbytes32result-self--bytes32"><a class="header" href="#unwrapbytes32result-self--bytes32"><strong>unwrap(Bytes32Result self) → (bytes32)</strong></a></h3>
+<h3 id="expectbytes32result-self-string-err--bytes32"><a class="header" href="#expectbytes32result-self-string-err--bytes32"><strong>expect(Bytes32Result self, string err) → (bytes32)</strong></a></h3>
+<h3 id="topointerbytes32result-self--pointer"><a class="header" href="#topointerbytes32result-self--pointer"><strong>toPointer(Bytes32Result self) → (Pointer)</strong></a></h3>
+<h2 id="libbytesresultpointer"><a class="header" href="#libbytesresultpointer">LibBytesResultPointer</a></h2>
+<h3 id="tobytesresultpointer-self--bytesresult-res"><a class="header" href="#tobytesresultpointer-self--bytesresult-res"><strong>toBytesResult(Pointer self) → (BytesResult res)</strong></a></h3>
+<h2 id="libbytesresult"><a class="header" href="#libbytesresult">LibBytesResult</a></h2>
+<h3 id="isokbytesresult-self--bool"><a class="header" href="#isokbytesresult-self--bool"><strong>isOk(BytesResult self) → (bool)</strong></a></h3>
+<h3 id="iserrorbytesresult-self--bool"><a class="header" href="#iserrorbytesresult-self--bool"><strong>isError(BytesResult self) → (bool)</strong></a></h3>
+<h3 id="unwrapbytesresult-self--bytes"><a class="header" href="#unwrapbytesresult-self--bytes"><strong>unwrap(BytesResult self) → (bytes)</strong></a></h3>
+<h3 id="expectbytesresult-self-string-err--bytes"><a class="header" href="#expectbytesresult-self-string-err--bytes"><strong>expect(BytesResult self, string err) → (bytes)</strong></a></h3>
+<h3 id="toerrorbytesresult-self--error"><a class="header" href="#toerrorbytesresult-self--error"><strong>toError(BytesResult self) → (Error)</strong></a></h3>
+<h3 id="tovaluebytesresult-self--bytes"><a class="header" href="#tovaluebytesresult-self--bytes"><strong>toValue(BytesResult self) → (bytes)</strong></a></h3>
+<h3 id="topointerbytesresult-self--pointer"><a class="header" href="#topointerbytesresult-self--pointer"><strong>toPointer(BytesResult self) → (Pointer)</strong></a></h3>
+<h2 id="libstringresultpointer"><a class="header" href="#libstringresultpointer">LibStringResultPointer</a></h2>
+<h3 id="tostringresultpointer-self--stringresult-res"><a class="header" href="#tostringresultpointer-self--stringresult-res"><strong>toStringResult(Pointer self) → (StringResult res)</strong></a></h3>
+<h2 id="libstringresult"><a class="header" href="#libstringresult">LibStringResult</a></h2>
+<h3 id="isokstringresult-self--bool"><a class="header" href="#isokstringresult-self--bool"><strong>isOk(StringResult self) → (bool)</strong></a></h3>
+<h3 id="iserrorstringresult-self--bool"><a class="header" href="#iserrorstringresult-self--bool"><strong>isError(StringResult self) → (bool)</strong></a></h3>
+<h3 id="unwrapstringresult-self--string-val"><a class="header" href="#unwrapstringresult-self--string-val"><strong>unwrap(StringResult self) → (string val)</strong></a></h3>
+<h3 id="expectstringresult-self-string-err--string"><a class="header" href="#expectstringresult-self-string-err--string"><strong>expect(StringResult self, string err) → (string)</strong></a></h3>
+<h3 id="toerrorstringresult-self--error"><a class="header" href="#toerrorstringresult-self--error"><strong>toError(StringResult self) → (Error)</strong></a></h3>
+<h3 id="tovaluestringresult-self--string-val"><a class="header" href="#tovaluestringresult-self--string-val"><strong>toValue(StringResult self) → (string val)</strong></a></h3>
+<h3 id="topointerstringresult-self--pointer"><a class="header" href="#topointerstringresult-self--pointer"><strong>toPointer(StringResult self) → (Pointer)</strong></a></h3>
+<h2 id="libboolresultpointer"><a class="header" href="#libboolresultpointer">LibBoolResultPointer</a></h2>
+<h3 id="toboolresultpointer-self--boolresult-res"><a class="header" href="#toboolresultpointer-self--boolresult-res"><strong>toBoolResult(Pointer self) → (BoolResult res)</strong></a></h3>
+<h2 id="libboolresult"><a class="header" href="#libboolresult">LibBoolResult</a></h2>
+<h3 id="isokboolresult-self--bool"><a class="header" href="#isokboolresult-self--bool"><strong>isOk(BoolResult self) → (bool)</strong></a></h3>
+<h3 id="iserrorboolresult-self--bool"><a class="header" href="#iserrorboolresult-self--bool"><strong>isError(BoolResult self) → (bool)</strong></a></h3>
+<h3 id="unwrapboolresult-self--bool-val"><a class="header" href="#unwrapboolresult-self--bool-val"><strong>unwrap(BoolResult self) → (bool val)</strong></a></h3>
+<h3 id="expectboolresult-self-string-err--bool"><a class="header" href="#expectboolresult-self-string-err--bool"><strong>expect(BoolResult self, string err) → (bool)</strong></a></h3>
+<h3 id="toerrorboolresult-self--error"><a class="header" href="#toerrorboolresult-self--error"><strong>toError(BoolResult self) → (Error)</strong></a></h3>
+<h3 id="tovalueboolresult-self--bool-val"><a class="header" href="#tovalueboolresult-self--bool-val"><strong>toValue(BoolResult self) → (bool val)</strong></a></h3>
+<h3 id="topointerboolresult-self--pointer"><a class="header" href="#topointerboolresult-self--pointer"><strong>toPointer(BoolResult self) → (Pointer)</strong></a></h3>
+<h2 id="libemptyresultpointer"><a class="header" href="#libemptyresultpointer">LibEmptyResultPointer</a></h2>
+<h3 id="toemptyresultpointer-self--emptyresult-res"><a class="header" href="#toemptyresultpointer-self--emptyresult-res"><strong>toEmptyResult(Pointer self) → (EmptyResult res)</strong></a></h3>
+<h2 id="libemptyresult"><a class="header" href="#libemptyresult">LibEmptyResult</a></h2>
+<h3 id="isokemptyresult-self--bool"><a class="header" href="#isokemptyresult-self--bool"><strong>isOk(EmptyResult self) → (bool)</strong></a></h3>
+<h3 id="iserroremptyresult-self--bool"><a class="header" href="#iserroremptyresult-self--bool"><strong>isError(EmptyResult self) → (bool)</strong></a></h3>
+<h3 id="unwrapemptyresult-self"><a class="header" href="#unwrapemptyresult-self"><strong>unwrap(EmptyResult self)</strong></a></h3>
+<h3 id="expectemptyresult-self-string-err"><a class="header" href="#expectemptyresult-self-string-err"><strong>expect(EmptyResult self, string err)</strong></a></h3>
+<h3 id="toerroremptyresult-self--error"><a class="header" href="#toerroremptyresult-self--error"><strong>toError(EmptyResult self) → (Error)</strong></a></h3>
+<h3 id="topointeremptyresult-self--pointer"><a class="header" href="#topointeremptyresult-self--pointer"><strong>toPointer(EmptyResult self) → (Pointer)</strong></a></h3>
+<h2 id="libresulttype"><a class="header" href="#libresulttype">LibResultType</a></h2>
+<h3 id="encoderesulttype-_type-pointer-_dataptr--pointer-result"><a class="header" href="#encoderesulttype-_type-pointer-_dataptr--pointer-result"><strong>encode(ResultType _type, Pointer _dataPtr) → (Pointer result)</strong></a></h3>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../references/Pointer.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../references/Semver.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../references/Pointer.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../references/Semver.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="../solidity.min.js"></script>
+    </body>
+</html>

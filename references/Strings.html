@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Strings</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../book.css">
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="../index.html">Introduction</a></li><li class="chapter-item affix "><li class="part-title">User Guide</li><li class="chapter-item "><a href="../guide/installation.html">Installation</a></li><li class="chapter-item "><a href="../testing/index.html">Testing</a></li><li class="chapter-item "><a href="../scripts/index.html">Scripts</a></li><li class="chapter-item affix "><li class="part-title">Modules</li><li class="chapter-item "><a href="../modules/accounts.html">Accounts</a></li><li class="chapter-item "><a href="../modules/commands.html">Commands</a></li><li class="chapter-item "><a href="../modules/context.html">Context</a></li><li class="chapter-item "><a href="../modules/expect.html">Expect</a></li><li class="chapter-item "><a href="../modules/fe.html">Fe</a></li><li class="chapter-item "><a href="../modules/fmt.html">Format</a></li><li class="chapter-item "><a href="../modules/fs.html">Fs</a></li><li class="chapter-item "><a href="../modules/gas.html">Gas</a></li><li class="chapter-item "><a href="../modules/huff.html">Huff</a></li><li class="chapter-item "><a href="../modules/json.html">Json</a></li><li class="chapter-item "><a href="../modules/results.html">Results &amp; Errors</a></li><li class="chapter-item "><a href="../modules/requests.html">Requests</a></li><li class="chapter-item "><a href="../modules/utils.html">Utils</a></li><li class="chapter-item "><a href="../OTHER_MODULES.html">Others</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../modules/config.html">Config</a></li><li class="chapter-item "><a href="../modules/console.html">Console</a></li><li class="chapter-item "><a href="../modules/env.html">Env</a></li><li class="chapter-item "><a href="../modules/events.html">Events</a></li><li class="chapter-item "><a href="../modules/forks.html">Forks</a></li><li class="chapter-item "><a href="../modules/rpc.html">RPC</a></li><li class="chapter-item "><a href="../modules/strings.html">Strings</a></li></ol></li><li class="chapter-item "><li class="part-title">References</li><li class="chapter-item "><a href="../references/Accounts.html">Accounts</a></li><li class="chapter-item "><a href="../references/Commands.html">Commands</a></li><li class="chapter-item "><a href="../references/Config.html">Config</a></li><li class="chapter-item "><a href="../references/Context.html">Context</a></li><li class="chapter-item "><a href="../references/Env.html">Env</a></li><li class="chapter-item "><a href="../references/Error.html">Error</a></li><li class="chapter-item "><a href="../references/Events.html">Events</a></li><li class="chapter-item "><a href="../references/Expect.html">Expect</a></li><li class="chapter-item "><a href="../references/Fe.html">Fe</a></li><li class="chapter-item "><a href="../references/Fmt.html">Fmt</a></li><li class="chapter-item "><a href="../references/Forks.html">Forks</a></li><li class="chapter-item "><a href="../references/Fs.html">Fs</a></li><li class="chapter-item "><a href="../references/Gas.html">Gas</a></li><li class="chapter-item "><a href="../references/Huff.html">Huff</a></li><li class="chapter-item "><a href="../references/Invariants.html">Invariants</a></li><li class="chapter-item "><a href="../references/Json.html">Json</a></li><li class="chapter-item "><a href="../references/Pointer.html">Pointer</a></li><li class="chapter-item "><a href="../references/Result.html">Result</a></li><li class="chapter-item "><a href="../references/Semver.html">Semver</a></li><li class="chapter-item expanded "><a href="../references/Strings.html" class="active">Strings</a></li><li class="chapter-item "><a href="../references/Utils.html">Utils</a></li><li class="chapter-item "><a href="../references/Vulcan.html">Vulcan</a></li><li class="chapter-item "><a href="../references/Watchers.html">Watchers</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/nomoixyz/vulcan" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="strings"><a class="header" href="#strings">Strings</a></h1>
+<h2 id="strings-1"><a class="header" href="#strings-1">strings</a></h2>
+<h3 id="formatstring-template-bytes-args--string"><a class="header" href="#formatstring-template-bytes-args--string"><strong>format(string template, bytes args) → (string)</strong></a></h3>
+<h3 id="tostringaddress-value--string"><a class="header" href="#tostringaddress-value--string"><strong>toString(address value) → (string)</strong></a></h3>
+<p>Transforms an address to a string.</p>
+<h3 id="tostringbytes-value--string"><a class="header" href="#tostringbytes-value--string"><strong>toString(bytes value) → (string)</strong></a></h3>
+<p>Transforms a byte array to a string.</p>
+<h3 id="tostringbytes32-value--string"><a class="header" href="#tostringbytes32-value--string"><strong>toString(bytes32 value) → (string)</strong></a></h3>
+<p>Transforms a bytes32 to a string.</p>
+<h3 id="tostringbool-value--string"><a class="header" href="#tostringbool-value--string"><strong>toString(bool value) → (string)</strong></a></h3>
+<p>Transforms a boolean to a string.</p>
+<h3 id="tostringuint256-value--string"><a class="header" href="#tostringuint256-value--string"><strong>toString(uint256 value) → (string)</strong></a></h3>
+<p>Transforms an uint256 to a string.</p>
+<h3 id="tostringint256-value--string"><a class="header" href="#tostringint256-value--string"><strong>toString(int256 value) → (string)</strong></a></h3>
+<p>Transforms an int256 to a string.</p>
+<h3 id="parsebytesstring-value--bytes"><a class="header" href="#parsebytesstring-value--bytes"><strong>parseBytes(string value) → (bytes)</strong></a></h3>
+<p>Parses a byte array string.</p>
+<h3 id="parseaddressstring-value--address"><a class="header" href="#parseaddressstring-value--address"><strong>parseAddress(string value) → (address)</strong></a></h3>
+<p>Parses an address string.</p>
+<h3 id="parseuintstring-value--uint256"><a class="header" href="#parseuintstring-value--uint256"><strong>parseUint(string value) → (uint256)</strong></a></h3>
+<p>Parses an uint256 string.</p>
+<h3 id="parseintstring-value--int256"><a class="header" href="#parseintstring-value--int256"><strong>parseInt(string value) → (int256)</strong></a></h3>
+<p>Parses an int256 string.</p>
+<h3 id="parsebytes32string-value--bytes32"><a class="header" href="#parsebytes32string-value--bytes32"><strong>parseBytes32(string value) → (bytes32)</strong></a></h3>
+<p>Parses a bytes32 string.</p>
+<h3 id="parseboolstring-value--bool"><a class="header" href="#parseboolstring-value--bool"><strong>parseBool(string value) → (bool)</strong></a></h3>
+<p>Parses a boolean string.</p>
+<h3 id="parsejsonstring-value--jsonresult"><a class="header" href="#parsejsonstring-value--jsonresult"><strong>parseJson(string value) → (JsonResult)</strong></a></h3>
+<p>Parses a JSON string.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../references/Semver.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../references/Utils.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../references/Semver.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../references/Utils.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="../solidity.min.js"></script>
+    </body>
+</html>

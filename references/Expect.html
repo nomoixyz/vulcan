@@ -1,0 +1,404 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Expect</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../book.css">
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="../index.html">Introduction</a></li><li class="chapter-item affix "><li class="part-title">User Guide</li><li class="chapter-item "><a href="../guide/installation.html">Installation</a></li><li class="chapter-item "><a href="../testing/index.html">Testing</a></li><li class="chapter-item "><a href="../scripts/index.html">Scripts</a></li><li class="chapter-item affix "><li class="part-title">Modules</li><li class="chapter-item "><a href="../modules/accounts.html">Accounts</a></li><li class="chapter-item "><a href="../modules/commands.html">Commands</a></li><li class="chapter-item "><a href="../modules/context.html">Context</a></li><li class="chapter-item "><a href="../modules/expect.html">Expect</a></li><li class="chapter-item "><a href="../modules/fe.html">Fe</a></li><li class="chapter-item "><a href="../modules/fmt.html">Format</a></li><li class="chapter-item "><a href="../modules/fs.html">Fs</a></li><li class="chapter-item "><a href="../modules/gas.html">Gas</a></li><li class="chapter-item "><a href="../modules/huff.html">Huff</a></li><li class="chapter-item "><a href="../modules/json.html">Json</a></li><li class="chapter-item "><a href="../modules/results.html">Results &amp; Errors</a></li><li class="chapter-item "><a href="../modules/requests.html">Requests</a></li><li class="chapter-item "><a href="../modules/utils.html">Utils</a></li><li class="chapter-item "><a href="../OTHER_MODULES.html">Others</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../modules/config.html">Config</a></li><li class="chapter-item "><a href="../modules/console.html">Console</a></li><li class="chapter-item "><a href="../modules/env.html">Env</a></li><li class="chapter-item "><a href="../modules/events.html">Events</a></li><li class="chapter-item "><a href="../modules/forks.html">Forks</a></li><li class="chapter-item "><a href="../modules/rpc.html">RPC</a></li><li class="chapter-item "><a href="../modules/strings.html">Strings</a></li></ol></li><li class="chapter-item "><li class="part-title">References</li><li class="chapter-item "><a href="../references/Accounts.html">Accounts</a></li><li class="chapter-item "><a href="../references/Commands.html">Commands</a></li><li class="chapter-item "><a href="../references/Config.html">Config</a></li><li class="chapter-item "><a href="../references/Context.html">Context</a></li><li class="chapter-item "><a href="../references/Env.html">Env</a></li><li class="chapter-item "><a href="../references/Error.html">Error</a></li><li class="chapter-item "><a href="../references/Events.html">Events</a></li><li class="chapter-item expanded "><a href="../references/Expect.html" class="active">Expect</a></li><li class="chapter-item "><a href="../references/Fe.html">Fe</a></li><li class="chapter-item "><a href="../references/Fmt.html">Fmt</a></li><li class="chapter-item "><a href="../references/Forks.html">Forks</a></li><li class="chapter-item "><a href="../references/Fs.html">Fs</a></li><li class="chapter-item "><a href="../references/Gas.html">Gas</a></li><li class="chapter-item "><a href="../references/Huff.html">Huff</a></li><li class="chapter-item "><a href="../references/Invariants.html">Invariants</a></li><li class="chapter-item "><a href="../references/Json.html">Json</a></li><li class="chapter-item "><a href="../references/Pointer.html">Pointer</a></li><li class="chapter-item "><a href="../references/Result.html">Result</a></li><li class="chapter-item "><a href="../references/Semver.html">Semver</a></li><li class="chapter-item "><a href="../references/Strings.html">Strings</a></li><li class="chapter-item "><a href="../references/Utils.html">Utils</a></li><li class="chapter-item "><a href="../references/Vulcan.html">Vulcan</a></li><li class="chapter-item "><a href="../references/Watchers.html">Watchers</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/nomoixyz/vulcan" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="expect"><a class="header" href="#expect">Expect</a></h1>
+<h2 id="structs"><a class="header" href="#structs">Structs</a></h2>
+<h3 id="_boolexpectation"><a class="header" href="#_boolexpectation">_BoolExpectation</a></h3>
+<pre><code class="language-solidity">struct _BoolExpectation {
+	bool actual
+	_BoolExpectationNot not
+}
+</code></pre>
+<h3 id="_boolexpectationnot"><a class="header" href="#_boolexpectationnot">_BoolExpectationNot</a></h3>
+<pre><code class="language-solidity">struct _BoolExpectationNot {
+	bool actual
+}
+</code></pre>
+<h3 id="_uintexpectation"><a class="header" href="#_uintexpectation">_UintExpectation</a></h3>
+<pre><code class="language-solidity">struct _UintExpectation {
+	uint256 actual
+	_UintExpectationNot not
+}
+</code></pre>
+<h3 id="_uintexpectationnot"><a class="header" href="#_uintexpectationnot">_UintExpectationNot</a></h3>
+<pre><code class="language-solidity">struct _UintExpectationNot {
+	uint256 actual
+}
+</code></pre>
+<h3 id="_intexpectation"><a class="header" href="#_intexpectation">_IntExpectation</a></h3>
+<pre><code class="language-solidity">struct _IntExpectation {
+	int256 actual
+	_IntExpectationNot not
+}
+</code></pre>
+<h3 id="_intexpectationnot"><a class="header" href="#_intexpectationnot">_IntExpectationNot</a></h3>
+<pre><code class="language-solidity">struct _IntExpectationNot {
+	int256 actual
+}
+</code></pre>
+<h3 id="_addressexpectation"><a class="header" href="#_addressexpectation">_AddressExpectation</a></h3>
+<pre><code class="language-solidity">struct _AddressExpectation {
+	address actual
+	_AddressExpectationNot not
+}
+</code></pre>
+<h3 id="_addressexpectationnot"><a class="header" href="#_addressexpectationnot">_AddressExpectationNot</a></h3>
+<pre><code class="language-solidity">struct _AddressExpectationNot {
+	address actual
+}
+</code></pre>
+<h3 id="_bytes32expectation"><a class="header" href="#_bytes32expectation">_Bytes32Expectation</a></h3>
+<pre><code class="language-solidity">struct _Bytes32Expectation {
+	bytes32 actual
+	_Bytes32ExpectationNot not
+}
+</code></pre>
+<h3 id="_bytes32expectationnot"><a class="header" href="#_bytes32expectationnot">_Bytes32ExpectationNot</a></h3>
+<pre><code class="language-solidity">struct _Bytes32ExpectationNot {
+	bytes32 actual
+}
+</code></pre>
+<h3 id="_bytesexpectation"><a class="header" href="#_bytesexpectation">_BytesExpectation</a></h3>
+<pre><code class="language-solidity">struct _BytesExpectation {
+	bytes actual
+	_BytesExpectationNot not
+}
+</code></pre>
+<h3 id="_bytesexpectationnot"><a class="header" href="#_bytesexpectationnot">_BytesExpectationNot</a></h3>
+<pre><code class="language-solidity">struct _BytesExpectationNot {
+	bytes actual
+}
+</code></pre>
+<h3 id="_stringexpectation"><a class="header" href="#_stringexpectation">_StringExpectation</a></h3>
+<pre><code class="language-solidity">struct _StringExpectation {
+	string actual
+	_StringExpectationNot not
+}
+</code></pre>
+<h3 id="_stringexpectationnot"><a class="header" href="#_stringexpectationnot">_StringExpectationNot</a></h3>
+<pre><code class="language-solidity">struct _StringExpectationNot {
+	string actual
+}
+</code></pre>
+<h3 id="_callexpectation"><a class="header" href="#_callexpectation">_CallExpectation</a></h3>
+<pre><code class="language-solidity">struct _CallExpectation {
+	Call call
+	_CallExpectationNot not
+}
+</code></pre>
+<h3 id="_callexpectationnot"><a class="header" href="#_callexpectationnot">_CallExpectationNot</a></h3>
+<pre><code class="language-solidity">struct _CallExpectationNot {
+	Call call
+}
+</code></pre>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="expectbool-actual--_boolexpectation"><a class="header" href="#expectbool-actual--_boolexpectation"><strong>expect(bool actual) → (_BoolExpectation)</strong></a></h3>
+<h3 id="expectuint256-actual--_uintexpectation"><a class="header" href="#expectuint256-actual--_uintexpectation"><strong>expect(uint256 actual) → (_UintExpectation)</strong></a></h3>
+<h3 id="expectint256-actual--_intexpectation"><a class="header" href="#expectint256-actual--_intexpectation"><strong>expect(int256 actual) → (_IntExpectation)</strong></a></h3>
+<h3 id="expectaddress-actual--_addressexpectation"><a class="header" href="#expectaddress-actual--_addressexpectation"><strong>expect(address actual) → (_AddressExpectation)</strong></a></h3>
+<h3 id="expectbytes32-actual--_bytes32expectation"><a class="header" href="#expectbytes32-actual--_bytes32expectation"><strong>expect(bytes32 actual) → (_Bytes32Expectation)</strong></a></h3>
+<h3 id="expectbytes-actual--_bytesexpectation"><a class="header" href="#expectbytes-actual--_bytesexpectation"><strong>expect(bytes actual) → (_BytesExpectation)</strong></a></h3>
+<h3 id="expectstring-actual--_stringexpectation"><a class="header" href="#expectstring-actual--_stringexpectation"><strong>expect(string actual) → (_StringExpectation)</strong></a></h3>
+<h3 id="expectcall-call--_callexpectation"><a class="header" href="#expectcall-call--_callexpectation"><strong>expect(Call call) → (_CallExpectation)</strong></a></h3>
+<h3 id="any--bytes32"><a class="header" href="#any--bytes32"><strong>any() → (bytes32)</strong></a></h3>
+<h2 id="expectlib"><a class="header" href="#expectlib">ExpectLib</a></h2>
+<h3 id="toequal_boolexpectation-self-bool-expected"><a class="header" href="#toequal_boolexpectation-self-bool-expected"><strong>toEqual(_BoolExpectation self, bool expected)</strong></a></h3>
+<h3 id="toequal_boolexpectation-self-bool-expected-string-message"><a class="header" href="#toequal_boolexpectation-self-bool-expected-string-message"><strong>toEqual(_BoolExpectation self, bool expected, string message)</strong></a></h3>
+<h3 id="toequal_boolexpectationnot-self-bool-expected"><a class="header" href="#toequal_boolexpectationnot-self-bool-expected"><strong>toEqual(_BoolExpectationNot self, bool expected)</strong></a></h3>
+<h3 id="toequal_boolexpectationnot-self-bool-expected-string-message"><a class="header" href="#toequal_boolexpectationnot-self-bool-expected-string-message"><strong>toEqual(_BoolExpectationNot self, bool expected, string message)</strong></a></h3>
+<h3 id="tobetrue_boolexpectation-self"><a class="header" href="#tobetrue_boolexpectation-self"><strong>toBeTrue(_BoolExpectation self)</strong></a></h3>
+<h3 id="tobetrue_boolexpectation-self-string-message"><a class="header" href="#tobetrue_boolexpectation-self-string-message"><strong>toBeTrue(_BoolExpectation self, string message)</strong></a></h3>
+<h3 id="tobefalse_boolexpectation-self"><a class="header" href="#tobefalse_boolexpectation-self"><strong>toBeFalse(_BoolExpectation self)</strong></a></h3>
+<h3 id="tobefalse_boolexpectation-self-string-message"><a class="header" href="#tobefalse_boolexpectation-self-string-message"><strong>toBeFalse(_BoolExpectation self, string message)</strong></a></h3>
+<h3 id="toequal_addressexpectation-self-address-expected"><a class="header" href="#toequal_addressexpectation-self-address-expected"><strong>toEqual(_AddressExpectation self, address expected)</strong></a></h3>
+<h3 id="toequal_addressexpectation-self-address-expected-string-message"><a class="header" href="#toequal_addressexpectation-self-address-expected-string-message"><strong>toEqual(_AddressExpectation self, address expected, string message)</strong></a></h3>
+<h3 id="toequal_addressexpectationnot-self-address-expected"><a class="header" href="#toequal_addressexpectationnot-self-address-expected"><strong>toEqual(_AddressExpectationNot self, address expected)</strong></a></h3>
+<h3 id="toequal_addressexpectationnot-self-address-expected-string-message"><a class="header" href="#toequal_addressexpectationnot-self-address-expected-string-message"><strong>toEqual(_AddressExpectationNot self, address expected, string message)</strong></a></h3>
+<h3 id="tobeacontract_addressexpectation-self"><a class="header" href="#tobeacontract_addressexpectation-self"><strong>toBeAContract(_AddressExpectation self)</strong></a></h3>
+<h3 id="tobeacontract_addressexpectation-self-string-message"><a class="header" href="#tobeacontract_addressexpectation-self-string-message"><strong>toBeAContract(_AddressExpectation self, string message)</strong></a></h3>
+<h3 id="tobeacontract_addressexpectationnot-self"><a class="header" href="#tobeacontract_addressexpectationnot-self"><strong>toBeAContract(_AddressExpectationNot self)</strong></a></h3>
+<h3 id="tobeacontract_addressexpectationnot-self-string-message"><a class="header" href="#tobeacontract_addressexpectationnot-self-string-message"><strong>toBeAContract(_AddressExpectationNot self, string message)</strong></a></h3>
+<h3 id="toequal_bytes32expectation-self-bytes32-expected"><a class="header" href="#toequal_bytes32expectation-self-bytes32-expected"><strong>toEqual(_Bytes32Expectation self, bytes32 expected)</strong></a></h3>
+<h3 id="toequal_bytes32expectation-self-bytes32-expected-string-message"><a class="header" href="#toequal_bytes32expectation-self-bytes32-expected-string-message"><strong>toEqual(_Bytes32Expectation self, bytes32 expected, string message)</strong></a></h3>
+<h3 id="toequal_bytes32expectationnot-self-bytes32-expected"><a class="header" href="#toequal_bytes32expectationnot-self-bytes32-expected"><strong>toEqual(_Bytes32ExpectationNot self, bytes32 expected)</strong></a></h3>
+<h3 id="toequal_bytes32expectationnot-self-bytes32-expected-string-message"><a class="header" href="#toequal_bytes32expectationnot-self-bytes32-expected-string-message"><strong>toEqual(_Bytes32ExpectationNot self, bytes32 expected, string message)</strong></a></h3>
+<h3 id="tobethehashof_bytes32expectation-self-bytes-data"><a class="header" href="#tobethehashof_bytes32expectation-self-bytes-data"><strong>toBeTheHashOf(_Bytes32Expectation self, bytes data)</strong></a></h3>
+<h3 id="tobethehashof_bytes32expectation-self-bytes-data-string-message"><a class="header" href="#tobethehashof_bytes32expectation-self-bytes-data-string-message"><strong>toBeTheHashOf(_Bytes32Expectation self, bytes data, string message)</strong></a></h3>
+<h3 id="tobethehashof_bytes32expectationnot-self-bytes-data"><a class="header" href="#tobethehashof_bytes32expectationnot-self-bytes-data"><strong>toBeTheHashOf(_Bytes32ExpectationNot self, bytes data)</strong></a></h3>
+<h3 id="tobethehashof_bytes32expectationnot-self-bytes-data-string-message"><a class="header" href="#tobethehashof_bytes32expectationnot-self-bytes-data-string-message"><strong>toBeTheHashOf(_Bytes32ExpectationNot self, bytes data, string message)</strong></a></h3>
+<h3 id="toequal_bytesexpectation-self-bytes-expected"><a class="header" href="#toequal_bytesexpectation-self-bytes-expected"><strong>toEqual(_BytesExpectation self, bytes expected)</strong></a></h3>
+<h3 id="toequal_bytesexpectation-self-bytes-expected-string-message"><a class="header" href="#toequal_bytesexpectation-self-bytes-expected-string-message"><strong>toEqual(_BytesExpectation self, bytes expected, string message)</strong></a></h3>
+<h3 id="toequal_bytesexpectationnot-self-bytes-expected"><a class="header" href="#toequal_bytesexpectationnot-self-bytes-expected"><strong>toEqual(_BytesExpectationNot self, bytes expected)</strong></a></h3>
+<h3 id="toequal_bytesexpectationnot-self-bytes-expected-string-message"><a class="header" href="#toequal_bytesexpectationnot-self-bytes-expected-string-message"><strong>toEqual(_BytesExpectationNot self, bytes expected, string message)</strong></a></h3>
+<h3 id="toequal_stringexpectation-self-string-expected"><a class="header" href="#toequal_stringexpectation-self-string-expected"><strong>toEqual(_StringExpectation self, string expected)</strong></a></h3>
+<h3 id="toequal_stringexpectation-self-string-expected-string-message"><a class="header" href="#toequal_stringexpectation-self-string-expected-string-message"><strong>toEqual(_StringExpectation self, string expected, string message)</strong></a></h3>
+<h3 id="toequal_stringexpectationnot-self-string-expected"><a class="header" href="#toequal_stringexpectationnot-self-string-expected"><strong>toEqual(_StringExpectationNot self, string expected)</strong></a></h3>
+<h3 id="toequal_stringexpectationnot-self-string-expected-string-message"><a class="header" href="#toequal_stringexpectationnot-self-string-expected-string-message"><strong>toEqual(_StringExpectationNot self, string expected, string message)</strong></a></h3>
+<h3 id="tocontain_stringexpectation-self-string-contained"><a class="header" href="#tocontain_stringexpectation-self-string-contained"><strong>toContain(_StringExpectation self, string contained)</strong></a></h3>
+<h3 id="tocontain_stringexpectation-self-string-contained-string-message"><a class="header" href="#tocontain_stringexpectation-self-string-contained-string-message"><strong>toContain(_StringExpectation self, string contained, string message)</strong></a></h3>
+<h3 id="tocontain_stringexpectationnot-self-string-contained"><a class="header" href="#tocontain_stringexpectationnot-self-string-contained"><strong>toContain(_StringExpectationNot self, string contained)</strong></a></h3>
+<h3 id="tocontain_stringexpectationnot-self-string-contained-string-message"><a class="header" href="#tocontain_stringexpectationnot-self-string-contained-string-message"><strong>toContain(_StringExpectationNot self, string contained, string message)</strong></a></h3>
+<h3 id="tohavelength_stringexpectation-self-uint256-expected"><a class="header" href="#tohavelength_stringexpectation-self-uint256-expected"><strong>toHaveLength(_StringExpectation self, uint256 expected)</strong></a></h3>
+<h3 id="tohavelength_stringexpectation-self-uint256-expected-string-message"><a class="header" href="#tohavelength_stringexpectation-self-uint256-expected-string-message"><strong>toHaveLength(_StringExpectation self, uint256 expected, string message)</strong></a></h3>
+<h3 id="tohavelength_stringexpectationnot-self-uint256-expected"><a class="header" href="#tohavelength_stringexpectationnot-self-uint256-expected"><strong>toHaveLength(_StringExpectationNot self, uint256 expected)</strong></a></h3>
+<h3 id="tohavelength_stringexpectationnot-self-uint256-expected-string-message"><a class="header" href="#tohavelength_stringexpectationnot-self-uint256-expected-string-message"><strong>toHaveLength(_StringExpectationNot self, uint256 expected, string message)</strong></a></h3>
+<h3 id="toequal_uintexpectation-self-uint256-expected"><a class="header" href="#toequal_uintexpectation-self-uint256-expected"><strong>toEqual(_UintExpectation self, uint256 expected)</strong></a></h3>
+<h3 id="toequal_uintexpectation-self-uint256-expected-string-message"><a class="header" href="#toequal_uintexpectation-self-uint256-expected-string-message"><strong>toEqual(_UintExpectation self, uint256 expected, string message)</strong></a></h3>
+<h3 id="toequal_uintexpectationnot-self-uint256-expected"><a class="header" href="#toequal_uintexpectationnot-self-uint256-expected"><strong>toEqual(_UintExpectationNot self, uint256 expected)</strong></a></h3>
+<h3 id="toequal_uintexpectationnot-self-uint256-expected-string-message"><a class="header" href="#toequal_uintexpectationnot-self-uint256-expected-string-message"><strong>toEqual(_UintExpectationNot self, uint256 expected, string message)</strong></a></h3>
+<h3 id="tobecloseto_uintexpectation-self-uint256-expected-uint256-d"><a class="header" href="#tobecloseto_uintexpectation-self-uint256-expected-uint256-d"><strong>toBeCloseTo(_UintExpectation self, uint256 expected, uint256 d)</strong></a></h3>
+<h3 id="tobecloseto_uintexpectation-self-uint256-expected-uint256-d-string-message"><a class="header" href="#tobecloseto_uintexpectation-self-uint256-expected-uint256-d-string-message"><strong>toBeCloseTo(_UintExpectation self, uint256 expected, uint256 d, string message)</strong></a></h3>
+<h3 id="tobelessthan_uintexpectation-self-uint256-expected"><a class="header" href="#tobelessthan_uintexpectation-self-uint256-expected"><strong>toBeLessThan(_UintExpectation self, uint256 expected)</strong></a></h3>
+<h3 id="tobelessthan_uintexpectation-self-uint256-expected-string-message"><a class="header" href="#tobelessthan_uintexpectation-self-uint256-expected-string-message"><strong>toBeLessThan(_UintExpectation self, uint256 expected, string message)</strong></a></h3>
+<h3 id="tobelessthanorequal_uintexpectation-self-uint256-expected"><a class="header" href="#tobelessthanorequal_uintexpectation-self-uint256-expected"><strong>toBeLessThanOrEqual(_UintExpectation self, uint256 expected)</strong></a></h3>
+<h3 id="tobelessthanorequal_uintexpectation-self-uint256-expected-string-message"><a class="header" href="#tobelessthanorequal_uintexpectation-self-uint256-expected-string-message"><strong>toBeLessThanOrEqual(_UintExpectation self, uint256 expected, string message)</strong></a></h3>
+<h3 id="tobegreaterthan_uintexpectation-self-uint256-expected"><a class="header" href="#tobegreaterthan_uintexpectation-self-uint256-expected"><strong>toBeGreaterThan(_UintExpectation self, uint256 expected)</strong></a></h3>
+<h3 id="tobegreaterthan_uintexpectation-self-uint256-expected-string-message"><a class="header" href="#tobegreaterthan_uintexpectation-self-uint256-expected-string-message"><strong>toBeGreaterThan(_UintExpectation self, uint256 expected, string message)</strong></a></h3>
+<h3 id="tobegreaterthanorequal_uintexpectation-self-uint256-expected"><a class="header" href="#tobegreaterthanorequal_uintexpectation-self-uint256-expected"><strong>toBeGreaterThanOrEqual(_UintExpectation self, uint256 expected)</strong></a></h3>
+<h3 id="tobegreaterthanorequal_uintexpectation-self-uint256-expected-string-message"><a class="header" href="#tobegreaterthanorequal_uintexpectation-self-uint256-expected-string-message"><strong>toBeGreaterThanOrEqual(_UintExpectation self, uint256 expected, string message)</strong></a></h3>
+<h3 id="toequal_intexpectation-self-int256-expected"><a class="header" href="#toequal_intexpectation-self-int256-expected"><strong>toEqual(_IntExpectation self, int256 expected)</strong></a></h3>
+<h3 id="toequal_intexpectation-self-int256-expected-string-message"><a class="header" href="#toequal_intexpectation-self-int256-expected-string-message"><strong>toEqual(_IntExpectation self, int256 expected, string message)</strong></a></h3>
+<h3 id="toequal_intexpectationnot-self-int256-expected"><a class="header" href="#toequal_intexpectationnot-self-int256-expected"><strong>toEqual(_IntExpectationNot self, int256 expected)</strong></a></h3>
+<h3 id="toequal_intexpectationnot-self-int256-expected-string-message"><a class="header" href="#toequal_intexpectationnot-self-int256-expected-string-message"><strong>toEqual(_IntExpectationNot self, int256 expected, string message)</strong></a></h3>
+<h3 id="tobecloseto_intexpectation-self-int256-expected-uint256-d"><a class="header" href="#tobecloseto_intexpectation-self-int256-expected-uint256-d"><strong>toBeCloseTo(_IntExpectation self, int256 expected, uint256 d)</strong></a></h3>
+<h3 id="tobecloseto_intexpectation-self-int256-expected-uint256-d-string-message"><a class="header" href="#tobecloseto_intexpectation-self-int256-expected-uint256-d-string-message"><strong>toBeCloseTo(_IntExpectation self, int256 expected, uint256 d, string message)</strong></a></h3>
+<h3 id="tobelessthan_intexpectation-self-int256-expected"><a class="header" href="#tobelessthan_intexpectation-self-int256-expected"><strong>toBeLessThan(_IntExpectation self, int256 expected)</strong></a></h3>
+<h3 id="tobelessthan_intexpectation-self-int256-expected-string-message"><a class="header" href="#tobelessthan_intexpectation-self-int256-expected-string-message"><strong>toBeLessThan(_IntExpectation self, int256 expected, string message)</strong></a></h3>
+<h3 id="tobelessthanorequal_intexpectation-self-int256-expected"><a class="header" href="#tobelessthanorequal_intexpectation-self-int256-expected"><strong>toBeLessThanOrEqual(_IntExpectation self, int256 expected)</strong></a></h3>
+<h3 id="tobelessthanorequal_intexpectation-self-int256-expected-string-message"><a class="header" href="#tobelessthanorequal_intexpectation-self-int256-expected-string-message"><strong>toBeLessThanOrEqual(_IntExpectation self, int256 expected, string message)</strong></a></h3>
+<h3 id="tobegreaterthan_intexpectation-self-int256-expected"><a class="header" href="#tobegreaterthan_intexpectation-self-int256-expected"><strong>toBeGreaterThan(_IntExpectation self, int256 expected)</strong></a></h3>
+<h3 id="tobegreaterthan_intexpectation-self-int256-expected-string-message"><a class="header" href="#tobegreaterthan_intexpectation-self-int256-expected-string-message"><strong>toBeGreaterThan(_IntExpectation self, int256 expected, string message)</strong></a></h3>
+<h3 id="tobegreaterthanorequal_intexpectation-self-int256-expected"><a class="header" href="#tobegreaterthanorequal_intexpectation-self-int256-expected"><strong>toBeGreaterThanOrEqual(_IntExpectation self, int256 expected)</strong></a></h3>
+<h3 id="tobegreaterthanorequal_intexpectation-self-int256-expected-string-message"><a class="header" href="#tobegreaterthanorequal_intexpectation-self-int256-expected-string-message"><strong>toBeGreaterThanOrEqual(_IntExpectation self, int256 expected, string message)</strong></a></h3>
+<h3 id="tohavereverted_callexpectation-self"><a class="header" href="#tohavereverted_callexpectation-self"><strong>toHaveReverted(_CallExpectation self)</strong></a></h3>
+<h3 id="tohavereverted_callexpectation-self-string-message"><a class="header" href="#tohavereverted_callexpectation-self-string-message"><strong>toHaveReverted(_CallExpectation self, string message)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectation-self-bytes4-expectedselector"><a class="header" href="#tohaverevertedwith_callexpectation-self-bytes4-expectedselector"><strong>toHaveRevertedWith(_CallExpectation self, bytes4 expectedSelector)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectation-self-bytes4-expectedselector-string-message"><a class="header" href="#tohaverevertedwith_callexpectation-self-bytes4-expectedselector-string-message"><strong>toHaveRevertedWith(_CallExpectation self, bytes4 expectedSelector, string message)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectationnot-self-bytes4-expectedselector"><a class="header" href="#tohaverevertedwith_callexpectationnot-self-bytes4-expectedselector"><strong>toHaveRevertedWith(_CallExpectationNot self, bytes4 expectedSelector)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectationnot-self-bytes4-expectedselector-string-message"><a class="header" href="#tohaverevertedwith_callexpectationnot-self-bytes4-expectedselector-string-message"><strong>toHaveRevertedWith(_CallExpectationNot self, bytes4 expectedSelector, string message)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectation-self-string-error"><a class="header" href="#tohaverevertedwith_callexpectation-self-string-error"><strong>toHaveRevertedWith(_CallExpectation self, string error)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectation-self-string-error-string-message"><a class="header" href="#tohaverevertedwith_callexpectation-self-string-error-string-message"><strong>toHaveRevertedWith(_CallExpectation self, string error, string message)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectationnot-self-string-error"><a class="header" href="#tohaverevertedwith_callexpectationnot-self-string-error"><strong>toHaveRevertedWith(_CallExpectationNot self, string error)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectationnot-self-string-error-string-message"><a class="header" href="#tohaverevertedwith_callexpectationnot-self-string-error-string-message"><strong>toHaveRevertedWith(_CallExpectationNot self, string error, string message)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectation-self-bytes-expectederror"><a class="header" href="#tohaverevertedwith_callexpectation-self-bytes-expectederror"><strong>toHaveRevertedWith(_CallExpectation self, bytes expectedError)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectation-self-bytes-expectederror-string-message"><a class="header" href="#tohaverevertedwith_callexpectation-self-bytes-expectederror-string-message"><strong>toHaveRevertedWith(_CallExpectation self, bytes expectedError, string message)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectationnot-self-bytes-expectederror"><a class="header" href="#tohaverevertedwith_callexpectationnot-self-bytes-expectederror"><strong>toHaveRevertedWith(_CallExpectationNot self, bytes expectedError)</strong></a></h3>
+<h3 id="tohaverevertedwith_callexpectationnot-self-bytes-expectederror-string-message"><a class="header" href="#tohaverevertedwith_callexpectationnot-self-bytes-expectederror-string-message"><strong>toHaveRevertedWith(_CallExpectationNot self, bytes expectedError, string message)</strong></a></h3>
+<h3 id="tohavesucceeded_callexpectation-self"><a class="header" href="#tohavesucceeded_callexpectation-self"><strong>toHaveSucceeded(_CallExpectation self)</strong></a></h3>
+<h3 id="tohavesucceeded_callexpectation-self-string-message"><a class="header" href="#tohavesucceeded_callexpectation-self-string-message"><strong>toHaveSucceeded(_CallExpectation self, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig"><strong>toHaveEmitted(_CallExpectation self, string eventSig)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-string-message"><strong>toHaveEmitted(_CallExpectation self, string eventSig, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes321-topics"><a class="header" href="#tohaveemitted_callexpectation-self-bytes321-topics"><strong>toHaveEmitted(_CallExpectation self, bytes32[1] topics)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes321-topics-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-bytes321-topics-string-message"><strong>toHaveEmitted(_CallExpectation self, bytes32[1] topics, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes322-topics"><a class="header" href="#tohaveemitted_callexpectation-self-bytes322-topics"><strong>toHaveEmitted(_CallExpectation self, bytes32[2] topics)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes322-topics-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-bytes322-topics-string-message"><strong>toHaveEmitted(_CallExpectation self, bytes32[2] topics, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes323-topics"><a class="header" href="#tohaveemitted_callexpectation-self-bytes323-topics"><strong>toHaveEmitted(_CallExpectation self, bytes32[3] topics)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes323-topics-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-bytes323-topics-string-message"><strong>toHaveEmitted(_CallExpectation self, bytes32[3] topics, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes324-topics"><a class="header" href="#tohaveemitted_callexpectation-self-bytes324-topics"><strong>toHaveEmitted(_CallExpectation self, bytes32[4] topics)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes324-topics-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-bytes324-topics-string-message"><strong>toHaveEmitted(_CallExpectation self, bytes32[4] topics, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes-data"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes-data"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes data)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes-data-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes-data-string-message"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes data, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes321-topics"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes321-topics"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[1] topics)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes321-topics-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes321-topics-string-message"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[1] topics, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes322-topics"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes322-topics"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[2] topics)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes322-topics-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes322-topics-string-message"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[2] topics, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes323-topics"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes323-topics"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[3] topics)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes323-topics-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes323-topics-string-message"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[3] topics, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes321-topics-bytes-data"><a class="header" href="#tohaveemitted_callexpectation-self-bytes321-topics-bytes-data"><strong>toHaveEmitted(_CallExpectation self, bytes32[1] topics, bytes data)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes321-topics-bytes-data-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-bytes321-topics-bytes-data-string-message"><strong>toHaveEmitted(_CallExpectation self, bytes32[1] topics, bytes data, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes322-topics-bytes-data"><a class="header" href="#tohaveemitted_callexpectation-self-bytes322-topics-bytes-data"><strong>toHaveEmitted(_CallExpectation self, bytes32[2] topics, bytes data)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes322-topics-bytes-data-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-bytes322-topics-bytes-data-string-message"><strong>toHaveEmitted(_CallExpectation self, bytes32[2] topics, bytes data, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes323-topics-bytes-data"><a class="header" href="#tohaveemitted_callexpectation-self-bytes323-topics-bytes-data"><strong>toHaveEmitted(_CallExpectation self, bytes32[3] topics, bytes data)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes323-topics-bytes-data-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-bytes323-topics-bytes-data-string-message"><strong>toHaveEmitted(_CallExpectation self, bytes32[3] topics, bytes data, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes324-topics-bytes-data"><a class="header" href="#tohaveemitted_callexpectation-self-bytes324-topics-bytes-data"><strong>toHaveEmitted(_CallExpectation self, bytes32[4] topics, bytes data)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-bytes324-topics-bytes-data-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-bytes324-topics-bytes-data-string-message"><strong>toHaveEmitted(_CallExpectation self, bytes32[4] topics, bytes data, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes321-topics-bytes-data"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes321-topics-bytes-data"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[1] topics, bytes data)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes321-topics-bytes-data-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes321-topics-bytes-data-string-message"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[1] topics, bytes data, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes322-topics-bytes-data"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes322-topics-bytes-data"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[2] topics, bytes data)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes322-topics-bytes-data-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes322-topics-bytes-data-string-message"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[2] topics, bytes data, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes323-topics-bytes-data"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes323-topics-bytes-data"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[3] topics, bytes data)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes323-topics-bytes-data-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes323-topics-bytes-data-string-message"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[3] topics, bytes data, string message)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes32-topics-bytes-data"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes32-topics-bytes-data"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[] topics, bytes data)</strong></a></h3>
+<h3 id="tohaveemitted_callexpectation-self-string-eventsig-bytes32-topics-bytes-data-string-message"><a class="header" href="#tohaveemitted_callexpectation-self-string-eventsig-bytes32-topics-bytes-data-string-message"><strong>toHaveEmitted(_CallExpectation self, string eventSig, bytes32[] topics, bytes data, string message)</strong></a></h3>
+<h3 id="printmessagestring-message"><a class="header" href="#printmessagestring-message"><strong>printMessage(string message)</strong></a></h3>
+<h2 id="anylib"><a class="header" href="#anylib">AnyLib</a></h2>
+<h3 id="value--bytes32"><a class="header" href="#value--bytes32"><strong>value() → (bytes32)</strong></a></h3>
+<h3 id="checkbytes32-val--bool-res"><a class="header" href="#checkbytes32-val--bool-res"><strong>check(bytes32 val) → (bool res)</strong></a></h3>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../references/Events.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../references/Fe.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../references/Events.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../references/Fe.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="../solidity.min.js"></script>
+    </body>
+</html>

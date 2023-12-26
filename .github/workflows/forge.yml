@@ -1,0 +1,41 @@
+name: Forge
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Build image
+        run: docker build . -t nomoixyz/vulcan-test-suite
+      - name: Run tests
+        run: docker run --rm nomoixyz/vulcan-test-suite --no-match-path 'test/examples/**/*'
+  format:
+    name: Check format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Foundry
+        uses: onbjerg/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Print forge version
+        run: forge --version
+
+      - name: Check formatting
+        run: forge fmt --check

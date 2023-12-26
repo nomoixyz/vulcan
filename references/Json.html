@@ -1,0 +1,285 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Json</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../book.css">
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="../index.html">Introduction</a></li><li class="chapter-item affix "><li class="part-title">User Guide</li><li class="chapter-item "><a href="../guide/installation.html">Installation</a></li><li class="chapter-item "><a href="../testing/index.html">Testing</a></li><li class="chapter-item "><a href="../scripts/index.html">Scripts</a></li><li class="chapter-item affix "><li class="part-title">Modules</li><li class="chapter-item "><a href="../modules/accounts.html">Accounts</a></li><li class="chapter-item "><a href="../modules/commands.html">Commands</a></li><li class="chapter-item "><a href="../modules/context.html">Context</a></li><li class="chapter-item "><a href="../modules/expect.html">Expect</a></li><li class="chapter-item "><a href="../modules/fe.html">Fe</a></li><li class="chapter-item "><a href="../modules/fmt.html">Format</a></li><li class="chapter-item "><a href="../modules/fs.html">Fs</a></li><li class="chapter-item "><a href="../modules/gas.html">Gas</a></li><li class="chapter-item "><a href="../modules/huff.html">Huff</a></li><li class="chapter-item "><a href="../modules/json.html">Json</a></li><li class="chapter-item "><a href="../modules/results.html">Results &amp; Errors</a></li><li class="chapter-item "><a href="../modules/requests.html">Requests</a></li><li class="chapter-item "><a href="../modules/utils.html">Utils</a></li><li class="chapter-item "><a href="../OTHER_MODULES.html">Others</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../modules/config.html">Config</a></li><li class="chapter-item "><a href="../modules/console.html">Console</a></li><li class="chapter-item "><a href="../modules/env.html">Env</a></li><li class="chapter-item "><a href="../modules/events.html">Events</a></li><li class="chapter-item "><a href="../modules/forks.html">Forks</a></li><li class="chapter-item "><a href="../modules/rpc.html">RPC</a></li><li class="chapter-item "><a href="../modules/strings.html">Strings</a></li></ol></li><li class="chapter-item "><li class="part-title">References</li><li class="chapter-item "><a href="../references/Accounts.html">Accounts</a></li><li class="chapter-item "><a href="../references/Commands.html">Commands</a></li><li class="chapter-item "><a href="../references/Config.html">Config</a></li><li class="chapter-item "><a href="../references/Context.html">Context</a></li><li class="chapter-item "><a href="../references/Env.html">Env</a></li><li class="chapter-item "><a href="../references/Error.html">Error</a></li><li class="chapter-item "><a href="../references/Events.html">Events</a></li><li class="chapter-item "><a href="../references/Expect.html">Expect</a></li><li class="chapter-item "><a href="../references/Fe.html">Fe</a></li><li class="chapter-item "><a href="../references/Fmt.html">Fmt</a></li><li class="chapter-item "><a href="../references/Forks.html">Forks</a></li><li class="chapter-item "><a href="../references/Fs.html">Fs</a></li><li class="chapter-item "><a href="../references/Gas.html">Gas</a></li><li class="chapter-item "><a href="../references/Huff.html">Huff</a></li><li class="chapter-item "><a href="../references/Invariants.html">Invariants</a></li><li class="chapter-item expanded "><a href="../references/Json.html" class="active">Json</a></li><li class="chapter-item "><a href="../references/Pointer.html">Pointer</a></li><li class="chapter-item "><a href="../references/Result.html">Result</a></li><li class="chapter-item "><a href="../references/Semver.html">Semver</a></li><li class="chapter-item "><a href="../references/Strings.html">Strings</a></li><li class="chapter-item "><a href="../references/Utils.html">Utils</a></li><li class="chapter-item "><a href="../references/Vulcan.html">Vulcan</a></li><li class="chapter-item "><a href="../references/Watchers.html">Watchers</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/nomoixyz/vulcan" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="json"><a class="header" href="#json">Json</a></h1>
+<h2 id="custom-types"><a class="header" href="#custom-types">Custom types</a></h2>
+<h3 id="jsonresult"><a class="header" href="#jsonresult">JsonResult</a></h3>
+<pre><code class="language-solidity">type JsonResult is bytes32;
+</code></pre>
+<h2 id="structs"><a class="header" href="#structs">Structs</a></h2>
+<h3 id="jsonobject"><a class="header" href="#jsonobject">JsonObject</a></h3>
+<pre><code class="language-solidity">struct JsonObject {
+	string id
+	string serialized
+}
+</code></pre>
+<h2 id="functions"><a class="header" href="#functions">Functions</a></h2>
+<h3 id="okjsonobject-value--jsonresult"><a class="header" href="#okjsonobject-value--jsonresult"><strong>Ok(JsonObject value) → (JsonResult)</strong></a></h3>
+<h2 id="jsonerror"><a class="header" href="#jsonerror">JsonError</a></h2>
+<h3 id="invalid--error"><a class="header" href="#invalid--error"><strong>Invalid() → (Error)</strong></a></h3>
+<h3 id="tojsonresulterror-self--jsonresult"><a class="header" href="#tojsonresulterror-self--jsonresult"><strong>toJsonResult(Error self) → (JsonResult)</strong></a></h3>
+<h2 id="libjsonobjectpointer"><a class="header" href="#libjsonobjectpointer">LibJsonObjectPointer</a></h2>
+<h3 id="tojsonobjectpointer-self--jsonobject-obj"><a class="header" href="#tojsonobjectpointer-self--jsonobject-obj"><strong>toJsonObject(Pointer self) → (JsonObject obj)</strong></a></h3>
+<h3 id="tojsonresultpointer-self--jsonresult-result"><a class="header" href="#tojsonresultpointer-self--jsonresult-result"><strong>toJsonResult(Pointer self) → (JsonResult result)</strong></a></h3>
+<h3 id="topointerjsonobject-obj--pointer-ptr"><a class="header" href="#topointerjsonobject-obj--pointer-ptr"><strong>toPointer(JsonObject obj) → (Pointer ptr)</strong></a></h3>
+<h2 id="libjsonresult"><a class="header" href="#libjsonresult">LibJsonResult</a></h2>
+<h3 id="isokjsonresult-self--bool"><a class="header" href="#isokjsonresult-self--bool"><strong>isOk(JsonResult self) → (bool)</strong></a></h3>
+<h3 id="iserrorjsonresult-self--bool"><a class="header" href="#iserrorjsonresult-self--bool"><strong>isError(JsonResult self) → (bool)</strong></a></h3>
+<h3 id="unwrapjsonresult-self--jsonobject-val"><a class="header" href="#unwrapjsonresult-self--jsonobject-val"><strong>unwrap(JsonResult self) → (JsonObject val)</strong></a></h3>
+<h3 id="expectjsonresult-self-string-err--jsonobject"><a class="header" href="#expectjsonresult-self-string-err--jsonobject"><strong>expect(JsonResult self, string err) → (JsonObject)</strong></a></h3>
+<h3 id="toerrorjsonresult-self--error"><a class="header" href="#toerrorjsonresult-self--error"><strong>toError(JsonResult self) → (Error)</strong></a></h3>
+<h3 id="tovaluejsonresult-self--jsonobject-val"><a class="header" href="#tovaluejsonresult-self--jsonobject-val"><strong>toValue(JsonResult self) → (JsonObject val)</strong></a></h3>
+<h3 id="topointerjsonresult-self--pointer"><a class="header" href="#topointerjsonresult-self--pointer"><strong>toPointer(JsonResult self) → (Pointer)</strong></a></h3>
+<h2 id="json-1"><a class="header" href="#json-1">json</a></h2>
+<h3 id="getobjectjsonobject-jsonobj-string-key--bytes-abiencodeddata"><a class="header" href="#getobjectjsonobject-jsonobj-string-key--bytes-abiencodeddata"><strong>getObject(JsonObject jsonObj, string key) → (bytes abiEncodedData)</strong></a></h3>
+<p>Parses a json object struct by key and returns an ABI encoded value.</p>
+<h3 id="parsejsonobject-jsonobj--bytes-abiencodeddata"><a class="header" href="#parsejsonobject-jsonobj--bytes-abiencodeddata"><strong>parse(JsonObject jsonObj) → (bytes abiEncodedData)</strong></a></h3>
+<p>Parses a json object struct and returns an ABI encoded tuple.</p>
+<h3 id="isvalidstring-jsonobj--bool"><a class="header" href="#isvalidstring-jsonobj--bool"><strong>isValid(string jsonObj) → (bool)</strong></a></h3>
+<h3 id="containskeyjsonobject-obj-string-key--bool"><a class="header" href="#containskeyjsonobject-obj-string-key--bool"><strong>containsKey(JsonObject obj, string key) → (bool)</strong></a></h3>
+<h3 id="getuintjsonobject-obj-string-key--uint256"><a class="header" href="#getuintjsonobject-obj-string-key--uint256"><strong>getUint(JsonObject obj, string key) → (uint256)</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as uint256.</p>
+<h3 id="getuintarrayjsonobject-obj-string-key--uint256"><a class="header" href="#getuintarrayjsonobject-obj-string-key--uint256"><strong>getUintArray(JsonObject obj, string key) → (uint256[])</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as uint256[].</p>
+<h3 id="getintjsonobject-obj-string-key--int256"><a class="header" href="#getintjsonobject-obj-string-key--int256"><strong>getInt(JsonObject obj, string key) → (int256)</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as int256.</p>
+<h3 id="getintarrayjsonobject-obj-string-key--int256"><a class="header" href="#getintarrayjsonobject-obj-string-key--int256"><strong>getIntArray(JsonObject obj, string key) → (int256[])</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as int256[].</p>
+<h3 id="getbooljsonobject-obj-string-key--bool"><a class="header" href="#getbooljsonobject-obj-string-key--bool"><strong>getBool(JsonObject obj, string key) → (bool)</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as bool.</p>
+<h3 id="getboolarrayjsonobject-obj-string-key--bool"><a class="header" href="#getboolarrayjsonobject-obj-string-key--bool"><strong>getBoolArray(JsonObject obj, string key) → (bool[])</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as bool[].</p>
+<h3 id="getaddressjsonobject-obj-string-key--address"><a class="header" href="#getaddressjsonobject-obj-string-key--address"><strong>getAddress(JsonObject obj, string key) → (address)</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as address.</p>
+<h3 id="getaddressarrayjsonobject-obj-string-key--address"><a class="header" href="#getaddressarrayjsonobject-obj-string-key--address"><strong>getAddressArray(JsonObject obj, string key) → (address[])</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as address.</p>
+<h3 id="getstringjsonobject-obj-string-key--string"><a class="header" href="#getstringjsonobject-obj-string-key--string"><strong>getString(JsonObject obj, string key) → (string)</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as string.</p>
+<h3 id="getstringarrayjsonobject-obj-string-key--string"><a class="header" href="#getstringarrayjsonobject-obj-string-key--string"><strong>getStringArray(JsonObject obj, string key) → (string[])</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as string[].</p>
+<h3 id="getbytesjsonobject-obj-string-key--bytes"><a class="header" href="#getbytesjsonobject-obj-string-key--bytes"><strong>getBytes(JsonObject obj, string key) → (bytes)</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as bytes.</p>
+<h3 id="getbytesarrayjsonobject-obj-string-key--bytes"><a class="header" href="#getbytesarrayjsonobject-obj-string-key--bytes"><strong>getBytesArray(JsonObject obj, string key) → (bytes[])</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as bytes[].</p>
+<h3 id="getbytes32jsonobject-obj-string-key--bytes32"><a class="header" href="#getbytes32jsonobject-obj-string-key--bytes32"><strong>getBytes32(JsonObject obj, string key) → (bytes32)</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as bytes32.</p>
+<h3 id="getbytes32arrayjsonobject-obj-string-key--bytes32"><a class="header" href="#getbytes32arrayjsonobject-obj-string-key--bytes32"><strong>getBytes32Array(JsonObject obj, string key) → (bytes32[])</strong></a></h3>
+<p>Parses the value of the <code>key</code> contained on <code>jsonStr</code> as bytes32[].</p>
+<h3 id="getkeysjsonobject-obj-string-key--string"><a class="header" href="#getkeysjsonobject-obj-string-key--string"><strong>getKeys(JsonObject obj, string key) → (string[])</strong></a></h3>
+<h3 id="getkeysjsonobject-obj--string"><a class="header" href="#getkeysjsonobject-obj--string"><strong>getKeys(JsonObject obj) → (string[])</strong></a></h3>
+<h3 id="create--jsonobject"><a class="header" href="#create--jsonobject"><strong>create() → (JsonObject)</strong></a></h3>
+<p>Creates a new JsonObject struct.</p>
+<h3 id="createstring-obj--jsonresult"><a class="header" href="#createstring-obj--jsonresult"><strong>create(string obj) → (JsonResult)</strong></a></h3>
+<p>Creates a new JsonObject struct.</p>
+<h3 id="setjsonobject-obj-string-key-bool-value--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-bool-value--jsonobject-res"><strong>set(JsonObject obj, string key, bool value) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-uint256-value--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-uint256-value--jsonobject-res"><strong>set(JsonObject obj, string key, uint256 value) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-int256-value--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-int256-value--jsonobject-res"><strong>set(JsonObject obj, string key, int256 value) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-address-value--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-address-value--jsonobject-res"><strong>set(JsonObject obj, string key, address value) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-bytes32-value--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-bytes32-value--jsonobject-res"><strong>set(JsonObject obj, string key, bytes32 value) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-string-value--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-string-value--jsonobject-res"><strong>set(JsonObject obj, string key, string value) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-bytes-value--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-bytes-value--jsonobject-res"><strong>set(JsonObject obj, string key, bytes value) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-bool-values--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-bool-values--jsonobject-res"><strong>set(JsonObject obj, string key, bool[] values) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-uint256-values--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-uint256-values--jsonobject-res"><strong>set(JsonObject obj, string key, uint256[] values) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-int256-values--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-int256-values--jsonobject-res"><strong>set(JsonObject obj, string key, int256[] values) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-address-values--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-address-values--jsonobject-res"><strong>set(JsonObject obj, string key, address[] values) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-bytes32-values--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-bytes32-values--jsonobject-res"><strong>set(JsonObject obj, string key, bytes32[] values) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-string-values--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-string-values--jsonobject-res"><strong>set(JsonObject obj, string key, string[] values) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-bytes-values--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-bytes-values--jsonobject-res"><strong>set(JsonObject obj, string key, bytes[] values) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="setjsonobject-obj-string-key-jsonobject-value--jsonobject-res"><a class="header" href="#setjsonobject-obj-string-key-jsonobject-value--jsonobject-res"><strong>set(JsonObject obj, string key, JsonObject value) → (JsonObject res)</strong></a></h3>
+<p>Serializes and sets the key and value for the provided json object.</p>
+<h3 id="writejsonobject-obj-string-path"><a class="header" href="#writejsonobject-obj-string-path"><strong>write(JsonObject obj, string path)</strong></a></h3>
+<p>Writes a JsonObject struct to a file.</p>
+<h3 id="writejsonobject-obj-string-path-string-key"><a class="header" href="#writejsonobject-obj-string-path-string-key"><strong>write(JsonObject obj, string path, string key)</strong></a></h3>
+<p>Writes a JsonObject struct to an existing json file modifying only a specific key.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../references/Invariants.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../references/Pointer.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../references/Invariants.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../references/Pointer.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        <script type="text/javascript" src="../solidity.min.js"></script>
+    </body>
+</html>
