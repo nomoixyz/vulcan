@@ -10,12 +10,14 @@ contract ResultExample is Test {
         // Run a non existent command
         CommandResult result = commands.run(["asdf12897u391723"]);
 
-        // Use unwrap to revert with the default error message
         ctx.expectRevert();
+
+        // Use unwrap to revert with the default error message
         result.unwrap();
 
-        // Use expect to revert with a custom error message
         ctx.expectRevert("Command not executed");
+
+        // Use expect to revert with a custom error message
         result.expect("Command not executed");
 
         bool failed = false;

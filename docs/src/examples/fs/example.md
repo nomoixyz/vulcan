@@ -16,14 +16,11 @@ contract FsExample is Test {
     string constant BINARY_TEST_FILE = "./test/fixtures/fs/write/test_binary.txt";
 
     function test() external {
-        StringResult stringResult = fs.readFile(HELLO_WORLD);
-        BytesResult bytesResult = fs.readFileBinary(HELLO_WORLD);
+        string memory stringResult = fs.readFile(HELLO_WORLD).unwrap();
+        expect(stringResult).toEqual("Hello, World!\n");
 
-        expect(stringResult.isOk()).toBeTrue();
-        expect(bytesResult.isOk()).toBeTrue();
-
-        expect(stringResult.unwrap()).toEqual("Hello, World!\n");
-        expect(bytesResult.toValue()).toEqual(bytes("Hello, World!\n"));
+        bytes memory bytesResult = fs.readFileBinary(HELLO_WORLD).unwrap();
+        expect(bytesResult).toEqual("Hello, World!\n");
     }
 }
 
@@ -45,21 +42,19 @@ contract FsExample is Test {
     string constant TEXT_TEST_FILE = "./test/fixtures/fs/write/example.txt";
 
     function test() external {
-        EmptyResult writeStringResult = fs.writeFile(TEXT_TEST_FILE, "This is a test");
+        // Write string
+        fs.writeFile(TEXT_TEST_FILE, "This is a test").expect("Failed to write file");
 
-        expect(writeStringResult.isOk()).toBeTrue();
+        string memory readStringResult = fs.readFile(TEXT_TEST_FILE).unwrap();
 
-        StringResult readStringResult = fs.readFile(TEXT_TEST_FILE);
+        expect(readStringResult).toEqual("This is a test");
 
-        expect(readStringResult.unwrap()).toEqual("This is a test");
+        // Write binary
+        fs.writeFileBinary(TEXT_TEST_FILE, "This is a test in binary").expect("Failed to write file");
 
-        EmptyResult writeBytesResult = fs.writeFileBinary(TEXT_TEST_FILE, bytes("This is a test in binary"));
+        bytes memory readBytesResult = fs.readFileBinary(TEXT_TEST_FILE).unwrap();
 
-        expect(writeBytesResult.isOk()).toBeTrue();
-
-        BytesResult readBytesResult = fs.readFileBinary(TEXT_TEST_FILE);
-
-        expect(readBytesResult.unwrap()).toEqual(bytes("This is a test in binary"));
+        expect(readBytesResult).toEqual("This is a test in binary");
     }
 }
 
@@ -75,7 +70,7 @@ pragma solidity ^0.8.13;
 
 import {Test} from "vulcan/test.sol";
 import {expect} from "vulcan/test/Expect.sol";
-import {fs, FsMetadataResult} from "vulcan/test/Fs.sol";
+import {fs, FsMetadata} from "vulcan/test/Fs.sol";
 import {BoolResult} from "vulcan/test/Result.sol";
 
 contract FsExample is Test {
@@ -85,17 +80,14 @@ contract FsExample is Test {
     string constant NOT_FOUND_EXAMPLE = "./test/fixtures/fs/read/lkjjsadflkjasdf.txt";
 
     function test() external {
-        FsMetadataResult metadataResult = fs.metadata(READ_EXAMPLE);
-        expect(metadataResult.isOk()).toBeTrue();
-        expect(metadataResult.unwrap().isDir).toBeFalse();
+        FsMetadata memory metadata = fs.metadata(READ_EXAMPLE).expect("Failed to get metadata");
+        expect(metadata.isDir).toBeFalse();
 
-        BoolResult existsResult = fs.fileExists(READ_EXAMPLE);
-        expect(existsResult.isOk()).toBeTrue();
-        expect(existsResult.unwrap()).toBeTrue();
+        bool exists = fs.fileExists(READ_EXAMPLE).unwrap();
+        expect(exists).toBeTrue();
 
-        BoolResult notFoundResult = fs.fileExists(NOT_FOUND_EXAMPLE);
-        expect(notFoundResult.isOk()).toBeTrue();
-        expect(notFoundResult.unwrap()).toBeFalse();
+        exists = fs.fileExists(NOT_FOUND_EXAMPLE).unwrap();
+        expect(exists).toBeFalse();
     }
 }
 

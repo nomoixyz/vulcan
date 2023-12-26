@@ -46,7 +46,7 @@ contract FeTest is Test {
             true
         ).build().unwrap();
 
-        StringResult result = fs.readFile("./test/fixtures/fe/output/A/A.bin");
+        StringResult result = fs.readFile("./test/fixtures/fe/output/MyFeContract/MyFeContract.bin");
 
         expect(bytes(result.unwrap()).length).toBeGreaterThan(0);
     }
@@ -58,6 +58,6 @@ contract FeTest is Test {
 
         string memory expectedBytecode = "600180600c6000396000f3fe00";
 
-        expect(string(feCmd.getBytecode("A").toValue())).toEqual(expectedBytecode);
+        expect(string(feCmd.getBytecode("MyFeContract").toValue())).toEqual(expectedBytecode);
     }
 }

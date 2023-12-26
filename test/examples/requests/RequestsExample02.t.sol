@@ -7,9 +7,10 @@ import {Test, expect, request, Response, RequestClient, JsonObject} from "vulcan
 /// @dev How to send a request with a JSON body
 contract RequestExample is Test {
     function test() external {
+        // Create a request client
         RequestClient memory client = request.create();
 
-        Response memory jsonRes = client.post("https://httpbin.org/post").json("{ \"foo\": \"bar\" }").send().unwrap();
+        Response memory jsonRes = client.post("https://httpbin.org/post").json('{ "foo": "bar" }').send().unwrap();
 
         expect(jsonRes.status).toEqual(200);
 

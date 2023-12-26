@@ -9,10 +9,11 @@ contract FeExample is Test {
     function test() external {
         Fe memory feCmd = fe.create().setFilePath("./test/mocks/guest_book.fe").setOverwrite(true);
 
+        // Compile the bytecode and revert if there is an error
         feCmd.build().unwrap();
 
-        string memory expectedBytecode = "600180600c6000396000f3fe00";
+        bytes memory bytecode = feCmd.getBytecode("MyFeContract").toValue();
 
-        expect(string(feCmd.getBytecode("A").toValue())).toEqual(expectedBytecode);
+        expect(bytecode).toEqual("600180600c6000396000f3fe00");
     }
 }

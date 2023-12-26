@@ -12,17 +12,17 @@ contract ResultExample is Test {
         StringResult result = Ok(string("foo"));
 
         // Use unwrap to get the value or revert if the result is an `Error`
-        string memory unwrapValue = result.unwrap();
-        expect(unwrapValue).toEqual("foo");
+        string memory value = result.unwrap();
+        expect(value).toEqual("foo");
 
         // Use expect to get the value or revert with a custom message if
         // the result is an `Error`
-        string memory expectValue = result.expect("Result failed");
-        expect(expectValue).toEqual("foo");
+        value = result.expect("Result failed");
+        expect(value).toEqual("foo");
 
-        // Safely getting the value
+        // Safely handling the result
         if (result.isOk()) {
-            string memory value = result.toValue();
+            value = result.toValue();
             expect(value).toEqual("foo");
         }
     }
