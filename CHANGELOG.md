@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.4.7](https://github.com/nomoixyz/vulcan/compare/v0.4.6...v0.4.7) (2024-02-23)
+
+
+### Features
+
+* install forge-std@v1.7.6 ([6a102f5](https://github.com/nomoixyz/vulcan/commit/6a102f5f99c11f923e70cf40be1c70dc50953cb9))
+* string to json ([#238](https://github.com/nomoixyz/vulcan/issues/238)) ([f67740f](https://github.com/nomoixyz/vulcan/commit/f67740f8a9c846a543aebf29433ad69c3f0ff337))
+* update forge-std ([#240](https://github.com/nomoixyz/vulcan/issues/240)) ([943b0d3](https://github.com/nomoixyz/vulcan/commit/943b0d33b0111caf18fae3594f1ca89e925bac58))
+
 ## [0.4.6](https://github.com/nomoixyz/vulcan/compare/v0.4.5...v0.4.6) (2023-11-27)
 
 
