@@ -120,7 +120,7 @@ library env {
     /// @param name The name of the environment variable to read.
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `bool`.
-    function getBool(string memory name, bool defaultValue) internal returns (bool value) {
+    function getBool(string memory name, bool defaultValue) internal view returns (bool value) {
         return vulcan.hevm.envOr(name, defaultValue);
     }
 
@@ -128,7 +128,7 @@ library env {
     /// @param name The name of the environment variable to read.
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `uint256`.
-    function getUint(string memory name, uint256 defaultValue) external returns (uint256 value) {
+    function getUint(string memory name, uint256 defaultValue) internal view returns (uint256 value) {
         return vulcan.hevm.envOr(name, defaultValue);
     }
 
@@ -136,7 +136,7 @@ library env {
     /// @param name The name of the environment variable to read.
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `int256`.
-    function getInt(string memory name, int256 defaultValue) external returns (int256 value) {
+    function getInt(string memory name, int256 defaultValue) internal view returns (int256 value) {
         return vulcan.hevm.envOr(name, defaultValue);
     }
 
@@ -144,7 +144,7 @@ library env {
     /// @param name The name of the environment variable to read.
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `address`.
-    function getAddress(string memory name, address defaultValue) external returns (address value) {
+    function getAddress(string memory name, address defaultValue) internal view returns (address value) {
         return vulcan.hevm.envOr(name, defaultValue);
     }
 
@@ -152,7 +152,7 @@ library env {
     /// @param name The name of the environment variable to read.
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `bytes32`.
-    function getBytes32(string memory name, bytes32 defaultValue) external returns (bytes32 value) {
+    function getBytes32(string memory name, bytes32 defaultValue) internal view returns (bytes32 value) {
         return vulcan.hevm.envOr(name, defaultValue);
     }
 
@@ -160,7 +160,7 @@ library env {
     /// @param name The name of the environment variable to read.
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `string`.
-    function getString(string memory name, string memory defaultValue) external returns (string memory value) {
+    function getString(string memory name, string memory defaultValue) internal view returns (string memory value) {
         return vulcan.hevm.envOr(name, defaultValue);
     }
 
@@ -168,7 +168,7 @@ library env {
     /// @param name The name of the environment variable to read.
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `bytes`.
-    function getBytes(string memory name, bytes memory defaultValue) external returns (bytes memory value) {
+    function getBytes(string memory name, bytes memory defaultValue) internal view returns (bytes memory value) {
         return vulcan.hevm.envOr(name, defaultValue);
     }
 
@@ -178,7 +178,8 @@ library env {
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `bool[]`.
     function getBoolArray(string memory name, string memory delim, bool[] memory defaultValue)
-        external
+        internal
+        view
         returns (bool[] memory value)
     {
         return vulcan.hevm.envOr(name, delim, defaultValue);
@@ -190,7 +191,8 @@ library env {
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `uint256[]`.
     function getUintArray(string memory name, string memory delim, uint256[] memory defaultValue)
-        external
+        internal
+        view
         returns (uint256[] memory value)
     {
         return vulcan.hevm.envOr(name, delim, defaultValue);
@@ -202,7 +204,8 @@ library env {
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `int256[]`.
     function getIntArray(string memory name, string memory delim, int256[] memory defaultValue)
-        external
+        internal
+        view
         returns (int256[] memory value)
     {
         return vulcan.hevm.envOr(name, delim, defaultValue);
@@ -214,7 +217,8 @@ library env {
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `address[]`.
     function getAddressArray(string memory name, string memory delim, address[] memory defaultValue)
-        external
+        internal
+        view
         returns (address[] memory value)
     {
         return vulcan.hevm.envOr(name, delim, defaultValue);
@@ -226,7 +230,8 @@ library env {
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `bytes32[]`.
     function getBytes32Array(string memory name, string memory delim, bytes32[] memory defaultValue)
-        external
+        internal
+        view
         returns (bytes32[] memory value)
     {
         return vulcan.hevm.envOr(name, delim, defaultValue);
@@ -238,7 +243,8 @@ library env {
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `string[]`.
     function getStringArray(string memory name, string memory delim, string[] memory defaultValue)
-        external
+        internal
+        view
         returns (string[] memory value)
     {
         return vulcan.hevm.envOr(name, delim, defaultValue);
@@ -250,7 +256,8 @@ library env {
     /// @param defaultValue The value to return if the environment variable doesn't exists.
     /// @return value The value of the environment variable as `bytes[]`.
     function getBytesArray(string memory name, string memory delim, bytes[] memory defaultValue)
-        external
+        internal
+        view
         returns (bytes[] memory value)
     {
         return vulcan.hevm.envOr(name, delim, defaultValue);
